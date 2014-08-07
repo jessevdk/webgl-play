@@ -1,3 +1,16 @@
+if (!(typeof window == 'undefined')) {
+    if (typeof window.glsl == 'undefined') {
+        window.glsl = {};
+    }
+
+    window.glsl.preprocessor = {};
+} else {
+    glsl = {
+        source: require('./source'),
+        tokenizer: require('./tokenizer')
+    };
+}
+
 (function(exports) {
 
 function PreprocessExpressionTokenizer(source) {
@@ -35,12 +48,12 @@ function PreprocessExpressionTokenizer(source) {
         '&': 'AMPERSAND'
     }
 
-    BaseTokenizer.call(this, source, keywords, {});
+    glsl.tokenizer.Base.call(this, source, keywords, {});
 
     this._add_int_constants();
 }
 
-PreprocessExpressionTokenizer.prototype = new BaseTokenizer();
+PreprocessExpressionTokenizer.prototype = new glsl.tokenizer.Base();
 
 function PreprocessTokenizer(source) {
     var keywords = {
@@ -59,10 +72,10 @@ function PreprocessTokenizer(source) {
         'line': 'LINE'
     };
 
-    BaseTokenizer.call(this, source, keywords, {});
+    glsl.tokenizer.Base.call(this, source, keywords, {});
 }
 
-PreprocessTokenizer.prototype = new BaseTokenizer();
+PreprocessTokenizer.prototype = new glsl.tokenizer.Base();
 
 function Preprocessor(source) {
     this._source = '';
@@ -74,7 +87,7 @@ function Preprocessor(source) {
     };
 
     this._source_mapping = [];
-    this._source_location = new SourceLocation(1, 1);
+    this._source_location = new glsl.source.Location(1, 1);
 
     var lines = source.split('\n');
 
@@ -94,8 +107,8 @@ function Preprocessor(source) {
         var p = this._pstack[this._pstack.length - 1];
 
         if (ptr < line.length && line[ptr] == '#') {
-            var lsource = new Source(line.slice(ptr + 1));
-            lsource.offset(new SourceLocation(i, ptr + 1));
+            var lsource = new glsl.source.Source(line.slice(ptr + 1));
+            lsource.offset(new glsl.source.Location(i, ptr + 1));
 
             var tokenizer = new PreprocessTokenizer(lsource);
             var tok = tokenizer.next();
@@ -158,17 +171,17 @@ function Preprocessor(source) {
                 line += '\n';
             }
 
-            this._add_source(line, new SourceLocation(i + 1, 1));
+            this._add_source(line, new glsl.source.Location(i + 1, 1));
         }
     }
 
-    this._source_reader = new Source(this._source);
+    this._source_reader = new glsl.source.Source(this._source);
     this._source_reader._source_map = this._source_map.bind(this);
 }
 
 Preprocessor.prototype._source_map = function(range) {
-    return new SourceRange(this._source_map_one(range.start, false),
-                           this._source_map_one(range.end, true));
+    return new glsl.source.Range(this._source_map_one(range.start, false),
+                                 this._source_map_one(range.end, true));
 }
 
 Preprocessor.prototype._source_map_one = function(loc, isend) {
@@ -250,7 +263,7 @@ Preprocessor.prototype._expand = function(s, origloc, curloc) {
         defre.push(d);
     }
 
-    defre = new RegExp('\\b' + regex_choices(defre) + '\\b', 'g');
+    defre = new RegExp('\\b' + glsl.tokenizer.regex_choices(defre) + '\\b', 'g');
 
     var smap = [];
 
@@ -270,8 +283,8 @@ Preprocessor.prototype._expand = function(s, origloc, curloc) {
 
             if (poff != offset) {
                 smap.push({
-                    current: new SourceRange(pnewloc, nnewloc),
-                    original: new SourceRange(ploc, nloc),
+                    current: new glsl.source.Range(pnewloc, nnewloc),
+                    original: new glsl.source.Range(ploc, nloc),
                     macro: false
                 });
             }
@@ -282,8 +295,8 @@ Preprocessor.prototype._expand = function(s, origloc, curloc) {
             poff = offset + m.length;
 
             smap.push({
-                current: new SourceRange(nnewloc, pnewloc),
-                original: new SourceRange(nloc, ploc),
+                current: new glsl.source.Range(nnewloc, pnewloc),
+                original: new glsl.source.Range(nloc, ploc),
                 macro: true
             });
         }
@@ -295,8 +308,8 @@ Preprocessor.prototype._expand = function(s, origloc, curloc) {
         var pt = s.slice(poff);
 
         smap.push({
-            current: new SourceRange(pnewloc, pnewloc.advance(pt)),
-            original: new SourceRange(ploc, ploc.advance(pt)),
+            current: new glsl.source.Range(pnewloc, pnewloc.advance(pt)),
+            original: new glsl.source.Range(ploc, ploc.advance(pt)),
             macro: false
         });
 
@@ -362,7 +375,7 @@ Preprocessor.prototype._undef = function(tok, tokenizer) {
 Preprocessor.prototype._if = function(tok, tokenizer) {
     var rest = tokenizer.remainder();
 
-    var exprtok = new PreprocessExpressionTokenizer(new Source(rest.text));
+    var exprtok = new PreprocessExpressionTokenizer(new glsl.source.Source(rest.text));
 
     var expr = this._parse_expression(exprtok, -1);
 
@@ -441,7 +454,7 @@ Preprocessor.prototype._elif = function(tok, tokenizer) {
     }
 
     var rest = tokenizer.remainder();
-    var exprtok = new PreprocessExpressionTokenizer(new Source(this._expand(rest.text)));
+    var exprtok = new PreprocessExpressionTokenizer(new glsl.source.Source(this._expand(rest.text)));
 
     var expr = this._parse_expression(exprtok, -1);
 
@@ -694,7 +707,7 @@ Preprocessor.prototype._parse_expression = function(tokenizer, p) {
 }
 
 Preprocessor.prototype._error = function(loc, text) {
-    this._errors.push(new SourceError(loc, text));
+    this._errors.push(new glsl.source.Error(loc, text));
 }
 
 Preprocessor.prototype.source = function() {
@@ -703,6 +716,6 @@ Preprocessor.prototype.source = function() {
 
 exports.Preprocessor = Preprocessor;
 
-})(typeof window == 'undefined' ? global : window);
+})(typeof window == 'undefined' ? exports : window.glsl);
 
 // vi:ts=4:et

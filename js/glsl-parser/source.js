@@ -1,21 +1,31 @@
+if (!(typeof window == 'undefined')) {
+    if (typeof window.glsl == 'undefined') {
+        window.glsl = {};
+    }
+
+    window.glsl.source = {};
+} else {
+    glsl = {
+        tokenizer: require('./tokenizer')
+    };
+}
+
 (function(exports) {
 
-function SourceLocation(line, column) {
+function Location(line, column) {
     this.line = line;
     this.column = column;
 }
 
-exports.SourceLocation = SourceLocation;
-
-SourceLocation.prototype.copy = function() {
-    return new SourceLocation(this.line, this.column);
+Location.prototype.copy = function() {
+    return new Location(this.line, this.column);
 }
 
-SourceLocation.prototype.to_range = function() {
-    return new SourceRange(this, this);
+Location.prototype.to_range = function() {
+    return new Range(this, this);
 }
 
-SourceLocation.prototype.compare = function(loc) {
+Location.prototype.compare = function(loc) {
     if (this.line != loc.line) {
         return this.line < loc.line ? -1 : 1;
     }
@@ -27,7 +37,7 @@ SourceLocation.prototype.compare = function(loc) {
     return 0;
 }
 
-SourceLocation.prototype.advance = function(s) {
+Location.prototype.advance = function(s) {
     var li = -1;
 
     var ret = this.copy();
@@ -48,15 +58,13 @@ SourceLocation.prototype.advance = function(s) {
     return ret;
 }
 
-function SourceRange(start, end) {
+function Range(start, end) {
     this.start = start.copy();
     this.end = end.copy();
 }
 
-exports.SourceRange = SourceRange;
-
-SourceRange.prototype.copy = function() {
-    return new SourceRange(this.start, this.end);
+Range.prototype.copy = function() {
+    return new Range(this.start, this.end);
 }
 
 function SourceError(loc, message) {
@@ -71,15 +79,11 @@ SourceError.prototype.formatted_message = function() {
     return l + '.' + c + ': ' + this.message;
 }
 
-exports.SourceError = SourceError;
-
 function Source(s) {
     this._source = s;
     this._remainder = this._source;
-    this._location = new SourceLocation(1, 1);
+    this._location = new Location(1, 1);
 }
-
-exports.Source = Source;
 
 Source.prototype.location = function() {
     return this._location;
@@ -121,15 +125,20 @@ Source.prototype._next = function(r, tokenize) {
         this._location = this._location.advance(m[0]);
 
         if (tokenize) {
-            var rng = this._source_map(new SourceRange(start, this._location));
+            var rng = this._source_map(new Range(start, this._location));
 
-            return new Token(0, m[0], rng);
+            return new glsl.tokenizer.Token(0, m[0], rng);
         }
     }
 
     return null;
 }
 
-})(typeof window == 'undefined' ? global : window);
+exports.Error = SourceError;
+exports.Location = Location;
+exports.Range = Range;
+exports.Source = Source;
+
+})(typeof window == 'undefined' ? exports : window.glsl.source);
 
 // vi:ts=4:et

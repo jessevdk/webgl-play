@@ -1,6 +1,10 @@
-// IDENTIFIER
-// TYPE_NAME
-// FIELD_SELECTION
+if (!(typeof window == 'undefined')) {
+    if (typeof window.glsl == 'undefined') {
+        window.glsl = {};
+    }
+
+    window.glsl.tokenizer = {};
+}
 
 (function(exports) {
 
@@ -63,13 +67,9 @@ function BaseTokenizer(source, keywords, operators) {
     ]
 }
 
-exports.BaseTokenizer = BaseTokenizer;
-
 function regex_escape(s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
-
-exports.regex_escape = regex_escape;
 
 function regex_choices(l) {
     l = l.slice(0);
@@ -92,8 +92,6 @@ function regex_choices(l) {
 
     return '(' + l.join('|') + ')';
 }
-
-exports.regex_choices = regex_choices;
 
 BaseTokenizer.prototype._extract_operators = function() {
     var ops = [];
@@ -338,8 +336,12 @@ function Tokenizer(source) {
 
 Tokenizer.prototype = new BaseTokenizer();
 
+exports.Base = BaseTokenizer;
 exports.Tokenizer = Tokenizer;
 
-})(typeof window == 'undefined' ? global : window);
+exports.regex_choices = regex_choices;
+exports.regex_escape = regex_escape;
+
+})(typeof window == 'undefined' ? exports : window.glsl.tokenizer);
 
 // vi:ts=4:et
