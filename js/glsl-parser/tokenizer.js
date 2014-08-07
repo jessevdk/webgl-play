@@ -16,35 +16,50 @@ function Token(id, text, loc) {
 
 exports.Token = Token;
 
-function BaseTokenizer(source, keywords, operators) {
-    this._source = source;
+function BaseTokenizer(b, options) {
+    this._options = options;
 
-    if (typeof keywords != 'undefined') {
-        this._keywords = keywords;
+    if (typeof this._options == 'undefined') {
+        this._options = {floats: false, ints: false};
+    }
+
+    if (typeof b.keywords != 'undefined') {
+        this._keywords = b.keywords;
     } else {
         this._keywords = {};
     }
 
-    if (typeof operators != 'undefined') {
-        this._operators = operators;
+    if (typeof b.operators != 'undefined') {
+        this._operators = b.operators;
     } else {
         this._operators = {};
     }
 
-    this._last_token_id = 0;
     this._token_id_map = {};
+    this._last_token_id = 0;
 
-    this._define_tokens(keywords);
-    this._define_tokens(operators);
+    this._define_token(b, 'IDENTIFIER');
+    this._define_token(b, 'UNSUPPORTED');
 
-    this._define_token('IDENTIFIER');
-    this._define_token('UNSUPPORTED');
+    this._define_tokens(b, this._keywords);
+    this._define_tokens(b, this._operators);
+
+    if (this._options.floats) {
+        this._add_float_constants(b);
+    }
+
+    if (this._options.ints) {
+        this._add_int_constants(b);
+    }
 
     this._extract_operators();
 
     this._rws = /^[ \t\n]+/;
     this._rident = /^[A-Za-z_][A-Za-z0-9_]*/;
+}
 
+BaseTokenizer.prototype.init = function(source) {
+    this._source = source;
     this._cached = [];
 
     this._matchers = [
@@ -65,6 +80,46 @@ function BaseTokenizer(source, keywords, operators) {
             }).bind(this)
         }
     ]
+
+    if (this._options.floats) {
+        // floating point number
+        this._matchers.push({
+            regex: /((\d+\.\d*|\.\d+)([eE][+-]?\d+)?|\d+[eE][+-]?\d+)/,
+            finish_token: (function(tok) {
+                tok.id = this._token('FLOATCONSTANT');
+                tok.value = parseFloat(tok.text);
+            }).bind(this)
+        });
+    }
+
+    if (this._options.ints) {
+        // literal hexadecimal integer
+        this._matchers.push({
+            regex: /^0[xX][0-9a-fA-F]+/,
+            finish_token: (function(tok) {
+                tok.id = this._token('INTCONSTANT');
+                tok.value = parseInt(tok.text.slice(2), 16);
+            }).bind(this)
+        });
+
+        // literal decimal integer
+        this._matchers.push({
+            regex: /^[1-9][0-9]*/,
+            finish_token: (function(tok) {
+                tok.id = this._token('INTCONSTANT');
+                tok.value = parseInt(tok.text, 10);
+            }).bind(this)
+        });
+
+        // literal octal integer
+        this._matchers.push({
+            regex: /^0[0-7]*/,
+            finish_token: (function(tok) {
+                tok.id = this._token('INTCONSTANT');
+                tok.value = parseInt(tok.text, 8);
+            }).bind(this)
+        });
+    }
 }
 
 function regex_escape(s) {
@@ -107,10 +162,11 @@ BaseTokenizer.prototype._extract_operators = function() {
     }
 }
 
-BaseTokenizer.prototype._define_token = function(t) {
+BaseTokenizer.prototype._define_token = function(b, t) {
     var id = ++this._last_token_id;
 
     this['T_' + t] = id;
+    b['T_' + t] = id;
 
     this._token_id_map[id] = t;
 }
@@ -119,9 +175,9 @@ BaseTokenizer.prototype.token_name = function(id) {
     return this._token_id_map[id];
 }
 
-BaseTokenizer.prototype._define_tokens = function(tmap) {
+BaseTokenizer.prototype._define_tokens = function(b, tmap) {
     for (var k in tmap) {
-        this._define_token(tmap[k]);
+        this._define_token(b, tmap[k]);
     }
 }
 
@@ -184,157 +240,118 @@ BaseTokenizer.prototype._token = function(n) {
     return this['T_' + n];
 }
 
-BaseTokenizer.prototype._add_int_constants = function() {
-    this._define_token('INTCONSTANT');
-
-    // literal hexadecimal integer
-    this._matchers.push({
-        regex: /^0[xX][0-9a-fA-F]+/,
-        finish_token: (function(tok) {
-            tok.id = this._token('INTCONSTANT');
-            tok.value = parseInt(tok.text.slice(2), 16);
-        }).bind(this)
-    });
-
-    // literal decimal integer
-    this._matchers.push({
-        regex: /^[1-9][0-9]*/,
-        finish_token: (function(tok) {
-            tok.id = this._token('INTCONSTANT');
-            tok.value = parseInt(tok.text, 10);
-        }).bind(this)
-    });
-
-    // literal octal integer
-    this._matchers.push({
-        regex: /^0[0-7]*/,
-        finish_token: (function(tok) {
-            tok.id = this._token('INTCONSTANT');
-            tok.value = parseInt(tok.text, 8);
-        }).bind(this)
-    });
+BaseTokenizer.prototype._add_int_constants = function(b) {
+    this._define_token(b, 'INTCONSTANT');
 }
 
-BaseTokenizer.prototype._add_float_constants = function() {
-    this._define_token('FLOATCONSTANT');
-
-    // floating point number
-    this._matchers.push({
-        regex: /((\d+\.\d*|\.\d+)([eE][+-]?\d+)?|\d+[eE][+-]?\d+)/,
-        finish_token: (function(tok) {
-            tok.id = this._token('FLOATCONSTANT');
-            tok.value = parseFloat(tok.text);
-        }).bind(this)
-    });
+BaseTokenizer.prototype._add_float_constants = function(b) {
+    this._define_token(b, 'FLOATCONSTANT');
 }
 
 function Tokenizer(source) {
-    var keywords = {
-        'attribute': 'ATTRIBUTE',
-        'const': 'CONST',
-        'bool': 'BOOL',
-        'float': 'FLOAT',
-        'int': 'INT',
-        'break': 'BREAK',
-        'continue': 'CONTINUE',
-        'do': 'DO',
-        'else': 'ELSE',
-        'for': 'FOR',
-        'if': 'IF',
-        'discard': 'DISCARD',
-        'return': 'RETURN',
-        'bvec2': 'BVEC2',
-        'bvec3': 'BVEC3',
-        'bvec4': 'BVEC4',
-        'ivec2': 'IVEC2',
-        'ivec3': 'IVEC3',
-        'ivec4': 'IVEC4',
-        'vec2': 'VEC2',
-        'vec3': 'VEC3',
-        'vec4': 'VEC4',
-        'mat2': 'MAT2',
-        'mat3': 'MAT3',
-        'mat4': 'MAT4',
-        'in': 'IN',
-        'out': 'OUT',
-        'inout': 'INOUT',
-        'uniform': 'UNIFORM',
-        'varying': 'VARYING',
-        'sampler2d': 'SAMPLER2D',
-        'samplercube': 'SAMPLERCUBE',
-        'struct': 'STRUCT',
-        'void': 'VOID',
-        'while': 'WHILE',
-
-        'true': 'BOOLCONSTANT',
-        'false': 'BOOLCONSTANT',
-
-        'invariant': 'INVARIANT',
-        'highp': 'HIGH_PRECISION',
-        'mediump': 'MEDIUM_PRECISION',
-        'lowp': 'LOW_PRECISION',
-        'precision': 'PRECISION'
-    }
-
-    var operators = {
-        '<<': 'LEFT_OP',
-        '>>': 'RIGHT_OP',
-        '++': 'INC_OP',
-        '--': 'DEC_OP',
-        '<=': 'LE_OP',
-        '>=': 'GE_OP',
-        '==': 'EQ_OP',
-        '!=': 'NE_OP',
-        '&&': 'AND_OP',
-        '||': 'OR_OP',
-        '^': 'XOR_OP',
-
-        '*=': 'MUL_ASSIGN',
-        '/=': 'DIV_ASSIGN',
-        '+=': 'ADD_ASSIGN',
-        '%=': 'MOD_ASSIGN',
-        '<<=': 'LEFT_ASSIGN',
-        '>>=': 'RIGHT_ASSIGN',
-        '&=': 'AND_ASSIGN',
-        '^=': 'XOR_ASSIGN',
-        '|=': 'OR_ASSIGN',
-        '-=': 'SUB_ASSIGN',
-
-        '(': 'LEFT_PAREN',
-        ')': 'RIGHT_PAREN',
-        '[': 'LEFT_BRACKET',
-        ']': 'RIGHT_BRACKET',
-        '{': 'LEFT_BRACE',
-        '}': 'RIGHT_BRACE',
-
-        '.': 'DOT',
-        ',': 'COMMA',
-        ':': 'COLON',
-        '=': 'EQUAL',
-        ';': 'SEMICOLON',
-        '!': 'BANG',
-        '-': 'DASH',
-        '~': 'TILDE',
-        '+': 'PLUS',
-        '*': 'STAR',
-        '/': 'SLASH',
-        '%': 'PERCENT',
-
-        '<': 'LEFT_ANGLE',
-        '>': 'RIGHT_ANGLE',
-        '|': 'VERTICAL_BAR',
-        '^': 'CARET',
-        '&': 'AMPERSAND',
-        '?': 'QUESTION',
-    }
-
-    BaseTokenizer.call(this, source, keywords, operators);
-
-    this._add_float_constants();
-    this._add_int_constants();
+    BaseTokenizer.prototype.init.call(this, source);
 }
 
-Tokenizer.prototype = new BaseTokenizer();
+Tokenizer.keywords = {
+    'attribute': 'ATTRIBUTE',
+    'const': 'CONST',
+    'bool': 'BOOL',
+    'float': 'FLOAT',
+    'int': 'INT',
+    'break': 'BREAK',
+    'continue': 'CONTINUE',
+    'do': 'DO',
+    'else': 'ELSE',
+    'for': 'FOR',
+    'if': 'IF',
+    'discard': 'DISCARD',
+    'return': 'RETURN',
+    'bvec2': 'BVEC2',
+    'bvec3': 'BVEC3',
+    'bvec4': 'BVEC4',
+    'ivec2': 'IVEC2',
+    'ivec3': 'IVEC3',
+    'ivec4': 'IVEC4',
+    'vec2': 'VEC2',
+    'vec3': 'VEC3',
+    'vec4': 'VEC4',
+    'mat2': 'MAT2',
+    'mat3': 'MAT3',
+    'mat4': 'MAT4',
+    'in': 'IN',
+    'out': 'OUT',
+    'inout': 'INOUT',
+    'uniform': 'UNIFORM',
+    'varying': 'VARYING',
+    'sampler2d': 'SAMPLER2D',
+    'samplercube': 'SAMPLERCUBE',
+    'struct': 'STRUCT',
+    'void': 'VOID',
+    'while': 'WHILE',
+
+    'true': 'BOOLCONSTANT',
+    'false': 'BOOLCONSTANT',
+
+    'invariant': 'INVARIANT',
+    'highp': 'HIGH_PRECISION',
+    'mediump': 'MEDIUM_PRECISION',
+    'lowp': 'LOW_PRECISION',
+    'precision': 'PRECISION'
+}
+
+Tokenizer.operators = {
+    '<<': 'LEFT_OP',
+    '>>': 'RIGHT_OP',
+    '++': 'INC_OP',
+    '--': 'DEC_OP',
+    '<=': 'LE_OP',
+    '>=': 'GE_OP',
+    '==': 'EQ_OP',
+    '!=': 'NE_OP',
+    '&&': 'AND_OP',
+    '||': 'OR_OP',
+    '^': 'XOR_OP',
+
+    '*=': 'MUL_ASSIGN',
+    '/=': 'DIV_ASSIGN',
+    '+=': 'ADD_ASSIGN',
+    '%=': 'MOD_ASSIGN',
+    '<<=': 'LEFT_ASSIGN',
+    '>>=': 'RIGHT_ASSIGN',
+    '&=': 'AND_ASSIGN',
+    '^=': 'XOR_ASSIGN',
+    '|=': 'OR_ASSIGN',
+    '-=': 'SUB_ASSIGN',
+
+    '(': 'LEFT_PAREN',
+    ')': 'RIGHT_PAREN',
+    '[': 'LEFT_BRACKET',
+    ']': 'RIGHT_BRACKET',
+    '{': 'LEFT_BRACE',
+    '}': 'RIGHT_BRACE',
+
+    '.': 'DOT',
+    ',': 'COMMA',
+    ':': 'COLON',
+    '=': 'EQUAL',
+    ';': 'SEMICOLON',
+    '!': 'BANG',
+    '-': 'DASH',
+    '~': 'TILDE',
+    '+': 'PLUS',
+    '*': 'STAR',
+    '/': 'SLASH',
+    '%': 'PERCENT',
+
+    '<': 'LEFT_ANGLE',
+    '>': 'RIGHT_ANGLE',
+    '|': 'VERTICAL_BAR',
+    '^': 'CARET',
+    '&': 'AMPERSAND',
+    '?': 'QUESTION',
+}
+
+Tokenizer.prototype = new BaseTokenizer(Tokenizer, {floats: true, ints: true});
 
 exports.Base = BaseTokenizer;
 exports.Tokenizer = Tokenizer;

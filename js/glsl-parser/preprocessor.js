@@ -13,69 +13,67 @@ if (!(typeof window == 'undefined')) {
 
 (function(exports) {
 
-function PreprocessExpressionTokenizer(source) {
-    var keywords = {
-        'defined': 'DEFINED'
-    }
-
-    var operators = {
-        '<<': 'LEFT_OP',
-        '>>': 'RIGHT_OP',
-        '<=': 'LE_OP',
-        '>=': 'GE_OP',
-        '==': 'EQ_OP',
-        '!=': 'NE_OP',
-        '&&': 'AND_OP',
-        '||': 'OR_OP',
-        '^^': 'XOR_OP',
-
-        '(': 'LEFT_PAREN',
-        ')': 'RIGHT_PAREN',
-
-        ',': 'COMMA',
-        '!': 'BANG',
-        '-': 'DASH',
-        '~': 'TILDE',
-        '+': 'PLUS',
-        '*': 'STAR',
-        '/': 'SLASH',
-        '%': 'PERCENT',
-
-        '<': 'LEFT_ANGLE',
-        '>': 'RIGHT_ANGLE',
-        '|': 'VERTICAL_BAR',
-        '^': 'CARET',
-        '&': 'AMPERSAND'
-    }
-
-    glsl.tokenizer.Base.call(this, source, keywords, {});
-
-    this._add_int_constants();
+function ExpressionTokenizer(source) {
+    glsl.tokenizer.Base.prototype.init.call(this, source);
 }
 
-PreprocessExpressionTokenizer.prototype = new glsl.tokenizer.Base();
-
-function PreprocessTokenizer(source) {
-    var keywords = {
-        'define' : 'DEFINE',
-        'undef': 'UNDEF',
-        'if': 'IF',
-        'ifdef': 'IFDEF',
-        'ifndef': 'IFNDEF',
-        'else': 'ELSE',
-        'elif': 'ELIF',
-        'endif': 'ENDIF',
-        'error': 'ERROR',
-        'pragma': 'PRAGMA',
-        'extension': 'EXTENSION',
-        'version': 'VERSION',
-        'line': 'LINE'
-    };
-
-    glsl.tokenizer.Base.call(this, source, keywords, {});
+ExpressionTokenizer.keywords = {
+    'defined': 'DEFINED'
 }
 
-PreprocessTokenizer.prototype = new glsl.tokenizer.Base();
+ExpressionTokenizer.operators = {
+    '<<': 'LEFT_OP',
+    '>>': 'RIGHT_OP',
+    '<=': 'LE_OP',
+    '>=': 'GE_OP',
+    '==': 'EQ_OP',
+    '!=': 'NE_OP',
+    '&&': 'AND_OP',
+    '||': 'OR_OP',
+    '^^': 'XOR_OP',
+
+    '(': 'LEFT_PAREN',
+    ')': 'RIGHT_PAREN',
+
+    ',': 'COMMA',
+    '!': 'BANG',
+    '-': 'DASH',
+    '~': 'TILDE',
+    '+': 'PLUS',
+    '*': 'STAR',
+    '/': 'SLASH',
+    '%': 'PERCENT',
+
+    '<': 'LEFT_ANGLE',
+    '>': 'RIGHT_ANGLE',
+    '|': 'VERTICAL_BAR',
+    '^': 'CARET',
+    '&': 'AMPERSAND'
+}
+
+ExpressionTokenizer.prototype = new glsl.tokenizer.Base(ExpressionTokenizer, {ints: true});
+
+function Tokenizer(source) {
+    glsl.tokenizer.Base.prototype.init.call(this, source);
+}
+
+Tokenizer.keywords = {
+    'define' : 'DEFINE',
+    'undef': 'UNDEF',
+    'if': 'IF',
+    'ifdef': 'IFDEF',
+    'ifndef': 'IFNDEF',
+    'else': 'ELSE',
+    'elif': 'ELIF',
+    'endif': 'ENDIF',
+    'error': 'ERROR',
+    'pragma': 'PRAGMA',
+    'extension': 'EXTENSION',
+    'version': 'VERSION',
+    'line': 'LINE'
+};
+
+Tokenizer.prototype = new glsl.tokenizer.Base(Tokenizer);
 
 function Preprocessor(source) {
     this._source = '';
@@ -110,7 +108,7 @@ function Preprocessor(source) {
             var lsource = new glsl.source.Source(line.slice(ptr + 1));
             lsource.offset(new glsl.source.Location(i, ptr + 1));
 
-            var tokenizer = new PreprocessTokenizer(lsource);
+            var tokenizer = new Tokenizer(lsource);
             var tok = tokenizer.next();
 
             if (tok == null) {
@@ -120,47 +118,47 @@ function Preprocessor(source) {
             }
 
             switch (tok.id) {
-            case tokenizer.T_ENDIF:
+            case Tokenizer.T_ENDIF:
                 this._endif(tok, tokenizer);
                 break;
-            case tokenizer.T_ELSE:
+            case Tokenizer.T_ELSE:
                 this._else(tok, tokenizer);
                 break;
-            case tokenizer.T_ELIF:
+            case Tokenizer.T_ELIF:
                 this._elif(tok, tokenizer);
                 break;
             }
 
-            if (tok.id == tokenizer.T_ENDIF || p.skip) {
+            if (tok.id == Tokenizer.T_ENDIF || p.skip) {
                 continue;
             }
 
             switch (tok.id) {
-            case tokenizer.T_DEFINE:
+            case Tokenizer.T_DEFINE:
                 this._define(tok, tokenizer);
                 break;
-            case tokenizer.T_UNDEF:
+            case Tokenizer.T_UNDEF:
                 this._undef(tok, tokenizer);
                 break;
-            case tokenizer.T_IF:
+            case Tokenizer.T_IF:
                 this._if(tok, tokenizer);
                 break;
-            case tokenizer.T_IFDEF:
+            case Tokenizer.T_IFDEF:
                 this._ifdef(tok, tokenizer, false);
                 break;
-            case tokenizer.T_IFNDEF:
+            case Tokenizer.T_IFNDEF:
                 this._ifdef(tok, tokenizer, true);
                 break;
-            case tokenizer.T_ERROR:
+            case Tokenizer.T_ERROR:
                 this._error(tok.location, tokenizer.remainder().text);
                 break;
-            case tokenizer.T_PRAGMA:
+            case Tokenizer.T_PRAGMA:
                 break;
-            case tokenizer.T_EXTENSION:
+            case Tokenizer.T_EXTENSION:
                 break;
-            case tokenizer.T_VERSION:
+            case Tokenizer.T_VERSION:
                 break;
-            case tokenizer.T_LINE:
+            case Tokenizer.T_LINE:
                 break;
             default:
                 this._error(tok.location, 'expected preprocessor directive, but got ' + tokenizer.token_name(tok.id) + ':' + tok.text);
@@ -327,7 +325,7 @@ Preprocessor.prototype._define = function(tok, tokenizer) {
         return;
     }
 
-    if (def.id != tokenizer.T_IDENTIFIER) {
+    if (def.id != Tokenizer.T_IDENTIFIER) {
         this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
         return;
     }
@@ -354,7 +352,7 @@ Preprocessor.prototype._undef = function(tok, tokenizer) {
         return;
     }
 
-    if (def.id != tokenizer.T_IDENTIFIER) {
+    if (def.id != Tokenizer.T_IDENTIFIER) {
         this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
         return;
     }
@@ -375,7 +373,7 @@ Preprocessor.prototype._undef = function(tok, tokenizer) {
 Preprocessor.prototype._if = function(tok, tokenizer) {
     var rest = tokenizer.remainder();
 
-    var exprtok = new PreprocessExpressionTokenizer(new glsl.source.Source(rest.text));
+    var exprtok = new ExpressionTokenizer(new glsl.source.Source(rest.text));
 
     var expr = this._parse_expression(exprtok, -1);
 
@@ -397,7 +395,7 @@ Preprocessor.prototype._ifdef = function(tok, tokenizer, negate) {
         return;
     }
 
-    if (def.id != tokenizer.T_IDENTIFIER) {
+    if (def.id != Tokenizer.T_IDENTIFIER) {
         this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
         return;
     }
@@ -454,7 +452,7 @@ Preprocessor.prototype._elif = function(tok, tokenizer) {
     }
 
     var rest = tokenizer.remainder();
-    var exprtok = new PreprocessExpressionTokenizer(new glsl.source.Source(this._expand(rest.text)));
+    var exprtok = new ExpressionTokenizer(new glsl.source.Source(this._expand(rest.text)));
 
     var expr = this._parse_expression(exprtok, -1);
 
@@ -492,15 +490,15 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
     }
 
     switch (tok.id) {
-    case tokenizer.T_INTCONSTANT:
+    case ExpressionTokenizer.T_INTCONSTANT:
         return tok.value;
-    case tokenizer.T_IDENTIFIER:
+    case ExpressionTokenizer.T_IDENTIFIER:
         if (tok.text in this._defines) {
             return this._defines[tok.text];
         }
 
         return null;
-    case tokenizer.T_LEFT_PAREN:
+    case ExpressionTokenizer.T_LEFT_PAREN:
         var ret = this._parse_expression(tokenizer);
 
         if (ret == null) {
@@ -514,18 +512,18 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
             return null;
         }
 
-        if (tok.id != tokenizer.T_RIGHT_PAREN) {
+        if (tok.id != ExpressionTokenizer.T_RIGHT_PAREN) {
             // TODO: error
             return null;
         }
         break;
-    case tokenizer.T_DEFINED:
+    case ExpressionTokenizer.T_DEFINED:
         var id = tokenizer.next();
 
         var expect = null;
 
-        if (id != null && id.id == tokenizer.T_LEFT_PAREN) {
-            expect = tokenizer.T_RIGHT_PAREN;
+        if (id != null && id.id == ExpressionTokenizer.T_LEFT_PAREN) {
+            expect = ExpressionTokenizer.T_RIGHT_PAREN;
             id = tokenizer.next();
         }
 
@@ -534,7 +532,7 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
             return null;
         }
 
-        if (id.id != tokenizer.T_IDENTIFIER) {
+        if (id.id != ExpressionTokenizer.T_IDENTIFIER) {
             // TODO: error
             return null;
         }
@@ -549,10 +547,10 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
         }
 
         return (id.text in this._defines);
-    case tokenizer.T_PLUS:
-    case tokenizer.T_DASH:
-    case tokenizer.T_TILDE:
-    case tokenizer.T_BANG:
+    case ExpressionTokenizer.T_PLUS:
+    case ExpressionTokenizer.T_DASH:
+    case ExpressionTokenizer.T_TILDE:
+    case ExpressionTokenizer.T_BANG:
         var ret = this._parse_expression(tokenizer, 2);
 
         if (ret == null) {
@@ -560,20 +558,20 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
         }
 
         switch (tok.id) {
-            case tokenizer.T_PLUS:
+            case ExpressionTokenizer.T_PLUS:
                 return ret;
-            case tokenizer.T_DASH:
+            case ExpressionTokenizer.T_DASH:
                 return -ret;
-            case tokenizer.T_TILDE:
+            case ExpressionTokenizer.T_TILDE:
                 return ~ret;
-            case tokenizer.T_BANG:
+            case ExpressionTokenizer.T_BANG:
                 return !ret;
         }
 
         break;
     }
 
-    this._error(tok.location, 'expected expression, but got ' + tokenizer.token_name(tok.id) + ':' + tok.text);
+    this._error(tok.location, 'expected expression, but got ' + ExpressionTokenizer.token_name(tok.id) + ':' + tok.text);
 
     return null;
 }
@@ -588,42 +586,42 @@ Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
     var prec = 0;
 
     switch (tok.id) {
-    case tokenizer.T_STAR:
-    case tokenizer.T_SLASH:
-    case tokenizer.T_PERCENT:
+    case ExpressionTokenizer.T_STAR:
+    case ExpressionTokenizer.T_SLASH:
+    case ExpressionTokenizer.T_PERCENT:
         prec = 3;
         break;
-    case tokenizer.T_PLUS:
-    case tokenizer.T_DASH:
+    case ExpressionTokenizer.T_PLUS:
+    case ExpressionTokenizer.T_DASH:
         prec = 4;
         break;
-    case tokenizer.T_LEFT_OP:
-    case tokenizer.T_RIGHT_OP:
+    case ExpressionTokenizer.T_LEFT_OP:
+    case ExpressionTokenizer.T_RIGHT_OP:
         prec = 5;
         break;
-    case tokenizer.T_LEFT_ANGLE:
-    case tokenizer.T_RIGHT_ANGLE:
-    case tokenizer.T_LE_OP:
-    case tokenizer.T_GE_OP:
+    case ExpressionTokenizer.T_LEFT_ANGLE:
+    case ExpressionTokenizer.T_RIGHT_ANGLE:
+    case ExpressionTokenizer.T_LE_OP:
+    case ExpressionTokenizer.T_GE_OP:
         prec = 6;
         break;
-    case tokenizer.T_EQ_OP:
-    case tokenizer.T_NE_OP:
+    case ExpressionTokenizer.T_EQ_OP:
+    case ExpressionTokenizer.T_NE_OP:
         prec = 7;
         break;
-    case tokenizer.T_AMPERSAND:
+    case ExpressionTokenizer.T_AMPERSAND:
         prec = 8;
         break;
-    case tokenizer.T_XOR_OP:
+    case ExpressionTokenizer.T_XOR_OP:
         prec = 9;
         break;
-    case tokenizer.T_VERTICAL_BAR:
+    case ExpressionTokenizer.T_VERTICAL_BAR:
         prec = 10;
         break;
-    case tokenizer.T_AND_OP:
+    case ExpressionTokenizer.T_AND_OP:
         prec = 11;
         break;
-    case tokenizer.T_OR_OP:
+    case ExpressionTokenizer.T_OR_OP:
         prec = 12;
         break;
     default:
@@ -643,41 +641,41 @@ Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
     }
 
     switch (tok.id) {
-    case tokenizer.T_STAR:
+    case ExpressionTokenizer.T_STAR:
         return lhs * rhs;
-    case tokenizer.T_SLASH:
+    case ExpressionTokenizer.T_SLASH:
         return lhs / rhs;
-    case tokenizer.T_PERCENT:
+    case ExpressionTokenizer.T_PERCENT:
         return lhs % rhs;
-    case tokenizer.T_PLUS:
+    case ExpressionTokenizer.T_PLUS:
         return lhs + rhs;
-    case tokenizer.T_DASH:
+    case ExpressionTokenizer.T_DASH:
         return lhs - rhs;
-    case tokenizer.T_LEFT_OP:
+    case ExpressionTokenizer.T_LEFT_OP:
         return lhs << rhs;
-    case tokenizer.T_RIGHT_OP:
+    case ExpressionTokenizer.T_RIGHT_OP:
         return lhs >> rhs;
-    case tokenizer.T_LEFT_ANGLE:
+    case ExpressionTokenizer.T_LEFT_ANGLE:
         return lhs < rhs;
-    case tokenizer.T_RIGHT_ANGLE:
+    case ExpressionTokenizer.T_RIGHT_ANGLE:
         return lhs > rhs;
-    case tokenizer.T_LE_OP:
+    case ExpressionTokenizer.T_LE_OP:
         return lhs <= rhs;
-    case tokenizer.T_GE_OP:
+    case ExpressionTokenizer.T_GE_OP:
         return lhs >= rhs;
-    case tokenizer.T_EQ_OP:
+    case ExpressionTokenizer.T_EQ_OP:
         return lhs == rhs;
-    case tokenizer.T_NE_OP:
+    case ExpressionTokenizer.T_NE_OP:
         return lhs != rhs;
-    case tokenizer.T_AMPERSAND:
+    case ExpressionTokenizer.T_AMPERSAND:
         return lhs & rhs;
-    case tokenizer.T_XOR_OP:
+    case ExpressionTokenizer.T_XOR_OP:
         return lhs ^ rhs;
-    case tokenizer.T_VERTICAL_BAR:
+    case ExpressionTokenizer.T_VERTICAL_BAR:
         return lhs | rhs;
-    case tokenizer.T_AND_OP:
+    case ExpressionTokenizer.T_AND_OP:
         return lhs && rhs;
-    case tokenizer.T_OR_OP:
+    case ExpressionTokenizer.T_OR_OP:
         return lhs || rhs;
     }
 
