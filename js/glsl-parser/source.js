@@ -30,6 +30,14 @@ Location.prototype.to_range = function() {
     return rng;
 }
 
+Location.prototype.inspect = function(depth) {
+    return this.line + '.' + this.column;
+}
+
+Location.prototype.marshal = function() {
+    return this.line + '.' + this.column;
+}
+
 Location.prototype.compare = function(loc) {
     if (this.line != loc.line) {
         return this.line < loc.line ? -1 : 1;
@@ -70,6 +78,14 @@ function Range(start, end) {
 
 Range.prototype.copy = function() {
     return new Range(this.start, this.end);
+}
+
+Range.prototype.inspect = function(depth) {
+    return '(' + this.start.inspect(depth + 1) + '-' + this.end.inspect(depth + 1) + ')';
+}
+
+Range.prototype.marshal = function() {
+    return '(' + this.start.marshal() + '-' + this.end.marshal() + ')';
 }
 
 function SourceError(loc, message) {
