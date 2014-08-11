@@ -91,15 +91,30 @@ function Preprocessor(source) {
 
     this._pstack = [{skip: false}];
     this._errors = [];
+    this._tokens = [];
+
+    var incomment = false;
 
     for (var i = 0; i < lines.length; i++)
     {
         var line = lines[i];
         var ptr = 0;
 
-        while (ptr < line.length && (line[ptr] == ' ' || line[ptr] == '\t'))
-        {
-            ptr++;
+        if (incomment) {
+            var opos = line.lastIndexOf('/*');
+            var cpos = line.lastIndexOf('*/');
+
+            if (cpos != -1 && cpos > opos) {
+                incomment = false;
+            }
+
+            // Do not try to handle directives
+            ptr = line.length;
+        } else {
+            while (ptr < line.length && (line[ptr] == ' ' || line[ptr] == '\t'))
+            {
+                ptr++;
+            }
         }
 
         var p = this._pstack[this._pstack.length - 1];
@@ -317,6 +332,16 @@ Preprocessor.prototype._expand = function(s, origloc, curloc) {
     }
 }
 
+Preprocessor.prototype._strip_comments = function(s) {
+    var cpos = s.indexOf('//');
+
+    if (cpos != -1) {
+        return s.slice(0, cpos);
+    }
+
+    return s;
+}
+
 Preprocessor.prototype._define = function(tok, tokenizer) {
     var def = tokenizer.next();
 
@@ -341,7 +366,7 @@ Preprocessor.prototype._define = function(tok, tokenizer) {
     }
 
     var rest = tokenizer.remainder();
-    this._defines[def.text] = this._expand(rest.text);
+    this._defines[def.text] = this._expand(this._strip_comments(rest.text));
 }
 
 Preprocessor.prototype._undef = function(tok, tokenizer) {
@@ -452,7 +477,8 @@ Preprocessor.prototype._elif = function(tok, tokenizer) {
     }
 
     var rest = tokenizer.remainder();
-    var exprtok = new ExpressionTokenizer(new glsl.source.Source(this._expand(rest.text)));
+    var s = this._expand(this._strip_comments(rest.text));
+    var exprtok = new ExpressionTokenizer(new glsl.source.Source(s));
 
     var expr = this._parse_expression(exprtok, -1);
 
