@@ -24,7 +24,10 @@ Location.prototype.copy = function() {
 }
 
 Location.prototype.to_range = function() {
-    return new Range(this, this);
+    var rng = new Range(this, this);
+    rng.end.column++;
+
+    return rng;
 }
 
 Location.prototype.compare = function(loc) {
