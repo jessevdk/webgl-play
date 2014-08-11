@@ -20,6 +20,13 @@ if (!(typeof window == 'undefined')) {
 
 var Tn = glsl.tokenizer.Tokenizer;
 
+function Error(loc, message) {
+    glsl.source.Error.call(this, loc, message);
+}
+
+Error.prototype = Object.create(glsl.source.Error.prototype);
+Error.prototype.constructor = Error;
+
 function Node() {
 }
 
@@ -2401,7 +2408,7 @@ Parser.prototype._parse_tu = function() {
 }
 
 Parser.prototype._error = function(loc, message) {
-    this._errors.push(new glsl.source.Error(loc, message));
+    this._errors.push(new Error(loc, message));
 }
 
 Parser.prototype._match = function(rule, tok) {
