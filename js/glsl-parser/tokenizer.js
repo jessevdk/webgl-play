@@ -1,3 +1,5 @@
+"use strict";
+
 if (!(typeof window == 'undefined')) {
     if (typeof window.glsl == 'undefined') {
         window.glsl = {};
