@@ -605,7 +605,7 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
 }
 
 Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
-    var tok = tokenizer.next();
+    var tok = tokenizer.peek();
 
     if (tok == null) {
         return null;
@@ -653,14 +653,15 @@ Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
         prec = 12;
         break;
     default:
-        tokenizer.unconsume(tok);
         return null;
     }
 
     if (p != -1 && !(prec < p)) {
-        tokenizer.unconsume(tok);
         return null;
     }
+
+    // Consume peeked token
+    tokenizer.next();
 
     var rhs = this._parse_expression(tokenizer, prec);
 

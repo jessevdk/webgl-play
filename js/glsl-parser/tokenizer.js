@@ -12,16 +12,48 @@ function Token(id, text, loc) {
     this.id = id;
     this.text = text;
     this.location = loc;
+
+    this._tokenizer = null;
+}
+
+Token.prototype.marshal = function() {
+    return this._tokenizer.token_id_name(this.id) + ':' + this.text + '@' + this.location.marshal();
+}
+
+Token.prototype.for_assert = function() {
+    var ret = new Token(this.id, this.text, this.location);
+    ret._tokenizer = this._tokenizer;
+
+    for (var k in this) {
+        var val = this[k];
+
+        if (this.hasOwnProperty(k) && !ret.hasOwnProperty(k) && typeof val != 'function') {
+            ret[k] = val;
+        }
+    }
+
+    return ret;
 }
 
 exports.Token = Token;
 
 function BaseTokenizer(b, options) {
-    this._options = options;
-
-    if (typeof this._options == 'undefined') {
-        this._options = {floats: false, ints: false};
-    }
+    this._options = this._merge_options({
+        floats: false,
+        ints: false,
+        bools: false,
+        comments: false,
+        skip_comments: true,
+        whitespace_class: /^[ \t\n]+/,
+        identifier_class: /^[A-Za-z_][A-Za-z0-9_]*/,
+        float_class: /((\d+\.\d*|\.\d+)([eE][+-]?\d+)?|\d+[eE][+-]?\d+)/,
+        line_comment_class: /^\/\/.*/,
+        multiline_comment_class: /^\/\*(.|\n)*?\*\//,
+        bool_class: /^(true|false)\b/,
+        hexadecimal_class: /^0[xX][0-9a-fA-F]+/,
+        octal_class: /^0[0-7]*/,
+        decimal_class: /^[1-9][0-9]*/
+    }, options);
 
     if (typeof b.keywords != 'undefined') {
         this._keywords = b.keywords;
@@ -36,58 +68,126 @@ function BaseTokenizer(b, options) {
     }
 
     this._token_id_map = {};
+    this._token_name_map = {};
     this._last_token_id = 0;
 
-    this._define_token(b, 'IDENTIFIER');
-    this._define_token(b, 'UNSUPPORTED');
+    this._define_token(b, 'identifier', 'IDENTIFIER');
+    this._define_token(b, 'unsupported', 'UNSUPPORTED');
+    this._define_token(b, 'eof', 'EOF');
 
     this._define_tokens(b, this._keywords);
     this._define_tokens(b, this._operators);
 
     if (this._options.floats) {
-        this._add_float_constants(b);
+        this._define_token(b, 'floating point number', 'FLOATCONSTANT');
     }
 
     if (this._options.ints) {
-        this._add_int_constants(b);
+        this._define_token(b, 'integer number', 'INTCONSTANT');
+    }
+
+    if (this._options.bools) {
+        this._define_token(b, 'boolean value', 'BOOLCONSTANT');
+    }
+
+    if (this._options.comments) {
+        this._define_token(b, 'comment', 'COMMENT');
     }
 
     this._extract_operators();
+}
 
-    this._rws = /^[ \t\n]+/;
-    this._rident = /^[A-Za-z_][A-Za-z0-9_]*/;
+BaseTokenizer.prototype._merge_options = function(defs, options) {
+    if (typeof options == 'undefined') {
+        return defs;
+    }
+
+    for (var k in options) {
+        defs[k] = options[k];
+    }
+
+    return defs;
 }
 
 BaseTokenizer.prototype.init = function(source) {
     this._source = source;
     this._cached = [];
+    this._comments = [];
 
-    this._matchers = [
-        {
-            regex: this._roperators,
+    this._matchers = [];
+
+    if (this._options.comments) {
+        this._matchers.push({
+            regex: this._options.line_comment_class,
             finish_token: (function(tok) {
-                tok.id = this._token(this._operators[tok.text]);
+                tok.id = this._token('COMMENT');
+                tok.multi = false;
+                tok.value = tok.text.slice(2);
+
+                tok.marshal = function() {
+                    return Token.prototype.marshal.call(this) + ', multi:' + this.multi + ' = ' + this.value;
+                };
             }).bind(this)
-        },
-        {
-            regex: this._rident,
+        })
+
+        this._matchers.push({
+            regex: this._options.multiline_comment_class,
             finish_token: (function(tok) {
-                if (tok.text in this._keywords) {
-                    tok.id = this._token(this._keywords[tok.text]);
-                } else {
-                    tok.id = this.T_IDENTIFIER;
-                }
+                tok.id = this._token('COMMENT');
+                tok.multi = true;
+                tok.value = tok.text.slice(2, tok.text.length - 2);
+
+                tok.marshal = function() {
+                    return Token.prototype.marshal.call(this) + ', multi:' + this.multi + ' = ' + this.value;
+                };
             }).bind(this)
-        }
-    ]
+        })
+    }
+
+    this._matchers.push({
+        regex: this._roperators,
+        finish_token: (function(tok) {
+            tok.id = this._token(this._operators[tok.text]);
+        }).bind(this)
+    });
+
+    if (this._options.bools) {
+        // bools
+        this._matchers.push({
+            regex: this._options.bool_class,
+            finish_token: (function(tok) {
+                tok.id = this._token('BOOLCONSTANT');
+                tok.value = (tok.text == 'true');
+
+                tok.marshal = function() {
+                    return Token.prototype.marshal.call(this) + ' = ' + this.value;
+                };
+            }).bind(this)
+        });
+    }
+
+    this._matchers.push({
+        regex: this._options.identifier_class,
+        finish_token: (function(tok) {
+            if (tok.text in this._keywords) {
+                tok.id = this._token(this._keywords[tok.text]);
+            } else {
+                tok.id = this.T_IDENTIFIER;
+            }
+        }).bind(this)
+    });
 
     if (this._options.floats) {
         // floating point number
         this._matchers.push({
-            regex: /((\d+\.\d*|\.\d+)([eE][+-]?\d+)?|\d+[eE][+-]?\d+)/,
+            regex: this._options.float_class,
             finish_token: (function(tok) {
                 tok.id = this._token('FLOATCONSTANT');
                 tok.value = parseFloat(tok.text);
+
+                tok.marshal = function() {
+                    return Token.prototype.marshal.call(this) + ' = ' + this.value;
+                };
             }).bind(this)
         });
     }
@@ -95,31 +195,54 @@ BaseTokenizer.prototype.init = function(source) {
     if (this._options.ints) {
         // literal hexadecimal integer
         this._matchers.push({
-            regex: /^0[xX][0-9a-fA-F]+/,
+            regex: this._options.hexadecimal_class,
             finish_token: (function(tok) {
                 tok.id = this._token('INTCONSTANT');
                 tok.value = parseInt(tok.text.slice(2), 16);
+
+                tok.marshal = function() {
+                    return Token.prototype.marshal.call(this) + ' = ' + this.value;
+                };
             }).bind(this)
         });
 
         // literal decimal integer
         this._matchers.push({
-            regex: /^[1-9][0-9]*/,
+            regex: this._options.decimal_class,
             finish_token: (function(tok) {
                 tok.id = this._token('INTCONSTANT');
                 tok.value = parseInt(tok.text, 10);
+
+                tok.marshal = function() {
+                    return Token.prototype.marshal.call(this) + ' = ' + this.value;
+                };
             }).bind(this)
         });
 
         // literal octal integer
         this._matchers.push({
-            regex: /^0[0-7]*/,
+            regex: this._options.octal_class,
             finish_token: (function(tok) {
                 tok.id = this._token('INTCONSTANT');
                 tok.value = parseInt(tok.text, 8);
+
+                tok.marshal = function() {
+                    return Token.prototype.marshal.call(this) + ' = ' + this.value;
+                }
             }).bind(this)
         });
     }
+}
+
+BaseTokenizer.prototype.create_token = function(id, text, location) {
+    var tok = new Token(id, text, location);
+    tok._tokenizer = this;
+
+    return tok;
+}
+
+BaseTokenizer.prototype.comments = function() {
+    return this._comments;
 }
 
 function regex_escape(s) {
@@ -162,31 +285,53 @@ BaseTokenizer.prototype._extract_operators = function() {
     }
 }
 
-BaseTokenizer.prototype._define_token = function(b, t) {
+BaseTokenizer.prototype._define_token = function(b, name, t) {
     var id = ++this._last_token_id;
 
     this['T_' + t] = id;
     b['T_' + t] = id;
 
     this._token_id_map[id] = t;
+    this._token_name_map[id] = name;
 }
 
 BaseTokenizer.prototype.token_name = function(id) {
+    return this._token_name_map[id];
+}
+
+BaseTokenizer.prototype.token_id_name = function(id) {
     return this._token_id_map[id];
 }
 
 BaseTokenizer.prototype._define_tokens = function(b, tmap) {
+    var ids = [];
+
     for (var k in tmap) {
-        this._define_token(b, tmap[k]);
+        ids.push(k);
+    }
+
+    ids.sort();
+
+    for (var i = 0; i < ids.length; i++) {
+        this._define_token(b, ids[i], tmap[ids[i]]);
     }
 }
 
 BaseTokenizer.prototype._skip_ws = function() {
-    this._source.skip(this._rws);
+    this._source.skip(this._options.whitespace_class);
+}
+
+BaseTokenizer.prototype.peek = function() {
+    if (this._cached.length != 0) {
+        return this._cached[0];
+    }
+
+    return this.unconsume(this.next());
 }
 
 BaseTokenizer.prototype.unconsume = function(tok) {
     this._cached.push(tok);
+    return tok;
 }
 
 BaseTokenizer.prototype.next = function() {
@@ -196,24 +341,41 @@ BaseTokenizer.prototype.next = function() {
         return ret;
     }
 
-    this._skip_ws();
+    var processing_comments = true;
 
-    if (this._source.eof()) {
-        return null;
-    }
+    while (processing_comments) {
+        processing_comments = false;
+        this._skip_ws();
 
-    for (var i = 0; i < this._matchers.length; i++) {
-        var m = this._matchers[i];
+        if (this._source.eof()) {
+            var tok = new Token(this.T_EOF, '', this.location().to_range());
+            tok._tokenizer = this;
 
-        if (m.regex == null) {
-            continue;
+            return tok;
         }
 
-        var tok = this._source.next(m.regex);
+        for (var i = 0; i < this._matchers.length; i++) {
+            var m = this._matchers[i];
 
-        if (tok != null) {
-            m.finish_token(tok);
-            return tok;
+            if (m.regex == null) {
+                continue;
+            }
+
+            var tok = this._source.next(m.regex);
+
+            if (tok != null) {
+                tok._tokenizer = this;
+
+                m.finish_token(tok);
+
+                if (this._options.comments && this._options.skip_comments && tok.id == this.T_COMMENT) {
+                    this._comments.push(tok);
+                    processing_comments = true;
+                    break;
+                } else {
+                    return tok;
+                }
+            }
         }
     }
 
@@ -238,14 +400,6 @@ BaseTokenizer.prototype.location = function() {
 
 BaseTokenizer.prototype._token = function(n) {
     return this['T_' + n];
-}
-
-BaseTokenizer.prototype._add_int_constants = function(b) {
-    this._define_token(b, 'INTCONSTANT');
-}
-
-BaseTokenizer.prototype._add_float_constants = function(b) {
-    this._define_token(b, 'FLOATCONSTANT');
 }
 
 function Tokenizer(source) {
@@ -283,15 +437,11 @@ Tokenizer.keywords = {
     'inout': 'INOUT',
     'uniform': 'UNIFORM',
     'varying': 'VARYING',
-    'sampler2d': 'SAMPLER2D',
-    'samplercube': 'SAMPLERCUBE',
+    'sampler2D': 'SAMPLER2D',
+    'samplerCube': 'SAMPLERCUBE',
     'struct': 'STRUCT',
     'void': 'VOID',
     'while': 'WHILE',
-
-    'true': 'BOOLCONSTANT',
-    'false': 'BOOLCONSTANT',
-
     'invariant': 'INVARIANT',
     'highp': 'HIGH_PRECISION',
     'mediump': 'MEDIUM_PRECISION',
@@ -351,7 +501,12 @@ Tokenizer.operators = {
     '?': 'QUESTION',
 }
 
-Tokenizer.prototype = new BaseTokenizer(Tokenizer, {floats: true, ints: true});
+Tokenizer.prototype = new BaseTokenizer(Tokenizer, {
+    floats: true,
+    ints: true,
+    bools: true,
+    comments: true
+});
 
 exports.Base = BaseTokenizer;
 exports.Tokenizer = Tokenizer;
