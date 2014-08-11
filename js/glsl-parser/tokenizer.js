@@ -460,7 +460,7 @@ Tokenizer.operators = {
     '!=': 'NE_OP',
     '&&': 'AND_OP',
     '||': 'OR_OP',
-    '^': 'XOR_OP',
+    '^^': 'XOR_OP',
 
     '*=': 'MUL_ASSIGN',
     '/=': 'DIV_ASSIGN',
