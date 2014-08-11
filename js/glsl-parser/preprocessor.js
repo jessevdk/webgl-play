@@ -1,3 +1,5 @@
+"use strict";
+
 if (!(typeof window == 'undefined')) {
     if (typeof window.glsl == 'undefined') {
         window.glsl = {};
@@ -5,7 +7,7 @@ if (!(typeof window == 'undefined')) {
 
     window.glsl.preprocessor = {};
 } else {
-    glsl = {
+    var glsl = {
         source: require('./source'),
         tokenizer: require('./tokenizer')
     };
@@ -720,7 +722,7 @@ Preprocessor.prototype._parse_expression = function(tokenizer, p) {
     }
 
     while (true) {
-        ret = this._parse_expression_rhs(tokenizer, p, lhs);
+        var ret = this._parse_expression_rhs(tokenizer, p, lhs);
 
         if (ret == null) {
             return lhs;

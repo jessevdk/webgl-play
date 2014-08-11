@@ -1,3 +1,5 @@
+"use strict";
+
 if (!(typeof window == 'undefined')) {
     if (typeof window.glsl == 'undefined') {
         window.glsl = {};
@@ -5,7 +7,7 @@ if (!(typeof window == 'undefined')) {
 
     window.glsl.source = {};
 } else {
-    glsl = {
+    var glsl = {
         tokenizer: require('./tokenizer')
     };
 }
