@@ -1,0 +1,10 @@
+{
+  "name": "webgl-play",
+  "description": "webgl playground",
+  "author": "Jesse van den Kieboom <jessevdk@gmail.com>",
+  "dependencies": {
+    "mocha": "1.21.x",
+    "chai": "1.9.x",
+    "istanbul": "0.3.x"
+  }
+}
