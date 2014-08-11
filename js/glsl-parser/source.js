@@ -75,6 +75,8 @@ Range.prototype.copy = function() {
 function SourceError(loc, message) {
     this.location = loc.copy();
     this.message = message;
+
+    this._stack = (new Error()).stack;
 }
 
 SourceError.prototype.formatted_message = function() {
