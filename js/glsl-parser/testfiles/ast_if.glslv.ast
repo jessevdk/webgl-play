@@ -1,0 +1,139 @@
+{
+  "body": [
+    {
+      "FunctionDef": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "VOID:void@(3.1-3.5)",
+            "qualifiers": [],
+            "is_builtin": true
+          },
+          "name": "IDENTIFIER:main@(3.6-3.10)",
+          "parameters": [],
+          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
+          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
+        },
+        "body(Block)": {
+          "right_brace": "RIGHT_BRACE:}@(23.1-23.2)",
+          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "body": [
+            {
+              "SelectionStmt": {
+                "token": "IF:if@(4.5-4.7)",
+                "left_paren": "LEFT_PAREN:(@(4.8-4.9)",
+                "condition(ConstantExpr)": {
+                  "token": "BOOLCONSTANT:true@(4.9-4.13) = true"
+                },
+                "right_paren": "RIGHT_PAREN:)@(4.13-4.14)",
+                "body(Block)": {
+                  "right_brace": "RIGHT_BRACE:}@(6.5-6.6)",
+                  "left_brace": "LEFT_BRACE:{@(4.15-4.16)",
+                  "body": [],
+                  "new_scope": false
+                }
+              }
+            },
+            {
+              "SelectionStmt": {
+                "token": "IF:if@(8.5-8.7)",
+                "left_paren": "LEFT_PAREN:(@(8.8-8.9)",
+                "condition(ConstantExpr)": {
+                  "token": "BOOLCONSTANT:true@(8.9-8.13) = true"
+                },
+                "right_paren": "RIGHT_PAREN:)@(8.13-8.14)",
+                "body(ExpressionStmt)": {
+                  "expression(AssignmentExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:a@(9.9-9.10)"
+                    },
+                    "op": "EQUAL:=@(9.11-9.12)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:2@(9.13-9.14) = 2"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(9.14-9.15)"
+                }
+              }
+            },
+            {
+              "SelectionStmt": {
+                "token": "IF:if@(11.5-11.7)",
+                "left_paren": "LEFT_PAREN:(@(11.8-11.9)",
+                "condition(ConstantExpr)": {
+                  "token": "BOOLCONSTANT:true@(11.9-11.13) = true"
+                },
+                "right_paren": "RIGHT_PAREN:)@(11.13-11.14)",
+                "body(Block)": {
+                  "right_brace": "RIGHT_BRACE:}@(13.5-13.6)",
+                  "left_brace": "LEFT_BRACE:{@(11.15-11.16)",
+                  "body": [],
+                  "new_scope": false
+                },
+                "els(SelectionElseStmt)": {
+                  "token": "ELSE:else@(13.7-13.11)",
+                  "body(SelectionStmt)": {
+                    "token": "IF:if@(13.12-13.14)",
+                    "left_paren": "LEFT_PAREN:(@(13.15-13.16)",
+                    "condition(ConstantExpr)": {
+                      "token": "BOOLCONSTANT:false@(13.16-13.21) = false"
+                    },
+                    "right_paren": "RIGHT_PAREN:)@(13.21-13.22)",
+                    "body(Block)": {
+                      "right_brace": "RIGHT_BRACE:}@(15.5-15.6)",
+                      "left_brace": "LEFT_BRACE:{@(13.23-13.24)",
+                      "body": [],
+                      "new_scope": false
+                    },
+                    "els(SelectionElseStmt)": {
+                      "token": "ELSE:else@(15.7-15.11)",
+                      "body(Block)": {
+                        "right_brace": "RIGHT_BRACE:}@(17.5-17.6)",
+                        "left_brace": "LEFT_BRACE:{@(15.12-15.13)",
+                        "body": [],
+                        "new_scope": false
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "SelectionStmt": {
+                "token": "IF:if@(19.5-19.7)",
+                "left_paren": "LEFT_PAREN:(@(19.8-19.9)",
+                "condition(ConstantExpr)": {
+                  "token": "BOOLCONSTANT:true@(19.9-19.13) = true"
+                },
+                "right_paren": "RIGHT_PAREN:)@(19.13-19.14)",
+                "body(Block)": {
+                  "right_brace": "RIGHT_BRACE:}@(21.5-21.6)",
+                  "left_brace": "LEFT_BRACE:{@(19.15-19.16)",
+                  "body": [],
+                  "new_scope": false
+                },
+                "els(SelectionElseStmt)": {
+                  "token": "ELSE:else@(21.7-21.11)",
+                  "body(ExpressionStmt)": {
+                    "expression(ConstantExpr)": {
+                      "token": "BOOLCONSTANT:true@(22.9-22.13) = true"
+                    },
+                    "semi": "SEMICOLON:;@(22.13-22.14)"
+                  }
+                }
+              }
+            }
+          ],
+          "new_scope": true
+        }
+      }
+    }
+  ],
+  "comments": [
+    "COMMENT:// something@(5.9-5.21), multi:false =  something",
+    "COMMENT:// something@(12.9-12.21), multi:false =  something",
+    "COMMENT:// something else if@(14.9-14.29), multi:false =  something else if",
+    "COMMENT:// something else@(16.9-16.26), multi:false =  something else",
+    "COMMENT:// something@(20.9-20.21), multi:false =  something",
+    "COMMENT:// vi:ts=4:et@(25.1-25.14), multi:false =  vi:ts=4:et"
+  ]
+}

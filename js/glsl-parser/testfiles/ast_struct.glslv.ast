@@ -1,0 +1,71 @@
+{
+  "body": [
+    {
+      "TypeDecl": {
+        "type(StructDecl)": {
+          "token": "STRUCT:struct@(3.1-3.7)",
+          "name": "IDENTIFIER:myvec@(3.8-3.13)",
+          "left_brace": "LEFT_BRACE:{@(3.14-3.15)",
+          "right_brace": "RIGHT_BRACE:}@(7.1-7.2)",
+          "fields": [
+            {
+              "FieldDecl": {
+                "type(Type)": {
+                  "token": "INT:int@(4.5-4.8)",
+                  "qualifiers": [],
+                  "is_builtin": true
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:a@(4.9-4.10)",
+                      "is_array": false,
+                      "array_size": 0
+                    }
+                  },
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b@(4.12-4.13)",
+                      "is_array": true,
+                      "array_size(ConstantExpr)": {
+                        "token": "INTCONSTANT:2@(4.14-4.15) = 2"
+                      },
+                      "left_bracket": "LEFT_BRACKET:[@(4.13-4.14)",
+                      "right_bracket": "RIGHT_BRACKET:]@(4.15-4.16)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(4.16-4.17)"
+              }
+            },
+            {
+              "FieldDecl": {
+                "type(Type)": {
+                  "token": "FLOAT:float@(6.13-6.18)",
+                  "qualifiers": [
+                    "MEDIUM_PRECISION:mediump@(6.5-6.12)"
+                  ],
+                  "is_builtin": true
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:c@(6.19-6.20)",
+                      "is_array": false,
+                      "array_size": 0
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(6.20-6.21)"
+              }
+            }
+          ]
+        },
+        "semi": "SEMICOLON:;@(7.2-7.3)"
+      }
+    }
+  ],
+  "comments": [
+    "COMMENT:// vi:ts=4:et@(9.1-9.14), multi:false =  vi:ts=4:et"
+  ]
+}

@@ -1,0 +1,366 @@
+{
+  "body": [
+    {
+      "FunctionDef": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "VOID:void@(3.1-3.5)",
+            "qualifiers": [],
+            "is_builtin": true
+          },
+          "name": "IDENTIFIER:main@(3.6-3.10)",
+          "parameters": [],
+          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
+          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
+        },
+        "body(Block)": {
+          "right_brace": "RIGHT_BRACE:}@(29.1-29.2)",
+          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "body": [
+            {
+              "ForStmt": {
+                "token": "FOR:for@(5.5-5.8)",
+                "left_paren": "LEFT_PAREN:(@(5.9-5.10)",
+                "init(ExpressionStmt)": {
+                  "expression(AssignmentExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(5.10-5.11)"
+                    },
+                    "op": "EQUAL:=@(5.12-5.13)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:0@(5.14-5.15) = 0"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(5.15-5.16)"
+                },
+                "rest(ForRestStmt)": {
+                  "condition(BinOpExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(5.17-5.18)"
+                    },
+                    "op": "LEFT_ANGLE:<@(5.19-5.20)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:10@(5.21-5.23) = 10"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(5.23-5.24)",
+                  "expression(UnaryPostfixOpExpr)": {
+                    "op": "INC_OP:++@(5.26-5.28)",
+                    "expression(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(5.25-5.26)"
+                    }
+                  }
+                },
+                "right_paren": "RIGHT_PAREN:)@(5.28-5.29)",
+                "body(Block)": {
+                  "right_brace": "RIGHT_BRACE:}@(7.5-7.6)",
+                  "left_brace": "LEFT_BRACE:{@(5.30-5.31)",
+                  "body": [],
+                  "new_scope": true
+                }
+              }
+            },
+            {
+              "ForStmt": {
+                "token": "FOR:for@(10.5-10.8)",
+                "left_paren": "LEFT_PAREN:(@(10.9-10.10)",
+                "init(ExpressionStmt)": {
+                  "expression(AssignmentExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(10.10-10.11)"
+                    },
+                    "op": "EQUAL:=@(10.12-10.13)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:2@(10.14-10.15) = 2"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(10.15-10.16)"
+                },
+                "rest(ForRestStmt)": {
+                  "condition(BinOpExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(10.17-10.18)"
+                    },
+                    "op": "LEFT_ANGLE:<@(10.19-10.20)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:4@(10.21-10.22) = 4"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(10.22-10.23)"
+                },
+                "right_paren": "RIGHT_PAREN:)@(10.23-10.24)",
+                "body(Block)": {
+                  "right_brace": "RIGHT_BRACE:}@(12.5-12.6)",
+                  "left_brace": "LEFT_BRACE:{@(10.25-10.26)",
+                  "body": [
+                    {
+                      "ExpressionStmt": {
+                        "expression(UnaryPostfixOpExpr)": {
+                          "op": "INC_OP:++@(11.10-11.12)",
+                          "expression(VariableExpr)": {
+                            "name": "IDENTIFIER:i@(11.9-11.10)"
+                          }
+                        },
+                        "semi": "SEMICOLON:;@(11.12-11.13)"
+                      }
+                    }
+                  ],
+                  "new_scope": true
+                }
+              }
+            },
+            {
+              "ForStmt": {
+                "token": "FOR:for@(15.5-15.8)",
+                "left_paren": "LEFT_PAREN:(@(15.9-15.10)",
+                "init(ExpressionStmt)": {
+                  "expression(AssignmentExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(15.10-15.11)"
+                    },
+                    "op": "EQUAL:=@(15.12-15.13)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:10@(15.14-15.16) = 10"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(15.16-15.17)"
+                },
+                "rest(ForRestStmt)": {
+                  "condition(BinOpExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(15.18-15.19)"
+                    },
+                    "op": "RIGHT_ANGLE:>@(15.20-15.21)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:5@(15.22-15.23) = 5"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(15.23-15.24)",
+                  "expression(UnaryPostfixOpExpr)": {
+                    "op": "DEC_OP:--@(15.26-15.28)",
+                    "expression(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(15.25-15.26)"
+                    }
+                  }
+                },
+                "right_paren": "RIGHT_PAREN:)@(15.28-15.29)",
+                "body(EmptyStmt)": {
+                  "semi": "SEMICOLON:;@(16.9-16.10)"
+                }
+              }
+            },
+            {
+              "ForStmt": {
+                "token": "FOR:for@(19.5-19.8)",
+                "left_paren": "LEFT_PAREN:(@(19.9-19.10)",
+                "init(VariableDecl)": {
+                  "type(Type)": {
+                    "token": "INT:int@(19.10-19.13)",
+                    "qualifiers": [],
+                    "is_builtin": true
+                  },
+                  "names": [
+                    {
+                      "Named": {
+                        "name": "IDENTIFIER:i@(19.14-19.15)",
+                        "initial_assign": "EQUAL:=@(19.16-19.17)",
+                        "initial_value(ConstantExpr)": {
+                          "token": "INTCONSTANT:10@(19.18-19.20) = 10"
+                        },
+                        "is_array": false,
+                        "array_size": 0
+                      }
+                    }
+                  ],
+                  "semi": "SEMICOLON:;@(19.20-19.21)"
+                },
+                "rest(ForRestStmt)": {
+                  "condition(BinOpExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(19.22-19.23)"
+                    },
+                    "op": "RIGHT_ANGLE:>@(19.24-19.25)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:5@(19.26-19.27) = 5"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(19.27-19.28)",
+                  "expression(UnaryPostfixOpExpr)": {
+                    "op": "DEC_OP:--@(19.30-19.32)",
+                    "expression(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(19.29-19.30)"
+                    }
+                  }
+                },
+                "right_paren": "RIGHT_PAREN:)@(19.32-19.33)",
+                "body(Block)": {
+                  "right_brace": "RIGHT_BRACE:}@(20.5-20.6)",
+                  "left_brace": "LEFT_BRACE:{@(19.34-19.35)",
+                  "body": [],
+                  "new_scope": true
+                }
+              }
+            },
+            {
+              "ForStmt": {
+                "token": "FOR:for@(23.5-23.8)",
+                "left_paren": "LEFT_PAREN:(@(23.9-23.10)",
+                "init(VariableDecl)": {
+                  "type(Type)": {
+                    "token": "INT:int@(23.10-23.13)",
+                    "qualifiers": [],
+                    "is_builtin": true
+                  },
+                  "names": [
+                    {
+                      "Named": {
+                        "name": "IDENTIFIER:i@(23.14-23.15)",
+                        "initial_assign": "EQUAL:=@(23.16-23.17)",
+                        "initial_value(ConstantExpr)": {
+                          "token": "INTCONSTANT:10@(23.18-23.20) = 10"
+                        },
+                        "is_array": false,
+                        "array_size": 0
+                      }
+                    },
+                    {
+                      "Named": {
+                        "name": "IDENTIFIER:j@(23.22-23.23)",
+                        "initial_assign": "EQUAL:=@(23.24-23.25)",
+                        "initial_value(ConstantExpr)": {
+                          "token": "INTCONSTANT:5@(23.26-23.27) = 5"
+                        },
+                        "is_array": false,
+                        "array_size": 0
+                      }
+                    }
+                  ],
+                  "semi": "SEMICOLON:;@(23.27-23.28)"
+                },
+                "rest(ForRestStmt)": {
+                  "condition(BinOpExpr)": {
+                    "lhs(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(23.29-23.30)"
+                    },
+                    "op": "RIGHT_ANGLE:>@(23.31-23.32)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:5@(23.33-23.34) = 5"
+                    }
+                  },
+                  "semi": "SEMICOLON:;@(23.34-23.35)",
+                  "expression(ExpressionListStmt)": {
+                    "expressions": [
+                      {
+                        "UnaryPostfixOpExpr": {
+                          "op": "DEC_OP:--@(23.37-23.39)",
+                          "expression(VariableExpr)": {
+                            "name": "IDENTIFIER:i@(23.36-23.37)"
+                          }
+                        }
+                      },
+                      {
+                        "UnaryPostfixOpExpr": {
+                          "op": "DEC_OP:--@(23.42-23.44)",
+                          "expression(VariableExpr)": {
+                            "name": "IDENTIFIER:j@(23.41-23.42)"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "right_paren": "RIGHT_PAREN:)@(23.44-23.45)",
+                "body(Block)": {
+                  "right_brace": "RIGHT_BRACE:}@(24.5-24.6)",
+                  "left_brace": "LEFT_BRACE:{@(23.46-23.47)",
+                  "body": [],
+                  "new_scope": true
+                }
+              }
+            },
+            {
+              "ForStmt": {
+                "token": "FOR:for@(27.5-27.8)",
+                "left_paren": "LEFT_PAREN:(@(27.9-27.10)",
+                "init(VariableDecl)": {
+                  "type(Type)": {
+                    "token": "INT:int@(27.10-27.13)",
+                    "qualifiers": [],
+                    "is_builtin": true
+                  },
+                  "names": [
+                    {
+                      "Named": {
+                        "name": "IDENTIFIER:i@(27.14-27.15)",
+                        "initial_assign": "EQUAL:=@(27.16-27.17)",
+                        "initial_value(ConstantExpr)": {
+                          "token": "INTCONSTANT:10@(27.18-27.20) = 10"
+                        },
+                        "is_array": false,
+                        "array_size": 0
+                      }
+                    }
+                  ],
+                  "semi": "SEMICOLON:;@(27.20-27.21)"
+                },
+                "rest(ForRestStmt)": {
+                  "condition(VariableDecl)": {
+                    "type(Type)": {
+                      "token": "BOOL:bool@(27.22-27.26)",
+                      "qualifiers": [],
+                      "is_builtin": true
+                    },
+                    "names": [
+                      {
+                        "Named": {
+                          "name": "IDENTIFIER:a@(27.27-27.28)",
+                          "initial_assign": "EQUAL:=@(27.29-27.30)",
+                          "initial_value(BinOpExpr)": {
+                            "lhs(VariableExpr)": {
+                              "name": "IDENTIFIER:i@(27.31-27.32)"
+                            },
+                            "op": "RIGHT_ANGLE:>@(27.33-27.34)",
+                            "rhs(ConstantExpr)": {
+                              "token": "INTCONSTANT:5@(27.35-27.36) = 5"
+                            }
+                          },
+                          "is_array": false,
+                          "array_size": 0
+                        }
+                      }
+                    ]
+                  },
+                  "semi": "SEMICOLON:;@(27.36-27.37)",
+                  "expression(UnaryPostfixOpExpr)": {
+                    "op": "DEC_OP:--@(27.39-27.41)",
+                    "expression(VariableExpr)": {
+                      "name": "IDENTIFIER:i@(27.38-27.39)"
+                    }
+                  }
+                },
+                "right_paren": "RIGHT_PAREN:)@(27.41-27.42)",
+                "body(Block)": {
+                  "right_brace": "RIGHT_BRACE:}@(28.5-28.6)",
+                  "left_brace": "LEFT_BRACE:{@(27.43-27.44)",
+                  "body": [],
+                  "new_scope": true
+                }
+              }
+            }
+          ],
+          "new_scope": true
+        }
+      }
+    }
+  ],
+  "comments": [
+    "COMMENT:// simple for loop@(4.5-4.23), multi:false =  simple for loop",
+    "COMMENT:// something@(6.9-6.21), multi:false =  something",
+    "COMMENT:// without expression@(9.5-9.26), multi:false =  without expression",
+    "COMMENT:// without braces@(14.5-14.22), multi:false =  without braces",
+    "COMMENT:// with inline declaration@(18.5-18.31), multi:false =  with inline declaration",
+    "COMMENT:// with multiple inline declaration@(22.5-22.40), multi:false =  with multiple inline declaration",
+    "COMMENT:// without inline expression declaration@(26.5-26.45), multi:false =  without inline expression declaration",
+    "COMMENT:// vi:ts=4:et@(31.1-31.14), multi:false =  vi:ts=4:et"
+  ]
+}
