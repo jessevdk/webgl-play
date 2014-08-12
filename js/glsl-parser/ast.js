@@ -30,9 +30,11 @@ Error.prototype.constructor = Error;
 function Node() {
 }
 
-Node.create = function(name) {
+Node.create = function(name, constructor) {
     var ret = Object.create(Node.prototype);
+
     ret.node_name = name;
+    ret.constructor = constructor;
 
     return ret;
 }
@@ -106,16 +108,20 @@ Node.prototype.to_json = function() {
 }
 
 function Type(tok) {
+    Node.call(this);
+
     this.token = tok;
     this.qualifiers = [];
     this.is_builtin = (tok.id != Tn.T_IDENTIFIER);
 }
 
-Type.prototype = Node.create('Type');
+Type.prototype = Node.create('Type', Type);
 
 exports.Type = Type;
 
 function StructDecl(stok, name) {
+    Node.call(this);
+
     this.token = stok;
     this.name = name;
 
@@ -125,21 +131,25 @@ function StructDecl(stok, name) {
     this.fields = [];
 }
 
-StructDecl.prototype = Node.create('StructDecl');
+StructDecl.prototype = Node.create('StructDecl', StructDecl);
 exports.StructDecl = StructDecl;
 
 
 function FieldDecl(type) {
+    Node.call(this);
+
     this.type = type;
     this.names = [];
     this.semi = null;
 }
 
-FieldDecl.prototype = Node.create('FieldDecl');
+FieldDecl.prototype = Node.create('FieldDecl', FieldDecl);
 exports.FieldDecl = FieldDecl;
 
 
 function PrecisionStmt(token, qualifier, type) {
+    Node.call(this);
+
     this.token = token;
     this.qualifier = qualifier;
     this.type = type;
@@ -147,42 +157,50 @@ function PrecisionStmt(token, qualifier, type) {
     this.semi = null;
 }
 
-PrecisionStmt.prototype = Node.create('PrecisionStmt');
+PrecisionStmt.prototype = Node.create('PrecisionStmt', PrecisionStmt);
 exports.PrecisionStmt = PrecisionStmt;
 
 
 function InvariantDecl(token) {
+    Node.call(this);
+
     this.token = token;
     this.names = [];
 
     this.semi = null;
 }
 
-InvariantDecl.prototype = Node.create('InvariantDecl');
+InvariantDecl.prototype = Node.create('InvariantDecl', InvariantDecl);
 exports.InvariantDecl = InvariantDecl;
 
 
 function VariableDecl(type) {
+    Node.call(this);
+
     this.type = type;
     this.names = [];
 
     this.semi = null;
 }
 
-VariableDecl.prototype = Node.create('VariableDecl');
+VariableDecl.prototype = Node.create('VariableDecl', VariableDecl);
 exports.VariableDecl = VariableDecl;
 
 
 function TypeDecl(type) {
+    Node.call(this);
+
     this.type = type;
     this.semi = null;
 }
 
-TypeDecl.prototype = Node.create('TypeDecl');
+TypeDecl.prototype = Node.create('TypeDecl', TypeDecl);
 exports.TypeDecl = TypeDecl;
 
 
 function ParamDecl() {
+    Node.call(this);
+
     this.type = null;
     this.name = null;
     this.qualifier = null;
@@ -193,11 +211,13 @@ function ParamDecl() {
     this.right_bracket = null;
 }
 
-ParamDecl.prototype = Node.create('ParamDecl');
+ParamDecl.prototype = Node.create('ParamDecl', ParamDecl);
 exports.ParamDecl = ParamDecl;
 
 
 function Named(name) {
+    Node.call(this);
+
     this.name = name;
 
     this.initial_assign = null;
@@ -209,11 +229,13 @@ function Named(name) {
     this.right_bracket = null;
 }
 
-Named.prototype = Node.create('Named');
+Named.prototype = Node.create('Named', Named);
 exports.Named = Named;
 
 
 function FunctionHeader(type, name) {
+    Node.call(this);
+
     this.type = type;
     this.name = name;
     this.parameters = [];
@@ -221,66 +243,80 @@ function FunctionHeader(type, name) {
     this.right_paren = null;
 }
 
-FunctionHeader.prototype = Node.create('FunctionHeader');
+FunctionHeader.prototype = Node.create('FunctionHeader', FunctionHeader);
 exports.FunctionHeader = FunctionHeader;
 
 
 function FunctionProto(header) {
+    Node.call(this);
+
     this.header = header;
     this.semi = null;
 }
 
-FunctionProto.prototype = Node.create('FunctionProto');
+FunctionProto.prototype = Node.create('FunctionProto', FunctionProto);
 exports.FunctionProto = FunctionProto;
 
 
 function FunctionDef(header) {
+    Node.call(this);
+
     this.header = header;
     this.body = null;
 }
 
-FunctionDef.prototype = Node.create('FunctionDef');
+FunctionDef.prototype = Node.create('FunctionDef', FunctionDef);
 exports.FunctionDef = FunctionDef;
 
 
 function Block() {
+    Node.call(this);
+
     this.right_brace = null;
     this.left_brace = null;
     this.body = [];
     this.new_scope = true;
 }
 
-Block.prototype = Node.create('Block');
+Block.prototype = Node.create('Block', Block);
 exports.Block = Block;
 
 
 function EmptyStmt(semi) {
+    Node.call(this);
+
     this.semi = semi;
 }
 
-EmptyStmt.prototype = Node.create('EmptyStmt');
+EmptyStmt.prototype = Node.create('EmptyStmt', EmptyStmt);
 exports.EmptyStmt = EmptyStmt;
 
 
 function ExpressionStmt(expr) {
+    Node.call(this);
+
     this.expression = expr;
     this.semi = null;
 }
 
-ExpressionStmt.prototype = Node.create('ExpressionStmt');
+ExpressionStmt.prototype = Node.create('ExpressionStmt', ExpressionStmt);
 exports.ExpressionStmt = ExpressionStmt;
 
 
 function ExpressionListStmt() {
+    Node.call(this);
+
     this.expressions = [];
     this.semi = null;
 }
 
-ExpressionListStmt.prototype = Node.create('ExpressionListStmt');
+ExpressionListStmt.prototype = Node.create('ExpressionListStmt', ExpressionListStmt);
 exports.ExpressionListStmt = ExpressionListStmt;
 
 
 function SelectionStmt(tok) {
+    Node.call(this);
+
     this.token = tok;
     this.left_paren = null;
     this.condition = null;
@@ -289,20 +325,24 @@ function SelectionStmt(tok) {
     this.els = null;
 }
 
-SelectionStmt.prototype = Node.create('SelectionStmt');
+SelectionStmt.prototype = Node.create('SelectionStmt', SelectionStmt);
 exports.SelectionStmt = SelectionStmt;
 
 
 function SelectionElseStmt(tok) {
+    Node.call(this);
+
     this.token = tok;
     this.body = null;
 }
 
-SelectionElseStmt.prototype = Node.create('SelectionElseStmt');
+SelectionElseStmt.prototype = Node.create('SelectionElseStmt', SelectionElseStmt);
 exports.SelectionElseStmt = SelectionElseStmt;
 
 
 function WhileStmt(tok) {
+    Node.call(this);
+
     this.token = tok;
 
     this.left_paren = null;
@@ -311,11 +351,13 @@ function WhileStmt(tok) {
     this.body = null;
 }
 
-WhileStmt.prototype = Node.create('WhileStmt');
+WhileStmt.prototype = Node.create('WhileStmt', WhileStmt);
 exports.WhileStmt = WhileStmt;
 
 
 function DoStmt(dtok, wtok) {
+    Node.call(this);
+
     this.do_token = dtok;
     this.while_token = wtok;
 
@@ -325,11 +367,13 @@ function DoStmt(dtok, wtok) {
     this.body = null;
 }
 
-DoStmt.prototype = Node.create('DoStmt');
+DoStmt.prototype = Node.create('DoStmt', DoStmt);
 exports.DoStmt = DoStmt;
 
 
 function ForStmt(tok) {
+    Node.call(this);
+
     this.token = tok;
 
     this.left_paren = null;
@@ -339,64 +383,78 @@ function ForStmt(tok) {
     this.body = null;
 }
 
-ForStmt.prototype = Node.create('ForStmt');
+ForStmt.prototype = Node.create('ForStmt', ForStmt);
 exports.ForStmt = ForStmt;
 
 
 function ForRestStmt(cond) {
+    Node.call(this);
+
     this.condition = cond;
     this.semi = null;
     this.expression = null;
 }
 
-ForRestStmt.prototype = Node.create('ForRestStmt');
+ForRestStmt.prototype = Node.create('ForRestStmt', ForRestStmt);
 exports.ForRestStmt = ForRestStmt;
 
 
 function ContinueStmt(tok) {
+    Node.call(this);
+
     this.token = tok;
 }
 
-ContinueStmt.prototype = Node.create('ContinueStmt');
+ContinueStmt.prototype = Node.create('ContinueStmt', ContinueStmt);
 exports.ContinueStmt = ContinueStmt;
 
 
 function BreakStmt(tok) {
+    Node.call(this);
+
     this.token = tok;
 }
 
-BreakStmt.prototype = Node.create('BreakStmt');
+BreakStmt.prototype = Node.create('BreakStmt', BreakStmt);
 exports.BreakStmt = BreakStmt;
 
 
 function ReturnStmt(tok) {
+    Node.call(this);
+
     this.token = tok;
     this.expression = null;
 }
 
-ReturnStmt.prototype = Node.create('ReturnStmt');
+ReturnStmt.prototype = Node.create('ReturnStmt', ReturnStmt);
 exports.ReturnStmt = ReturnStmt;
 
 
 function DiscardStmt(tok) {
+    Node.call(this);
+
     this.token = tok;
 }
 
-DiscardStmt.prototype = Node.create('DiscardStmt');
+DiscardStmt.prototype = Node.create('DiscardStmt', DiscardStmt);
 exports.DiscardStmt = DiscardStmt;
 
 
 function AssignmentExpr(lexpr, op, rexpr) {
+    Node.call(this);
+
     this.lhs = lexpr;
     this.op = op;
     this.rhs = rexpr;
 }
 
-AssignmentExpr.prototype = Node.create('AssignmentExpr');
+AssignmentExpr.prototype = Node.create('AssignmentExpr', AssignmentExpr);
 exports.AssignmentExpr = AssignmentExpr;
 
 
 function TernaryExpr(condition, qtok, trueexpr, ctok, falseexpr) {
+    Node.call(this);
+
     this.condition = condition;
     this.question_token = qtok;
     this.true_expression = trueexpr;
@@ -404,85 +462,103 @@ function TernaryExpr(condition, qtok, trueexpr, ctok, falseexpr) {
     this.false_expression = falseexpr;
 }
 
-TernaryExpr.prototype = Node.create('TernaryExpr');
+TernaryExpr.prototype = Node.create('TernaryExpr', TernaryExpr);
 exports.TernaryExpr = TernaryExpr;
 
 
 function BinOpExpr(lhs, op, rhs) {
+    Node.call(this);
+
     this.lhs = lhs;
     this.op = op;
     this.rhs = rhs;
 }
 
-BinOpExpr.prototype = Node.create('BinOpExpr');
+BinOpExpr.prototype = Node.create('BinOpExpr', BinOpExpr);
 exports.BinOpExpr = BinOpExpr;
 
 
 function UnaryOpExpr(op, rhs) {
+    Node.call(this);
+
     this.op = op;
     this.expression = rhs;
 }
 
-UnaryOpExpr.prototype = Node.create('UnaryOpExpr');
+UnaryOpExpr.prototype = Node.create('UnaryOpExpr', UnaryOpExpr);
 exports.UnaryOpExpr = UnaryOpExpr;
 
 
 function UnaryPostfixOpExpr(op, rhs) {
+    Node.call(this);
+
     this.op = op;
     this.expression = rhs;
 }
 
-UnaryPostfixOpExpr.prototype = Node.create('UnaryPostfixOpExpr');
+UnaryPostfixOpExpr.prototype = Node.create('UnaryPostfixOpExpr', UnaryPostfixOpExpr);
 exports.UnaryPostfixOpExpr = UnaryPostfixOpExpr;
 
 
 function ConstantExpr(token) {
+    Node.call(this);
+
     this.token = token;
 }
 
-ConstantExpr.prototype = Node.create('ConstantExpr');
+ConstantExpr.prototype = Node.create('ConstantExpr', ConstantExpr);
 exports.ConstantExpr = ConstantExpr;
 
 
 function GroupExpr(lparen, expr, rparen) {
+    Node.call(this);
+
     this.left_paren = lparen;
     this.expression = expr;
     this.right_paren = rparen;
 }
 
-GroupExpr.prototype = Node.create('GroupExpr');
+GroupExpr.prototype = Node.create('GroupExpr', GroupExpr);
 exports.GroupExpr = GroupExpr;
 
 
 function VariableExpr(name) {
+    Node.call(this);
+
     this.name = name;
 }
 
-VariableExpr.prototype = Node.create('VariableExpr');
+VariableExpr.prototype = Node.create('VariableExpr', VariableExpr);
 exports.VariableExpr = VariableExpr;
 
 
 function FunctionCallExpr(name) {
+    Node.call(this);
+
     this.name = name;
     this.left_paren = null;
     this.right_paren = null;
     this.arguments = [];
 }
 
-FunctionCallExpr.prototype = Node.create('FunctionCallExpr');
+FunctionCallExpr.prototype = Node.create('FunctionCallExpr', FunctionCallExpr);
 exports.FunctionCallExpr = FunctionCallExpr;
 
 
 function FieldSelectionExpr(expr, selector) {
+    Node.call(this);
+
     this.expression = expr;
     this.selector = selector;
 }
 
-FieldSelectionExpr.prototype = Node.create('FieldSelectionExpr');
+FieldSelectionExpr.prototype = Node.create('FieldSelectionExpr', FieldSelectionExpr);
 exports.FieldSelectionExpr = FieldSelectionExpr;
 
 
 function IndexExpr(expr, index) {
+    Node.call(this);
+
     this.expression = expr;
 
     this.right_bracket = null;
@@ -490,7 +566,7 @@ function IndexExpr(expr, index) {
     this.left_bracket = null;
 }
 
-IndexExpr.prototype = Node.create('IndexExpr');
+IndexExpr.prototype = Node.create('IndexExpr', IndexExpr);
 exports.IndexExpr = IndexExpr;
 
 
