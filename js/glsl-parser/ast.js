@@ -685,7 +685,7 @@ Parser.prototype._parse_binop_expression = function(tok, m, expr, opid, rule) {
 
     tok = this._t.peek();
 
-    while (tok != null && opid(tok.id)) {
+    while (opid(tok.id)) {
         var op = tok;
 
         // consume peeked token
@@ -838,7 +838,7 @@ Parser.prototype._parse_postfix_expression = function(tok, m) {
 
     tok = this._t.peek();
 
-    while (tok != null) {
+    while (tok.id != Tn.T_EOF) {
         switch (tok.id) {
         case Tn.T_LEFT_BRACKET:
             // consume peeked token
@@ -885,9 +885,11 @@ Parser.prototype._parse_postfix_expression = function(tok, m) {
             break;
         }
 
-        if (tok != null) {
-            tok = this._t.peek();
+        if (tok === null) {
+            break;
         }
+
+        tok = this._t.peek();
     }
 
     return expr;
@@ -1211,7 +1213,7 @@ Parser.prototype._parse_expression = function(tok, m) {
     var ret = new ExpressionListStmt();
     ret.expressions.push(expr);
 
-    while (tok != null && tok.id == Tn.T_COMMA) {
+    while (tok.id == Tn.T_COMMA) {
         // consume peeked comma
         this._t.next();
 
@@ -1621,7 +1623,7 @@ Parser.prototype._parse_function_header = function(type, name) {
     var func = new FunctionHeader(type, name);
     func.left_paren = lp;
 
-    while (tok != null && tok.id != Tn.T_RIGHT_PAREN) {
+    while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_PAREN) {
         if (!first) {
             if (tok.id != Tn.T_COMMA) {
                 return this._require_one_of_error([Tn.T_COMMA], tok);
@@ -1675,7 +1677,7 @@ Parser.prototype._parse_function_prototype_or_definition = function(type, ident)
 
         var tok = this._t.next();
 
-        while (tok != null && tok.id != Tn.T_RIGHT_BRACE) {
+        while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
             var ret = this._parse_rule(this._parse_statement_no_new_scope, tok);
 
             if (!ret) {
@@ -2183,7 +2185,7 @@ Parser.prototype._parse_compound_statement = function(tok, newscope) {
     block.new_scope = newscope;
     block.left_brace = lb;
 
-    while (tok != null && tok.id != Tn.T_RIGHT_BRACE) {
+    while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
         var ret = this._parse_rule(this._parse_statement_no_new_scope, tok);
 
         if (!ret) {
