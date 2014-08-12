@@ -20,6 +20,10 @@ if (!(typeof window == 'undefined')) {
 
 var Tn = glsl.tokenizer.Tokenizer;
 
+var SYNC_FAIL       = 0,
+    SYNC_OK         = 1,
+    SYNC_OK_CONSUME = 2;
+
 function Error(loc, message) {
     glsl.source.Error.call(this, loc, message);
 }
@@ -28,6 +32,7 @@ Error.prototype = Object.create(glsl.source.Error.prototype);
 Error.prototype.constructor = Error;
 
 function Node() {
+    this.incomplete = true;
 }
 
 Node.create = function(name, constructor) {
@@ -57,6 +62,11 @@ Node.prototype._value_is_empty = function(v) {
     }
 
     return false;
+}
+
+Node.prototype.complete = function() {
+    this.incomplete = false;
+    return this;
 }
 
 Node.prototype._marshal_object = function(value) {
@@ -139,11 +149,11 @@ Type.prototype = Node.create('Type', Type);
 
 exports.Type = Type;
 
-function StructDecl(stok, name) {
+function StructDecl(stok) {
     Node.call(this);
 
     this.token = stok;
-    this.name = name;
+    this.name = null;
 
     this.left_brace = null;
     this.right_brace = null;
@@ -171,8 +181,8 @@ function PrecisionStmt(token, qualifier, type) {
     Node.call(this);
 
     this.token = token;
-    this.qualifier = qualifier;
-    this.type = type;
+    this.qualifier = null;
+    this.type = null;
 
     this.semi = null;
 }
@@ -375,11 +385,11 @@ WhileStmt.prototype = Node.create('WhileStmt', WhileStmt);
 exports.WhileStmt = WhileStmt;
 
 
-function DoStmt(dtok, wtok) {
+function DoStmt(dtok) {
     Node.call(this);
 
     this.do_token = dtok;
-    this.while_token = wtok;
+    this.while_token = null;
 
     this.left_paren = null;
     this.condition = null;
@@ -460,26 +470,26 @@ DiscardStmt.prototype = Node.create('DiscardStmt', DiscardStmt);
 exports.DiscardStmt = DiscardStmt;
 
 
-function AssignmentExpr(lexpr, op, rexpr) {
+function AssignmentExpr(lexpr) {
     Node.call(this);
 
     this.lhs = lexpr;
-    this.op = op;
-    this.rhs = rexpr;
+    this.op = null;
+    this.rhs = null;
 }
 
 AssignmentExpr.prototype = Node.create('AssignmentExpr', AssignmentExpr);
 exports.AssignmentExpr = AssignmentExpr;
 
 
-function TernaryExpr(condition, qtok, trueexpr, ctok, falseexpr) {
+function TernaryExpr(condition) {
     Node.call(this);
 
     this.condition = condition;
-    this.question_token = qtok;
-    this.true_expression = trueexpr;
-    this.colon_token = ctok;
-    this.false_expression = falseexpr;
+    this.question_token = null;
+    this.true_expression = null;
+    this.colon_token = null;
+    this.false_expression = null;
 }
 
 TernaryExpr.prototype = Node.create('TernaryExpr', TernaryExpr);
@@ -530,12 +540,12 @@ ConstantExpr.prototype = Node.create('ConstantExpr', ConstantExpr);
 exports.ConstantExpr = ConstantExpr;
 
 
-function GroupExpr(lparen, expr, rparen) {
+function GroupExpr() {
     Node.call(this);
 
-    this.left_paren = lparen;
-    this.expression = expr;
-    this.right_paren = rparen;
+    this.left_paren = null;
+    this.expression = null;
+    this.right_paren = null;
 }
 
 GroupExpr.prototype = Node.create('GroupExpr', GroupExpr);
@@ -565,24 +575,24 @@ FunctionCallExpr.prototype = Node.create('FunctionCallExpr', FunctionCallExpr);
 exports.FunctionCallExpr = FunctionCallExpr;
 
 
-function FieldSelectionExpr(expr, selector) {
+function FieldSelectionExpr(expr) {
     Node.call(this);
 
     this.expression = expr;
-    this.selector = selector;
+    this.selector = null;
 }
 
 FieldSelectionExpr.prototype = Node.create('FieldSelectionExpr', FieldSelectionExpr);
 exports.FieldSelectionExpr = FieldSelectionExpr;
 
 
-function IndexExpr(expr, index) {
+function IndexExpr(expr) {
     Node.call(this);
 
     this.expression = expr;
 
     this.right_bracket = null;
-    this.index = index;
+    this.index = null;
     this.left_bracket = null;
 }
 
@@ -699,8 +709,8 @@ Parser.prototype._parse_binop_expression = function(tok, m, expr, opid, rule) {
         ret = rule.call(this, tok, m, expr);
     }
 
-    if (!ret) {
-        return false;
+    if (ret.incomplete) {
+        return ret;
     }
 
     tok = this._t.peek();
@@ -713,11 +723,13 @@ Parser.prototype._parse_binop_expression = function(tok, m, expr, opid, rule) {
 
         var rhs = this._parse_rule(rule, this._t.next());
 
-        if (!rhs) {
-            return false;
+        ret = new BinOpExpr(ret, op, rhs);
+
+        if (rhs.incomplete) {
+            return ret;
         }
 
-        ret = new BinOpExpr(ret, op, rhs);
+        ret.complete();
         tok = this._t.peek();
     }
 
@@ -725,24 +737,25 @@ Parser.prototype._parse_binop_expression = function(tok, m, expr, opid, rule) {
 }
 
 Parser.prototype._parse_function_call = function(tok, m) {
-    var lp = this._require_one_of([Tn.T_LEFT_PAREN]);
-
-    if (!lp) {
-        return false;
-    }
-
     var cl = new FunctionCallExpr(tok);
+
+    cl.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+
+    if (cl.left_paren === null) {
+        return cl;
+    }
 
     var n = this._t.peek();
 
     if (this._match(this._parse_assignment_expression, n)) {
         while (true) {
             var ret = this._parse_rule(this._parse_assignment_expression, this._t.next());
-            if (!ret) {
-                return false;
-            }
 
             cl.arguments.push(ret);
+
+            if (ret.incomplete) {
+                return cl;
+            }
 
             n = this._t.peek();
 
@@ -758,25 +771,21 @@ Parser.prototype._parse_function_call = function(tok, m) {
         cl.arguments = [this._t.next()];
     }
 
-    var rp = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    cl.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
 
-    if (!rp) {
-        return false;
+    if (cl.right_paren === null) {
+        return cl;
     }
 
-    cl.left_paren = lp;
-    cl.right_paren = rp;
-
-    return cl;
+    return cl.complete();
 }
 
 Parser.prototype._parse_function_identifier = function(tok) {
-    return tok;
+    return (new Named(tok)).complete();
 }
 
-Parser.prototype._parse_function_identifier.match = function(tok) {
-    switch (tok.id) {
-    case Tn.T_IDENTIFIER:
+Parser.prototype._is_builtin_type = function(id) {
+    switch (id) {
     case Tn.T_FLOAT:
     case Tn.T_INT:
     case Tn.T_BOOL:
@@ -800,36 +809,43 @@ Parser.prototype._parse_function_identifier.match = function(tok) {
     return false;
 }
 
+Parser.prototype._parse_function_identifier.match = function(tok) {
+    return this._is_builtin_type(tok.id) || tok.id == Tn.T_IDENTIFIER;
+}
+
 Parser.prototype._parse_primary_expression = function(tok, m) {
-    if (this._parse_function_identifier.match(tok)) {
+    if (this._parse_function_identifier.match.call(this, tok)) {
         var n = this._t.peek();
 
         if (n.id == Tn.T_LEFT_PAREN) {
             return this._parse_function_call(tok);
         }
 
-        return new VariableExpr(tok);
+        return (new VariableExpr(tok)).complete();
     }
 
     switch (tok.id) {
     case Tn.T_INTCONSTANT:
     case Tn.T_FLOATCONSTANT:
     case Tn.T_BOOLCONSTANT:
-        return new ConstantExpr(tok);
+        return (new ConstantExpr(tok)).complete();
     case Tn.T_LEFT_PAREN:
-        var expr = this._parse_rule(this._parse_expression, this._t.next());
+        var grp = new GroupExpr();
 
-        if (!expr) {
-            return false;
+        grp.left_paren = tok;
+        grp.expression = this._parse_rule(this._parse_expression, this._t.next());
+
+        if (grp.expression.incomplete) {
+            return grp;
         }
 
-        var rp = this._require_one_of([Tn.T_RIGHT_PAREN]);
+        grp.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
 
-        if (!rp) {
-            return false;
+        if (grp.right_paren === null) {
+            return grp;
         }
 
-        return new GroupExpr(tok, expr, rp);
+        return grp.complete();
     }
 }
 
@@ -852,8 +868,8 @@ Parser.prototype._parse_primary_expression.expected = function() {
 Parser.prototype._parse_postfix_expression = function(tok, m) {
     var expr = this._parse_primary_expression(tok, m);
 
-    if (!expr) {
-        return false;
+    if (expr.incomplete) {
+        return expr;
     }
 
     tok = this._t.peek();
@@ -864,41 +880,42 @@ Parser.prototype._parse_postfix_expression = function(tok, m) {
             // consume peeked token
             this._t.next();
 
-            var iexpr = this._parse_rule(this._parse_expression, this._t.next());
-
-            if (!iexpr) {
-                return false;
-            }
-
-            var rb = this._require_one_of([Tn.T_RIGHT_BRACKET]);
-
-            if (!rb) {
-                return false;
-            }
-
-            expr = new IndexExpr(expr, iexpr);
+            expr = new IndexExpr(expr);
             expr.left_bracket = tok;
-            expr.right_bracket = rb;
 
-            break;
+            expr.index = this._parse_rule(this._parse_expression, this._t.next());
+
+            if (expr.index.incomplete) {
+                break;
+            }
+
+            expr.right_bracket = this._require_one_of([Tn.T_RIGHT_BRACKET]);
+
+            if (expr.right_bracket === null) {
+                break;
+            }
+
+            expr.complete();
         case Tn.T_DOT:
             // consume peeked token
             this._t.next();
 
-            var name = this._require_one_of([Tn.T_IDENTIFIER]);
+            expr = new FieldSelectionExpr(expr);
 
-            if (!name) {
-                return false;
+            expr.selector = this._require_one_of([Tn.T_IDENTIFIER]);
+
+            if (expr.selector === null) {
+                break;
             }
 
-            expr = new FieldSelectionExpr(expr, name);
+            expr.complete();
             break;
         case Tn.T_INC_OP:
         case Tn.T_DEC_OP:
-            expr = new UnaryPostfixOpExpr(tok, expr);
-
             // consume peeked token
             this._t.next();
+
+            expr = (new UnaryPostfixOpExpr(tok, expr)).complete();
             break;
         default:
             tok = null;
@@ -928,12 +945,13 @@ Parser.prototype._parse_unary_expression = function(tok, m) {
     case Tn.T_BANG:
     case Tn.T_TILDE:
         var expr = this._parse_rule(this._parse_unary_expression, this._t.next());
+        var ret = new UnaryOpExpr(tok, expr);
 
-        if (!expr) {
-            return false;
+        if (!expr.incomplete) {
+            ret.complete();
         }
 
-        return new UnaryOpExpr(tok, expr);
+        return ret;
     }
 
     return this._parse_postfix_expression(tok, m);
@@ -1104,30 +1122,35 @@ Parser.prototype._parse_logical_or_expression.match = Parser.prototype._parse_lo
 Parser.prototype._parse_logical_or_expression.expected = Parser.prototype._parse_logical_xor_expression.expected;
 
 Parser.prototype._parse_unary_conditional_expression_rest = function(expr) {
-    if (!expr) {
-        return false;
+    if (expr.incomplete) {
+        return expr;
     }
 
     var n = this._t.peek();
 
     if (n != null && n.id == Tn.T_QUESTION) {
-        var q = this._t.next();
+        var ret = new TernaryExpr(expr);
+        ret.question_token = this._t.next();
 
-        var trueexpr = this._parse_rule(this._parse_expression, this._t.next());
+        ret.true_expression = this._parse_rule(this._parse_expression, this._t.next());
 
-        if (!trueexpr) {
-            return false;
+        if (ret.true_expression.incomplete) {
+            return ret;
         }
 
-        var colon = this._require_one_of([Tn.T_COLON]);
+        ret.colon_token = this._require_one_of([Tn.T_COLON]);
 
-        var falseexpr = this._parse_rule(this._parse_assignment_expression, this._t.next());
-
-        if (!falseexpr) {
-            return false;
+        if (ret.colon_token === null) {
+            return ret;
         }
 
-        return new TernaryExpr(expr, q, trueexpr, colon, falseexpr);
+        ret.false_expression = this._parse_rule(this._parse_assignment_expression, this._t.next());
+
+        if (ret.false_expression.incomplete) {
+            return ret;
+        }
+
+        return ret.complete();
     }
 
     return expr;
@@ -1150,7 +1173,7 @@ Parser.prototype._parse_conditional_expression.match = Parser.prototype._parse_l
 Parser.prototype._parse_conditional_expression.expected = Parser.prototype._parse_logical_or_expression.expected;
 
 Parser.prototype._parse_assignment_operator = function(tok, m) {
-    return tok;
+    return {token: tok, incomplete: false};
 }
 
 Parser.prototype._parse_assignment_operator.match = function(tok) {
@@ -1177,19 +1200,22 @@ Parser.prototype._parse_assignment_operator.expected = function() {
 }
 
 Parser.prototype._parse_unary_assignment_expression = function(expr) {
+    var ret = new AssignmentExpr(expr);
     var op = this._parse_rule(this._parse_assignment_operator, this._t.next());
 
-    if (!op) {
-        return false;
+    if (op.incomplete) {
+        return ret;
     }
 
-    var asexpr = this._parse_rule(this._parse_assignment_expression, this._t.next());
+    ret.op = op.token;
 
-    if (!asexpr) {
-        return false;
+    ret.rhs = this._parse_rule(this._parse_assignment_expression, this._t.next());
+
+    if (!ret.rhs.incomplete) {
+        ret.complete();
     }
 
-    return new AssignmentExpr(expr, op, asexpr);
+    return ret;
 }
 
 Parser.prototype._parse_unary_assignment_expression.match = Parser.prototype._parse_unary_expression.match;
@@ -1199,8 +1225,8 @@ Parser.prototype._parse_unary_assignment_expression.expected = Parser.prototype.
 Parser.prototype._parse_assignment_expression = function(tok, m) {
     var expr = this._parse_unary_expression(tok, m);
 
-    if (!expr) {
-        return false;
+    if (expr.incomplete) {
+        return expr;
     }
 
     var n = this._t.peek();
@@ -1220,8 +1246,8 @@ Parser.prototype._parse_assignment_expression.expected = Parser.prototype._parse
 Parser.prototype._parse_expression = function(tok, m) {
     var expr = this._parse_assignment_expression(tok, m);
 
-    if (!expr) {
-        return false;
+    if (expr.incomplete) {
+        return expr;
     }
 
     tok = this._t.peek();
@@ -1240,16 +1266,16 @@ Parser.prototype._parse_expression = function(tok, m) {
         tok = this._t.next();
 
         expr = this._parse_assignment_expression(tok, m);
+        ret.expressions.push(expr);
 
-        if (!expr) {
-            return false;
+        if (expr.incomplete) {
+            return expr;
         }
 
-        ret.expressions.push(expr);
         tok = this._t.peek();
     }
 
-    return ret;
+    return ret.complete();
 }
 
 Parser.prototype._parse_expression.match = Parser.prototype._parse_assignment_expression.match;
@@ -1263,12 +1289,9 @@ Parser.prototype._parse_field_declaration_name = function(tok) {
     var name = tok;
 
     var ret = new Named(name);
+    ret.complete();
 
-    var optarr = this._parse_optional_array_spec(ret);
-
-    if (optarr === false) {
-        return false;
-    }
+    this._parse_optional_array_spec(ret);
 
     return ret;
 }
@@ -1283,20 +1306,20 @@ Parser.prototype._parse_field_declaration_name.expected = function() {
 
 Parser.prototype._parse_field_declaration = function(tok, m) {
     var type = m(tok);
+    var sdecl = new FieldDecl(type);
 
-    if (!type) {
-        return false;
+    if (type.incomplete) {
+        return sdecl;
     }
 
     tok = this._t.next();
     var first = true;
 
-    var sdecl = new FieldDecl(type);
-
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_SEMICOLON) {
         if (!first) {
             if (tok.id != Tn.T_COMMA) {
-                return this._require_one_of_error([Tn.T_COMMA], tok);
+                this._require_one_of_error([Tn.T_COMMA], tok);
+                return sdecl;
             }
 
             tok = this._t.next();
@@ -1305,28 +1328,32 @@ Parser.prototype._parse_field_declaration = function(tok, m) {
         }
 
         var fname = this._parse_rule(this._parse_field_declaration_name, tok);
+        sdecl.names.push(fname);
 
-        if (!fname) {
-            return false;
+        if (fname.incomplete) {
+            return sdecl;
         }
 
-        sdecl.names.push(fname);
         tok = this._t.next();
     }
 
     if (tok.id != Tn.T_SEMICOLON) {
-        return this._require_one_of_error([Tn.T_SEMICOLON], tok);
+        this._require_one_of_error([Tn.T_SEMICOLON], tok);
+        return sdecl;
     }
 
     sdecl.semi = tok;
-    return sdecl;
+    return sdecl.complete();
 }
 
 Parser.prototype._parse_struct_specifier = function(tok) {
     var lb = this._t.next();
 
+    var sdl = new StructDecl(tok);
+
     if (lb.id != Tn.T_IDENTIFIER && lb.id != Tn.T_LEFT_BRACE ) {
-        return this._require_one_of_error([Tn.T_IDENTIFIER, Tn.T_LEFT_BRACE], lb);
+        this._require_one_of_error([Tn.T_IDENTIFIER, Tn.T_LEFT_BRACE], lb);
+        return sdl;
     }
 
     var name = null;
@@ -1336,32 +1363,35 @@ Parser.prototype._parse_struct_specifier = function(tok) {
         lb = this._t.next();
     }
 
+    sdl.name = name;
+
     if (lb.id != Tn.T_LEFT_BRACE) {
-        return this._require_one_of_error([Tn.T_LEFT_BRACE], lb);
+        this._require_one_of_error([Tn.T_LEFT_BRACE], lb);
+        return sdl;
     }
 
-    var sdl = new StructDecl(tok, name);
     sdl.left_brace = lb;
 
     tok = this._t.next();
 
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
         var decl = this._parse_rule(this._parse_field_declaration, tok);
+        sdl.fields.push(decl);
 
-        if (!decl) {
-            return false;
+        if (decl.incomplete) {
+            return sdl;
         }
 
-        sdl.fields.push(decl);
         tok = this._t.next();
     }
 
     if (tok.id != Tn.T_RIGHT_BRACE) {
-        return this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+        this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+        return sdl;
     }
 
     sdl.right_brace = tok;
-    return sdl;
+    return sdl.complete();
 }
 
 Parser.prototype._parse_struct_specifier.match = function(tok) {
@@ -1369,7 +1399,7 @@ Parser.prototype._parse_struct_specifier.match = function(tok) {
 }
 
 Parser.prototype._parse_type_specifier_no_prec_impl = function(tok) {
-    return new Type(tok);
+    return (new Type(tok)).complete();
 }
 
 Parser.prototype._parse_type_specifier_no_prec = function(tok, m) {
@@ -1434,12 +1464,8 @@ Parser.prototype._parse_precision_qualifier.expected = function() {
 
 Parser.prototype._parse_type_precision_qualifier = function(tok, m) {
     var type = this._parse_rule(this._parse_type_specifier_no_prec, this._t.next());
-
-    if (!type) {
-        return false;
-    }
-
     type.qualifiers.unshift(tok);
+
     return type;
 }
 
@@ -1460,13 +1486,10 @@ Parser.prototype._parse_type_qualifier = function(tok) {
     if (tok.id == Tn.T_INVARIANT) {
         var varying = this._require_one_of([Tn.T_VARYING]);
 
-        if (!varying) {
-            return false;
-        }
-
-        node = this._parse_rule(this._parse_type_specifier, this._t.next());
-
-        if (node) {
+        if (varying === null) {
+            node = new Type(null);
+        } else {
+            node = this._parse_rule(this._parse_type_specifier, this._t.next());
             node.qualifiers.unshift(varying);
         }
     } else {
@@ -1514,48 +1537,44 @@ Parser.prototype._parse_optional_array_spec = function(ret) {
         // consume peeked token
         this._t.next();
 
-        var expr = this._parse_rule(this._parse_constant_expression, this._t.next());
+        ret.array_size = this._parse_rule(this._parse_constant_expression, this._t.next());
 
-        if (!expr) {
-            return false;
+        if (ret.array_size.incomplete) {
+            ret.incomplete = true;
+            return true;
         }
 
-        ret.array_size = expr;
+        ret.right_bracket = this._require_one_of([Tn.T_RIGHT_BRACKET]);
 
-        var rb = this._require_one_of([Tn.T_RIGHT_BRACKET]);
-
-        if (!rb) {
-            return false;
+        if (ret.right_bracket === null) {
+            ret.incomplete = true;
+            return true;
         }
 
-        ret.right_bracket = rb;
-        return ret;
+        return true;
     } else {
-        return null;
+        return false;
     }
 }
 
 Parser.prototype._parse_parameter_declarator = function(tok, m) {
     var type = this._parse_type_specifier(tok, m);
 
-    if (!type) {
-        return false;
+    var pdecl = new ParamDecl();
+    pdecl.type = type;
+
+    if (type.incomplete) {
+        return pdecl;
     }
 
     tok = this._t.peek();
-
-    var pdecl = new ParamDecl();
-    pdecl.type = type;
 
     if (tok.id == Tn.T_IDENTIFIER) {
         pdecl.name = this._t.next();
     }
 
-    var optarr = this._parse_optional_array_spec(pdecl);
-
-    if (optarr === false) {
-        return false;
-    }
+    pdecl.complete();
+    this._parse_optional_array_spec(pdecl);
 
     return pdecl;
 }
@@ -1565,12 +1584,8 @@ Parser.prototype._parse_parameter_declarator.expected = Parser.prototype._parse_
 
 Parser.prototype._parse_parameter_qualifier = function(tok) {
     var ret = this._parse_rule(this._parse_parameter_declarator, this._t.next());
-
-    if (!ret) {
-        return false;
-    }
-
     ret.qualifier = tok;
+
     return ret;
 }
 
@@ -1596,16 +1611,12 @@ Parser.prototype._parse_parameter_type_qualifier = function(tok, m) {
 
     m = this._match(this._parse_parameter_qualifier, tok);
 
-    var decl = false;
+    var decl;
 
     if (m) {
         decl = this._parse_parameter_qualifier(tok, m);
     } else {
         decl = this._parse_rule(this._parse_parameter_declarator, tok);
-    }
-
-    if (!decl) {
-        return false;
     }
 
     decl.qualifier = q;
@@ -1631,22 +1642,21 @@ match_one_of(Parser.prototype._parse_parameter_declaration, [
 ]);
 
 Parser.prototype._parse_function_header = function(type, name) {
-    var lp = this._require_one_of([Tn.T_LEFT_PAREN]);
+    var func = new FunctionHeader(type, name);
+    func.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
 
-    if (!lp) {
+    if (func.left_paren === null) {
         return false;
     }
 
     var tok = this._t.next();
     var first = true;
 
-    var func = new FunctionHeader(type, name);
-    func.left_paren = lp;
-
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_PAREN) {
         if (!first) {
             if (tok.id != Tn.T_COMMA) {
-                return this._require_one_of_error([Tn.T_COMMA], tok);
+                this._require_one_of_error([Tn.T_COMMA], tok);
+                return func;
             }
 
             tok = this._t.next();
@@ -1655,40 +1665,44 @@ Parser.prototype._parse_function_header = function(type, name) {
         }
 
         var m = this._parse_rule(this._parse_parameter_declaration, tok);
+        func.parameters.push(m);
 
-        if (!m) {
-            return false;
+        if (m.incomplete) {
+            return func;
         }
 
-        func.parameters.push(m);
         tok = this._t.next();
     }
 
     if (tok.id != Tn.T_RIGHT_PAREN) {
-        return this._require_one_of_error([Tn.T_RIGHT_PAREN], tok);
+        this._require_one_of_error([Tn.T_RIGHT_PAREN], tok);
+        return func;
     }
 
     func.right_paren = tok;
-    return func;
+    return func.complete();
 }
 
 Parser.prototype._parse_function_prototype_or_definition = function(type, ident) {
     var ret = this._parse_function_header(type, ident);
 
-    if (!ret) {
-        return false;
+    if (ret.incomplete) {
+        // return most likely incomplete function definition
+        return new FunctionDef(ret);
     }
 
     var n = this._require_one_of([Tn.T_SEMICOLON, Tn.T_LEFT_BRACE]);
 
-    if (!n) {
-        return false;
+    if (n === null) {
+        // return most likely incomplete function definition
+        return new FunctionDef(ret);
     }
 
     if (n.id == Tn.T_SEMICOLON) {
         var proto = new FunctionProto(ret);
+
         proto.semi = n;
-        return proto;
+        return proto.complete();
     } else {
         var func = new FunctionDef(ret);
         func.body = new Block();
@@ -1699,21 +1713,24 @@ Parser.prototype._parse_function_prototype_or_definition = function(type, ident)
 
         while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
             var ret = this._parse_rule(this._parse_statement_no_new_scope, tok);
+            func.body.body.push(ret);
 
-            if (!ret) {
-                return false;
+            if (ret.incomplete) {
+                return ret;
             }
 
-            func.body.body.push(ret);
             tok = this._t.next();
         }
 
         if (tok.id != Tn.T_RIGHT_BRACE) {
             this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+            return func;
         }
 
         func.body.right_brace = tok;
-        return func;
+        func.body.complete();
+
+        return func.complete();
     }
 }
 
@@ -1724,12 +1741,13 @@ Parser.prototype._parse_statement_with_scope = function(tok, m) {
 Parser.prototype._parse_selection_rest_statement = function(tok, m) {
     var stmt = this._parse_statement_with_scope(tok, m);
 
-    if (!stmt) {
-        return false;
+    var ret = {body: stmt, els: null, incomplete: true};
+
+    if (stmt.incomplete) {
+        return ret;
     }
 
     var n = this._t.peek();
-    var ret = {body: stmt, els: null};
 
     if (n.id == Tn.T_ELSE) {
         var selelse = new SelectionElseStmt(n);
@@ -1738,13 +1756,14 @@ Parser.prototype._parse_selection_rest_statement = function(tok, m) {
         // consume peeked token
         this._t.next();
 
-        var b = this._parse_rule(this._parse_statement_with_scope, this._t.next());
+        selelse.body = this._parse_rule(this._parse_statement_with_scope, this._t.next());
 
-        if (!b) {
-            return false;
+        if (!selelse.body.incomplete) {
+            selelse.complete();
+            ret.incomplete = false;
         }
-
-        selelse.body = b;
+    } else {
+        ret.incomplete = false;
     }
 
     return ret;
@@ -1753,42 +1772,36 @@ Parser.prototype._parse_selection_rest_statement = function(tok, m) {
 Parser.prototype._parse_selection_statement = function(tok, m) {
     var sel = new SelectionStmt(tok);
 
-    var lp = this._require_one_of([Tn.T_LEFT_PAREN]);
+    sel.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
 
-    if (!lp) {
-        return false;
+    if (sel.left_paren === null) {
+        return sel;
     }
-
-    sel.left_paren = lp;
 
     tok = this._t.next();
 
-    var expr = this._parse_rule(this._parse_expression, tok);
+    sel.condition = this._parse_rule(this._parse_expression, tok);
 
-    if (!expr) {
-        return false;
+    if (sel.condition.incomplete) {
+        return sel;
     }
 
-    sel.condition = expr;
+    sel.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
 
-    var rp = this._require_one_of([Tn.T_RIGHT_PAREN]);
-
-    if (!rp) {
-        return false;
+    if (sel.right_paren === null) {
+        return sel;
     }
-
-    sel.right_paren = rp;
 
     tok = this._t.next();
 
     var ret = this._parse_rule(this._parse_selection_rest_statement, tok);
 
-    if (!ret) {
-        return false;
-    }
-
     sel.body = ret.body;
     sel.els = ret.els;
+
+    if (!ret.incomplete) {
+        sel.complete();
+    }
 
     return sel;
 }
@@ -1803,36 +1816,36 @@ Parser.prototype._parse_selection_statement.expected = function() {
 
 Parser.prototype._parse_condition_var_init = function(tok, m) {
     var type = this._parse_fully_specified_type(tok, m);
+    var ret = new VariableDecl(type);
 
-    if (!type) {
-        return false;
+    if (type.incomplete) {
+        return ret;
     }
 
     var ident = this._require_one_of([Tn.T_IDENTIFIER]);
 
-    if (!ident) {
-        return false;
+    if (ident === null) {
+        return ret;
     }
 
     var equal = this._require_one_of([Tn.T_EQUAL]);
 
-    if (!equal) {
-        return false;
+    if (equal === null) {
+        return ret;
     }
 
-    var init = this._parse_rule(this._parse_initializer, this._t.next());
-
-    if (!init) {
-        return false;
-    }
-
-    var ret = new VariableDecl(type);
     var named = new Named(ident);
+    ret.names.push(named);
 
     named.initial_assign = equal;
+
+    var init = this._parse_rule(this._parse_initializer, this._t.next());
     named.initial_value = init;
 
-    ret.names.push(named);
+    if (!init.incomplete) {
+        named.complete();
+        ret.complete();
+    }
 
     return ret;
 }
@@ -1866,38 +1879,33 @@ Parser.prototype._parse_condition.expected = function() {
 }
 
 Parser.prototype._parse_while_statement = function(tok) {
-    var wtok = tok;
-    var lp = this._require_one_of([Tn.T_LEFT_PAREN]);
+    var ret = new WhileStmt(tok);
 
-    if (!lp) {
-        return false;
+    ret.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+
+    if (ret.left_paren === null) {
+        return ret;
     }
 
     tok = this._t.next();
 
-    var cond = this._parse_rule(this._parse_condition, tok);
+    ret.condition = this._parse_rule(this._parse_condition, tok);
 
-    if (!cond) {
-        return false;
+    if (ret.condition.incomplete) {
+        return ret;
     }
 
-    var rp = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    ret.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
 
-    if (!rp) {
-        return false;
+    if (ret.right_paren === null) {
+        return ret;
     }
 
-    var stmt = this._parse_rule(this._parse_statement_no_new_scope, this._t.next());
+    ret.body = this._parse_rule(this._parse_statement_no_new_scope, this._t.next());
 
-    if (!stmt) {
-        return false;
+    if (!ret.body.incomplete) {
+        ret.complete();
     }
-
-    var ret = new WhileStmt(wtok);
-    ret.left_paren = lp;
-    ret.condition = cond;
-    ret.right_paren = rp;
-    ret.body = stmt;
 
     return ret;
 }
@@ -1911,54 +1919,48 @@ Parser.prototype._parse_while_statement.expected = function() {
 }
 
 Parser.prototype._parse_do_statement = function(tok) {
-    var dtok = tok;
+    var ret = new DoStmt(tok);
 
     var stmt = this._parse_rule(this._parse_statement_with_scope, this._t.next());
+    ret.body = stmt;
 
-    if (!stmt) {
-        return false;
+    if (stmt.incomplete) {
+        return ret;
     }
 
-    var wtok = this._require_one_of([Tn.T_WHILE]);
+    ret.while_token = this._require_one_of([Tn.T_WHILE]);
 
-    if (!wtok) {
-        return false;
+    if (ret.while_token == null) {
+        return ret;
     }
 
-    var lp = this._require_one_of([Tn.T_LEFT_PAREN]);
+    ret.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
 
-    if (!lp) {
-        return false;
+    if (ret.left_paren === null) {
+        return ret;
     }
 
     tok = this._t.next();
 
-    var cond = this._parse_rule(this._parse_expression, tok);
+    ret.condition = this._parse_rule(this._parse_expression, tok);
 
-    if (!cond) {
-        return false;
+    if (ret.condition.incomplete) {
+        return ret;
     }
 
-    var rp = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    ret.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
 
-    if (!rp) {
-        return false;
+    if (ret.right_paren === null) {
+        return ret;
     }
 
-    var semi = this._require_one_of([Tn.T_SEMICOLON]);
+    ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
 
-    if (!semi) {
-        return false;
+    if (ret.semi === null) {
+        return ret;
     }
 
-    var ret = new DoStmt(dtok, wtok);
-    ret.left_paren = lp;
-    ret.condition = cond;
-    ret.right_paren = rp;
-    ret.body = stmt;
-    ret.semi = semi;
-
-    return ret;
+    return ret.complete();
 }
 
 Parser.prototype._parse_do_statement.match = function(tok) {
@@ -1978,8 +1980,7 @@ Parser.prototype._parse_declaration_or_expression_statement = function(tok, m) {
             return this._parse_declaration(tok, this._match(this._parse_declaration, tok));
         } else {
             // go for the expression
-            var ret = this._parse_expression_statement(tok, this._match(this._parse_expression_statement, tok));
-            return ret;
+            return this._parse_expression_statement(tok, this._match(this._parse_expression_statement, tok));
         }
     }
 
@@ -2029,84 +2030,72 @@ Parser.prototype._parse_conditionopt.match = function(tok) {
 
 Parser.prototype._parse_for_rest_statement = function(tok, m) {
     var copt = this._parse_rule(this._parse_conditionopt, tok);
-
-    if (copt == false) {
-        return false;
-    }
-
     var ret = new ForRestStmt(copt);
 
-    var semi = this._require_one_of([Tn.T_SEMICOLON]);
-
-    if (!semi) {
-        return false;
+    if (copt !== null && copt.incomplete) {
+        return ret;
     }
 
-    ret.semi = semi;
+    ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
+
+    if (ret.semi === null) {
+        return ret;
+    }
 
     var n = this._t.peek();
     var m = this._match(this._parse_expression, n);
 
     if (m) {
-        var expr = this._parse_expression(this._t.next(), m);
+        ret.expression = this._parse_expression(this._t.next(), m);
 
-        if (!expr) {
-            return false;
+        if (ret.expression.incomplete) {
+            return ret;
         }
-
-        ret.expression = expr;
     }
 
-    return ret;
+    return ret.complete();
 }
 
 Parser.prototype._parse_for_rest_statement.match = Parser.prototype._parse_conditionopt.match;
 
 Parser.prototype._parse_for_statement = function(tok) {
-    var ftok = tok;
-    var lp = this._require_one_of([Tn.T_LEFT_PAREN]);
+    var ret = new ForStmt(tok);
 
-    if (!lp) {
-        return false;
+    ret.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+
+    if (ret.left_paren === null) {
+        return ret;
     }
 
     tok = this._t.next();
 
-    var init = this._parse_rule(this._parse_for_init_statement, tok);
+    ret.init = this._parse_rule(this._parse_for_init_statement, tok);
 
-    if (!init) {
-        return false;
+    if (ret.init.incomplete) {
+        return ret;
     }
 
     tok = this._t.next();
 
-    var rest = this._parse_rule(this._parse_for_rest_statement, tok);
+    ret.rest = this._parse_rule(this._parse_for_rest_statement, tok);
 
-    if (!rest) {
-        return false;
+    if (ret.rest.incomplete) {
+        return ret;
     }
 
-    var rp = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    ret.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
 
-    if (!rp) {
-        return false;
+    if (ret.right_paren === null) {
+        return ret;
     }
 
-    var stmt = this._parse_rule(this._parse_statement_no_new_scope, this._t.next());
+    ret.body = this._parse_rule(this._parse_statement_no_new_scope, this._t.next());
 
-    if (!stmt) {
-        return false;
+    if (ret.body.incomplete) {
+        return ret;
     }
 
-    var ret = new ForStmt(ftok);
-
-    ret.left_paren = lp;
-    ret.init = init;
-    ret.rest = rest;
-    ret.right_paren = rp;
-    ret.body = stmt;
-
-    return ret;
+    return ret.complete();
 }
 
 Parser.prototype._parse_for_statement.match = function(tok) {
@@ -2143,13 +2132,11 @@ Parser.prototype._parse_jump_statement = function(tok, m) {
         var n = this._t.peek();
 
         if (n != null && n.id != Tn.T_SEMICOLON) {
-            var expr = this._parse_rule(this._parse_expression, this._t.next());
+            ret.expression = this._parse_rule(this._parse_expression, this._t.next());
 
-            if (!expr) {
-                return false;
+            if (ret.expression.incomplete) {
+                return ret;
             }
-
-            ret.expression = expr;
         }
 
         break;
@@ -2158,14 +2145,13 @@ Parser.prototype._parse_jump_statement = function(tok, m) {
         break;
     }
 
-    var semi = this._require_one_of([Tn.T_SEMICOLON]);
+    ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
 
-    if (!semi) {
-        return false;
+    if (ret.semi === null) {
+        return ret;
     }
 
-    ret.semi = semi;
-    return ret;
+    return ret.complete();
 }
 
 Parser.prototype._parse_jump_statement.match = function(tok) {
@@ -2196,32 +2182,31 @@ match_one_of(Parser.prototype._parse_simple_statement, [
 ]);
 
 Parser.prototype._parse_compound_statement = function(tok, newscope) {
-    var lb = tok;
-
-    tok = this._t.next();
-
     var block = new Block();
 
     block.new_scope = newscope;
-    block.left_brace = lb;
+    block.left_brace = tok;
+
+    tok = this._t.next();
 
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
         var ret = this._parse_rule(this._parse_statement_no_new_scope, tok);
+        block.body.push(ret);
 
-        if (!ret) {
-            return false;
+        if (ret.incomplete) {
+            return ret;
         }
 
-        block.body.push(ret);
         tok = this._t.next();
     }
 
     if (tok.id != Tn.T_RIGHT_BRACE) {
-        return this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+        this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+        return block;
     }
 
     block.right_brace = tok;
-    return block;
+    return block.complete();
 }
 
 
@@ -2268,28 +2253,27 @@ Parser.prototype._parse_selection_rest_statement.match = Parser.prototype._parse
 Parser.prototype._parse_selection_rest_statement.expected = Parser.prototype._parse_statement_with_scope.expected;
 
 Parser.prototype._parse_declaration_precision = function(tok) {
-    var q = this._parse_rule(this._parse_precision_qualifier, this._t.next());
+    var ret = new PrecisionStmt(tok);
 
-    if (!q) {
-        return false;
+    ret.qualifier = this._parse_rule(this._parse_precision_qualifier, this._t.next());
+
+    if (ret.qualifier.incomplete) {
+        return ret;
     }
 
-    var type = this._parse_rule(this._parse_type_specifier_no_prec, this._t.next());
+    ret.type = this._parse_rule(this._parse_type_specifier_no_prec, this._t.next());
 
-    if (!type) {
-        return false;
+    if (ret.type.incomplete) {
+        return ret;
     }
 
-    var semi = this._require_one_of([Tn.T_SEMICOLON]);
+    ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
 
-    if (!semi) {
-        return false;
+    if (ret.semi === null) {
+        return ret;
     }
 
-    var ret = new PrecisionStmt(tok, q, type);
-    ret.semi = semi;
-
-    return ret;
+    return ret.complete();
 }
 
 Parser.prototype._parse_initializer = Parser.prototype._parse_assignment_expression;
@@ -2299,40 +2283,47 @@ Parser.prototype._parse_initializer.expected = Parser.prototype._parse_assignmen
 Parser.prototype._parse_single_declaration = function(type, ident) {
     var decl = new VariableDecl(type);
 
+    if (type.incomplete) {
+        return decl;
+    }
+
     var named = new Named(ident);
-    decl.names.push(named);
+    decl.names.push(named.complete());
 
     var n = this._t.peek();
 
     if (n.id == Tn.T_EOF) {
-        return decl;
+        return decl.complete();
     }
 
     if (n.id == Tn.T_EQUAL) {
         // consume peeked token
         this._t.next();
 
-        var ret = this._parse_rule(this._parse_initializer, this._t.next());
-
-        if (!ret) {
-            return false;
-        }
-
         named.initial_assign = n;
-        named.initial_value = ret;
+        named.initial_value = this._parse_rule(this._parse_initializer, this._t.next());
+
+        if (named.initial_value.incomplete) {
+            named.incomplete = true;
+            return decl;
+        }
     } else {
-        if (this._parse_optional_array_spec(named) === false) {
-            return false;
+        this._parse_optional_array_spec(named);
+
+        if (named.incomplete) {
+            return decl;
         }
     }
 
-    return decl;
+    return decl.complete();
 }
 
 Parser.prototype._parse_init_declarator_list = function(decl, opts) {
-    if (!decl) {
-        return false;
+    if (decl.incomplete) {
+        return decl;
     }
+
+    decl.incomplete = true;
 
     var tok = this._t.peek();
 
@@ -2342,55 +2333,56 @@ Parser.prototype._parse_init_declarator_list = function(decl, opts) {
 
         var ident = this._require_one_of([Tn.T_IDENTIFIER]);
 
-        if (!ident) {
-            return false;
+        if (ident === null) {
+            return decl;
         }
 
         var name = new Named(ident);
+        decl.names.push(name);
+
         var isarray = false;
 
         tok = this._t.peek();
 
         if (opts.array) {
-            var r = this._parse_optional_array_spec(name);
+            name.complete();
 
-            if (r === false) {
-                return false;
+            if (this._parse_optional_array_spec(name)) {
+                isarray = true;
             }
 
-            isarray = (r === true);
+            if (name.incomplete) {
+                return decl;
+            }
         }
 
         if (!isarray && opts.equal && tok.id == Tn.T_EQUAL) {
             // consume peeked token
             this._t.next();
 
-            var init = this._parse_rule(this._parse_initializer, this._t.next());
-
-            if (!init) {
-                return false;
-            }
-
+            name.initial_value = this._parse_rule(this._parse_initializer, this._t.next());
             name.initial_assign = tok;
-            name.initial_value = init;
+
+            if (name.initial_value.incomplete) {
+                return decl;
+            }
         }
 
-        decl.names.push(name);
+        name.complete();
         tok = this._t.peek();
     }
 
-    var semi = this._require_one_of([Tn.T_SEMICOLON]);
+    decl.semi = this._require_one_of([Tn.T_SEMICOLON]);
 
-    if (!semi) {
-        return false;
+    if (decl.semi === null) {
+        return decl;
     }
 
-    decl.semi = semi;
-    return decl;
+    return decl.complete();
 }
 
 Parser.prototype._parse_declaration = function(tok, m) {
-    var decl;
+    var decl = null;
 
     var opts = {equal: true, array: true};
 
@@ -2401,14 +2393,14 @@ Parser.prototype._parse_declaration = function(tok, m) {
 
         if (n.id == Tn.T_IDENTIFIER) {
             decl = new InvariantDecl(tok);
-            decl.names.push(new Named(this._t.next()));
+            decl.names.push((new Named(this._t.next())).complete());
 
             opts.equal = false;
             opts.array = false;
         }
     }
 
-    if (!decl) {
+    if (decl === null) {
         // First parse the fully specified type
         var type = m(tok);
 
@@ -2429,7 +2421,13 @@ Parser.prototype._parse_declaration = function(tok, m) {
             }
         } else {
             decl = new TypeDecl(type);
+
+            if (!type.incomplete) {
+                decl.complete();
+            }
         }
+    } else {
+        decl.complete();
     }
 
     // Finish the declarator list
@@ -2445,29 +2443,27 @@ Parser.prototype._parse_declaration.match = function(tok, m) {
 }
 
 Parser.prototype._parse_declaration.expected = function() {
-    return ['function prototype', 'type declaration'];
+    return ['function prototype', 'function definition', 'struct declaration', 'variable declaration'];
 }
 
 Parser.prototype._parse_expression_statement = function(tok, m) {
     if (tok.id == Tn.T_SEMICOLON) {
-        return new EmptyStmt(tok);
+        return (new EmptyStmt(tok)).complete();
     } else {
         var ret = this._parse_expression(tok, m);
-
-        if (!ret) {
-            return false;
-        }
-
-        var semi = this._require_one_of([Tn.T_SEMICOLON]);
-
-        if (!semi) {
-            return false;
-        }
-
         var stmt = new ExpressionStmt(ret);
-        stmt.semi = semi;
 
-        return stmt;
+        if (ret.incomplete) {
+            return stmt;
+        }
+
+        stmt.semi = this._require_one_of([Tn.T_SEMICOLON]);
+
+        if (stmt.semi === null) {
+            return stmt;
+        }
+
+        return stmt.complete();
     }
 }
 
@@ -2483,6 +2479,50 @@ Parser.prototype._parse_external_declaration = function(tok, m) {
     return m(tok);
 }
 
+Parser.prototype._sync_declaration = function(tok) {
+    if (this._is_builtin_type(tok.id)) {
+        return SYNC_OK;
+    }
+
+    switch (tok.id) {
+    case Tn.T_SEMICOLON:
+        return SYNC_OK_CONSUME;
+    case Tn.T_PRECISION:
+    case Tn.T_ATTRIBUTE:
+    case Tn.T_CONST:
+    case Tn.T_UNIFORM:
+    case Tn.T_VARYING:
+    case Tn.T_STRUCT:
+    case Tn.T_VOID:
+    case Tn.T_INVARIANT:
+    case Tn.T_HIGH_PRECISION:
+    case Tn.T_MEDIUM_PRECISION:
+    case Tn.T_LOW_PRECISION:
+    case Tn.T_PRECISION:
+        return SYNC_OK;
+    }
+
+    return SYNC_FAIL;
+}
+
+Parser.prototype._sync = function(syncer) {
+    var tok = this._t.peek();
+
+    while (tok.id != Tn.T_EOF) {
+        var s = syncer.call(this, tok);
+
+        if (s == SYNC_OK) {
+            return;
+        } else if (s == SYNC_OK_CONSUME) {
+            this._t.next();
+            return;
+        }
+
+        this._t.next();
+        tok = this._t.peek();
+    }
+}
+
 match_one_of(Parser.prototype._parse_external_declaration, [
     Parser.prototype._parse_declaration
 ]);
@@ -2496,17 +2536,18 @@ Parser.prototype._parse_tu = function() {
         }
 
         var node = this._parse_rule(this._parse_external_declaration, tok);
-
-        if (!node) {
-            break;
-        }
-
         this.body.push(node);
+
+        if (node.incomplete) {
+            this._sync(this._sync_declaration);
+        }
     }
 }
 
 Parser.prototype._error = function(loc, message) {
     this._errors.push(new Error(loc, message));
+
+    // Advance to next sync token
 }
 
 Parser.prototype._match = function(rule, tok) {
