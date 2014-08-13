@@ -6,7 +6,7 @@ if (process.argv.length > 2) {
     for (var i = 2; i < process.argv.length; i++) {
         var source = fs.readFileSync(process.argv[i], 'utf8');
         var p = new glsl.ast.Parser(source);
-        var j = JSON.stringify(p.marshal(), null, '  ');
+        var j = JSON.stringify(p.marshal(), null, '  ') + '\n';
 
         fs.writeFileSync(process.argv[i] + '.ast', j, {encoding: 'utf8'});
     }
