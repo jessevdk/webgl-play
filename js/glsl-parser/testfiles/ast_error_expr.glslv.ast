@@ -1,0 +1,49 @@
+{
+  "body": [
+    {
+      "FunctionDef": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "VOID:void@(3.1-3.5)",
+            "is_builtin": true
+          },
+          "name": "IDENTIFIER:main@(3.6-3.10)",
+          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
+          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
+        },
+        "body(Block)": {
+          "right_brace": "RIGHT_BRACE:}@(5.1-5.2)",
+          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "body": [
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(AssignmentExpr)": {
+                  "incomplete": true,
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(4.5-4.6)"
+                  },
+                  "op": "EQUAL:=@(4.7-4.8)",
+                  "rhs(NoMatch)": {
+                    "incomplete": true,
+                    "token": "SEMICOLON:;@(4.9-4.10)"
+                  }
+                }
+              }
+            }
+          ],
+          "new_scope": true
+        }
+      }
+    }
+  ],
+  "comments": [
+    "COMMENT:// vi:ts=4:et@(7.1-7.14), multi:false =  vi:ts=4:et"
+  ],
+  "errors": [
+    {
+      "location": "(4.9-4.10)",
+      "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
+    }
+  ]
+}
