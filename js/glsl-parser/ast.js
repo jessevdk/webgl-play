@@ -1241,7 +1241,7 @@ Parser.prototype._parse_assignment_expression = function(tok, m) {
 
 Parser.prototype._parse_assignment_expression.match = Parser.prototype._parse_unary_expression.match;
 
-Parser.prototype._parse_assignment_expression.expected = Parser.prototype._parse_unary_expression;
+Parser.prototype._parse_assignment_expression.expected = Parser.prototype._parse_unary_expression.expected;
 
 Parser.prototype._parse_expression = function(tok, m) {
     var expr = this._parse_assignment_expression(tok, m);
