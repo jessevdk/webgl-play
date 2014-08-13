@@ -622,7 +622,17 @@ function Parser(source) {
     this._parse_tu();
 }
 
-Parser.prototype = Node.create('Parser')
+Parser.prototype = Node.create('Parser');
+
+Parser.prototype.marshal = function() {
+    var ret = Node.prototype.marshal.call(this);
+
+    if (this._errors.length != 0) {
+        ret.errors = this._marshal_array(this._errors);
+    }
+
+    return ret;
+}
 
 Parser.prototype._require_one_of_error = function(ids, tok) {
     var loc;
