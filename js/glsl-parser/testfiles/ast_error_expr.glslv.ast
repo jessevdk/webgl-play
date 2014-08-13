@@ -12,7 +12,7 @@
           "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(5.1-5.2)",
+          "right_brace": "RIGHT_BRACE:}@(6.1-6.2)",
           "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
           "body": [
             {
@@ -30,6 +30,29 @@
                   }
                 }
               }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(AssignmentExpr)": {
+                  "incomplete": true,
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(5.5-5.6)"
+                  },
+                  "op": "EQUAL:=@(5.7-5.8)",
+                  "rhs(BinOpExpr)": {
+                    "incomplete": true,
+                    "lhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:2@(5.9-5.10) = 2"
+                    },
+                    "op": "STAR:*@(5.11-5.12)",
+                    "rhs(NoMatch)": {
+                      "incomplete": true,
+                      "token": "SEMICOLON:;@(5.12-5.13)"
+                    }
+                  }
+                }
+              }
             }
           ],
           "new_scope": true
@@ -38,11 +61,15 @@
     }
   ],
   "comments": [
-    "COMMENT:// vi:ts=4:et@(7.1-7.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// vi:ts=4:et@(8.1-8.14), multi:false =  vi:ts=4:et"
   ],
   "errors": [
     {
       "location": "(4.9-4.10)",
+      "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
+    },
+    {
+      "location": "(5.12-5.13)",
       "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
     }
   ]
