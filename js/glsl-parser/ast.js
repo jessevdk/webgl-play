@@ -2630,6 +2630,8 @@ Parser.prototype._parse_rule = function(rule, tok) {
         }
 
         this._error(tok.location, 'expected ' + ex + ' but got `' + this._t.token_name(tok.id) + '\'');
+        this._t.unconsume(tok);
+
         return new NoMatch(tok);
     }
 
