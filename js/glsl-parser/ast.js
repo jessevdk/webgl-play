@@ -1703,6 +1703,73 @@ Parser.prototype._parse_function_header = function(type, name) {
     return func.complete();
 }
 
+Parser.prototype._sync_statement = function(tok) {
+    if (this._is_builtin_type(tok.id)) {
+        return SYNC_OK;
+    }
+
+    switch (tok.id) {
+    case Tn.T_SEMICOLON:
+        return SYNC_OK_CONSUME;
+    case Tn.T_PRECISION:
+    case Tn.T_ATTRIBUTE:
+    case Tn.T_CONST:
+    case Tn.T_UNIFORM:
+    case Tn.T_VARYING:
+    case Tn.T_STRUCT:
+    case Tn.T_HIGH_PRECISION:
+    case Tn.T_MEDIUM_PRECISION:
+    case Tn.T_LOW_PRECISION:
+    case Tn.T_PRECISION:
+    case Tn.T_RIGHT_BRACE:
+    case Tn.T_FOR:
+    case Tn.T_DO:
+    case Tn.T_WHILE:
+    case Tn.T_IF:
+    case Tn.T_RETURN:
+    case Tn.T_DISCARD:
+    case Tn.T_CONTINUE:
+    case Tn.T_BREAK:
+        return SYNC_OK;
+    }
+
+    return SYNC_FAIL;
+}
+
+Parser.prototype._parse_function_definition = function(header, lb) {
+    var func = new FunctionDef(header);
+
+    if (header.incomplete) {
+        return func;
+    }
+
+    func.body = new Block();
+    func.body.left_brace = lb;
+
+    var tok = this._t.next();
+
+    while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
+        var ret = this._parse_rule(this._parse_statement_no_new_scope, tok);
+        func.body.body.push(ret);
+
+        if (ret.incomplete) {
+            this._sync(this._sync_statement);
+        }
+
+        tok = this._t.next();
+    }
+
+    if (tok.id != Tn.T_RIGHT_BRACE) {
+        this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+        return func;
+    }
+
+    func.body.right_brace = tok;
+    func.body.complete();
+
+    return func.complete();
+}
+
 Parser.prototype._parse_function_prototype_or_definition = function(type, ident) {
     var ret = this._parse_function_header(type, ident);
 
@@ -1724,33 +1791,7 @@ Parser.prototype._parse_function_prototype_or_definition = function(type, ident)
         proto.semi = n;
         return proto.complete();
     } else {
-        var func = new FunctionDef(ret);
-        func.body = new Block();
-
-        func.body.left_brace = n;
-
-        var tok = this._t.next();
-
-        while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
-            var ret = this._parse_rule(this._parse_statement_no_new_scope, tok);
-            func.body.body.push(ret);
-
-            if (ret.incomplete) {
-                return ret;
-            }
-
-            tok = this._t.next();
-        }
-
-        if (tok.id != Tn.T_RIGHT_BRACE) {
-            this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
-            return func;
-        }
-
-        func.body.right_brace = tok;
-        func.body.complete();
-
-        return func.complete();
+        return this._parse_function_definition(ret, n);
     }
 }
 
@@ -2566,8 +2607,6 @@ Parser.prototype._parse_tu = function() {
 
 Parser.prototype._error = function(loc, message) {
     this._errors.push(new Error(loc, message));
-
-    // Advance to next sync token
 }
 
 Parser.prototype._match = function(rule, tok) {
