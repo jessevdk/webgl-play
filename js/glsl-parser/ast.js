@@ -39,11 +39,31 @@ Node.create = function(name, constructor) {
     return ret;
 }
 
+Node.prototype._value_is_empty = function(v) {
+    if (v === null) {
+        return true;
+    }
+
+    if (v === false) {
+        return true;
+    }
+
+    if (v === 0) {
+        return true;
+    }
+
+    if (Array.prototype.isPrototypeOf(v) && v.length == 0) {
+        return true;
+    }
+
+    return false;
+}
+
 Node.prototype._marshal_object = function(value) {
     var ret = {};
 
     for (var k in value) {
-        if (k[0] != '_' && value.hasOwnProperty(k) && value[k] !== null) {
+        if (k[0] != '_' && value.hasOwnProperty(k) && !this._value_is_empty(value[k])) {
             var name = k;
             var val = value[k];
 

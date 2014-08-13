@@ -5,7 +5,6 @@
         "header(FunctionHeader)": {
           "type(Type)": {
             "token": "INT:int@(3.1-3.4)",
-            "qualifiers": [],
             "is_builtin": true
           },
           "name": "IDENTIFIER:function_proto@(3.5-3.19)",
@@ -14,22 +13,16 @@
               "ParamDecl": {
                 "type(Type)": {
                   "token": "INT:int@(3.20-3.23)",
-                  "qualifiers": [],
                   "is_builtin": true
-                },
-                "is_array": false,
-                "array_size": 0
+                }
               }
             },
             {
               "ParamDecl": {
                 "type(Type)": {
                   "token": "VEC2:vec2@(3.25-3.29)",
-                  "qualifiers": [],
                   "is_builtin": true
-                },
-                "is_array": false,
-                "array_size": 0
+                }
               }
             }
           ],
@@ -44,7 +37,6 @@
         "header(FunctionHeader)": {
           "type(Type)": {
             "token": "VOID:void@(5.1-5.5)",
-            "qualifiers": [],
             "is_builtin": true
           },
           "name": "IDENTIFIER:main@(5.6-5.10)",
@@ -53,11 +45,8 @@
               "ParamDecl": {
                 "type(Type)": {
                   "token": "VOID:void@(5.11-5.15)",
-                  "qualifiers": [],
                   "is_builtin": true
-                },
-                "is_array": false,
-                "array_size": 0
+                }
               }
             }
           ],
@@ -114,7 +103,6 @@
         "header(FunctionHeader)": {
           "type(Type)": {
             "token": "INT:int@(9.1-9.4)",
-            "qualifiers": [],
             "is_builtin": true
           },
           "name": "IDENTIFIER:function_proto@(9.5-9.19)",
@@ -123,24 +111,18 @@
               "ParamDecl": {
                 "type(Type)": {
                   "token": "INT:int@(9.20-9.23)",
-                  "qualifiers": [],
                   "is_builtin": true
                 },
-                "name": "IDENTIFIER:a@(9.24-9.25)",
-                "is_array": false,
-                "array_size": 0
+                "name": "IDENTIFIER:a@(9.24-9.25)"
               }
             },
             {
               "ParamDecl": {
                 "type(Type)": {
                   "token": "VEC2:vec2@(9.27-9.31)",
-                  "qualifiers": [],
                   "is_builtin": true
                 },
-                "name": "IDENTIFIER:b@(9.32-9.33)",
-                "is_array": false,
-                "array_size": 0
+                "name": "IDENTIFIER:b@(9.32-9.33)"
               }
             }
           ],
@@ -150,7 +132,6 @@
         "body(Block)": {
           "right_brace": "RIGHT_BRACE:}@(10.1-10.2)",
           "left_brace": "LEFT_BRACE:{@(9.35-9.36)",
-          "body": [],
           "new_scope": true
         }
       }
@@ -160,7 +141,6 @@
         "header(FunctionHeader)": {
           "type(Type)": {
             "token": "INT:int@(12.1-12.4)",
-            "qualifiers": [],
             "is_builtin": true
           },
           "name": "IDENTIFIER:function_param_qualifiers@(12.5-12.30)",
@@ -169,39 +149,30 @@
               "ParamDecl": {
                 "type(Type)": {
                   "token": "INT:int@(12.34-12.37)",
-                  "qualifiers": [],
                   "is_builtin": true
                 },
                 "name": "IDENTIFIER:a@(12.38-12.39)",
-                "qualifier": "IN:in@(12.31-12.33)",
-                "is_array": false,
-                "array_size": 0
+                "qualifier": "IN:in@(12.31-12.33)"
               }
             },
             {
               "ParamDecl": {
                 "type(Type)": {
                   "token": "INT:int@(12.47-12.50)",
-                  "qualifiers": [],
                   "is_builtin": true
                 },
                 "name": "IDENTIFIER:b@(12.51-12.52)",
-                "qualifier": "INOUT:inout@(12.41-12.46)",
-                "is_array": false,
-                "array_size": 0
+                "qualifier": "INOUT:inout@(12.41-12.46)"
               }
             },
             {
               "ParamDecl": {
                 "type(Type)": {
                   "token": "INT:int@(12.58-12.61)",
-                  "qualifiers": [],
                   "is_builtin": true
                 },
                 "name": "IDENTIFIER:c@(12.62-12.63)",
-                "qualifier": "OUT:out@(12.54-12.57)",
-                "is_array": false,
-                "array_size": 0
+                "qualifier": "OUT:out@(12.54-12.57)"
               }
             }
           ],
@@ -211,7 +182,6 @@
         "body(Block)": {
           "right_brace": "RIGHT_BRACE:}@(14.1-14.2)",
           "left_brace": "LEFT_BRACE:{@(12.65-12.66)",
-          "body": [],
           "new_scope": true
         }
       }
@@ -221,7 +191,6 @@
         "header(FunctionHeader)": {
           "type(Type)": {
             "token": "INT:int@(16.1-16.4)",
-            "qualifiers": [],
             "is_builtin": true
           },
           "name": "IDENTIFIER:function_type_qualifiers@(16.5-16.29)",
@@ -230,13 +199,10 @@
               "ParamDecl": {
                 "type(Type)": {
                   "token": "INT:int@(16.39-16.42)",
-                  "qualifiers": [],
                   "is_builtin": true
                 },
                 "name": "IDENTIFIER:a@(16.43-16.44)",
-                "qualifier": "CONST:const@(16.30-16.35)",
-                "is_array": false,
-                "array_size": 0
+                "qualifier": "CONST:const@(16.30-16.35)"
               }
             },
             {
@@ -249,9 +215,7 @@
                   "is_builtin": true
                 },
                 "name": "IDENTIFIER:b@(16.66-16.67)",
-                "qualifier": "CONST:const@(16.46-16.51)",
-                "is_array": false,
-                "array_size": 0
+                "qualifier": "CONST:const@(16.46-16.51)"
               }
             },
             {
@@ -264,9 +228,7 @@
                   "is_builtin": true
                 },
                 "name": "IDENTIFIER:c@(16.89-16.90)",
-                "qualifier": "CONST:const@(16.69-16.74)",
-                "is_array": false,
-                "array_size": 0
+                "qualifier": "CONST:const@(16.69-16.74)"
               }
             }
           ],
@@ -276,7 +238,6 @@
         "body(Block)": {
           "right_brace": "RIGHT_BRACE:}@(18.1-18.2)",
           "left_brace": "LEFT_BRACE:{@(16.92-16.93)",
-          "body": [],
           "new_scope": true
         }
       }

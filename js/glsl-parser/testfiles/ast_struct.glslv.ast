@@ -12,15 +12,12 @@
               "FieldDecl": {
                 "type(Type)": {
                   "token": "INT:int@(4.5-4.8)",
-                  "qualifiers": [],
                   "is_builtin": true
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:a@(4.9-4.10)",
-                      "is_array": false,
-                      "array_size": 0
+                      "name": "IDENTIFIER:a@(4.9-4.10)"
                     }
                   },
                   {
@@ -50,9 +47,7 @@
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:c@(6.19-6.20)",
-                      "is_array": false,
-                      "array_size": 0
+                      "name": "IDENTIFIER:c@(6.19-6.20)"
                     }
                   }
                 ],

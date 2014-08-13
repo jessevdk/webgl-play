@@ -6,7 +6,6 @@
         "qualifier": "HIGH_PRECISION:highp@(3.11-3.16)",
         "type(Type)": {
           "token": "FLOAT:float@(3.17-3.22)",
-          "qualifiers": [],
           "is_builtin": true
         },
         "semi": "SEMICOLON:;@(3.22-3.23)"
@@ -24,9 +23,7 @@
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:projection@(5.14-5.24)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:projection@(5.14-5.24)"
             }
           }
         ],
@@ -45,9 +42,7 @@
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:color@(6.14-6.19)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:color@(6.14-6.19)"
             }
           }
         ],
@@ -70,9 +65,7 @@
               "initial_assign": "EQUAL:=@(8.20-8.21)",
               "initial_value(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(8.22-8.23) = 4"
-              },
-              "is_array": false,
-              "array_size": 0
+              }
             }
           }
         ],
@@ -91,9 +84,7 @@
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:high_float@(9.13-9.23)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:high_float@(9.13-9.23)"
             }
           }
         ],
@@ -112,9 +103,7 @@
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:medium_float@(10.15-10.27)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:medium_float@(10.15-10.27)"
             }
           }
         ],
@@ -133,9 +122,7 @@
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:low_float@(11.12-11.21)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:low_float@(11.12-11.21)"
             }
           }
         ],
@@ -148,16 +135,12 @@
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:low_float@(12.11-12.20)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:low_float@(12.11-12.20)"
             }
           },
           {
             "Named": {
-              "name": "IDENTIFIER:medium_float@(12.22-12.34)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:medium_float@(12.22-12.34)"
             }
           }
         ],
@@ -177,9 +160,7 @@
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:nonvariant@(14.23-14.33)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:nonvariant@(14.23-14.33)"
             }
           }
         ],
@@ -215,15 +196,12 @@
       "VariableDecl": {
         "type(Type)": {
           "token": "INT:int@(18.1-18.4)",
-          "qualifiers": [],
           "is_builtin": true
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:multivar1@(18.5-18.14)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:multivar1@(18.5-18.14)"
             }
           },
           {
@@ -232,9 +210,7 @@
               "initial_assign": "EQUAL:=@(18.26-18.27)",
               "initial_value(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(18.28-18.29) = 4"
-              },
-              "is_array": false,
-              "array_size": 0
+              }
             }
           },
           {
@@ -264,22 +240,17 @@
               "FieldDecl": {
                 "type(Type)": {
                   "token": "INT:int@(21.2-21.5)",
-                  "qualifiers": [],
                   "is_builtin": true
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:a@(21.6-21.7)",
-                      "is_array": false,
-                      "array_size": 0
+                      "name": "IDENTIFIER:a@(21.6-21.7)"
                     }
                   },
                   {
                     "Named": {
-                      "name": "IDENTIFIER:b@(21.9-21.10)",
-                      "is_array": false,
-                      "array_size": 0
+                      "name": "IDENTIFIER:b@(21.9-21.10)"
                     }
                   }
                 ],
@@ -291,9 +262,7 @@
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:uservalue1@(22.3-22.13)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:uservalue1@(22.3-22.13)"
             }
           }
         ],
@@ -303,16 +272,12 @@
     {
       "VariableDecl": {
         "type(Type)": {
-          "token": "IDENTIFIER:usertype@(24.1-24.9)",
-          "qualifiers": [],
-          "is_builtin": false
+          "token": "IDENTIFIER:usertype@(24.1-24.9)"
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:uservalue2@(24.10-24.20)",
-              "is_array": false,
-              "array_size": 0
+              "name": "IDENTIFIER:uservalue2@(24.10-24.20)"
             }
           }
         ],
@@ -324,7 +289,6 @@
         "header(FunctionHeader)": {
           "type(Type)": {
             "token": "VOID:void@(26.1-26.5)",
-            "qualifiers": [],
             "is_builtin": true
           },
           "name": "IDENTIFIER:f@(26.6-26.7)",
@@ -332,13 +296,9 @@
             {
               "ParamDecl": {
                 "type(Type)": {
-                  "token": "IDENTIFIER:usertype@(26.8-26.16)",
-                  "qualifiers": [],
-                  "is_builtin": false
+                  "token": "IDENTIFIER:usertype@(26.8-26.16)"
                 },
-                "name": "IDENTIFIER:a@(26.17-26.18)",
-                "is_array": false,
-                "array_size": 0
+                "name": "IDENTIFIER:a@(26.17-26.18)"
               }
             }
           ],
@@ -352,16 +312,12 @@
             {
               "VariableDecl": {
                 "type(Type)": {
-                  "token": "IDENTIFIER:usertype@(27.2-27.10)",
-                  "qualifiers": [],
-                  "is_builtin": false
+                  "token": "IDENTIFIER:usertype@(27.2-27.10)"
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:b@(27.11-27.12)",
-                      "is_array": false,
-                      "array_size": 0
+                      "name": "IDENTIFIER:b@(27.11-27.12)"
                     }
                   }
                 ],

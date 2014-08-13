@@ -5,11 +5,9 @@
         "header(FunctionHeader)": {
           "type(Type)": {
             "token": "VOID:void@(3.1-3.5)",
-            "qualifiers": [],
             "is_builtin": true
           },
           "name": "IDENTIFIER:main@(3.6-3.10)",
-          "parameters": [],
           "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
           "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
         },
@@ -27,9 +25,7 @@
                 "right_paren": "RIGHT_PAREN:)@(4.13-4.14)",
                 "body(Block)": {
                   "right_brace": "RIGHT_BRACE:}@(6.5-6.6)",
-                  "left_brace": "LEFT_BRACE:{@(4.15-4.16)",
-                  "body": [],
-                  "new_scope": false
+                  "left_brace": "LEFT_BRACE:{@(4.15-4.16)"
                 }
               }
             },
@@ -65,9 +61,7 @@
                 "right_paren": "RIGHT_PAREN:)@(11.13-11.14)",
                 "body(Block)": {
                   "right_brace": "RIGHT_BRACE:}@(13.5-13.6)",
-                  "left_brace": "LEFT_BRACE:{@(11.15-11.16)",
-                  "body": [],
-                  "new_scope": false
+                  "left_brace": "LEFT_BRACE:{@(11.15-11.16)"
                 },
                 "els(SelectionElseStmt)": {
                   "token": "ELSE:else@(13.7-13.11)",
@@ -80,17 +74,13 @@
                     "right_paren": "RIGHT_PAREN:)@(13.21-13.22)",
                     "body(Block)": {
                       "right_brace": "RIGHT_BRACE:}@(15.5-15.6)",
-                      "left_brace": "LEFT_BRACE:{@(13.23-13.24)",
-                      "body": [],
-                      "new_scope": false
+                      "left_brace": "LEFT_BRACE:{@(13.23-13.24)"
                     },
                     "els(SelectionElseStmt)": {
                       "token": "ELSE:else@(15.7-15.11)",
                       "body(Block)": {
                         "right_brace": "RIGHT_BRACE:}@(17.5-17.6)",
-                        "left_brace": "LEFT_BRACE:{@(15.12-15.13)",
-                        "body": [],
-                        "new_scope": false
+                        "left_brace": "LEFT_BRACE:{@(15.12-15.13)"
                       }
                     }
                   }
@@ -107,9 +97,7 @@
                 "right_paren": "RIGHT_PAREN:)@(19.13-19.14)",
                 "body(Block)": {
                   "right_brace": "RIGHT_BRACE:}@(21.5-21.6)",
-                  "left_brace": "LEFT_BRACE:{@(19.15-19.16)",
-                  "body": [],
-                  "new_scope": false
+                  "left_brace": "LEFT_BRACE:{@(19.15-19.16)"
                 },
                 "els(SelectionElseStmt)": {
                   "token": "ELSE:else@(21.7-21.11)",

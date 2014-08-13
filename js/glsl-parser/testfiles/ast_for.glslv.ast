@@ -5,11 +5,9 @@
         "header(FunctionHeader)": {
           "type(Type)": {
             "token": "VOID:void@(3.1-3.5)",
-            "qualifiers": [],
             "is_builtin": true
           },
           "name": "IDENTIFIER:main@(3.6-3.10)",
-          "parameters": [],
           "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
           "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
         },
@@ -55,7 +53,6 @@
                 "body(Block)": {
                   "right_brace": "RIGHT_BRACE:}@(7.5-7.6)",
                   "left_brace": "LEFT_BRACE:{@(5.30-5.31)",
-                  "body": [],
                   "new_scope": true
                 }
               }
@@ -156,7 +153,6 @@
                 "init(VariableDecl)": {
                   "type(Type)": {
                     "token": "INT:int@(19.10-19.13)",
-                    "qualifiers": [],
                     "is_builtin": true
                   },
                   "names": [
@@ -166,9 +162,7 @@
                         "initial_assign": "EQUAL:=@(19.16-19.17)",
                         "initial_value(ConstantExpr)": {
                           "token": "INTCONSTANT:10@(19.18-19.20) = 10"
-                        },
-                        "is_array": false,
-                        "array_size": 0
+                        }
                       }
                     }
                   ],
@@ -196,7 +190,6 @@
                 "body(Block)": {
                   "right_brace": "RIGHT_BRACE:}@(20.5-20.6)",
                   "left_brace": "LEFT_BRACE:{@(19.34-19.35)",
-                  "body": [],
                   "new_scope": true
                 }
               }
@@ -208,7 +201,6 @@
                 "init(VariableDecl)": {
                   "type(Type)": {
                     "token": "INT:int@(23.10-23.13)",
-                    "qualifiers": [],
                     "is_builtin": true
                   },
                   "names": [
@@ -218,9 +210,7 @@
                         "initial_assign": "EQUAL:=@(23.16-23.17)",
                         "initial_value(ConstantExpr)": {
                           "token": "INTCONSTANT:10@(23.18-23.20) = 10"
-                        },
-                        "is_array": false,
-                        "array_size": 0
+                        }
                       }
                     },
                     {
@@ -229,9 +219,7 @@
                         "initial_assign": "EQUAL:=@(23.24-23.25)",
                         "initial_value(ConstantExpr)": {
                           "token": "INTCONSTANT:5@(23.26-23.27) = 5"
-                        },
-                        "is_array": false,
-                        "array_size": 0
+                        }
                       }
                     }
                   ],
@@ -273,7 +261,6 @@
                 "body(Block)": {
                   "right_brace": "RIGHT_BRACE:}@(24.5-24.6)",
                   "left_brace": "LEFT_BRACE:{@(23.46-23.47)",
-                  "body": [],
                   "new_scope": true
                 }
               }
@@ -285,7 +272,6 @@
                 "init(VariableDecl)": {
                   "type(Type)": {
                     "token": "INT:int@(27.10-27.13)",
-                    "qualifiers": [],
                     "is_builtin": true
                   },
                   "names": [
@@ -295,9 +281,7 @@
                         "initial_assign": "EQUAL:=@(27.16-27.17)",
                         "initial_value(ConstantExpr)": {
                           "token": "INTCONSTANT:10@(27.18-27.20) = 10"
-                        },
-                        "is_array": false,
-                        "array_size": 0
+                        }
                       }
                     }
                   ],
@@ -307,7 +291,6 @@
                   "condition(VariableDecl)": {
                     "type(Type)": {
                       "token": "BOOL:bool@(27.22-27.26)",
-                      "qualifiers": [],
                       "is_builtin": true
                     },
                     "names": [
@@ -323,9 +306,7 @@
                             "rhs(ConstantExpr)": {
                               "token": "INTCONSTANT:5@(27.35-27.36) = 5"
                             }
-                          },
-                          "is_array": false,
-                          "array_size": 0
+                          }
                         }
                       }
                     ]
@@ -342,7 +323,6 @@
                 "body(Block)": {
                   "right_brace": "RIGHT_BRACE:}@(28.5-28.6)",
                   "left_brace": "LEFT_BRACE:{@(27.43-27.44)",
-                  "body": [],
                   "new_scope": true
                 }
               }
