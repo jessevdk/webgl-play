@@ -600,6 +600,16 @@ IndexExpr.prototype = Node.create('IndexExpr', IndexExpr);
 exports.IndexExpr = IndexExpr;
 
 
+function NoMatch(tok) {
+    Node.call(this);
+
+    this.token = tok;
+}
+
+NoMatch.prototype = Node.create('NoMatch', NoMatch);
+exports.NoMatch = NoMatch;
+
+
 function Parser(source) {
     this._preprocessor = new glsl.preprocessor.Preprocessor(source);
     this._t = new Tn(this._preprocessor);
@@ -2571,7 +2581,7 @@ Parser.prototype._parse_rule = function(rule, tok) {
         }
 
         this._error(tok.location, 'expected ' + ex + ' but got `' + this._t.token_name(tok.id) + '\'');
-        return false;
+        return new NoMatch(tok);
     }
 
     return rule.call(this, tok, m);
