@@ -12,7 +12,7 @@
           "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(6.1-6.2)",
+          "right_brace": "RIGHT_BRACE:}@(9.1-9.2)",
           "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
           "body": [
             {
@@ -53,6 +53,72 @@
                   }
                 }
               }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(AssignmentExpr)": {
+                  "incomplete": true,
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(6.5-6.6)"
+                  },
+                  "op": "EQUAL:=@(6.7-6.8)",
+                  "rhs(GroupExpr)": {
+                    "incomplete": true,
+                    "left_paren": "LEFT_PAREN:(@(6.9-6.10)",
+                    "expression(NoMatch)": {
+                      "incomplete": true,
+                      "token": "SEMICOLON:;@(6.10-6.11)"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(AssignmentExpr)": {
+                  "incomplete": true,
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(7.5-7.6)"
+                  },
+                  "op": "EQUAL:=@(7.7-7.8)",
+                  "rhs(GroupExpr)": {
+                    "incomplete": true,
+                    "left_paren": "LEFT_PAREN:(@(7.9-7.10)",
+                    "expression(ConstantExpr)": {
+                      "token": "INTCONSTANT:2@(7.10-7.11) = 2"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(AssignmentExpr)": {
+                  "incomplete": true,
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(8.5-8.6)"
+                  },
+                  "op": "EQUAL:=@(8.7-8.8)",
+                  "rhs(GroupExpr)": {
+                    "incomplete": true,
+                    "left_paren": "LEFT_PAREN:(@(8.9-8.10)",
+                    "expression(BinOpExpr)": {
+                      "incomplete": true,
+                      "lhs(ConstantExpr)": {
+                        "token": "INTCONSTANT:2@(8.10-8.11) = 2"
+                      },
+                      "op": "STAR:*@(8.12-8.13)",
+                      "rhs(NoMatch)": {
+                        "incomplete": true,
+                        "token": "SEMICOLON:;@(8.13-8.14)"
+                      }
+                    }
+                  }
+                }
+              }
             }
           ],
           "new_scope": true
@@ -61,7 +127,7 @@
     }
   ],
   "comments": [
-    "COMMENT:// vi:ts=4:et@(8.1-8.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// vi:ts=4:et@(11.1-11.14), multi:false =  vi:ts=4:et"
   ],
   "errors": [
     {
@@ -70,6 +136,18 @@
     },
     {
       "location": "(5.12-5.13)",
+      "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
+    },
+    {
+      "location": "(6.10-6.11)",
+      "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
+    },
+    {
+      "location": "(7.11-7.12)",
+      "message": "expected ), but got ;"
+    },
+    {
+      "location": "(8.13-8.14)",
       "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
     }
   ]
