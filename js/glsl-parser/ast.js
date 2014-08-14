@@ -660,8 +660,7 @@ Parser.prototype._require_one_of_error = function(ids, tok) {
         this._error(loc, 'expected ' + choices[0] + ', but got ' + got);
     }
 
-
-    return false;
+    return null;
 }
 
 Parser.prototype._require_one_of = function(ids) {
