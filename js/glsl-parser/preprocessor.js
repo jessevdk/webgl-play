@@ -128,12 +128,6 @@ function Preprocessor(source) {
             var tokenizer = new Tokenizer(lsource);
             var tok = tokenizer.next();
 
-            if (tok == null) {
-                this._error(tokenizer.remainder().location,
-                            'expected preprocessor directive');
-                continue;
-            }
-
             switch (tok.id) {
             case Tokenizer.T_ENDIF:
                 this._endif(tok, tokenizer);
@@ -146,7 +140,7 @@ function Preprocessor(source) {
                 break;
             }
 
-            if (tok.id == Tokenizer.T_ENDIF || p.skip) {
+            if (tok.id == Tokenizer.T_ENDIF || tok.id == Tokenizer.T_ELSE || tok.id == Tokenizer.ELIF || p.skip) {
                 continue;
             }
 
@@ -187,6 +181,13 @@ function Preprocessor(source) {
             }
 
             this._add_source(line, new glsl.source.Location(i + 1, 1));
+        }
+
+        var opos = line.lastIndexOf('/*');
+        var cpos = line.lastIndexOf('*/');
+
+        if (opos != -1 && opos > cpos) {
+            incomment = true;
         }
     }
 
@@ -347,11 +348,6 @@ Preprocessor.prototype._strip_comments = function(s) {
 Preprocessor.prototype._define = function(tok, tokenizer) {
     var def = tokenizer.next();
 
-    if (def == null) {
-        this._error(tok.location, 'expected identifier, but got nothing');
-        return;
-    }
-
     if (def.id != Tokenizer.T_IDENTIFIER) {
         this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
         return;
@@ -374,11 +370,6 @@ Preprocessor.prototype._define = function(tok, tokenizer) {
 Preprocessor.prototype._undef = function(tok, tokenizer) {
     var def = tokenizer.next();
 
-    if (def == null) {
-        this._error(tok.location, 'expected identifier, but got nothing');
-        return;
-    }
-
     if (def.id != Tokenizer.T_IDENTIFIER) {
         this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
         return;
@@ -386,14 +377,10 @@ Preprocessor.prototype._undef = function(tok, tokenizer) {
 
     var next = tokenizer.next();
 
-    if (next != null) {
-        this._error(next.location, 'unexpected input after defined');
-        return;
-    } else if (!tokenizer.eof()) {
-        this._error(tokenizer.remainder().location, 'unexpected input after defined');
-        return;
+    if (next.id != Tokenizer.T_EOF) {
+        this._error(next.location, 'unexpected input after defined, got ' + tokenizer.token_name(next.id) + ':' + next.text);
     } else {
-        delete this._defines(def.text);
+        delete this._defines[def.text];
     }
 }
 
@@ -404,7 +391,7 @@ Preprocessor.prototype._if = function(tok, tokenizer) {
 
     var expr = this._parse_expression(exprtok, -1);
 
-    if (expr == null) {
+    if (expr === null) {
         return;
     }
 
@@ -417,11 +404,6 @@ Preprocessor.prototype._if = function(tok, tokenizer) {
 Preprocessor.prototype._ifdef = function(tok, tokenizer, negate) {
     var def = tokenizer.next();
 
-    if (def == null) {
-        this._error(tok.location, 'expected identifier, but got nothing');
-        return;
-    }
-
     if (def.id != Tokenizer.T_IDENTIFIER) {
         this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
         return;
@@ -429,12 +411,8 @@ Preprocessor.prototype._ifdef = function(tok, tokenizer, negate) {
 
     var next = tokenizer.next();
 
-    if (next != null) {
-        this._error(next.location, 'unexpected input after defined');
-        return;
-    } else if (!tokenizer.eof()) {
-        this._error(tokenizer.remainder().location, 'unexpected input after defined');
-        return;
+    if (next.id != Tokenizer.T_EOF) {
+        this._error(next.location, 'unexpected input after defined, got ' + tokenizer.token_name(next.id) + ':' + next.text);
     } else {
         var skip = !(def.text in this._defines);
 
@@ -484,15 +462,13 @@ Preprocessor.prototype._elif = function(tok, tokenizer) {
 
     var expr = this._parse_expression(exprtok, -1);
 
-    if (expr == null) {
+    if (expr === null) {
         p.skip = true;
         return;
     }
 
-    this._pstack.push({
-        skip: !expr,
-        condition: expr
-    });
+    p.skip = !expr;
+    p.condition = expr;
 }
 
 Preprocessor.prototype._endif = function(tok, tokenizer) {
@@ -512,11 +488,6 @@ Preprocessor.prototype._endif = function(tok, tokenizer) {
 Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
     var tok = tokenizer.next();
 
-    if (tok == null) {
-        // TODO this._error()
-        return null;
-    }
-
     switch (tok.id) {
     case ExpressionTokenizer.T_INTCONSTANT:
         return tok.value;
@@ -529,16 +500,11 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
     case ExpressionTokenizer.T_LEFT_PAREN:
         var ret = this._parse_expression(tokenizer);
 
-        if (ret == null) {
+        if (ret === null) {
             return null;
         }
 
         tok = tokenizer.next();
-
-        if (tok == null) {
-            // TODO: error
-            return null;
-        }
 
         if (tok.id != ExpressionTokenizer.T_RIGHT_PAREN) {
             // TODO: error
@@ -550,14 +516,9 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
 
         var expect = null;
 
-        if (id != null && id.id == ExpressionTokenizer.T_LEFT_PAREN) {
+        if (id.id == ExpressionTokenizer.T_LEFT_PAREN) {
             expect = ExpressionTokenizer.T_RIGHT_PAREN;
             id = tokenizer.next();
-        }
-
-        if (id == null) {
-            // TODO: error
-            return null;
         }
 
         if (id.id != ExpressionTokenizer.T_IDENTIFIER) {
@@ -568,7 +529,7 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
         if (expect) {
             var e = tokenizer.next();
 
-            if (e == null || e.id != expect) {
+            if (e.id != expect) {
                 // TODO: error
                 return null;
             }
@@ -581,7 +542,7 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
     case ExpressionTokenizer.T_BANG:
         var ret = this._parse_expression(tokenizer, 2);
 
-        if (ret == null) {
+        if (ret === null) {
             return null;
         }
 
@@ -600,16 +561,11 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
     }
 
     this._error(tok.location, 'expected expression, but got ' + ExpressionTokenizer.token_name(tok.id) + ':' + tok.text);
-
     return null;
 }
 
 Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
     var tok = tokenizer.peek();
-
-    if (tok == null) {
-        return null;
-    }
 
     var prec = 0;
 
@@ -665,7 +621,7 @@ Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
 
     var rhs = this._parse_expression(tokenizer, prec);
 
-    if (rhs == null) {
+    if (rhs === null) {
         return null;
     }
 
@@ -718,14 +674,14 @@ Preprocessor.prototype._parse_expression_rhs = function(tokenizer, p, lhs) {
 Preprocessor.prototype._parse_expression = function(tokenizer, p) {
     var lhs = this._parse_expression_primary(tokenizer);
 
-    if (lhs == null) {
+    if (lhs === null) {
         return;
     }
 
     while (true) {
         var ret = this._parse_expression_rhs(tokenizer, p, lhs);
 
-        if (ret == null) {
+        if (ret === null) {
             return lhs;
         } else {
             lhs = ret;

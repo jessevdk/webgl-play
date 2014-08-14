@@ -21,6 +21,21 @@ suite('preprocessor', function() {
         assert.equal(p.source(), processed);
     });
 
+    test('all', function () {
+        var unprocessed = fs.readFileSync('testfiles/preprocessor_all.glslv', 'utf8');
+        var processed = fs.readFileSync('testfiles/preprocessor_all_result.glslv', 'utf8');
+
+        var p = new glsl.preprocessor.Preprocessor(unprocessed);
+
+        var errors = p.errors();
+
+        for (var i = 0; i < errors.length; i++) {
+            assert.ok(false, errors[i].formatted_message() + '\n' + errors[i]._stack);
+        }
+
+        assert.equal(p.source(), processed);
+    });
+
     test('source_map', function() {
         var unprocessed = fs.readFileSync('testfiles/preprocessor.glslv', 'utf8');
         var p = new glsl.preprocessor.Preprocessor(unprocessed);
