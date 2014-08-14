@@ -1,15 +1,23 @@
 "use strict";
 
-if (!(typeof window == 'undefined')) {
-    if (typeof window.glsl == 'undefined') {
-        window.glsl = {};
+var ns;
+
+if (typeof window != 'undefined' || typeof self != 'undefined') {
+    var ctx = (typeof window != 'undefined' ? window : self);
+
+    if (typeof ctx.glsl == 'undefined') {
+        ctx.glsl = {};
     }
 
-    window.glsl.source = {};
+    ctx.glsl.source = {};
+    ns = ctx.glsl.source;
 } else {
+    // in node
     var glsl = {
         tokenizer: require('./tokenizer')
-    };
+    }
+
+    ns = exports;
 }
 
 (function(exports) {
@@ -162,6 +170,6 @@ exports.Location = Location;
 exports.Range = Range;
 exports.Source = Source;
 
-})(typeof window == 'undefined' ? exports : window.glsl.source);
+})(ns);
 
 // vi:ts=4:et

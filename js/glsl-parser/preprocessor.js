@@ -1,16 +1,24 @@
 "use strict";
 
-if (!(typeof window == 'undefined')) {
-    if (typeof window.glsl == 'undefined') {
-        window.glsl = {};
+var ns;
+
+if (typeof window != 'undefined' || typeof self != 'undefined') {
+    var ctx = (typeof window != 'undefined' ? window : self);
+
+    if (typeof ctx.glsl == 'undefined') {
+        ctx.glsl = {};
     }
 
-    window.glsl.preprocessor = {};
+    ctx.glsl.preprocessor = {};
+    ns = ctx.glsl.preprocessor;
 } else {
+    // in node
     var glsl = {
-        source: require('./source'),
-        tokenizer: require('./tokenizer')
-    };
+        tokenizer: require('./tokenizer'),
+        source: require('./source')
+    }
+
+    ns = exports;
 }
 
 (function(exports) {
@@ -699,6 +707,6 @@ Preprocessor.prototype.source = function() {
 
 exports.Preprocessor = Preprocessor;
 
-})(typeof window == 'undefined' ? exports : window.glsl);
+})(ns);
 
 // vi:ts=4:et
