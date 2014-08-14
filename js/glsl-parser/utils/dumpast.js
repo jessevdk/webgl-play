@@ -1,4 +1,4 @@
-const glsl = require('./glslparser');
+const glsl = require('../glslparser');
 
 var fs = require('fs');
 
