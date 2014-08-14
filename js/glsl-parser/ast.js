@@ -1147,7 +1147,7 @@ Parser.prototype._parse_unary_conditional_expression_rest = function(expr) {
 
     var n = this._t.peek();
 
-    if (n != null && n.id == Tn.T_QUESTION) {
+    if (n.id == Tn.T_QUESTION) {
         var ret = new TernaryExpr(expr);
         ret.question_token = this._t.next();
 
