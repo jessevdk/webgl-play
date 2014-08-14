@@ -15,7 +15,7 @@ suite('preprocessor', function() {
         var errors = p.errors();
 
         for (var i = 0; i < errors.length; i++) {
-            assert.ok(false, errors[i].formatted_message() + '\n' + errors[e]._stack);
+            assert.ok(false, errors[i].formatted_message() + '\n' + errors[i]._stack);
         }
 
         assert.equal(p.source(), processed);
