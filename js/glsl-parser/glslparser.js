@@ -1,5 +1,5 @@
 if (typeof window == 'undefined') {
-    var mods = ['source', 'tokenizer', 'preprocessor', 'ast', 'builtins'];
+    var mods = ['source', 'tokenizer', 'preprocessor', 'ast', 'builtins', 'sst'];
 
     for (var i = 0; i < mods.length; i++) {
         exports[mods[i]] = require('./' + mods[i]);

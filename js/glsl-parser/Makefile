@@ -38,6 +38,9 @@ test: $(MOCHA_BIN)
 test-ast: $(MOCHA_BIN)
 	@$(MOCHA) ast_test.js
 
+test-sst: $(MOCHA_BIN)
+	@$(MOCHA) sst_test.js
+
 test-preprocessor: $(MOCHA_BIN)
 	@$(MOCHA) preprocessor_test.js
 
