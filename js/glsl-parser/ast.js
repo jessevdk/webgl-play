@@ -617,6 +617,8 @@ exports.NoMatch = NoMatch;
 
 
 function Parser(source) {
+    Node.call(this);
+
     this._preprocessor = new glsl.preprocessor.Preprocessor(source);
     this._t = new Tn(this._preprocessor);
 
@@ -626,9 +628,10 @@ function Parser(source) {
     this.comments = this._t.comments();
 
     this._parse_tu();
+    this.complete();
 }
 
-Parser.prototype = Node.create('Parser');
+Parser.prototype = Node.create('Parser', Parser);
 
 Parser.prototype.marshal = function() {
     var ret = Node.prototype.marshal.call(this);
