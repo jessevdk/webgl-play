@@ -7,7 +7,7 @@ MOCHA_OPTS = -u tdd
 
 MOCHA = $(MOCHA_BIN) $(MOCHA_OPTS)
 
-TESTS = ast_test.js preprocessor_test.js
+TESTS = preprocessor_test.js ast_test.js sst_test.js
 
 UNAME = $(shell uname)
 
