@@ -860,10 +860,12 @@ FunctionCallExpr.prototype.location = function() {
 }
 
 
-function FieldSelectionExpr(expr) {
+function FieldSelectionExpr(expr, op) {
     Node.call(this);
 
     this.expression = expr;
+    this.op = op;
+
     this.selector = null;
 }
 
@@ -871,7 +873,7 @@ FieldSelectionExpr.prototype = Node.create('FieldSelectionExpr', FieldSelectionE
 exports.FieldSelectionExpr = FieldSelectionExpr;
 
 FieldSelectionExpr.prototype.location = function() {
-    return glsl.source.Range.spans(this.expression, this.selector);
+    return glsl.source.Range.spans(this.expression, this.op, this.selector);
 }
 
 
@@ -1220,7 +1222,7 @@ Parser.prototype._parse_postfix_expression = function(tok, m) {
             // consume peeked token
             this._t.next();
 
-            expr = new FieldSelectionExpr(expr);
+            expr = new FieldSelectionExpr(expr, tok);
 
             expr.selector = this._require_one_of([Tn.T_IDENTIFIER]);
 
