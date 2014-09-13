@@ -1,0 +1,670 @@
+{
+  "body": [
+    {
+      "PrecisionStmt": {
+        "token": "PRECISION:precision@(3.1-3.10)",
+        "qualifier": "HIGH_PRECISION:highp@(3.11-3.16)",
+        "type(Type)": {
+          "token": "FLOAT:float@(3.17-3.22)",
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 15,
+            "name": "float",
+            "is_scalar": true,
+            "is_float": true,
+            "length": 1,
+            "is_builtin": true
+          }
+        },
+        "semi": "SEMICOLON:;@(3.22-3.23)"
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "MAT4:mat4@(5.9-5.13)",
+          "qualifiers": [
+            "UNIFORM:uniform@(5.1-5.8)"
+          ],
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 29,
+            "name": "mat4",
+            "is_mat": true,
+            "is_float": true,
+            "length": 4,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:projection@(5.14-5.24)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(5.24-5.25)",
+        "@id": 4
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "VEC3:vec3@(6.9-6.13)",
+          "qualifiers": [
+            "VARYING:varying@(6.1-6.8)"
+          ],
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 40,
+            "name": "vec3",
+            "is_vec": true,
+            "is_float": true,
+            "length": 3,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:color@(6.14-6.19)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(6.19-6.20)",
+        "@id": 7
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "INT:int@(8.7-8.10)",
+          "qualifiers": [
+            "CONST:const@(8.1-8.6)"
+          ],
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 21,
+            "name": "int",
+            "is_scalar": true,
+            "is_int": true,
+            "length": 1,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:num_iter@(8.11-8.19)",
+              "initial_assign": "EQUAL:=@(8.20-8.21)",
+              "initial_value(ConstantExpr)": {
+                "token": "INTCONSTANT:4@(8.22-8.23) = 4"
+              }
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(8.23-8.24)",
+        "@id": 10
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "FLOAT:float@(9.7-9.12)",
+          "qualifiers": [
+            "HIGH_PRECISION:highp@(9.1-9.6)"
+          ],
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 15,
+            "name": "float",
+            "is_scalar": true,
+            "is_float": true,
+            "length": 1,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:high_float@(9.13-9.23)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(9.23-9.24)",
+        "@id": 14
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "FLOAT:float@(10.9-10.14)",
+          "qualifiers": [
+            "MEDIUM_PRECISION:mediump@(10.1-10.8)"
+          ],
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 15,
+            "name": "float",
+            "is_scalar": true,
+            "is_float": true,
+            "length": 1,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:medium_float@(10.15-10.27)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(10.27-10.28)",
+        "@id": 17
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "FLOAT:float@(11.6-11.11)",
+          "qualifiers": [
+            "LOW_PRECISION:lowp@(11.1-11.5)"
+          ],
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 15,
+            "name": "float",
+            "is_scalar": true,
+            "is_float": true,
+            "length": 1,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:low_float@(11.12-11.21)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(11.21-11.22)",
+        "@id": 20
+      }
+    },
+    {
+      "InvariantDecl": {
+        "token": "INVARIANT:invariant@(12.1-12.10)",
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:low_float@(12.11-12.20)",
+              "symbol(VariableDecl)": "@20"
+            }
+          },
+          {
+            "Named": {
+              "name": "IDENTIFIER:medium_float@(12.22-12.34)",
+              "symbol(VariableDecl)": "@17"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(12.34-12.35)"
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "INT:int@(14.19-14.22)",
+          "qualifiers": [
+            "INVARIANT:invariant@(14.1-14.10)",
+            "VARYING:varying@(14.11-14.18)"
+          ],
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 21,
+            "name": "int",
+            "is_scalar": true,
+            "is_int": true,
+            "length": 1,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:nonvariant@(14.23-14.33)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(14.33-14.34)",
+        "@id": 26
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "BOOL:bool@(16.9-16.13)",
+          "qualifiers": [
+            "UNIFORM:uniform@(16.1-16.8)"
+          ],
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 5,
+            "name": "bool",
+            "is_scalar": true,
+            "is_bool": true,
+            "length": 1,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:boolarray@(16.14-16.23)",
+              "is_array": true,
+              "array_size(ConstantExpr)": {
+                "token": "INTCONSTANT:4@(16.24-16.25) = 4",
+                "is_const_expression": true,
+                "const_value": 4,
+                "type(builtins.Type)": {
+                  "id": 21,
+                  "name": "int",
+                  "is_scalar": true,
+                  "is_int": true,
+                  "length": 1,
+                  "is_builtin": true
+                }
+              },
+              "left_bracket": "LEFT_BRACKET:[@(16.23-16.24)",
+              "right_bracket": "RIGHT_BRACKET:]@(16.25-16.26)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(16.26-16.27)",
+        "@id": 29
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "INT:int@(18.1-18.4)",
+          "is_builtin": true,
+          "type(builtins.Type)": {
+            "id": 21,
+            "name": "int",
+            "is_scalar": true,
+            "is_int": true,
+            "length": 1,
+            "is_builtin": true
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:multivar1@(18.5-18.14)"
+            }
+          },
+          {
+            "Named": {
+              "name": "IDENTIFIER:multivar2@(18.16-18.25)",
+              "initial_assign": "EQUAL:=@(18.26-18.27)",
+              "initial_value(ConstantExpr)": {
+                "token": "INTCONSTANT:4@(18.28-18.29) = 4"
+              }
+            }
+          },
+          {
+            "Named": {
+              "name": "IDENTIFIER:multivar3@(18.31-18.40)",
+              "is_array": true,
+              "array_size(ConstantExpr)": {
+                "token": "INTCONSTANT:2@(18.41-18.42) = 2",
+                "is_const_expression": true,
+                "const_value": 2,
+                "type(builtins.Type)": {
+                  "id": 21,
+                  "name": "int",
+                  "is_scalar": true,
+                  "is_int": true,
+                  "length": 1,
+                  "is_builtin": true
+                }
+              },
+              "left_bracket": "LEFT_BRACKET:[@(18.40-18.41)",
+              "right_bracket": "RIGHT_BRACKET:]@(18.42-18.43)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(18.43-18.44)",
+        "@id": 33
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(StructDecl)": {
+          "token": "STRUCT:struct@(20.1-20.7)",
+          "name": "IDENTIFIER:usertype@(20.8-20.16)",
+          "left_brace": "LEFT_BRACE:{@(20.17-20.18)",
+          "right_brace": "RIGHT_BRACE:}@(22.1-22.2)",
+          "fields": [
+            {
+              "FieldDecl": {
+                "type(Type)": {
+                  "token": "INT:int@(21.5-21.8)",
+                  "is_builtin": true,
+                  "type(builtins.Type)": {
+                    "id": 21,
+                    "name": "int",
+                    "is_scalar": true,
+                    "is_int": true,
+                    "length": 1,
+                    "is_builtin": true
+                  }
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:a@(21.9-21.10)"
+                    }
+                  },
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b@(21.12-21.13)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(21.13-21.14)"
+              }
+            }
+          ],
+          "type(UserType)": {
+            "decl(StructDecl)": "@41",
+            "name": "usertype"
+          },
+          "parent_scope(Parser)": "@1",
+          "@id": 41
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:uservalue1@(22.3-22.13)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(22.13-22.14)",
+        "@id": 40
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(Type)": {
+          "token": "IDENTIFIER:usertype@(24.1-24.9)",
+          "type(UserType)": {
+            "decl": "undefined",
+            "name(StructDecl)": "@41",
+            "@id": 50
+          }
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:uservalue2@(24.10-24.20)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(24.20-24.21)",
+        "@id": 48
+      }
+    },
+    {
+      "VariableDecl": {
+        "type(StructDecl)": {
+          "token": "STRUCT:struct@(26.1-26.7)",
+          "left_brace": "LEFT_BRACE:{@(26.8-26.9)",
+          "right_brace": "RIGHT_BRACE:}@(32.1-32.2)",
+          "fields": [
+            {
+              "FieldDecl": {
+                "type(StructDecl)": {
+                  "token": "STRUCT:struct@(27.5-27.11)",
+                  "name": "IDENTIFIER:A@(27.12-27.13)",
+                  "left_brace": "LEFT_BRACE:{@(27.14-27.15)",
+                  "right_brace": "RIGHT_BRACE:}@(29.5-29.6)",
+                  "fields": [
+                    {
+                      "FieldDecl": {
+                        "type(Type)": {
+                          "token": "INT:int@(28.9-28.12)",
+                          "is_builtin": true,
+                          "type(builtins.Type)": {
+                            "id": 21,
+                            "name": "int",
+                            "is_scalar": true,
+                            "is_int": true,
+                            "length": 1,
+                            "is_builtin": true
+                          }
+                        },
+                        "names": [
+                          {
+                            "Named": {
+                              "name": "IDENTIFIER:v@(28.13-28.14)"
+                            }
+                          }
+                        ],
+                        "semi": "SEMICOLON:;@(28.14-28.15)"
+                      }
+                    }
+                  ],
+                  "type(UserType)": {
+                    "decl(StructDecl)": "@55",
+                    "name": "A"
+                  },
+                  "parent_scope(StructDecl)": "@53",
+                  "@id": 55
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:a@(29.7-29.8)"
+                    }
+                  },
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b@(29.10-29.11)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(29.11-29.12)"
+              }
+            },
+            {
+              "FieldDecl": {
+                "type(Type)": {
+                  "token": "IDENTIFIER:A@(31.5-31.6)",
+                  "type(UserType)": {
+                    "decl": "undefined",
+                    "name(StructDecl)": "@55",
+                    "@id": 64
+                  }
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:c@(31.7-31.8)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(31.8-31.9)"
+              }
+            }
+          ],
+          "type(UserType)": {
+            "decl(StructDecl)": "@53"
+          },
+          "types": [
+            "UserType@64"
+          ],
+          "type_map": {
+            "A(UserType)": "@64"
+          },
+          "symbols": {
+            "A(UserType)": "@64"
+          },
+          "parent_scope(Parser)": "@1",
+          "@id": 53
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:uservalue3@(32.3-32.13)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(32.13-32.14)",
+        "@id": 52
+      }
+    },
+    {
+      "FunctionDef": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "VOID:void@(35.1-35.5)",
+            "is_builtin": true,
+            "type(builtins.Type)": {
+              "id": 42,
+              "name": "void",
+              "is_builtin": true
+            }
+          },
+          "name": "IDENTIFIER:f@(35.6-35.7)",
+          "parameters": [
+            {
+              "ParamDecl": {
+                "type(Type)": {
+                  "token": "IDENTIFIER:usertype@(35.8-35.16)",
+                  "type(UserType)": "@50"
+                },
+                "name": "IDENTIFIER:a@(35.17-35.18)",
+                "@id": 71
+              }
+            }
+          ],
+          "left_paren": "LEFT_PAREN:(@(35.7-35.8)",
+          "right_paren": "RIGHT_PAREN:)@(35.18-35.19)"
+        },
+        "body(Block)": {
+          "right_brace": "RIGHT_BRACE:}@(37.1-37.2)",
+          "left_brace": "LEFT_BRACE:{@(35.20-35.21)",
+          "body": [
+            {
+              "VariableDecl": {
+                "type(Type)": {
+                  "token": "IDENTIFIER:usertype@(36.2-36.10)",
+                  "type(UserType)": "@50"
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b@(36.11-36.12)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(36.12-36.13)",
+                "@id": 74
+              }
+            }
+          ],
+          "new_scope": true,
+          "variables": [
+            "VariableDecl@74"
+          ],
+          "variable_map": {
+            "b(VariableDecl)": "@74"
+          },
+          "symbols": {
+            "b(VariableDecl)": "@74"
+          },
+          "parent_scope(FunctionDef)": "@68"
+        },
+        "variables": [
+          "ParamDecl@71"
+        ],
+        "variable_map": {
+          "a(ParamDecl)": "@71"
+        },
+        "symbols": {
+          "a(ParamDecl)": "@71"
+        },
+        "parent_scope(Parser)": "@1",
+        "@id": 68
+      }
+    }
+  ],
+  "comments": [
+    "COMMENT:// vi:ts=4:et@(39.1-39.14), multi:false =  vi:ts=4:et"
+  ],
+  "functions": [
+    "FunctionDef@68"
+  ],
+  "function_map": {
+    "f(usertype)(FunctionDef)": "@68"
+  },
+  "variables": [
+    "VariableDecl@4",
+    "VariableDecl@7",
+    "VariableDecl@10",
+    "VariableDecl@14",
+    "VariableDecl@17",
+    "VariableDecl@20",
+    "VariableDecl@26",
+    "VariableDecl@29",
+    "VariableDecl@33",
+    "VariableDecl@33",
+    "VariableDecl@33",
+    "VariableDecl@40",
+    "VariableDecl@48",
+    "VariableDecl@52"
+  ],
+  "variable_map": {
+    "projection(VariableDecl)": "@4",
+    "color(VariableDecl)": "@7",
+    "num_iter(VariableDecl)": "@10",
+    "high_float(VariableDecl)": "@14",
+    "medium_float(VariableDecl)": "@17",
+    "low_float(VariableDecl)": "@20",
+    "nonvariant(VariableDecl)": "@26",
+    "boolarray(VariableDecl)": "@29",
+    "multivar1(VariableDecl)": "@33",
+    "multivar2(VariableDecl)": "@33",
+    "multivar3(VariableDecl)": "@33",
+    "uservalue1(VariableDecl)": "@40",
+    "uservalue2(VariableDecl)": "@48",
+    "uservalue3(VariableDecl)": "@52"
+  },
+  "types": [
+    "UserType@50"
+  ],
+  "type_map": {
+    "usertype(UserType)": "@50"
+  },
+  "symbols": {
+    "projection(VariableDecl)": "@4",
+    "color(VariableDecl)": "@7",
+    "num_iter(VariableDecl)": "@10",
+    "high_float(VariableDecl)": "@14",
+    "medium_float(VariableDecl)": "@17",
+    "low_float(VariableDecl)": "@20",
+    "nonvariant(VariableDecl)": "@26",
+    "boolarray(VariableDecl)": "@29",
+    "multivar1(VariableDecl)": "@33",
+    "multivar2(VariableDecl)": "@33",
+    "multivar3(VariableDecl)": "@33",
+    "usertype(UserType)": "@50",
+    "uservalue1(VariableDecl)": "@40",
+    "uservalue2(VariableDecl)": "@48",
+    "uservalue3(VariableDecl)": "@52"
+  },
+  "parent_scope": "(builtin scope)",
+  "@id": 1
+}
