@@ -69,6 +69,16 @@ Node.prototype._value_is_empty = function(v) {
         return true;
     }
 
+    if (Object.prototype.isPrototypeOf(v)) {
+        for (var prop in v) {
+            if (v.hasOwnProperty(prop)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     return false;
 }
 
