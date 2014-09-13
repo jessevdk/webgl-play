@@ -58,6 +58,13 @@ Location.prototype.compare = function(loc) {
     return 0;
 }
 
+Location.prototype.advance_chars = function(n) {
+    var ret = this.copy();
+    ret.column += n;
+
+    return ret;
+}
+
 Location.prototype.advance = function(s) {
     var li = -1;
 
@@ -94,6 +101,66 @@ Range.prototype.inspect = function(depth) {
 
 Range.prototype.marshal = function() {
     return '(' + this.start.marshal() + '-' + this.end.marshal() + ')';
+}
+
+Range.prototype.extend = function(loc) {
+    var ret = this.copy();
+
+    if (Location.prototype.isPrototypeOf(loc)) {
+        loc = loc.to_range();
+    }
+
+    if (loc.start.compare(ret.start) < 0) {
+        ret.start = loc.start.copy();
+    }
+
+    if (loc.end.compare(ret.end) > 0) {
+        ret.end = loc.end.copy();
+    }
+
+    return ret;
+}
+
+Range.spans = function() {
+    var q = arguments;
+    var locs = [];
+    var args = Array.prototype.slice.call(arguments);
+
+    while (args.length > 0) {
+        var arg = args.pop();
+
+        if (Range.prototype.isPrototypeOf(arg)) {
+            locs.push(arg);
+        } else if (Location.prototype.isPrototypeOf(arg)) {
+            locs.push(arg.to_range());
+        } else if (Array.prototype.isPrototypeOf(arg)) {
+            args.concat(arg);
+        } else if (typeof arg.location === 'function') {
+            args.push(arg.location());
+        } else if (typeof arg.location !== 'undefined') {
+            args.push(arg.location);
+        }
+    }
+
+    if (locs.length == 0) {
+        return new Range(new Location(0, 0), new Location(0, 0));
+    }
+
+    var ret = locs[0].copy();
+
+    for (var i = 1; i < locs.length; i++) {
+        var loc = locs[i];
+
+        if (loc.start.compare(ret.start) < 0) {
+            ret.start = loc.start.copy();
+        }
+
+        if (loc.end.compare(ret.end) > 0) {
+            ret.end = loc.end.copy();
+        }
+    }
+
+    return ret;
 }
 
 function SourceError(loc, message) {

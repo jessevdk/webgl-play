@@ -254,6 +254,10 @@ function Type(tok) {
 Type.prototype = Node.create('Type', Type);
 exports.Type = Type;
 
+Type.prototype.location = function() {
+    return glsl.source.Range.spans(this.token, this.qualifiers);
+}
+
 function StructDecl(stok) {
     Node.call(this);
 
@@ -269,6 +273,13 @@ function StructDecl(stok) {
 StructDecl.prototype = Node.create('StructDecl', StructDecl);
 exports.StructDecl = StructDecl;
 
+StructDecl.prototype.location = function() {
+    return glsl.source.Range.spans(this.token,
+                                   this.name,
+                                   this.fields,
+                                   this.left_brace,
+                                   this.right_brace);
+}
 
 function FieldDecl(type) {
     Node.call(this);
@@ -280,6 +291,10 @@ function FieldDecl(type) {
 
 FieldDecl.prototype = Node.create('FieldDecl', FieldDecl);
 exports.FieldDecl = FieldDecl;
+
+FieldDecl.prototype.location = function() {
+    return glsl.source.Range.spans(this.type, this.names, this.semi);
+}
 
 
 function PrecisionStmt(token, qualifier, type) {
@@ -295,6 +310,13 @@ function PrecisionStmt(token, qualifier, type) {
 PrecisionStmt.prototype = Node.create('PrecisionStmt', PrecisionStmt);
 exports.PrecisionStmt = PrecisionStmt;
 
+PrecisionStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token,
+                                   this.qualifier,
+                                   this.type,
+                                   this.semi);
+}
+
 
 function InvariantDecl(token) {
     Node.call(this);
@@ -307,6 +329,10 @@ function InvariantDecl(token) {
 
 InvariantDecl.prototype = Node.create('InvariantDecl', InvariantDecl);
 exports.InvariantDecl = InvariantDecl;
+
+InvariantDecl.prototype.location = function() {
+    return glsl.source.Range.spans(this.token, this.names, this.semi);
+}
 
 
 function VariableDecl(type) {
@@ -321,6 +347,10 @@ function VariableDecl(type) {
 VariableDecl.prototype = Node.create('VariableDecl', VariableDecl);
 exports.VariableDecl = VariableDecl;
 
+VariableDecl.prototype.location = function() {
+    return glsl.source.Range.spans(this.type, this.names, this.semi);
+}
+
 
 function TypeDecl(type) {
     Node.call(this);
@@ -331,6 +361,10 @@ function TypeDecl(type) {
 
 TypeDecl.prototype = Node.create('TypeDecl', TypeDecl);
 exports.TypeDecl = TypeDecl;
+
+TypeDecl.prototype.location = function() {
+    return glsl.source.Range.spans(this.type, this.semi);
+}
 
 
 function ParamDecl() {
@@ -348,6 +382,14 @@ function ParamDecl() {
 
 ParamDecl.prototype = Node.create('ParamDecl', ParamDecl);
 exports.ParamDecl = ParamDecl;
+
+ParamDecl.prototype.location = function() {
+    return glsl.source.Range.spans(this.type,
+                                   this.name,
+                                   this.array_size,
+                                   this.left_bracket,
+                                   this.right_bracket);
+}
 
 
 function Named(name) {
@@ -367,6 +409,15 @@ function Named(name) {
 Named.prototype = Node.create('Named', Named);
 exports.Named = Named;
 
+Named.prototype.location = function() {
+    return glsl.source.Range.spans(this.name,
+                                   this.initial_assign,
+                                   this.initial_value,
+                                   this.array_size,
+                                   this.left_bracket,
+                                   this.right_bracket);
+}
+
 
 function FunctionHeader(type, name) {
     Node.call(this);
@@ -381,6 +432,14 @@ function FunctionHeader(type, name) {
 FunctionHeader.prototype = Node.create('FunctionHeader', FunctionHeader);
 exports.FunctionHeader = FunctionHeader;
 
+FunctionHeader.prototype.location = function() {
+    return glsl.source.Range.spans(this.type,
+                                   this.name,
+                                   this.parameters,
+                                   this.left_paren,
+                                   this.right_paren);
+}
+
 
 function FunctionProto(header) {
     Node.call(this);
@@ -392,6 +451,9 @@ function FunctionProto(header) {
 FunctionProto.prototype = Node.create('FunctionProto', FunctionProto);
 exports.FunctionProto = FunctionProto;
 
+FunctionProto.prototype.location = function() {
+    return glsl.source.Range.spans(this.header.location(), this.semi);
+}
 
 function FunctionDef(header) {
     Node.call(this);
@@ -403,6 +465,9 @@ function FunctionDef(header) {
 FunctionDef.prototype = Node.create('FunctionDef', FunctionDef);
 exports.FunctionDef = FunctionDef;
 
+FunctionDef.prototype.location = function() {
+    return glsl.source.Range.spans(this.header, this.body);
+}
 
 function Block() {
     Node.call(this);
@@ -416,6 +481,9 @@ function Block() {
 Block.prototype = Node.create('Block', Block);
 exports.Block = Block;
 
+Block.prototype.location = function() {
+    return glsl.source.Range.spans(this.right_brace, this.body, this.left_brace);
+}
 
 function EmptyStmt(semi) {
     Node.call(this);
@@ -426,6 +494,9 @@ function EmptyStmt(semi) {
 EmptyStmt.prototype = Node.create('EmptyStmt', EmptyStmt);
 exports.EmptyStmt = EmptyStmt;
 
+EmptyStmt.prototype.location = function() {
+    return this.semi.location.copy();
+}
 
 function ExpressionStmt(expr) {
     Node.call(this);
@@ -437,6 +508,9 @@ function ExpressionStmt(expr) {
 ExpressionStmt.prototype = Node.create('ExpressionStmt', ExpressionStmt);
 exports.ExpressionStmt = ExpressionStmt;
 
+ExpressionStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.expression, this.semi);
+}
 
 function ExpressionListStmt() {
     Node.call(this);
@@ -447,6 +521,10 @@ function ExpressionListStmt() {
 
 ExpressionListStmt.prototype = Node.create('ExpressionListStmt', ExpressionListStmt);
 exports.ExpressionListStmt = ExpressionListStmt;
+
+ExpressionListStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.expressions, this.semi);
+}
 
 
 function SelectionStmt(tok) {
@@ -463,6 +541,15 @@ function SelectionStmt(tok) {
 SelectionStmt.prototype = Node.create('SelectionStmt', SelectionStmt);
 exports.SelectionStmt = SelectionStmt;
 
+SelectionStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token,
+                                   this.left_paren,
+                                   this.condition,
+                                   this.right_paren,
+                                   this.body,
+                                   this.els);
+}
+
 
 function SelectionElseStmt(tok) {
     Node.call(this);
@@ -473,6 +560,10 @@ function SelectionElseStmt(tok) {
 
 SelectionElseStmt.prototype = Node.create('SelectionElseStmt', SelectionElseStmt);
 exports.SelectionElseStmt = SelectionElseStmt;
+
+SelectionElseStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token, this.body);
+}
 
 
 function WhileStmt(tok) {
@@ -488,6 +579,14 @@ function WhileStmt(tok) {
 
 WhileStmt.prototype = Node.create('WhileStmt', WhileStmt);
 exports.WhileStmt = WhileStmt;
+
+WhileStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token,
+                                   this.left_paren,
+                                   this.condition,
+                                   this.right_paren,
+                                   this.body);
+}
 
 
 function DoStmt(dtok) {
@@ -505,6 +604,15 @@ function DoStmt(dtok) {
 DoStmt.prototype = Node.create('DoStmt', DoStmt);
 exports.DoStmt = DoStmt;
 
+DoStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.do_token,
+                                   this.while_token,
+                                   this.left_paren,
+                                   this.condition,
+                                   this.right_paren,
+                                   this.body);
+}
+
 
 function ForStmt(tok) {
     Node.call(this);
@@ -521,6 +629,15 @@ function ForStmt(tok) {
 ForStmt.prototype = Node.create('ForStmt', ForStmt);
 exports.ForStmt = ForStmt;
 
+ForStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token,
+                                   this.left_paren,
+                                   this.init,
+                                   this.rest,
+                                   this.right_paren,
+                                   this.body);
+}
+
 
 function ForRestStmt(cond) {
     Node.call(this);
@@ -533,6 +650,10 @@ function ForRestStmt(cond) {
 ForRestStmt.prototype = Node.create('ForRestStmt', ForRestStmt);
 exports.ForRestStmt = ForRestStmt;
 
+ForRestStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.condition, this.semi, this.expression);
+}
+
 
 function ContinueStmt(tok) {
     Node.call(this);
@@ -543,6 +664,10 @@ function ContinueStmt(tok) {
 ContinueStmt.prototype = Node.create('ContinueStmt', ContinueStmt);
 exports.ContinueStmt = ContinueStmt;
 
+ContinueStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token, this.semi);
+}
+
 
 function BreakStmt(tok) {
     Node.call(this);
@@ -552,6 +677,10 @@ function BreakStmt(tok) {
 
 BreakStmt.prototype = Node.create('BreakStmt', BreakStmt);
 exports.BreakStmt = BreakStmt;
+
+BreakStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token, this.semi);
+}
 
 
 function ReturnStmt(tok) {
@@ -564,6 +693,10 @@ function ReturnStmt(tok) {
 ReturnStmt.prototype = Node.create('ReturnStmt', ReturnStmt);
 exports.ReturnStmt = ReturnStmt;
 
+ReturnStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token, this.expression, this.semi);
+}
+
 
 function DiscardStmt(tok) {
     Node.call(this);
@@ -573,6 +706,10 @@ function DiscardStmt(tok) {
 
 DiscardStmt.prototype = Node.create('DiscardStmt', DiscardStmt);
 exports.DiscardStmt = DiscardStmt;
+
+DiscardStmt.prototype.location = function() {
+    return glsl.source.Range.spans(this.token, this.semi);
+}
 
 
 function AssignmentExpr(lexpr) {
@@ -586,6 +723,9 @@ function AssignmentExpr(lexpr) {
 AssignmentExpr.prototype = Node.create('AssignmentExpr', AssignmentExpr);
 exports.AssignmentExpr = AssignmentExpr;
 
+AssignmentExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.lhs, this.op, this.rhs);
+}
 
 function TernaryExpr(condition) {
     Node.call(this);
@@ -600,6 +740,13 @@ function TernaryExpr(condition) {
 TernaryExpr.prototype = Node.create('TernaryExpr', TernaryExpr);
 exports.TernaryExpr = TernaryExpr;
 
+TernaryExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.condition,
+                                   this.question_token,
+                                   this.true_expression,
+                                   this.colon_token,
+                                   this.false_expression);
+}
 
 function BinOpExpr(lhs, op, rhs) {
     Node.call(this);
@@ -612,6 +759,10 @@ function BinOpExpr(lhs, op, rhs) {
 BinOpExpr.prototype = Node.create('BinOpExpr', BinOpExpr);
 exports.BinOpExpr = BinOpExpr;
 
+BinOpExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.lhs, this.op, this.rhs);
+}
+
 
 function UnaryOpExpr(op, rhs) {
     Node.call(this);
@@ -622,6 +773,10 @@ function UnaryOpExpr(op, rhs) {
 
 UnaryOpExpr.prototype = Node.create('UnaryOpExpr', UnaryOpExpr);
 exports.UnaryOpExpr = UnaryOpExpr;
+
+UnaryOpExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.op, this.expression);
+}
 
 
 function UnaryPostfixOpExpr(op, rhs) {
@@ -634,6 +789,10 @@ function UnaryPostfixOpExpr(op, rhs) {
 UnaryPostfixOpExpr.prototype = Node.create('UnaryPostfixOpExpr', UnaryPostfixOpExpr);
 exports.UnaryPostfixOpExpr = UnaryPostfixOpExpr;
 
+UnaryPostfixOpExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.op, this.expression);
+}
+
 
 function ConstantExpr(token) {
     Node.call(this);
@@ -643,6 +802,10 @@ function ConstantExpr(token) {
 
 ConstantExpr.prototype = Node.create('ConstantExpr', ConstantExpr);
 exports.ConstantExpr = ConstantExpr;
+
+ConstantExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.token);
+}
 
 
 function GroupExpr() {
@@ -656,6 +819,10 @@ function GroupExpr() {
 GroupExpr.prototype = Node.create('GroupExpr', GroupExpr);
 exports.GroupExpr = GroupExpr;
 
+GroupExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.left_paren, this.expression, this.right_paren);
+}
+
 
 function VariableExpr(name) {
     Node.call(this);
@@ -665,6 +832,10 @@ function VariableExpr(name) {
 
 VariableExpr.prototype = Node.create('VariableExpr', VariableExpr);
 exports.VariableExpr = VariableExpr;
+
+VariableExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.name);
+}
 
 
 function FunctionCallExpr(name) {
@@ -679,6 +850,10 @@ function FunctionCallExpr(name) {
 FunctionCallExpr.prototype = Node.create('FunctionCallExpr', FunctionCallExpr);
 exports.FunctionCallExpr = FunctionCallExpr;
 
+FunctionCallExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.name, this.left_paren, this.right_paren, this.arguments);
+}
+
 
 function FieldSelectionExpr(expr) {
     Node.call(this);
@@ -689,6 +864,10 @@ function FieldSelectionExpr(expr) {
 
 FieldSelectionExpr.prototype = Node.create('FieldSelectionExpr', FieldSelectionExpr);
 exports.FieldSelectionExpr = FieldSelectionExpr;
+
+FieldSelectionExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.expression, this.selector);
+}
 
 
 function IndexExpr(expr) {
@@ -704,6 +883,10 @@ function IndexExpr(expr) {
 IndexExpr.prototype = Node.create('IndexExpr', IndexExpr);
 exports.IndexExpr = IndexExpr;
 
+IndexExpr.prototype.location = function() {
+    return glsl.source.Range.spans(this.expression, this.right_bracket, this.index, this.left_bracket);
+}
+
 
 function NoMatch(tok) {
     Node.call(this);
@@ -713,6 +896,10 @@ function NoMatch(tok) {
 
 NoMatch.prototype = Node.create('NoMatch', NoMatch);
 exports.NoMatch = NoMatch;
+
+NoMatch.prototype.location = function() {
+    return glsl.source.Range.spans(this.token);
+}
 
 
 function Parser(source) {
