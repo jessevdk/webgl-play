@@ -441,6 +441,37 @@ FunctionHeader.prototype.location = function() {
                                    this.right_paren);
 }
 
+FunctionHeader.signature_from_names = function(name, argnames) {
+    var ret = name + '(';
+
+    for (var i = 0; i < argnames.length; i++) {
+        var item = argnames[i];
+
+        if (i != 0) {
+            ret += ',';
+        }
+
+        ret += item;
+    }
+
+    return ret + ')';
+}
+
+FunctionHeader.prototype.signature = function() {
+    var argnames = [];
+
+    for (var i = 0; i < this.parameters.length; i++) {
+        var param = this.parameters[i];
+
+        if (param.type.token.id == Tn.T_VOID) {
+            continue;
+        }
+
+        argnames.push(param.type.token.text);
+    }
+
+    return FunctionHeader.signature_from_names(this.name.text, argnames);
+}
 
 function FunctionProto(header) {
     Node.call(this);
