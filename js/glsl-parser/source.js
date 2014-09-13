@@ -86,6 +86,27 @@ Location.prototype.advance = function(s) {
     return ret;
 }
 
+function BuiltinLocation() {
+    Location.call(this, 0, 0);
+}
+
+BuiltinLocation.prototype = Object.create(Location.prototype);
+BuiltinLocation.prototype.constructor = BuiltinLocation;
+
+exports.BuiltinLocation = BuiltinLocation;
+
+BuiltinLocation.prototype.inspect = function() {
+    return '(builtin)';
+}
+
+BuiltinLocation.prototype.marshal = function() {
+    return '(builtin)';
+}
+
+BuiltinLocation.prototype.copy = function() {
+    return new BuiltinLocation();
+}
+
 function Range(start, end) {
     this.start = start.copy();
     this.end = end.copy();
@@ -162,6 +183,27 @@ Range.spans = function() {
 
     return ret;
 }
+
+function BuiltinRange() {
+    Range.call(this, new BuiltinLocation(), new BuiltinLocation());
+}
+
+BuiltinRange.prototype = Object.create(Range.prototype);
+BuiltinRange.prototype.constructor = BuiltinRange;
+
+BuiltinRange.prototype.inspect = function() {
+    return '(builtin)';
+}
+
+BuiltinRange.prototype.marshal = function() {
+    return '(builtin)';
+}
+
+BuiltinRange.prototype.copy = function() {
+    return new BuiltinRange();
+}
+
+exports.BuiltinRange = BuiltinRange;
 
 function SourceError(loc, message) {
     this.location = loc.copy();
