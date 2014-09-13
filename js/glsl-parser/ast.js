@@ -87,47 +87,94 @@ Node.prototype.complete = function() {
     return this;
 }
 
-Node.prototype._marshal_object = function(value) {
+Node.prototype._marshal_object_is_ref = function(value, inctype) {
+    if (Node.prototype.isPrototypeOf(value) &&
+        value.marshal_can_ref() &&
+        typeof value.__marshal_ref_id != 'undefined') {
+
+        value.__marshal_ref++;
+
+        var ret = '';
+
+        if (inctype) {
+            ret += value.node_name;
+        }
+
+        return ret + '@' + value.__marshal_ref_id;
+    }
+
+    return null;
+}
+
+Node.prototype.marshal_node_name = function() {
+    return this.node_name;
+}
+
+Node.prototype.marshal_can_ref = function() {
+    return true;
+}
+
+Node.prototype._marshal_object = function(value, ctx) {
     var ret = {};
+
+    var isref = this._marshal_object_is_ref(value, false);
+
+    if (isref !== null) {
+        return isref;
+    }
+
+    if (Node.prototype.isPrototypeOf(value) && value.marshal_can_ref()) {
+        value.__marshal_ref = 1;
+        value.__marshal_ref_id = ctx.__marshal_ref_id++;
+        value.__marshalled = ret;
+
+        ctx.objects.push(value);
+    }
 
     for (var k in value) {
         if (k[0] != '_' && value.hasOwnProperty(k) && !this._value_is_empty(value[k])) {
             var name = k;
             var val = value[k];
 
-            if (typeof val == 'object' && Node.prototype.isPrototypeOf(val)) {
-                name += '(' + val.node_name + ')';
+            if (typeof val == 'object' && typeof val.marshal_node_name === 'function') {
+                name += '(' + val.marshal_node_name() + ')';
             }
 
-            ret[name] = this._marshal_value(val);
+            ret[name] = this._marshal_value(val, ctx);
         }
     }
 
     return ret;
 }
 
-Node.prototype._marshal_array = function(value) {
+Node.prototype._marshal_array = function(value, ctx) {
     var ret = new Array(value.length);
 
     for (var i = 0; i < value.length; i++) {
         var val = value[i];
 
         if (typeof val == 'object' && Node.prototype.isPrototypeOf(val)) {
-            var h = {};
-            h[val.node_name] = this._marshal_value(val);
+            var isref = this._marshal_object_is_ref(val, true);
 
-            ret[i] = h;
+            if (isref === null) {
+                var h = {};
+                h[val.node_name] = this._marshal_value(val, ctx);
+
+                ret[i] = h;
+            } else {
+                ret[i] = isref;
+            }
         } else {
-            ret[i] = this._marshal_value(val);
+            ret[i] = this._marshal_value(val, ctx);
         }
     }
 
     return ret;
 }
 
-Node.prototype._marshal_value = function(value) {
-    if (typeof value.marshal == 'function') {
-        return value.marshal();
+Node.prototype._marshal_value = function(value, ctx) {
+    if (typeof value === 'undefined') {
+        return 'undefined';
     }
 
     if (typeof value != 'object') {
@@ -135,14 +182,55 @@ Node.prototype._marshal_value = function(value) {
     }
 
     if (Array.prototype.isPrototypeOf(value)) {
-        return this._marshal_array(value);
+        return this._marshal_array(value, ctx);
     }
 
-    return this._marshal_object(value);
+    var ret = this._marshal_object_is_ref(value, false);
+
+    if (ret === null) {
+        if (typeof value.marshal == 'function') {
+            ret = value.marshal(ctx);
+        } else {
+            ret = this._marshal_object(value, ctx);
+        }
+    }
+
+    return ret;
 }
 
-Node.prototype.marshal = function() {
-    return this._marshal_object(this);
+Node.prototype.marshal = function(ctx) {
+    var owned_ctx = false;
+
+    if (typeof ctx === 'undefined') {
+        ctx = {
+            __marshal_ref_id: 1,
+            objects: []
+        };
+
+        owned_ctx = true;
+    }
+
+    var ret = this._marshal_object(this, ctx);
+
+    if (owned_ctx) {
+        for (var i = 0; i < ctx.objects.length; i++) {
+            var obj = ctx.objects[i];
+
+            if (obj.__marshal_ref > 1) {
+                obj.__marshalled['@id'] = obj.__marshal_ref_id;
+            }
+
+            delete obj.__marshal_ref;
+            delete obj.__marshalled;
+            delete obj.__marshal_ref_id;
+        }
+    }
+
+    return ret;
+}
+
+Node.prototype.location = function() {
+    throw new Error(this.node_name + ' does not implement required location()');
 }
 
 Node.prototype.to_json = function() {
@@ -164,7 +252,6 @@ function Type(tok) {
 }
 
 Type.prototype = Node.create('Type', Type);
-
 exports.Type = Type;
 
 function StructDecl(stok) {
@@ -645,11 +732,11 @@ function Parser(source) {
 
 Parser.prototype = Node.create('Parser', Parser);
 
-Parser.prototype.marshal = function() {
-    var ret = Node.prototype.marshal.call(this);
+Parser.prototype.marshal = function(ctx) {
+    var ret = Node.prototype.marshal.call(this, ctx);
 
     if (this._errors.length != 0) {
-        ret.errors = this._marshal_array(this._errors);
+        ret.errors = this._marshal_array(this._errors, ctx);
     }
 
     return ret;
