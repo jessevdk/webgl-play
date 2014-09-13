@@ -4,6 +4,11 @@ _MOCHA_BIN = $(NODE_MODULES_BIN)/_mocha
 ISTANBUL_BIN = $(NODE_MODULES_BIN)/istanbul
 
 MOCHA_OPTS = -u tdd
+MOCHA_TEST ?=
+
+ifneq ($(MOCHA_TEST),)
+MOCHA_OPTS += -g "$(MOCHA_TEST)"
+endif
 
 MOCHA = $(MOCHA_BIN) $(MOCHA_OPTS)
 
