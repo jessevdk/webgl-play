@@ -18,7 +18,7 @@ uniform bool boolarray[4];
 int multivar1, multivar2 = 4, multivar3[2];
 
 struct usertype {
-	int a, b;
+    int a, b;
 } uservalue1;
 
 usertype uservalue2;
