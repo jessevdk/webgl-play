@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const glsl = require('../glslparser');
 
 var fs = require('fs');
