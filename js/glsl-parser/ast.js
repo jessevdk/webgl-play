@@ -2378,6 +2378,15 @@ Parser.prototype._parse_declaration_or_expression_statement = function(tok, m) {
         }
     }
 
+    // Check to see if we start with a constructor
+    if (this._match(this._parse_function_identifier, tok)) {
+        var n = this._t.peek();
+
+        if (n.id == Tn.T_LEFT_PAREN) {
+            return this._parse_rule(this._parse_expression_statement, tok);
+        }
+    }
+
     var m = this._match(this._parse_declaration, tok);
 
     if (m) {
