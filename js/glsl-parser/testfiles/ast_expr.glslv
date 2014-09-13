@@ -1,19 +1,27 @@
 #version 100
 
+float f(float, float);
+float f();
+
 void main() {
-    a = 2 + 1 * 3 + f(b, c) - c.xx / 5.1 + 0555 + 0xef09 + -2;
+    float a, b;
+    vec2 c[4];
+    vec2 d;
+    int i = 0;
+
+    a = 2 + 1 * 3 + f(b, d.x) - d.x / 5.1 + 0555 + 0xef09 + -2;
     b++;
     ++b;
     b--;
     --b;
 
-    !c;
+    !a;
 
-    c == 3 ? 1 + 2 : 3 * 4;
-    c != 2;
-    c[i + 2].field;
+    a == 3 ? 1 + 2 : 3 * 4;
+    a != 2;
+    c[i + 2].x;
 
-    a || b && c || (d && !c);
+    bool(a) || bool(b) && bool(c[0].x) || (bool(d.y) && !bool(c[0].y));
 
     a, b, c;
 
@@ -22,7 +30,7 @@ void main() {
     a *= 2;
     a /= 2;
 
-    f(void);
+    fv(void);
 }
 
 // vi:ts=4:et

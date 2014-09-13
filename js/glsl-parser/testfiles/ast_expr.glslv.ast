@@ -1,27 +1,152 @@
 {
   "body": [
     {
+      "FunctionProto": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "FLOAT:float@(3.1-3.6)",
+            "is_builtin": true
+          },
+          "name": "IDENTIFIER:f@(3.7-3.8)",
+          "parameters": [
+            {
+              "ParamDecl": {
+                "type(Type)": {
+                  "token": "FLOAT:float@(3.9-3.14)",
+                  "is_builtin": true
+                }
+              }
+            },
+            {
+              "ParamDecl": {
+                "type(Type)": {
+                  "token": "FLOAT:float@(3.16-3.21)",
+                  "is_builtin": true
+                }
+              }
+            }
+          ],
+          "left_paren": "LEFT_PAREN:(@(3.8-3.9)",
+          "right_paren": "RIGHT_PAREN:)@(3.21-3.22)"
+        },
+        "semi": "SEMICOLON:;@(3.22-3.23)"
+      }
+    },
+    {
+      "FunctionProto": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "FLOAT:float@(4.1-4.6)",
+            "is_builtin": true
+          },
+          "name": "IDENTIFIER:f@(4.7-4.8)",
+          "left_paren": "LEFT_PAREN:(@(4.8-4.9)",
+          "right_paren": "RIGHT_PAREN:)@(4.9-4.10)"
+        },
+        "semi": "SEMICOLON:;@(4.10-4.11)"
+      }
+    },
+    {
       "FunctionDef": {
         "header(FunctionHeader)": {
           "type(Type)": {
-            "token": "VOID:void@(3.1-3.5)",
+            "token": "VOID:void@(6.1-6.5)",
             "is_builtin": true
           },
-          "name": "IDENTIFIER:main@(3.6-3.10)",
-          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
-          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
+          "name": "IDENTIFIER:main@(6.6-6.10)",
+          "left_paren": "LEFT_PAREN:(@(6.10-6.11)",
+          "right_paren": "RIGHT_PAREN:)@(6.11-6.12)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(26.1-26.2)",
-          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "right_brace": "RIGHT_BRACE:}@(34.1-34.2)",
+          "left_brace": "LEFT_BRACE:{@(6.13-6.14)",
           "body": [
+            {
+              "VariableDecl": {
+                "type(Type)": {
+                  "token": "FLOAT:float@(7.5-7.10)",
+                  "is_builtin": true
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:a@(7.11-7.12)"
+                    }
+                  },
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b@(7.14-7.15)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(7.15-7.16)"
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(Type)": {
+                  "token": "VEC2:vec2@(8.5-8.9)",
+                  "is_builtin": true
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:c@(8.10-8.11)",
+                      "is_array": true,
+                      "array_size(ConstantExpr)": {
+                        "token": "INTCONSTANT:4@(8.12-8.13) = 4"
+                      },
+                      "left_bracket": "LEFT_BRACKET:[@(8.11-8.12)",
+                      "right_bracket": "RIGHT_BRACKET:]@(8.13-8.14)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(8.14-8.15)"
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(Type)": {
+                  "token": "VEC2:vec2@(9.5-9.9)",
+                  "is_builtin": true
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:d@(9.10-9.11)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(9.11-9.12)"
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(Type)": {
+                  "token": "INT:int@(10.5-10.8)",
+                  "is_builtin": true
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:i@(10.9-10.10)",
+                      "initial_assign": "EQUAL:=@(10.11-10.12)",
+                      "initial_value(ConstantExpr)": {
+                        "token": "INTCONSTANT:0@(10.13-10.14) = 0"
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(10.14-10.15)"
+              }
+            },
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
                   "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(4.5-4.6)"
+                    "name": "IDENTIFIER:a@(12.5-12.6)"
                   },
-                  "op": "EQUAL:=@(4.7-4.8)",
+                  "op": "EQUAL:=@(12.7-12.8)",
                   "rhs(BinOpExpr)": {
                     "lhs(BinOpExpr)": {
                       "lhs(BinOpExpr)": {
@@ -29,127 +154,132 @@
                           "lhs(BinOpExpr)": {
                             "lhs(BinOpExpr)": {
                               "lhs(ConstantExpr)": {
-                                "token": "INTCONSTANT:2@(4.9-4.10) = 2"
+                                "token": "INTCONSTANT:2@(12.9-12.10) = 2"
                               },
-                              "op": "PLUS:+@(4.11-4.12)",
+                              "op": "PLUS:+@(12.11-12.12)",
                               "rhs(BinOpExpr)": {
                                 "lhs(ConstantExpr)": {
-                                  "token": "INTCONSTANT:1@(4.13-4.14) = 1"
+                                  "token": "INTCONSTANT:1@(12.13-12.14) = 1"
                                 },
-                                "op": "STAR:*@(4.15-4.16)",
+                                "op": "STAR:*@(12.15-12.16)",
                                 "rhs(ConstantExpr)": {
-                                  "token": "INTCONSTANT:3@(4.17-4.18) = 3"
+                                  "token": "INTCONSTANT:3@(12.17-12.18) = 3"
                                 }
                               }
                             },
-                            "op": "PLUS:+@(4.19-4.20)",
+                            "op": "PLUS:+@(12.19-12.20)",
                             "rhs(FunctionCallExpr)": {
-                              "name": "IDENTIFIER:f@(4.21-4.22)",
-                              "left_paren": "LEFT_PAREN:(@(4.22-4.23)",
-                              "right_paren": "RIGHT_PAREN:)@(4.27-4.28)",
+                              "name": "IDENTIFIER:f@(12.21-12.22)",
+                              "left_paren": "LEFT_PAREN:(@(12.22-12.23)",
+                              "right_paren": "RIGHT_PAREN:)@(12.29-12.30)",
                               "arguments": [
                                 {
                                   "VariableExpr": {
-                                    "name": "IDENTIFIER:b@(4.23-4.24)"
+                                    "name": "IDENTIFIER:b@(12.23-12.24)"
                                   }
                                 },
                                 {
-                                  "VariableExpr": {
-                                    "name": "IDENTIFIER:c@(4.26-4.27)"
+                                  "FieldSelectionExpr": {
+                                    "expression(VariableExpr)": {
+                                      "name": "IDENTIFIER:d@(12.26-12.27)"
+                                    },
+                                    "op": "DOT:.@(12.27-12.28)",
+                                    "selector": "IDENTIFIER:x@(12.28-12.29)"
                                   }
                                 }
                               ]
                             }
                           },
-                          "op": "DASH:-@(4.29-4.30)",
+                          "op": "DASH:-@(12.31-12.32)",
                           "rhs(BinOpExpr)": {
                             "lhs(FieldSelectionExpr)": {
                               "expression(VariableExpr)": {
-                                "name": "IDENTIFIER:c@(4.31-4.32)"
+                                "name": "IDENTIFIER:d@(12.33-12.34)"
                               },
-                              "selector": "IDENTIFIER:xx@(4.33-4.35)"
+                              "op": "DOT:.@(12.34-12.35)",
+                              "selector": "IDENTIFIER:x@(12.35-12.36)"
                             },
-                            "op": "SLASH:/@(4.36-4.37)",
+                            "op": "SLASH:/@(12.37-12.38)",
                             "rhs(ConstantExpr)": {
-                              "token": "FLOATCONSTANT:5.1@(4.38-4.41) = 5.1"
+                              "token": "FLOATCONSTANT:5.1@(12.39-12.42) = 5.1"
                             }
                           }
                         },
-                        "op": "PLUS:+@(4.42-4.43)",
+                        "op": "PLUS:+@(12.43-12.44)",
                         "rhs(ConstantExpr)": {
-                          "token": "INTCONSTANT:0555@(4.44-4.48) = 365"
+                          "token": "INTCONSTANT:0555@(12.45-12.49) = 365"
                         }
                       },
-                      "op": "PLUS:+@(4.49-4.50)",
+                      "op": "PLUS:+@(12.50-12.51)",
                       "rhs(ConstantExpr)": {
-                        "token": "INTCONSTANT:0xef09@(4.51-4.57) = 61193"
+                        "token": "INTCONSTANT:0xef09@(12.52-12.58) = 61193"
                       }
                     },
-                    "op": "PLUS:+@(4.58-4.59)",
+                    "op": "PLUS:+@(12.59-12.60)",
                     "rhs(UnaryOpExpr)": {
-                      "op": "DASH:-@(4.60-4.61)",
+                      "op": "DASH:-@(12.61-12.62)",
                       "expression(ConstantExpr)": {
-                        "token": "INTCONSTANT:2@(4.61-4.62) = 2"
+                        "token": "INTCONSTANT:2@(12.62-12.63) = 2"
                       }
                     }
                   }
                 },
-                "semi": "SEMICOLON:;@(4.62-4.63)"
+                "semi": "SEMICOLON:;@(12.63-12.64)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(UnaryPostfixOpExpr)": {
-                  "op": "INC_OP:++@(5.6-5.8)",
+                  "op": "INC_OP:++@(13.6-13.8)",
                   "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:b@(5.5-5.6)"
+                    "name": "IDENTIFIER:b@(13.5-13.6)"
                   }
                 },
-                "semi": "SEMICOLON:;@(5.8-5.9)"
+                "semi": "SEMICOLON:;@(13.8-13.9)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(UnaryOpExpr)": {
-                  "op": "INC_OP:++@(6.5-6.7)",
+                  "op": "INC_OP:++@(14.5-14.7)",
                   "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:b@(6.7-6.8)"
+                    "name": "IDENTIFIER:b@(14.7-14.8)"
                   }
                 },
-                "semi": "SEMICOLON:;@(6.8-6.9)"
+                "semi": "SEMICOLON:;@(14.8-14.9)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(UnaryPostfixOpExpr)": {
-                  "op": "DEC_OP:--@(7.6-7.8)",
+                  "op": "DEC_OP:--@(15.6-15.8)",
                   "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:b@(7.5-7.6)"
+                    "name": "IDENTIFIER:b@(15.5-15.6)"
                   }
                 },
-                "semi": "SEMICOLON:;@(7.8-7.9)"
+                "semi": "SEMICOLON:;@(15.8-15.9)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(UnaryOpExpr)": {
-                  "op": "DEC_OP:--@(8.5-8.7)",
+                  "op": "DEC_OP:--@(16.5-16.7)",
                   "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:b@(8.7-8.8)"
+                    "name": "IDENTIFIER:b@(16.7-16.8)"
                   }
                 },
-                "semi": "SEMICOLON:;@(8.8-8.9)"
+                "semi": "SEMICOLON:;@(16.8-16.9)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(UnaryOpExpr)": {
-                  "op": "BANG:!@(10.5-10.6)",
+                  "op": "BANG:!@(18.5-18.6)",
                   "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:c@(10.6-10.7)"
+                    "name": "IDENTIFIER:a@(18.6-18.7)"
                   }
                 },
-                "semi": "SEMICOLON:;@(10.7-10.8)"
+                "semi": "SEMICOLON:;@(18.7-18.8)"
               }
             },
             {
@@ -157,159 +287,44 @@
                 "expression(TernaryExpr)": {
                   "condition(BinOpExpr)": {
                     "lhs(VariableExpr)": {
-                      "name": "IDENTIFIER:c@(12.5-12.6)"
+                      "name": "IDENTIFIER:a@(20.5-20.6)"
                     },
-                    "op": "EQ_OP:==@(12.7-12.9)",
+                    "op": "EQ_OP:==@(20.7-20.9)",
                     "rhs(ConstantExpr)": {
-                      "token": "INTCONSTANT:3@(12.10-12.11) = 3"
+                      "token": "INTCONSTANT:3@(20.10-20.11) = 3"
                     }
                   },
-                  "question_token": "QUESTION:?@(12.12-12.13)",
+                  "question_token": "QUESTION:?@(20.12-20.13)",
                   "true_expression(BinOpExpr)": {
                     "lhs(ConstantExpr)": {
-                      "token": "INTCONSTANT:1@(12.14-12.15) = 1"
+                      "token": "INTCONSTANT:1@(20.14-20.15) = 1"
                     },
-                    "op": "PLUS:+@(12.16-12.17)",
+                    "op": "PLUS:+@(20.16-20.17)",
                     "rhs(ConstantExpr)": {
-                      "token": "INTCONSTANT:2@(12.18-12.19) = 2"
+                      "token": "INTCONSTANT:2@(20.18-20.19) = 2"
                     }
                   },
-                  "colon_token": "COLON::@(12.20-12.21)",
+                  "colon_token": "COLON::@(20.20-20.21)",
                   "false_expression(BinOpExpr)": {
                     "lhs(ConstantExpr)": {
-                      "token": "INTCONSTANT:3@(12.22-12.23) = 3"
+                      "token": "INTCONSTANT:3@(20.22-20.23) = 3"
                     },
-                    "op": "STAR:*@(12.24-12.25)",
+                    "op": "STAR:*@(20.24-20.25)",
                     "rhs(ConstantExpr)": {
-                      "token": "INTCONSTANT:4@(12.26-12.27) = 4"
+                      "token": "INTCONSTANT:4@(20.26-20.27) = 4"
                     }
                   }
                 },
-                "semi": "SEMICOLON:;@(12.27-12.28)"
+                "semi": "SEMICOLON:;@(20.27-20.28)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(BinOpExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:c@(13.5-13.6)"
-                  },
-                  "op": "NE_OP:!=@(13.7-13.9)",
-                  "rhs(ConstantExpr)": {
-                    "token": "INTCONSTANT:2@(13.10-13.11) = 2"
-                  }
-                },
-                "semi": "SEMICOLON:;@(13.11-13.12)"
-              }
-            },
-            {
-              "ExpressionStmt": {
-                "expression(FieldSelectionExpr)": {
-                  "expression(IndexExpr)": {
-                    "expression(VariableExpr)": {
-                      "name": "IDENTIFIER:c@(14.5-14.6)"
-                    },
-                    "right_bracket": "RIGHT_BRACKET:]@(14.12-14.13)",
-                    "index(BinOpExpr)": {
-                      "lhs(VariableExpr)": {
-                        "name": "IDENTIFIER:i@(14.7-14.8)"
-                      },
-                      "op": "PLUS:+@(14.9-14.10)",
-                      "rhs(ConstantExpr)": {
-                        "token": "INTCONSTANT:2@(14.11-14.12) = 2"
-                      }
-                    },
-                    "left_bracket": "LEFT_BRACKET:[@(14.6-14.7)"
-                  },
-                  "selector": "IDENTIFIER:field@(14.14-14.19)"
-                },
-                "semi": "SEMICOLON:;@(14.19-14.20)"
-              }
-            },
-            {
-              "ExpressionStmt": {
-                "expression(BinOpExpr)": {
-                  "lhs(BinOpExpr)": {
-                    "lhs(VariableExpr)": {
-                      "name": "IDENTIFIER:a@(16.5-16.6)"
-                    },
-                    "op": "OR_OP:||@(16.7-16.9)",
-                    "rhs(BinOpExpr)": {
-                      "lhs(VariableExpr)": {
-                        "name": "IDENTIFIER:b@(16.10-16.11)"
-                      },
-                      "op": "AND_OP:&&@(16.12-16.14)",
-                      "rhs(VariableExpr)": {
-                        "name": "IDENTIFIER:c@(16.15-16.16)"
-                      }
-                    }
-                  },
-                  "op": "OR_OP:||@(16.17-16.19)",
-                  "rhs(GroupExpr)": {
-                    "left_paren": "LEFT_PAREN:(@(16.20-16.21)",
-                    "expression(BinOpExpr)": {
-                      "lhs(VariableExpr)": {
-                        "name": "IDENTIFIER:d@(16.21-16.22)"
-                      },
-                      "op": "AND_OP:&&@(16.23-16.25)",
-                      "rhs(UnaryOpExpr)": {
-                        "op": "BANG:!@(16.26-16.27)",
-                        "expression(VariableExpr)": {
-                          "name": "IDENTIFIER:c@(16.27-16.28)"
-                        }
-                      }
-                    },
-                    "right_paren": "RIGHT_PAREN:)@(16.28-16.29)"
-                  }
-                },
-                "semi": "SEMICOLON:;@(16.29-16.30)"
-              }
-            },
-            {
-              "ExpressionStmt": {
-                "expression(ExpressionListStmt)": {
-                  "expressions": [
-                    {
-                      "VariableExpr": {
-                        "name": "IDENTIFIER:a@(18.5-18.6)"
-                      }
-                    },
-                    {
-                      "VariableExpr": {
-                        "name": "IDENTIFIER:b@(18.8-18.9)"
-                      }
-                    },
-                    {
-                      "VariableExpr": {
-                        "name": "IDENTIFIER:c@(18.11-18.12)"
-                      }
-                    }
-                  ]
-                },
-                "semi": "SEMICOLON:;@(18.12-18.13)"
-              }
-            },
-            {
-              "ExpressionStmt": {
-                "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(20.5-20.6)"
-                  },
-                  "op": "ADD_ASSIGN:+=@(20.7-20.9)",
-                  "rhs(ConstantExpr)": {
-                    "token": "INTCONSTANT:2@(20.10-20.11) = 2"
-                  }
-                },
-                "semi": "SEMICOLON:;@(20.11-20.12)"
-              }
-            },
-            {
-              "ExpressionStmt": {
-                "expression(AssignmentExpr)": {
                   "lhs(VariableExpr)": {
                     "name": "IDENTIFIER:a@(21.5-21.6)"
                   },
-                  "op": "SUB_ASSIGN:-=@(21.7-21.9)",
+                  "op": "NE_OP:!=@(21.7-21.9)",
                   "rhs(ConstantExpr)": {
                     "token": "INTCONSTANT:2@(21.10-21.11) = 2"
                   }
@@ -319,43 +334,230 @@
             },
             {
               "ExpressionStmt": {
-                "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(22.5-22.6)"
+                "expression(FieldSelectionExpr)": {
+                  "expression(IndexExpr)": {
+                    "expression(VariableExpr)": {
+                      "name": "IDENTIFIER:c@(22.5-22.6)"
+                    },
+                    "right_bracket": "RIGHT_BRACKET:]@(22.12-22.13)",
+                    "index(BinOpExpr)": {
+                      "lhs(VariableExpr)": {
+                        "name": "IDENTIFIER:i@(22.7-22.8)"
+                      },
+                      "op": "PLUS:+@(22.9-22.10)",
+                      "rhs(ConstantExpr)": {
+                        "token": "INTCONSTANT:2@(22.11-22.12) = 2"
+                      }
+                    },
+                    "left_bracket": "LEFT_BRACKET:[@(22.6-22.7)"
                   },
-                  "op": "MUL_ASSIGN:*=@(22.7-22.9)",
-                  "rhs(ConstantExpr)": {
-                    "token": "INTCONSTANT:2@(22.10-22.11) = 2"
+                  "op": "LEFT_BRACKET:[@(22.6-22.7)",
+                  "selector": "IDENTIFIER:x@(22.14-22.15)"
+                },
+                "semi": "SEMICOLON:;@(22.15-22.16)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(BinOpExpr)": {
+                  "lhs(BinOpExpr)": {
+                    "lhs(FunctionCallExpr)": {
+                      "name": "BOOL:bool@(24.5-24.9)",
+                      "left_paren": "LEFT_PAREN:(@(24.9-24.10)",
+                      "right_paren": "RIGHT_PAREN:)@(24.11-24.12)",
+                      "arguments": [
+                        {
+                          "VariableExpr": {
+                            "name": "IDENTIFIER:a@(24.10-24.11)"
+                          }
+                        }
+                      ]
+                    },
+                    "op": "OR_OP:||@(24.13-24.15)",
+                    "rhs(BinOpExpr)": {
+                      "lhs(FunctionCallExpr)": {
+                        "name": "BOOL:bool@(24.16-24.20)",
+                        "left_paren": "LEFT_PAREN:(@(24.20-24.21)",
+                        "right_paren": "RIGHT_PAREN:)@(24.22-24.23)",
+                        "arguments": [
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:b@(24.21-24.22)"
+                            }
+                          }
+                        ]
+                      },
+                      "op": "AND_OP:&&@(24.24-24.26)",
+                      "rhs(FunctionCallExpr)": {
+                        "name": "BOOL:bool@(24.27-24.31)",
+                        "left_paren": "LEFT_PAREN:(@(24.31-24.32)",
+                        "right_paren": "RIGHT_PAREN:)@(24.38-24.39)",
+                        "arguments": [
+                          {
+                            "FieldSelectionExpr": {
+                              "expression(IndexExpr)": {
+                                "expression(VariableExpr)": {
+                                  "name": "IDENTIFIER:c@(24.32-24.33)"
+                                },
+                                "right_bracket": "RIGHT_BRACKET:]@(24.35-24.36)",
+                                "index(ConstantExpr)": {
+                                  "token": "INTCONSTANT:0@(24.34-24.35) = 0"
+                                },
+                                "left_bracket": "LEFT_BRACKET:[@(24.33-24.34)"
+                              },
+                              "op": "LEFT_BRACKET:[@(24.33-24.34)",
+                              "selector": "IDENTIFIER:x@(24.37-24.38)"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "op": "OR_OP:||@(24.40-24.42)",
+                  "rhs(GroupExpr)": {
+                    "left_paren": "LEFT_PAREN:(@(24.43-24.44)",
+                    "expression(BinOpExpr)": {
+                      "lhs(FunctionCallExpr)": {
+                        "name": "BOOL:bool@(24.44-24.48)",
+                        "left_paren": "LEFT_PAREN:(@(24.48-24.49)",
+                        "right_paren": "RIGHT_PAREN:)@(24.52-24.53)",
+                        "arguments": [
+                          {
+                            "FieldSelectionExpr": {
+                              "expression(VariableExpr)": {
+                                "name": "IDENTIFIER:d@(24.49-24.50)"
+                              },
+                              "op": "DOT:.@(24.50-24.51)",
+                              "selector": "IDENTIFIER:y@(24.51-24.52)"
+                            }
+                          }
+                        ]
+                      },
+                      "op": "AND_OP:&&@(24.54-24.56)",
+                      "rhs(UnaryOpExpr)": {
+                        "op": "BANG:!@(24.57-24.58)",
+                        "expression(FunctionCallExpr)": {
+                          "name": "BOOL:bool@(24.58-24.62)",
+                          "left_paren": "LEFT_PAREN:(@(24.62-24.63)",
+                          "right_paren": "RIGHT_PAREN:)@(24.69-24.70)",
+                          "arguments": [
+                            {
+                              "FieldSelectionExpr": {
+                                "expression(IndexExpr)": {
+                                  "expression(VariableExpr)": {
+                                    "name": "IDENTIFIER:c@(24.63-24.64)"
+                                  },
+                                  "right_bracket": "RIGHT_BRACKET:]@(24.66-24.67)",
+                                  "index(ConstantExpr)": {
+                                    "token": "INTCONSTANT:0@(24.65-24.66) = 0"
+                                  },
+                                  "left_bracket": "LEFT_BRACKET:[@(24.64-24.65)"
+                                },
+                                "op": "LEFT_BRACKET:[@(24.64-24.65)",
+                                "selector": "IDENTIFIER:y@(24.68-24.69)"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "right_paren": "RIGHT_PAREN:)@(24.70-24.71)"
                   }
                 },
-                "semi": "SEMICOLON:;@(22.11-22.12)"
+                "semi": "SEMICOLON:;@(24.71-24.72)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(ExpressionListStmt)": {
+                  "expressions": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:a@(26.5-26.6)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b@(26.8-26.9)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:c@(26.11-26.12)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(26.12-26.13)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
                   "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(23.5-23.6)"
+                    "name": "IDENTIFIER:a@(28.5-28.6)"
                   },
-                  "op": "DIV_ASSIGN:/=@(23.7-23.9)",
+                  "op": "ADD_ASSIGN:+=@(28.7-28.9)",
                   "rhs(ConstantExpr)": {
-                    "token": "INTCONSTANT:2@(23.10-23.11) = 2"
+                    "token": "INTCONSTANT:2@(28.10-28.11) = 2"
                   }
                 },
-                "semi": "SEMICOLON:;@(23.11-23.12)"
+                "semi": "SEMICOLON:;@(28.11-28.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(AssignmentExpr)": {
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(29.5-29.6)"
+                  },
+                  "op": "SUB_ASSIGN:-=@(29.7-29.9)",
+                  "rhs(ConstantExpr)": {
+                    "token": "INTCONSTANT:2@(29.10-29.11) = 2"
+                  }
+                },
+                "semi": "SEMICOLON:;@(29.11-29.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(AssignmentExpr)": {
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(30.5-30.6)"
+                  },
+                  "op": "MUL_ASSIGN:*=@(30.7-30.9)",
+                  "rhs(ConstantExpr)": {
+                    "token": "INTCONSTANT:2@(30.10-30.11) = 2"
+                  }
+                },
+                "semi": "SEMICOLON:;@(30.11-30.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(AssignmentExpr)": {
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(31.5-31.6)"
+                  },
+                  "op": "DIV_ASSIGN:/=@(31.7-31.9)",
+                  "rhs(ConstantExpr)": {
+                    "token": "INTCONSTANT:2@(31.10-31.11) = 2"
+                  }
+                },
+                "semi": "SEMICOLON:;@(31.11-31.12)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:f@(25.5-25.6)",
-                  "left_paren": "LEFT_PAREN:(@(25.6-25.7)",
-                  "right_paren": "RIGHT_PAREN:)@(25.11-25.12)",
+                  "name": "IDENTIFIER:fv@(33.5-33.7)",
+                  "left_paren": "LEFT_PAREN:(@(33.7-33.8)",
+                  "right_paren": "RIGHT_PAREN:)@(33.12-33.13)",
                   "arguments": [
-                    "VOID:void@(25.7-25.11)"
+                    "VOID:void@(33.8-33.12)"
                   ]
                 },
-                "semi": "SEMICOLON:;@(25.12-25.13)"
+                "semi": "SEMICOLON:;@(33.13-33.14)"
               }
             }
           ],
@@ -365,6 +567,6 @@
     }
   ],
   "comments": [
-    "COMMENT:// vi:ts=4:et@(28.1-28.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// vi:ts=4:et@(36.1-36.14), multi:false =  vi:ts=4:et"
   ]
 }
