@@ -239,22 +239,22 @@
             {
               "FieldDecl": {
                 "type(Type)": {
-                  "token": "INT:int@(21.2-21.5)",
+                  "token": "INT:int@(21.5-21.8)",
                   "is_builtin": true
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:a@(21.6-21.7)"
+                      "name": "IDENTIFIER:a@(21.9-21.10)"
                     }
                   },
                   {
                     "Named": {
-                      "name": "IDENTIFIER:b@(21.9-21.10)"
+                      "name": "IDENTIFIER:b@(21.12-21.13)"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(21.10-21.11)"
+                "semi": "SEMICOLON:;@(21.13-21.14)"
               }
             }
           ]
@@ -285,43 +285,118 @@
       }
     },
     {
-      "FunctionDef": {
-        "header(FunctionHeader)": {
-          "type(Type)": {
-            "token": "VOID:void@(26.1-26.5)",
-            "is_builtin": true
-          },
-          "name": "IDENTIFIER:f@(26.6-26.7)",
-          "parameters": [
+      "VariableDecl": {
+        "type(StructDecl)": {
+          "token": "STRUCT:struct@(26.1-26.7)",
+          "left_brace": "LEFT_BRACE:{@(26.8-26.9)",
+          "right_brace": "RIGHT_BRACE:}@(32.1-32.2)",
+          "fields": [
             {
-              "ParamDecl": {
-                "type(Type)": {
-                  "token": "IDENTIFIER:usertype@(26.8-26.16)"
-                },
-                "name": "IDENTIFIER:a@(26.17-26.18)"
-              }
-            }
-          ],
-          "left_paren": "LEFT_PAREN:(@(26.7-26.8)",
-          "right_paren": "RIGHT_PAREN:)@(26.18-26.19)"
-        },
-        "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(28.1-28.2)",
-          "left_brace": "LEFT_BRACE:{@(26.20-26.21)",
-          "body": [
-            {
-              "VariableDecl": {
-                "type(Type)": {
-                  "token": "IDENTIFIER:usertype@(27.2-27.10)"
+              "FieldDecl": {
+                "type(StructDecl)": {
+                  "token": "STRUCT:struct@(27.5-27.11)",
+                  "name": "IDENTIFIER:A@(27.12-27.13)",
+                  "left_brace": "LEFT_BRACE:{@(27.14-27.15)",
+                  "right_brace": "RIGHT_BRACE:}@(29.5-29.6)",
+                  "fields": [
+                    {
+                      "FieldDecl": {
+                        "type(Type)": {
+                          "token": "INT:int@(28.9-28.12)",
+                          "is_builtin": true
+                        },
+                        "names": [
+                          {
+                            "Named": {
+                              "name": "IDENTIFIER:v@(28.13-28.14)"
+                            }
+                          }
+                        ],
+                        "semi": "SEMICOLON:;@(28.14-28.15)"
+                      }
+                    }
+                  ]
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:b@(27.11-27.12)"
+                      "name": "IDENTIFIER:a@(29.7-29.8)"
+                    }
+                  },
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b@(29.10-29.11)"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(27.12-27.13)"
+                "semi": "SEMICOLON:;@(29.11-29.12)"
+              }
+            },
+            {
+              "FieldDecl": {
+                "type(Type)": {
+                  "token": "IDENTIFIER:A@(31.5-31.6)"
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:c@(31.7-31.8)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(31.8-31.9)"
+              }
+            }
+          ]
+        },
+        "names": [
+          {
+            "Named": {
+              "name": "IDENTIFIER:uservalue3@(32.3-32.13)"
+            }
+          }
+        ],
+        "semi": "SEMICOLON:;@(32.13-32.14)"
+      }
+    },
+    {
+      "FunctionDef": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "VOID:void@(35.1-35.5)",
+            "is_builtin": true
+          },
+          "name": "IDENTIFIER:f@(35.6-35.7)",
+          "parameters": [
+            {
+              "ParamDecl": {
+                "type(Type)": {
+                  "token": "IDENTIFIER:usertype@(35.8-35.16)"
+                },
+                "name": "IDENTIFIER:a@(35.17-35.18)"
+              }
+            }
+          ],
+          "left_paren": "LEFT_PAREN:(@(35.7-35.8)",
+          "right_paren": "RIGHT_PAREN:)@(35.18-35.19)"
+        },
+        "body(Block)": {
+          "right_brace": "RIGHT_BRACE:}@(37.1-37.2)",
+          "left_brace": "LEFT_BRACE:{@(35.20-35.21)",
+          "body": [
+            {
+              "VariableDecl": {
+                "type(Type)": {
+                  "token": "IDENTIFIER:usertype@(36.2-36.10)"
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b@(36.11-36.12)"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(36.12-36.13)"
               }
             }
           ],
@@ -331,6 +406,6 @@
     }
   ],
   "comments": [
-    "COMMENT:// vi:ts=4:et@(30.1-30.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// vi:ts=4:et@(39.1-39.14), multi:false =  vi:ts=4:et"
   ]
 }
