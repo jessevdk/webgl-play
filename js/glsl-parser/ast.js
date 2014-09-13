@@ -41,6 +41,8 @@ function Node() {
     this.incomplete = true;
 }
 
+exports.Node = Node;
+
 Node.create = function(name, constructor) {
     var ret = Object.create(Node.prototype);
 
