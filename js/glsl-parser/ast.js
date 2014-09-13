@@ -375,7 +375,7 @@ function ParamDecl() {
     this.qualifier = null;
 
     this.is_array = false;
-    this.array_size = 0;
+    this.array_size = null;
     this.left_bracket = null;
     this.right_bracket = null;
 }
@@ -401,7 +401,7 @@ function Named(name) {
     this.initial_value = null;
 
     this.is_array = false;
-    this.array_size = 0;
+    this.array_size = null;
     this.left_bracket = null;
     this.right_bracket = null;
 }
