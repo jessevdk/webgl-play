@@ -241,9 +241,67 @@
           "new_scope": true
         }
       }
+    },
+    {
+      "FunctionDef": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "INT:int@(20.1-20.4)",
+            "is_builtin": true
+          },
+          "name": "IDENTIFIER:overloaded_func@(20.5-20.20)",
+          "parameters": [
+            {
+              "ParamDecl": {
+                "type(Type)": {
+                  "token": "INT:int@(20.21-20.24)",
+                  "is_builtin": true
+                },
+                "name": "IDENTIFIER:a@(20.25-20.26)"
+              }
+            }
+          ],
+          "left_paren": "LEFT_PAREN:(@(20.20-20.21)",
+          "right_paren": "RIGHT_PAREN:)@(20.26-20.27)"
+        },
+        "body(Block)": {
+          "right_brace": "RIGHT_BRACE:}@(22.1-22.2)",
+          "left_brace": "LEFT_BRACE:{@(20.28-20.29)",
+          "new_scope": true
+        }
+      }
+    },
+    {
+      "FunctionDef": {
+        "header(FunctionHeader)": {
+          "type(Type)": {
+            "token": "INT:int@(24.1-24.4)",
+            "is_builtin": true
+          },
+          "name": "IDENTIFIER:overloaded_func@(24.5-24.20)",
+          "parameters": [
+            {
+              "ParamDecl": {
+                "type(Type)": {
+                  "token": "FLOAT:float@(24.21-24.26)",
+                  "is_builtin": true
+                },
+                "name": "IDENTIFIER:a@(24.27-24.28)"
+              }
+            }
+          ],
+          "left_paren": "LEFT_PAREN:(@(24.20-24.21)",
+          "right_paren": "RIGHT_PAREN:)@(24.28-24.29)"
+        },
+        "body(Block)": {
+          "right_brace": "RIGHT_BRACE:}@(26.1-26.2)",
+          "left_brace": "LEFT_BRACE:{@(24.30-24.31)",
+          "new_scope": true
+        }
+      }
     }
   ],
   "comments": [
-    "COMMENT:// vi:ts=4:et@(20.1-20.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// vi:ts=4:et@(28.1-28.14), multi:false =  vi:ts=4:et"
   ]
 }

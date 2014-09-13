@@ -17,4 +17,12 @@ int function_type_qualifiers(const in int a, const mediump float b, const in low
 
 }
 
+int overloaded_func(int a) {
+
+}
+
+int overloaded_func(float a) {
+
+}
+
 // vi:ts=4:et
