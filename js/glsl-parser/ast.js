@@ -386,6 +386,7 @@ exports.ParamDecl = ParamDecl;
 ParamDecl.prototype.location = function() {
     return glsl.source.Range.spans(this.type,
                                    this.name,
+                                   this.qualifier,
                                    this.array_size,
                                    this.left_bracket,
                                    this.right_bracket);
