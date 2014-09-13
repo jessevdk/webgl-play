@@ -660,6 +660,7 @@ function ContinueStmt(tok) {
     Node.call(this);
 
     this.token = tok;
+    this.semi = null;
 }
 
 ContinueStmt.prototype = Node.create('ContinueStmt', ContinueStmt);
@@ -674,6 +675,7 @@ function BreakStmt(tok) {
     Node.call(this);
 
     this.token = tok;
+    this.semi = null;
 }
 
 BreakStmt.prototype = Node.create('BreakStmt', BreakStmt);
@@ -689,6 +691,7 @@ function ReturnStmt(tok) {
 
     this.token = tok;
     this.expression = null;
+    this.semi = null;
 }
 
 ReturnStmt.prototype = Node.create('ReturnStmt', ReturnStmt);
@@ -703,6 +706,7 @@ function DiscardStmt(tok) {
     Node.call(this);
 
     this.token = tok;
+    this.semi = null;
 }
 
 DiscardStmt.prototype = Node.create('DiscardStmt', DiscardStmt);
