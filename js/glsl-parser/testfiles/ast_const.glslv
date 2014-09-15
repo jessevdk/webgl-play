@@ -1,7 +1,7 @@
 #version 100
 
 void main() {
-	const float f = 0.5;
+    const float f = 0.5;
     const vec2 v2 = vec2(1.0, 2.0);
     const vec3 v3 = vec3(1.0, 2.0, 3.0);
     const vec4 v4 = vec4(1.0, 2.0, 3.0, 4.0);

@@ -18,9 +18,9 @@
             {
               "VariableDecl": {
                 "type(TypeRef)": {
-                  "token": "FLOAT:float@(4.8-4.13)",
+                  "token": "FLOAT:float@(4.11-4.16)",
                   "qualifiers": [
-                    "CONST:const@(4.2-4.7)"
+                    "CONST:const@(4.5-4.10)"
                   ],
                   "is_primitive": true,
                   "@id": 7
@@ -28,17 +28,17 @@
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:f@(4.14-4.15)",
+                      "name": "IDENTIFIER:f@(4.17-4.18)",
                       "decl(VariableDecl)": "@6",
                       "type(TypeRef)": "@7",
-                      "initial_assign": "EQUAL:=@(4.16-4.17)",
+                      "initial_assign": "EQUAL:=@(4.19-4.20)",
                       "initial_value(ConstantExpr)": {
-                        "token": "FLOATCONSTANT:0.5@(4.18-4.21) = 0.5"
+                        "token": "FLOATCONSTANT:0.5@(4.21-4.24) = 0.5"
                       }
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(4.21-4.22)",
+                "semi": "SEMICOLON:;@(4.24-4.25)",
                 "@id": 6
               }
             },
