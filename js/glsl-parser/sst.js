@@ -68,9 +68,7 @@ function Annotator(ast) {
         var btype = glsl.builtins.Types[i];
         var t = btype.type.t.type;
 
-        this._scope.type_map[t.name] = t;
-        this._scope.symbols[t.name] = t;
-        this._scope.types.push(t);
+        this._declare_type(t);
     }
 
     // Push builtin functions into the scope
@@ -656,10 +654,186 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
     var tp = this._lookup_type(node.name.text);
 
     if (tp !== null) {
-        // Constructor, resulting type is tp
-        // TODO: basic checks for arguments
         node.t.type = tp;
         node.t.is_constructor = true;
+
+        if (tp.is_primitive) {
+            if (tp.is_scalar) {
+                if (node.arguments.length != 1) {
+                    this._error(node.location(), 'constructor of type ' + tp.name + ' requires exactly 1 argument, ' + node.arguments.length + ' given');
+                } else {
+                    var nt = node.arguments[0].t;
+
+                    if (!nt.type.is_primitive) {
+                        this._error(node.location, 'constructor of type ' + tp.name + ' cannot be called with type ' + nt.type.name);
+                    } else if (nt.is_const_expression) {
+                        node.t.is_const_expression = true;
+
+                        if (nt.type.is_scalar) {
+                            node.t.const_value = nt.const_value;
+                        } else {
+                            node.t.const_value = nt.const_value[0];
+                        }
+                    }
+                }
+            } else if (tp.is_vec || tp.is_mat) {
+                if (node.arguments.length == 1) {
+                    var arg0 = node.arguments[0].t;
+
+                    if (arg0.type.is_scalar && arg0.is_const_expression) {
+                        node.t.is_const_expression = true;
+                        node.t.const_value = [];
+
+                        for (var i = 0; i < tp.length; i++) {
+                            if (tp.is_vec) {
+                                node.t.const_value.push(arg0.const_value);
+                            } else {
+                                var col = [];
+
+                                for (var j = 0; j < tp.length; j++) {
+                                    if (j == i) {
+                                        col.push(arg0.const_value);
+                                    } else {
+                                        col.push(0);
+                                    }
+                                }
+
+                                node.t.const_value.push(col);
+                            }
+                        }
+                    } else if (!arg0.type.is_scalar) {
+                        if (arg0.type.is_vec != tp.is_vec || arg0.type.is_mat != tp.is_mat) {
+                            this._error(node.location(), 'cannot call constructor of type ' + tp.name + ' with argument of type ' + arg0.type.name);
+                        } else if (arg0.is_const_expression) {
+                            node.t.is_const_expression = true;
+                            node.t.const_value = [];
+
+                            for (var i = 0; i < tp.length; i++) {
+                                if (tp.is_vec) {
+                                    if (i >= arg0.type.length) {
+                                        node.t.const_value.push(0);
+                                    } else {
+                                        node.t.const_value.push(arg0.const_value[i]);
+                                    }
+                                } else {
+                                    var col = [];
+
+                                    for (var j = 0; j < tp.length; j++) {
+                                        if (i >= arg0.type.length || j >= arg0.type.length) {
+                                            col.push(i == j ? 1 : 0);
+                                        } else {
+                                            col.push(arg0.const_value[i][j]);
+                                        }
+                                    }
+
+                                    node.t.const_value.push(col);
+                                }
+                            }
+                        }
+                    }
+                } else if (node.arguments.length > 1) {
+                    var val = [];
+                    var mval = [];
+
+                    node.t.is_const_expression = true;
+
+                    for (var i = 0; i < node.arguments.length; i++) {
+                        var arg = node.arguments[i];
+
+                        if (tp.is_mat && arg.t.type.is_mat) {
+                            this._error(arg.location(), 'cannot construct matrix with intermixed matrix argument');
+                            return;
+                        }
+
+                        if (arg.t.is_const_expression) {
+                            var v = arg.t.const_value;
+
+                            if (!arg.t.type.is_primitive) {
+                                this._error(arg.location(), 'cannot use value of type ' + arg.t.type.name + ' to construct value of type ' + tp.name);
+                                return;
+                            }
+
+                            if (arg.t.type.is_scalar) {
+                                v = [v];
+                            }
+
+                            for (var j = 0; j < v.length; j++) {
+                                if (val.length == tp.length) {
+                                    if (tp.is_mat) {
+                                        mval.push(val);
+                                        val = [];
+
+                                        if (mval.length == tp.length) {
+                                            this._error(arg.location(), 'too many values to construct value of type ' + tp.name);
+                                            return;
+                                        }
+                                    } else {
+                                        this._error(arg.location(), 'too many values to construct value of type ' + tp.name);
+                                        return;
+                                    }
+                                }
+
+                                val.push(v[j]);
+                            }
+                        } else {
+                            node.t.is_const_expression = false;
+                        }
+                    }
+
+                    if (val.length != tp.length) {
+                        this._error(node.location(), 'not enough values to fully construct type ' + tp.name);
+                        return;
+                    }
+
+                    if (tp.is_mat) {
+                        mval.push(val);
+
+                        if (mval.length != tp.length) {
+                            this._error(node.location(), 'not enough values to fully construct type ' + tp.name);
+                            return;
+                        }
+                    }
+
+                    if (node.t.is_const_expression) {
+                        if (tp.is_mat) {
+                            node.t.const_value = mval;
+                        } else {
+                            node.t.const_value = val;
+                        }
+                    }
+                } else {
+                    node.t.is_const_expression = true;
+                    node.t.const_value = node.t.type.zero;
+                }
+            }
+        } else {
+            // structures
+            if (node.arguments.length != tp.fields.length) {
+                this._error(node.location(), 'expected ' + tp.fields.length + ' arguments, but got ' + node.arguments.length);
+                return;
+            }
+
+            node.t.is_const_expression = true;
+            var val = {};
+
+            for (var i = 0; i < node.arguments.length; i++) {
+                var arg = node.arguments[i];
+                var field = tp.fields[i];
+
+                if (arg.t.type != field.type) {
+                    this._error(arg.location(), 'cannot initialize ' + tp.name + '.' + field.name + ' with type ' + field.type.name + ' from argument of type ' + arg.t.type.name);
+                    continue;
+                } else if (arg.t.is_const_expression && field.decl.type.is_const()) {
+                    val[field.name] = arg.t.const_value;
+                    node.t.is_const_expression = true;
+                }
+            }
+
+            if (node.t.is_const_expression) {
+                node.t.const_value = val;
+            }
+        }
+
         return;
     }
 
@@ -669,6 +843,26 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
     if (f === null) {
         this._error(node.location(), 'could not find function matching signature ' + sig);
         return;
+    }
+
+    if (glsl.ast.FunctionProto.prototype.isPrototypeOf(f) && f.is_builtin && f.evaluate !== null) {
+        var cargs = [];
+
+        for (var i = 0; i < node.arguments.length; i++) {
+            var arg = node.arguments[i];
+
+            if (arg.t.is_const_expression) {
+                cargs.push(arg.t.const_value);
+            } else {
+                cargs = null;
+                break;
+            }
+        }
+
+        if (cargs != null) {
+            node.t.is_const_expression = true;
+            node.t.const_value = f.evaluate.apply(this, cargs);
+        }
     }
 
     node.t.type = f.header.type.t.type;
@@ -976,6 +1170,12 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
         // Select on field in user defined type
         if (s in et.field_map) {
             var f = et.field_map[s];
+
+            if (node.expression.t.is_const_expression && s in node.expression.t.const_value) {
+                node.t.is_const_expression = true;
+                node.t.const_value = node.expression.t.const_value[s];
+            }
+
             node.t.type = f.type;
         } else {
             this._error(node.selector.location, 'the field \'' + s + '\' does not exist in the struct type ' + et.name);

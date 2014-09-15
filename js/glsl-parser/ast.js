@@ -495,6 +495,7 @@ function FunctionProto(header) {
     Node.call(this);
 
     this.header = header;
+    this.is_builtin = false;
     this.semi = null;
 }
 

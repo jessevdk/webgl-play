@@ -117,9 +117,10 @@ function PrimitiveType(id, zero) {
     this.is_vec = PrimitiveType._is_vec(id);
     this.is_mat = PrimitiveType._is_mat(id);
 
-    this.is_int = PrimitiveType._is_int(id);
-    this.is_float = PrimitiveType._is_float(id);
-    this.is_bool = PrimitiveType._is_bool(id);
+    this.element_type = PrimitiveType._element_type(id);
+    this.is_int = (this.element_type == Tn.T_INT);
+    this.is_float = (this.element_type == Tn.T_FLOAT);
+    this.is_bool = (this.element_type == Tn.T_BOOL);
 
     this.is_primitive = true;
 
@@ -176,31 +177,7 @@ PrimitiveType._is_scalar = function(tok) {
     return false;
 }
 
-PrimitiveType._is_int = function(tok) {
-    switch (tok) {
-    case Tn.T_INT:
-    case Tn.T_IVEC2:
-    case Tn.T_IVEC3:
-    case Tn.T_IVEC4:
-        return true;
-    }
-
-    return false;
-}
-
-PrimitiveType._is_bool = function(tok) {
-    switch (tok) {
-    case Tn.T_BOOL:
-    case Tn.T_BVEC2:
-    case Tn.T_BVEC3:
-    case Tn.T_BVEC4:
-        return true;
-    }
-
-    return false;
-}
-
-PrimitiveType._is_float = function(tok) {
+PrimitiveType._element_type = function(tok) {
     switch (tok) {
     case Tn.T_FLOAT:
     case Tn.T_VEC2:
@@ -209,10 +186,21 @@ PrimitiveType._is_float = function(tok) {
     case Tn.T_MAT2:
     case Tn.T_MAT3:
     case Tn.T_MAT4:
-        return true;
+        return Tn.T_FLOAT;
+    case Tn.T_INT:
+    case Tn.T_IVEC2:
+    case Tn.T_IVEC3:
+    case Tn.T_IVEC4:
+        return Tn.T_INT;
+    case Tn.T_BOOL:
+    case Tn.T_BVEC2:
+    case Tn.T_BVEC3:
+    case Tn.T_BVEC4:
+        return Tn.T_BOOL;
+
     }
 
-    return false;
+    return null;
 }
 
 PrimitiveType._length = function(tok) {
@@ -343,7 +331,56 @@ PrimitiveType._create_builtins = function() {
 
 PrimitiveType._create_builtins();
 
-function define_builtin_function(rettype, name, params) {
+function elem_evaluator() {
+    var l = 0;
+
+    for (var i = 0; i < arguments.length; i++) {
+        if (Array.prototype.isPrototypeOf(arguments[i])) {
+            l = arguments[i].length;
+            break;
+        }
+    }
+
+    if (l == 0) {
+        return this.apply(this, arguments);
+    } else {
+        var ret = [];
+
+        for (var i = 0; i < l; i++) {
+            var args = [];
+
+            for (var j = 0; j < arguments.length; j++) {
+                var arg = arguments[j];
+
+                if (Array.prototype.isPrototypeOf(arg)) {
+                    args.push(arg[i]);
+                } else {
+                    args.push(arg);
+                }
+            }
+
+            ret.push(this.apply(this, args));
+        }
+
+        return ret;
+    }
+}
+
+function func_evaluator() {
+    var args = [];
+
+    for (var i = 0; i < arguments.length; i++) {
+        if (!Array.prototype.isPrototypeOf(arguments[i])) {
+            args.push([arguments[i]]);
+        } else {
+            args.push(arguments[i]);
+        }
+    }
+
+    return this.apply(this, args);
+}
+
+function define_builtin_function(rettype, name, params, elemfunc, func) {
     if (!glsl.ast.TypeDecl.prototype.isPrototypeOf(rettype)) {
         rettype = exports.TypeMap[rettype];
     }
@@ -360,11 +397,11 @@ function define_builtin_function(rettype, name, params) {
 
     var bloc = new glsl.source.BuiltinRange();
 
-    var type = new glsl.ast.TypeRef(dtn.create_token(rettype.id, PrimitiveType._name(rettype.id), bloc));
+    var type = new glsl.ast.TypeRef(dtn.create_token(rettype.type.token.id, PrimitiveType._name(rettype.type.token.id), bloc));
     type.incomplete = false;
 
     type.t = {
-        type: rettype
+        type: rettype.type.t.type
     };
 
     var name = dtn.create_token(Tn.T_IDENTIFIER, name, bloc);
@@ -393,8 +430,18 @@ function define_builtin_function(rettype, name, params) {
     }
 
     var f = new glsl.ast.FunctionProto(header);
+
+    f.is_builtin = true;
     f.semi = dtn.create_token(Tn.T_SEMICOLON, ';', bloc);
     f.incomplete = false;
+
+    if (elemfunc) {
+        f.evaluate = elem_evaluator.bind(elemfunc);
+    } else if (func) {
+        f.evaluate = func_evaluator.bind(func);
+    } else {
+        f.evaluate = null;
+    }
 
     exports.Functions.push(f);
     exports.FunctionMap[sig] = f;
@@ -402,7 +449,7 @@ function define_builtin_function(rettype, name, params) {
     return f;
 }
 
-function define_builtin_function_gen(gentypes, rettype, name, params) {
+function define_builtin_function_gen(gentypes, rettype, name, params, elemfunc, func) {
     if (rettype !== null) {
         rettype = exports.TypeMap[rettype];
     }
@@ -423,23 +470,25 @@ function define_builtin_function_gen(gentypes, rettype, name, params) {
 
         define_builtin_function(rettype !== null ? rettype : g,
                                 name,
-                                sp);
+                                sp,
+                                elemfunc,
+                                func);
     }
 }
 
-function define_builtin_gentype_function(rettype, name, params) {
+function define_builtin_gentype_function(rettype, name, params, elemfunc, func) {
     var gentypes = [Tn.T_FLOAT, Tn.T_VEC2, Tn.T_VEC3, Tn.T_VEC4];
 
-    define_builtin_function_gen(gentypes, rettype, name, params);
+    define_builtin_function_gen(gentypes, rettype, name, params, elemfunc, func);
 }
 
-function define_builtin_mat_function(rettype, name, params) {
+function define_builtin_mat_function(rettype, name, params, elemfunc, func) {
     var gentypes = [Tn.T_MAT2, Tn.T_MAT3, Tn.T_MAT4];
 
-    define_builtin_function_gen(gentypes, rettype, name, params);
+    define_builtin_function_gen(gentypes, rettype, name, params, elemfunc, func);
 }
 
-function define_builtin_relvec_function(rettype, name, params) {
+function define_builtin_relvec_function(rettype, name, params, elemfunc, func) {
     var vmap = {
         'bvec': [Tn.T_BVEC2, Tn.T_BVEC3, Tn.T_BVEC4],
         'vec':  [Tn.T_VEC2,  Tn.T_VEC3,  Tn.T_VEC4],
@@ -463,7 +512,7 @@ function define_builtin_relvec_function(rettype, name, params) {
             }
         }
 
-        define_builtin_function(ret, name, sp);
+        define_builtin_function(ret, name, sp, elemfunc, func);
     }
 }
 
@@ -632,81 +681,286 @@ function define_builtin_unary_operator_gen(rettype, optypes, expr, gens) {
     }
 }
 
+var Emulate = {
+    radians: function (degrees) {
+        return degrees / 180.0 * Math.PI;
+    },
+
+    degrees: function (radians) {
+        return radians / Math.PI * 180.0;
+    },
+
+    exp2: function (x) {
+        return Math.pow(2, x);
+    },
+
+    log2: function (x) {
+        return Math.log(x) / Math.log(2);
+    },
+
+    inversesqrt: function (x) {
+        return 1 / Math.sqrt(x);
+    },
+
+    sign: function (x) {
+        return x < 0 ? -1 : (x > 0 ? 1 : 0);
+    },
+
+    fract: function (x) {
+        return x - Math.floor(x);
+    },
+
+    mod: function (x, y) {
+        return x - y * Math.floor(x / y);
+    },
+
+    clamp: function (x, minVal, maxVal) {
+        return Math.min(Math.max(x, minVal), maxVal);
+    },
+
+    mix: function (x, y, a) {
+        return x * (1 - a) + y * a;
+    },
+
+    smoothstep: function (edge0, edge1, x) {
+        if (x < edge0) {
+            return 0;
+        } else if (x > edge1) {
+            return 1;
+        } else {
+            var n = (x - edge0) / (edge1 - edge0);
+            return n * n * (3 - 2 * n);
+        }
+    },
+
+    step: function (edge, x) {
+        return x < edge ? 0 : 1;
+    },
+
+    length: function(x) {
+        var s = 0;
+
+        for (var i = 0; i < x.length; i++) {
+            s += x[i] * x[i];
+        }
+
+        return Math.sqrt(s);
+    },
+
+    distance: function(p0, p1) {
+        var s = 0;
+
+        for (var i = 0; i < p0.length; i++) {
+            var d = p0[i] - p1[i];
+            s += d * d;
+        }
+
+        return Math.sqrt(s);
+    },
+
+    dot: function(x, y) {
+        var s = 0;
+
+        for (var i = 0; i < x.length; i++) {
+            s += x[i] * y[i];
+        }
+
+        return s;
+    },
+
+    cross: function(x, y) {
+        return [
+            x[1] * y[2] - y[1] * x[2],
+            x[2] * y[0] - y[2] * x[0],
+            x[0] * y[1] - y[0] * x[1]
+        ];
+    },
+
+    normalize: function(x) {
+        var s = [];
+        var l = Emulate.length(x);
+
+        for (var i = 0; i < x.length; i++) {
+            s.push(x[i] / l);
+        }
+
+        return s;
+    },
+
+    faceforward: function(N, I, Nref) {
+        var s = [];
+
+        var isit = Emulate.dot(Nref, I);
+
+        for (var i = 0; i < N.length; i++) {
+            s.push(isit ? N[i] : -N[i]);
+        }
+
+        return s;
+    },
+
+    reflect: function(I, N) {
+        var d = Emulate.dot(N, I);
+        var s = [];
+
+        for (var i = 0; i < I.length; i++) {
+            s.push(I[i] - 2 * d * N[i]);
+        }
+
+        return s;
+    },
+
+    refract: function(I, N, eta) {
+        eta = eta[0];
+
+        var d = Emulate.dot(N, I);
+        var k = 1 - eta * eta * (1 - d * d);
+        var s = [];
+        var sk = 0;
+
+        if (k >= 0) {
+            sk = eta * d + Math.sqrt(k);
+        }
+
+        for (var i = 0; i < I.length; i++) {
+            if (k < 0) {
+                s.push(0);
+            } else {
+                s.push(eta * I[i] - sk * N[i]);
+            }
+        }
+
+        return s;
+    },
+
+    matrixCompMult: function(x, y) {
+        return x * y;
+    },
+
+    lessThan: function(x, y) {
+        return x < y;
+    },
+
+    lessThanEqual: function(x, y) {
+        return x <= y;
+    },
+
+    greaterThan: function(x, y) {
+        return x > y;
+    },
+
+    greaterThanEqual: function(x, y) {
+        return x < y;
+    },
+
+    equal: function(x, y) {
+        return x == y;
+    },
+
+    notEqual: function(x, y) {
+        return x != y;
+    },
+
+    any: function(x) {
+        for (var i = 0; i < x.length; i++) {
+            if (x[i]) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    all: function(x) {
+        for (var i = 0; i < x.length; i++) {
+            if (!x[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    },
+
+    not: function(x) {
+        return !x;
+    },
+}
+
 // Angle and Trigonometry functions
-define_builtin_gentype_function(null, 'radians', [null, 'degrees']);
-define_builtin_gentype_function(null, 'degrees', [null, 'radians']);
+define_builtin_gentype_function(null, 'radians', [null, 'degrees'], Emulate.radians);
+define_builtin_gentype_function(null, 'degrees', [null, 'radians'], Emulate.degrees);
 
-define_builtin_gentype_function(null, 'sin', [null, 'angle']);
-define_builtin_gentype_function(null, 'cos', [null, 'angle']);
-define_builtin_gentype_function(null, 'tan', [null, 'angle']);
+define_builtin_gentype_function(null, 'sin', [null, 'angle'], Math.sin);
+define_builtin_gentype_function(null, 'cos', [null, 'angle'], Math.cos);
+define_builtin_gentype_function(null, 'tan', [null, 'angle'], Math.tan);
 
-define_builtin_gentype_function(null, 'asin', [null, 'x']);
-define_builtin_gentype_function(null, 'acos', [null, 'x']);
-define_builtin_gentype_function(null, 'atan', [null, 'y', null, 'x']);
-define_builtin_gentype_function(null, 'atan', [null, 'y_over_x']);
+define_builtin_gentype_function(null, 'asin', [null, 'x'], Math.asin);
+define_builtin_gentype_function(null, 'acos', [null, 'x'], Math.acos);
+define_builtin_gentype_function(null, 'atan', [null, 'y', null, 'x'], Math.atan2);
+define_builtin_gentype_function(null, 'atan', [null, 'y_over_x'], Math.atan);
 
 // Exponential Functions
-define_builtin_gentype_function(null, 'pow', [null, 'x', null, 'y']);
-define_builtin_gentype_function(null, 'exp', [null, 'x']);
-define_builtin_gentype_function(null, 'log', [null, 'x']);
-define_builtin_gentype_function(null, 'exp2', [null, 'x']);
-define_builtin_gentype_function(null, 'log2', [null, 'x']);
-define_builtin_gentype_function(null, 'sqrt', [null, 'x']);
-define_builtin_gentype_function(null, 'inversesqrt', [null, 'x']);
+define_builtin_gentype_function(null, 'pow', [null, 'x', null, 'y'], Math.pow);
+define_builtin_gentype_function(null, 'exp', [null, 'x'], Math.exp);
+define_builtin_gentype_function(null, 'log', [null, 'x'], Math.log);
+define_builtin_gentype_function(null, 'exp2', [null, 'x'], Emulate.exp2);
+define_builtin_gentype_function(null, 'log2', [null, 'x'], Emulate.log2);
+define_builtin_gentype_function(null, 'sqrt', [null, 'x'], Math.sqrt);
+define_builtin_gentype_function(null, 'inversesqrt', [null, 'x'], Emulate.inversesqrt);
 
 // Common Functions
-define_builtin_gentype_function(null, 'abs', [null, 'x']);
-define_builtin_gentype_function(null, 'sign', [null, 'x']);
-define_builtin_gentype_function(null, 'floor', [null, 'x']);
-define_builtin_gentype_function(null, 'ceil', [null, 'x']);
-define_builtin_gentype_function(null, 'fract', [null, 'x']);
-define_builtin_gentype_function(null, 'mod', [null, 'x', null, 'y']);
-define_builtin_gentype_function(null, 'min', [null, 'x', null, 'y']);
-define_builtin_gentype_function(null, 'min', [null, 'x', Tn.T_FLOAT, 'y']);
-define_builtin_gentype_function(null, 'max', [null, 'x', null, 'y']);
-define_builtin_gentype_function(null, 'max', [null, 'x', Tn.T_FLOAT, 'y']);
-define_builtin_gentype_function(null, 'clamp', [null, 'x', null, 'minVal', null, 'maxVal']);
-define_builtin_gentype_function(null, 'clamp', [null, 'x', Tn.T_FLOAT, 'minVal', Tn.T_FLOAT, 'maxVal']);
-define_builtin_gentype_function(null, 'mix', [null, 'x', null, 'y', null, 'a']);
-define_builtin_gentype_function(null, 'mix', [null, 'x', null, 'y', Tn.T_FLOAT, 'a']);
-define_builtin_gentype_function(null, 'step', [null, 'edge', null, 'x']);
-define_builtin_gentype_function(null, 'step', [Tn.T_FLOAT, 'edge', null, 'x']);
-define_builtin_gentype_function(null, 'smoothstep', [null, 'edge0', null, 'edge1', null, 'x']);
-define_builtin_gentype_function(null, 'smoothstep', [Tn.T_FLOAT, 'edge0', Tn.T_FLOAT, 'edge1', null, 'x']);
+define_builtin_gentype_function(null, 'abs', [null, 'x'], Math.abs);
+define_builtin_gentype_function(null, 'sign', [null, 'x'], Emulate.sign);
+define_builtin_gentype_function(null, 'floor', [null, 'x'], Math.floor);
+define_builtin_gentype_function(null, 'ceil', [null, 'x'], Math.ceil);
+define_builtin_gentype_function(null, 'fract', [null, 'x'], Emulate.fract);
+define_builtin_gentype_function(null, 'mod', [null, 'x', null, 'y'], Emulate.mod);
+define_builtin_gentype_function(null, 'min', [null, 'x', null, 'y'], Math.min);
+define_builtin_gentype_function(null, 'min', [null, 'x', Tn.T_FLOAT, 'y'], Math.min);
+define_builtin_gentype_function(null, 'max', [null, 'x', null, 'y'], Math.max);
+define_builtin_gentype_function(null, 'max', [null, 'x', Tn.T_FLOAT, 'y'], Math.max);
+define_builtin_gentype_function(null, 'clamp', [null, 'x', null, 'minVal', null, 'maxVal'], Emulate.clamp);
+define_builtin_gentype_function(null, 'clamp', [null, 'x', Tn.T_FLOAT, 'minVal', Tn.T_FLOAT, 'maxVal'], Emulate.clamp);
+define_builtin_gentype_function(null, 'mix', [null, 'x', null, 'y', null, 'a'], Emulate.mix);
+define_builtin_gentype_function(null, 'mix', [null, 'x', null, 'y', Tn.T_FLOAT, 'a'], Emulate.mix);
+define_builtin_gentype_function(null, 'step', [null, 'edge', null, 'x'], Emulate.step);
+define_builtin_gentype_function(null, 'step', [Tn.T_FLOAT, 'edge', null, 'x'], Emulate.step);
+define_builtin_gentype_function(null, 'smoothstep', [null, 'edge0', null, 'edge1', null, 'x'], Emulate.smoothstep);
+define_builtin_gentype_function(null, 'smoothstep', [Tn.T_FLOAT, 'edge0', Tn.T_FLOAT, 'edge1', null, 'x'], Emulate.smootstep);
 
 // Geometric Functions
-define_builtin_gentype_function(Tn.T_FLOAT, 'length', [null, 'x']);
-define_builtin_gentype_function(Tn.T_FLOAT, 'distance', [null, 'p0', null, 'p1']);
-define_builtin_gentype_function(Tn.T_FLOAT, 'dot', [null, 'x', null, 'y']);
-define_builtin_function(Tn.T_VEC3, 'cross', [Tn.T_VEC3, 'x', Tn.T_VEC3, 'y']);
-define_builtin_gentype_function(null, 'normalize', [null, 'x']);
-define_builtin_gentype_function(null, 'faceforward', [null, 'N', null, 'I', null, 'Nref']);
-define_builtin_gentype_function(null, 'reflect', [null, 'I', null, 'N']);
-define_builtin_gentype_function(null, 'refract', [null, 'I', null, 'N', Tn.T_FLOAT, 'eta']);
+define_builtin_gentype_function(Tn.T_FLOAT, 'length', [null, 'x'], null, Emulate.length);
+define_builtin_gentype_function(Tn.T_FLOAT, 'distance', [null, 'p0', null, 'p1'], null, Emulate.distance);
+define_builtin_gentype_function(Tn.T_FLOAT, 'dot', [null, 'x', null, 'y'], null, Emulate.dot);
+define_builtin_function(Tn.T_VEC3, 'cross', [Tn.T_VEC3, 'x', Tn.T_VEC3, 'y'], null, Emulate.cross);
+define_builtin_gentype_function(null, 'normalize', [null, 'x'], null, Emulate.normalize);
+define_builtin_gentype_function(null, 'faceforward', [null, 'N', null, 'I', null, 'Nref'], null, Emulate.faceforward);
+define_builtin_gentype_function(null, 'reflect', [null, 'I', null, 'N'], null, Emulate.reflect);
+define_builtin_gentype_function(null, 'refract', [null, 'I', null, 'N', Tn.T_FLOAT, 'eta'], null, Emulate.refract);
 
 // Matrix Functions
-define_builtin_mat_function(null, 'matrixCompMult', [null, 'x', null, 'y']);
+define_builtin_mat_function(null, 'matrixCompMult', [null, 'x', null, 'y'], Emulate.matrixCompMult);
 
 // Vector Relational Functions
-define_builtin_relvec_function('bvec', 'lessThan', ['vec', 'x', 'vec', 'y']);
-define_builtin_relvec_function('bvec', 'lessThan', ['ivec', 'x', 'ivec', 'y']);
-define_builtin_relvec_function('bvec', 'lessThanEqual', ['vec', 'x', 'vec', 'y']);
-define_builtin_relvec_function('bvec', 'lessThanEqual', ['ivec', 'x', 'ivec', 'y']);
+define_builtin_relvec_function('bvec', 'lessThan', ['vec', 'x', 'vec', 'y'], Emulate.lessThan);
+define_builtin_relvec_function('bvec', 'lessThan', ['ivec', 'x', 'ivec', 'y'], Emulate.lessThan);
+define_builtin_relvec_function('bvec', 'lessThanEqual', ['vec', 'x', 'vec', 'y'], Emulate.lessThanEqual);
+define_builtin_relvec_function('bvec', 'lessThanEqual', ['ivec', 'x', 'ivec', 'y'], Emulate.lessThanEqual);
 
-define_builtin_relvec_function('bvec', 'greaterThan', ['vec', 'x', 'vec', 'y']);
-define_builtin_relvec_function('bvec', 'greaterThan', ['ivec', 'x', 'ivec', 'y']);
-define_builtin_relvec_function('bvec', 'greaterThanEqual', ['vec', 'x', 'vec', 'y']);
-define_builtin_relvec_function('bvec', 'greaterThanEqual', ['ivec', 'x', 'ivec', 'y']);
+define_builtin_relvec_function('bvec', 'greaterThan', ['vec', 'x', 'vec', 'y'], Emulate.greaterThan);
+define_builtin_relvec_function('bvec', 'greaterThan', ['ivec', 'x', 'ivec', 'y'], Emulate.greaterThan);
+define_builtin_relvec_function('bvec', 'greaterThanEqual', ['vec', 'x', 'vec', 'y'], Emulate.greaterThanEqual);
+define_builtin_relvec_function('bvec', 'greaterThanEqual', ['ivec', 'x', 'ivec', 'y'], Emulate.greaterThanEqual);
 
-define_builtin_relvec_function('bvec', 'equal', ['vec', 'x', 'vec', 'y']);
-define_builtin_relvec_function('bvec', 'equal', ['ivec', 'x', 'ivec', 'y']);
-define_builtin_relvec_function('bvec', 'notEqual', ['vec', 'x', 'vec', 'y']);
-define_builtin_relvec_function('bvec', 'notEqual', ['ivec', 'x', 'ivec', 'y']);
-define_builtin_relvec_function('bvec', 'notEqual', ['bvec', 'x', 'bvec', 'y']);
+define_builtin_relvec_function('bvec', 'equal', ['vec', 'x', 'vec', 'y'], Emulate.equal);
+define_builtin_relvec_function('bvec', 'equal', ['ivec', 'x', 'ivec', 'y'], Emulate.equal);
+define_builtin_relvec_function('bvec', 'notEqual', ['vec', 'x', 'vec', 'y'], Emulate.notEqual);
+define_builtin_relvec_function('bvec', 'notEqual', ['ivec', 'x', 'ivec', 'y'], Emulate.notEqual);
+define_builtin_relvec_function('bvec', 'notEqual', ['bvec', 'x', 'bvec', 'y'], Emulate.notEqual);
 
-define_builtin_relvec_function(Tn.T_BOOL, 'any', ['bvec', 'x']);
-define_builtin_relvec_function(Tn.T_BOOL, 'all', ['bvec', 'x']);
-define_builtin_relvec_function('bvec', 'not', ['bvec', 'x']);
+define_builtin_relvec_function(Tn.T_BOOL, 'any', ['bvec', 'x'], null, Emulate.any);
+define_builtin_relvec_function(Tn.T_BOOL, 'all', ['bvec', 'x'], null, Emulate.all);
+define_builtin_relvec_function('bvec', 'not', ['bvec', 'x'], Emulate.not);
 
 // Texture Lookup Functions
 define_builtin_function(Tn.T_VEC4, 'texture2D', [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC2, 'coord']);

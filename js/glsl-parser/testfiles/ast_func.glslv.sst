@@ -137,6 +137,11 @@
                         ],
                         "t": {
                           "type(builtins.PrimitiveType)": "$vec2",
+                          "is_const_expression": true,
+                          "const_value": [
+                            1,
+                            2
+                          ],
                           "is_constructor": true
                         }
                       }
