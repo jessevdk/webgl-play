@@ -570,12 +570,9 @@
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:fv@(33.5-33.7)",
                   "left_paren": "LEFT_PAREN:(@(33.7-33.8)",
-                  "right_paren": "RIGHT_PAREN:)@(33.12-33.13)",
-                  "arguments": [
-                    "VOID:void@(33.8-33.12)"
-                  ]
+                  "right_paren": "RIGHT_PAREN:)@(33.8-33.9)"
                 },
-                "semi": "SEMICOLON:;@(33.13-33.14)"
+                "semi": "SEMICOLON:;@(33.9-33.10)"
               }
             }
           ],

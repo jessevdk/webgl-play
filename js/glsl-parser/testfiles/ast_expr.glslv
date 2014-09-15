@@ -30,7 +30,7 @@ void main() {
     a *= 2;
     a /= 2;
 
-    fv(void);
+    fv();
 }
 
 // vi:ts=4:et
