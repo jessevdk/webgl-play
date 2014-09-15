@@ -1259,6 +1259,7 @@ Parser.prototype._parse_postfix_expression = function(tok, m) {
             }
 
             expr.complete();
+            break;
         case Tn.T_DOT:
             // consume peeked token
             this._t.next();
