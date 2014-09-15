@@ -2918,7 +2918,7 @@
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(70.5-70.15)",
                   "left_paren": "LEFT_PAREN:(@(70.15-70.16)",
-                  "right_paren": "RIGHT_PAREN:)@(70.20-70.21)",
+                  "right_paren": "RIGHT_PAREN:)@(70.23-70.24)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2929,76 +2929,96 @@
                       "VariableExpr": {
                         "name": "IDENTIFIER:f@(70.19-70.20)"
                       }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(70.22-70.23)"
+                      }
                     }
                   ]
                 },
-                "semi": "SEMICOLON:;@(70.21-70.22)"
+                "semi": "SEMICOLON:;@(70.24-70.25)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:smoothstep@(70.23-70.33)",
-                  "left_paren": "LEFT_PAREN:(@(70.33-70.34)",
-                  "right_paren": "RIGHT_PAREN:)@(70.40-70.41)",
+                  "name": "IDENTIFIER:smoothstep@(70.26-70.36)",
+                  "left_paren": "LEFT_PAREN:(@(70.36-70.37)",
+                  "right_paren": "RIGHT_PAREN:)@(70.47-70.48)",
                   "arguments": [
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v2@(70.34-70.36)"
+                        "name": "IDENTIFIER:v2@(70.37-70.39)"
                       }
                     },
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v2@(70.38-70.40)"
+                        "name": "IDENTIFIER:v2@(70.41-70.43)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(70.45-70.47)"
                       }
                     }
                   ]
                 },
-                "semi": "SEMICOLON:;@(70.41-70.42)"
+                "semi": "SEMICOLON:;@(70.48-70.49)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:smoothstep@(70.43-70.53)",
-                  "left_paren": "LEFT_PAREN:(@(70.53-70.54)",
-                  "right_paren": "RIGHT_PAREN:)@(70.60-70.61)",
+                  "name": "IDENTIFIER:smoothstep@(70.50-70.60)",
+                  "left_paren": "LEFT_PAREN:(@(70.60-70.61)",
+                  "right_paren": "RIGHT_PAREN:)@(70.71-70.72)",
                   "arguments": [
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v3@(70.54-70.56)"
+                        "name": "IDENTIFIER:v3@(70.61-70.63)"
                       }
                     },
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v3@(70.58-70.60)"
+                        "name": "IDENTIFIER:v3@(70.65-70.67)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(70.69-70.71)"
                       }
                     }
                   ]
                 },
-                "semi": "SEMICOLON:;@(70.61-70.62)"
+                "semi": "SEMICOLON:;@(70.72-70.73)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:smoothstep@(70.63-70.73)",
-                  "left_paren": "LEFT_PAREN:(@(70.73-70.74)",
-                  "right_paren": "RIGHT_PAREN:)@(70.80-70.81)",
+                  "name": "IDENTIFIER:smoothstep@(70.74-70.84)",
+                  "left_paren": "LEFT_PAREN:(@(70.84-70.85)",
+                  "right_paren": "RIGHT_PAREN:)@(70.95-70.96)",
                   "arguments": [
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v4@(70.74-70.76)"
+                        "name": "IDENTIFIER:v4@(70.85-70.87)"
                       }
                     },
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v4@(70.78-70.80)"
+                        "name": "IDENTIFIER:v4@(70.89-70.91)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(70.93-70.95)"
                       }
                     }
                   ]
                 },
-                "semi": "SEMICOLON:;@(70.81-70.82)"
+                "semi": "SEMICOLON:;@(70.96-70.97)"
               }
             },
             {
@@ -3006,7 +3026,7 @@
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(71.23-71.33)",
                   "left_paren": "LEFT_PAREN:(@(71.33-71.34)",
-                  "right_paren": "RIGHT_PAREN:)@(71.39-71.40)",
+                  "right_paren": "RIGHT_PAREN:)@(71.42-71.43)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3015,56 +3035,71 @@
                     },
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v2@(71.37-71.39)"
+                        "name": "IDENTIFIER:f@(71.37-71.38)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(71.40-71.42)"
                       }
                     }
                   ]
                 },
-                "semi": "SEMICOLON:;@(71.40-71.41)"
+                "semi": "SEMICOLON:;@(71.43-71.44)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:smoothstep@(71.42-71.52)",
-                  "left_paren": "LEFT_PAREN:(@(71.52-71.53)",
-                  "right_paren": "RIGHT_PAREN:)@(71.58-71.59)",
+                  "name": "IDENTIFIER:smoothstep@(71.45-71.55)",
+                  "left_paren": "LEFT_PAREN:(@(71.55-71.56)",
+                  "right_paren": "RIGHT_PAREN:)@(71.64-71.65)",
                   "arguments": [
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:f@(71.53-71.54)"
+                        "name": "IDENTIFIER:f@(71.56-71.57)"
                       }
                     },
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v3@(71.56-71.58)"
+                        "name": "IDENTIFIER:f@(71.59-71.60)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(71.62-71.64)"
                       }
                     }
                   ]
                 },
-                "semi": "SEMICOLON:;@(71.59-71.60)"
+                "semi": "SEMICOLON:;@(71.65-71.66)"
               }
             },
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:smoothstep@(71.61-71.71)",
-                  "left_paren": "LEFT_PAREN:(@(71.71-71.72)",
-                  "right_paren": "RIGHT_PAREN:)@(71.77-71.78)",
+                  "name": "IDENTIFIER:smoothstep@(71.67-71.77)",
+                  "left_paren": "LEFT_PAREN:(@(71.77-71.78)",
+                  "right_paren": "RIGHT_PAREN:)@(71.86-71.87)",
                   "arguments": [
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:f@(71.72-71.73)"
+                        "name": "IDENTIFIER:f@(71.78-71.79)"
                       }
                     },
                     {
                       "VariableExpr": {
-                        "name": "IDENTIFIER:v4@(71.75-71.77)"
+                        "name": "IDENTIFIER:f@(71.81-71.82)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(71.84-71.86)"
                       }
                     }
                   ]
                 },
-                "semi": "SEMICOLON:;@(71.78-71.79)"
+                "semi": "SEMICOLON:;@(71.87-71.88)"
               }
             },
             {

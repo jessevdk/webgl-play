@@ -67,8 +67,8 @@ void main() {
                     clamp(v2, f, f); clamp(v3, f, f); clamp(v4, f, f);
     step(f, f); step(v2, v2); step(v3, v3); step(v4, v4);
                 step(f, v2); step(f, v3); step(f, v4);
-    smoothstep(f, f); smoothstep(v2, v2); smoothstep(v3, v3); smoothstep(v4, v4);
-                      smoothstep(f, v2); smoothstep(f, v3); smoothstep(f, v4);
+    smoothstep(f, f, f); smoothstep(v2, v2, v2); smoothstep(v3, v3, v3); smoothstep(v4, v4, v4);
+                      smoothstep(f, f, v2); smoothstep(f, f, v3); smoothstep(f, f, v4);
 
     // Geometric Functions
     length(f); length(v2); length(v3); length(v4);
