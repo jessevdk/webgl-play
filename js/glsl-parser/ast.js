@@ -43,8 +43,12 @@ function Node() {
 
 exports.Node = Node;
 
-Node.create = function(name, constructor) {
-    var ret = Object.create(Node.prototype);
+Node.create = function(name, constructor, parent) {
+    if (typeof parent === 'undefined') {
+        parent = Node;
+    }
+
+    var ret = Object.create(parent.prototype);
 
     ret.node_name = name;
     ret.constructor = constructor;
