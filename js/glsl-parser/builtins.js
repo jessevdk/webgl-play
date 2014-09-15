@@ -647,7 +647,7 @@ define_builtin_bin_operator_gen(null, [Tn.T_STAR], Tn.T_VEC4, null, [Tn.T_MAT4])
 
 // Relational operators
 define_builtin_bin_operator_gen(Tn.T_BOOL,
-                                [Tn.T_LEFT_ANGLE_OP, Tn.T_RIGHT_ANGLE, Tn.T_LE_OP, Tn.T_GE_OP],
+                                [Tn.T_LEFT_ANGLE, Tn.T_RIGHT_ANGLE, Tn.T_LE_OP, Tn.T_GE_OP],
                                 null, null,
                                 [Tn.T_FLOAT, Tn.T_INT]);
 
