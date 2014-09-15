@@ -4880,6 +4880,7 @@
     "COMMENT:// Common Functions@(41.5-41.24), multi:false =  Common Functions",
     "COMMENT:// Geometric Functions@(59.5-59.27), multi:false =  Geometric Functions",
     "COMMENT:// Matrix Functions@(69.5-69.24), multi:false =  Matrix Functions",
-    "COMMENT:// Vector Relational Functions@(72.5-72.35), multi:false =  Vector Relational Functions"
+    "COMMENT:// Vector Relational Functions@(72.5-72.35), multi:false =  Vector Relational Functions",
+    "COMMENT:// vi:ts=4:et@(91.1-91.14), multi:false =  vi:ts=4:et"
   ]
 }

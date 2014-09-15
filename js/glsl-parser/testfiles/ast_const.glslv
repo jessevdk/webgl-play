@@ -87,3 +87,5 @@ void main() {
     all(b2); all(b3); all(b4);
     not(b2); not(b3); not(b4);
 }
+
+// vi:ts=4:et
