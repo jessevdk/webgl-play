@@ -127,6 +127,10 @@ PrimitiveType.prototype.marshal_can_ref = function() {
     return false;
 }
 
+PrimitiveType.prototype.marshal = function() {
+    return '$' + this.name;
+}
+
 PrimitiveType._is_vec = function(tok) {
     switch (tok) {
     case Tn.T_VEC2:
