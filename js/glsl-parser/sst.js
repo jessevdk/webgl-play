@@ -740,7 +740,7 @@ Annotator.prototype._annotate_bin_op_expr = function(node) {
     } else if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
         if (node.op.id == Tn.T_EQ_OP || node.op.id == Tn.T_NE_OP) {
             if (node.lhs.t.type == node.rhs.t.type) {
-                node.t.type = node.lhs.t.type;
+                node.t.type = glsl.builtins.Bool;
                 return;
             }
         }
