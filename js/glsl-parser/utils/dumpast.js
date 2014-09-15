@@ -7,7 +7,14 @@ var fs = require('fs');
 if (process.argv.length > 2) {
     for (var i = 2; i < process.argv.length; i++) {
         var source = fs.readFileSync(process.argv[i], 'utf8');
+
+        var start = Date.now();
         var p = new glsl.ast.Parser(source);
+        var end = Date.now();
+        var parsems = (end - start);
+
+        process.stderr.write(process.argv[i] + '.ast, parse: ' + parsems + 'ms\n');
+
         var j = JSON.stringify(p.marshal(), null, '  ') + '\n';
 
         fs.writeFileSync(process.argv[i] + '.ast', j, {encoding: 'utf8'});

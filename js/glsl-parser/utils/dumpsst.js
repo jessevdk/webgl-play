@@ -8,8 +8,19 @@ if (process.argv.length > 2) {
     for (var i = 2; i < process.argv.length; i++) {
         var source = fs.readFileSync(process.argv[i], 'utf8');
 
+        var start = Date.now();
         var p = new glsl.ast.Parser(source);
+        var end = Date.now();
+
+        var parsems = (end - start);
+
+        start = end;
         glsl.sst.Annotate(p);
+        end = Date.now();
+
+        var annotatems = (end - start);
+
+        process.stderr.write( process.argv[i] + '.sst, parse: ' + parsems + 'ms, annotate: ' + annotatems + 'ms\n');
 
         var j = JSON.stringify(p.marshal(), null, '  ') + '\n';
 
