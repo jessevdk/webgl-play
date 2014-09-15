@@ -40,10 +40,12 @@ function make_suite(name, prefix, filter) {
 
                 var seen = {};
 
-                var ast = JSON.parse(astj);
                 var body = p.marshal();
 
-                assert.deepEqual(body, ast);
+                if (JSON.stringify(body, null, '  ') + '\n' != astj) {
+                    var ast = JSON.parse(astj);
+                    assert.deepEqual(body, ast);
+                }
             }).bind(this, f));
         }
     });

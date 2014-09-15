@@ -42,10 +42,12 @@ function make_suite(name, prefix, filter) {
 
                 var seen = {};
 
-                var sst = JSON.parse(sstj);
                 var body = p.marshal();
 
-                assert.deepEqual(body, sst);
+                if (JSON.stringify(body, null, '  ') + '\n' != sstj) {
+                    var sst = JSON.parse(sstj);
+                    assert.deepEqual(body, sst);
+                }
             }).bind(this, f));
         }
     });
