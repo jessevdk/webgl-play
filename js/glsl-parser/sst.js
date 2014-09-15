@@ -687,13 +687,13 @@ Annotator.prototype._annotate_variable_expr = function(node) {
     } else if ((glsl.ast.Named.prototype.isPrototypeOf(sym) && glsl.ast.VariableDecl.prototype.isPrototypeOf(sym.decl)) ||
                glsl.ast.ParamDecl.prototype.isPrototypeOf(sym)) {
         node.t.decl = sym;
-        node.t.type = sym.type.t.type;
+        node.t.type = sym.t.type;
 
         if (glsl.ast.Named.prototype.isPrototypeOf(sym) && sym.type.is_const()) {
             node.t.is_const_expression = true;
 
             if (sym.initial_value === null) {
-                node.t.const_value = sym.type.t.zero;
+                node.t.const_value = sym.t.type.zero;
             } else {
                 node.t.const_value = sym.initial_value.t.const_value;
             }
