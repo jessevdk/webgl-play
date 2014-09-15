@@ -263,7 +263,7 @@ TypeRef.prototype.location = function() {
 }
 
 TypeRef.prototype.is_const = function() {
-    return this.qualifers.indexOf(Tn.T_CONST) != -1;
+    return this.qualifiers.indexOf(Tn.T_CONST) != -1;
 }
 
 function StructDecl(stok) {
