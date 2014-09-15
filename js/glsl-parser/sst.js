@@ -29,7 +29,7 @@ if (typeof window != 'undefined' || typeof self != 'undefined') {
 
 var Tn = glsl.tokenizer.Tokenizer;
 
-var Error = function(loc, message) {
+function Error(loc, message) {
     glsl.source.Error.call(this, loc, message);
 }
 
@@ -37,16 +37,6 @@ Error.prototype = Object.create(glsl.source.Error.prototype);
 Error.prototype.constructor = Error;
 
 exports.Error = Error;
-
-function UserType(name, decl) {
-    glsl.ast.Node.call(this);
-
-    this.decl = decl;
-    this.is_builtin = false;
-    this.name = name;
-}
-
-UserType.prototype = glsl.ast.Node.create('UserType', UserType);
 
 function Annotate(ast) {
     (new Annotator(ast)).annotate();
@@ -76,10 +66,11 @@ function Annotator(ast) {
     // Push builtin types into the scope
     for (var i = 0; i < glsl.builtins.Types.length; i++) {
         var btype = glsl.builtins.Types[i];
+        var t = btype.type.t.type;
 
-        this._scope.type_map[btype.type.token.text] = btype;
-        this._scope.symbols[btype.type.token.text] = btype;
-        this._scope.types.push(btype);
+        this._scope.type_map[t.name] = t;
+        this._scope.symbols[t.name] = t;
+        this._scope.types.push(t);
     }
 
     // Push builtin functions into the scope
@@ -130,12 +121,20 @@ Annotator.prototype._pop_scope = function() {
 }
 
 Annotator.prototype._annotate_node = function(node) {
+    if (node === null) {
+        return;
+    }
+
     var n = node.node_name.replace(/\B[A-Z]+/g, '_$&').toLowerCase();
     var fn = '_annotate_' + n;
 
     if (typeof this[fn] !== 'function') {
         throw new global.Error('no annotator available for ' + node.node_name);
     }
+
+    node.t = {
+        type: null
+    };
 
     return this[fn](node);
 }
@@ -160,7 +159,7 @@ Annotator.prototype._lookup = function(name, mapname) {
     return null;
 }
 
-Annotator.prototype._lookup_typename = function(name) {
+Annotator.prototype._lookup_type = function(name) {
     return this._lookup(name, 'type_map');
 }
 
@@ -186,40 +185,85 @@ Annotator.prototype._lookup_function_or_proto = function(name) {
     return this._lookup_function_proto(name);
 }
 
-Annotator.prototype._resolve_type = function(type) {
-    type.type = null;
+Annotator.prototype._declare_type = function(type) {
+    this._scope.types.push(type);
+    this._scope.type_map[type.name] = type;
+    this._scope.symbols[type.name] = type;
+}
 
+Annotator.prototype._declare_variable = function(node) {
+    this._scope.variable_map[node.name.text] = node;
+    this._scope.variables.push(node);
+
+    this._scope.symbols[node.name.text] = node;
+}
+
+Annotator.prototype._lookup_or_declare_type = function(type) {
+    var tp = this._lookup_type(type.name);
+
+    if (tp === null) {
+        this._declare_type(type);
+        return type;
+    }
+
+    return tp;
+}
+
+Annotator.prototype._annotate_type_ref = function(type) {
     if (type.incomplete) {
         return;
     }
 
-    if (type.is_builtin) {
-        type.type = glsl.builtins.TypeMap[type.token.id].type.type;
-        return;
-    }
-
-    if (glsl.ast.StructDecl.prototype.isPrototypeOf(type)) {
-        type.type = new UserType(type.name !== null ? type.name.text : null, type);
-
-        if (!type.incomplete) {
-            type.type.complete();
-        }
-
-        this._annotate_struct_decl(type);
+    if (type.is_primitive) {
+        type.t.type = glsl.builtins.TypeMap[type.token.id].type.t.type;
     } else {
-        type.type = this._lookup_typename(type.token.text);
+        type.t.type = this._lookup_type(type.token.text);
     }
 
-    if (type.type === null) {
+    if (type.t.type === null) {
         this._error(type.location(), 'unknown type ' + type.token.text);
     }
 }
 
+Annotator.prototype._annotate_array = function(node, element_type) {
+    if (node.is_array) {
+        if (this._resolve_array_size(node)) {
+            node.t.type = this._lookup_or_declare_type(new glsl.builtins.ArrayType(element_type, node.array_size.t.const_value));
+        }
+    }
+}
+
+Annotator.prototype._annotate_named = function(node) {
+    this._annotate_node(node.initial_value);
+
+    if (!node.is_array) {
+        node.t.type = node.type.t.type;
+    } else {
+        this._annotate_array(node, node.type.t.type);
+    }
+
+    if (node.initial_value !== null && node.type.is_const() && !node.initial_value.t.is_const_expression) {
+        this._error(bode.initial_value, 'expected constant initial value expression');
+    }
+}
+
+Annotator.prototype._annotate_param_decl = function(node) {
+    this._annotate_node(node.type);
+
+    if (!node.is_array) {
+        node.t.type = node.type.t.type;
+    } else {
+        this._annotate_array(node, node.type.t.type);
+    }
+}
+
 Annotator.prototype._annotate_variable_decl = function(node) {
-    this._resolve_type(node.type);
+    this._annotate_node(node.type);
 
     for (var i = 0; i < node.names.length; i++) {
         var name = node.names[i];
+
+        this._annotate_node(name);
 
         // Check if variable with the same name is already declared in this
         // scope
@@ -246,13 +290,8 @@ Annotator.prototype._annotate_variable_decl = function(node) {
             }
         }
 
-        this._resolve_array_size(name);
-
         // Declare variable
-        this._scope.variable_map[name.name.text] = node;
-        this._scope.variables.push(node);
-
-        this._scope.symbols[name.name.text] = node;
+        this._declare_variable(name);
     }
 }
 
@@ -261,6 +300,8 @@ Annotator.prototype._annotate_type_decl = function(node) {
 }
 
 Annotator.prototype._annotate_struct_decl = function(node) {
+    var type;
+
     if (node.name !== null) {
         var tp = this._lookup_symbol(node.name.text);
 
@@ -269,37 +310,37 @@ Annotator.prototype._annotate_struct_decl = function(node) {
             return;
         }
 
-        var type = new UserType(node);
-
-        if (!node.incomplete) {
-            type.complete();
-        }
-
-        this._scope.types.push(type);
-        this._scope.type_map[node.name.text] = type;
-        this._scope.symbols[node.name.text] = type;
+        type = new glsl.builtins.UserType(node.name.text, node);
+        this._declare_type(type);
+    } else {
+        // new anonymous user type
+        type = new glsl.builtins.UserType(null, node);
     }
 
+    node.t.type = type;
     this._push_scope(node);
 
-    var fieldmap = {};
+    var field_map = {};
 
     for (var i = 0; i < node.fields.length; i++) {
         var field = node.fields[i];
 
+        this._annotate_node(field.type);
+
         for (var j = 0; j < field.names.length; j++) {
             var name = field.names[j];
 
-            if (name.name.text in fieldmap) {
-                this._error(name.location(), 'a field named ' + name.name.text + ' already exists, previous declaration was at ' + fieldmap[name.name.text].location().inspect());
-                continue;
+            this._annotate_node(name);
+
+            var f = node.t.type.declare_field(name.name.text, name.type.t);
+            f.decl = name;
+
+            if (name.name.text in field_map) {
+                this._error(name.location(), 'a field named ' + name.name.text + ' already exists, previous declaration was at ' + field_map[name.name.text].location().inspect());
             }
 
-            this._resolve_array_size(name);
-            fieldmap[name] = field;
+            field_map[name] = field;
         }
-
-        this._resolve_type(field.type);
     }
 
     this._pop_scope(node);
@@ -307,37 +348,40 @@ Annotator.prototype._annotate_struct_decl = function(node) {
 
 Annotator.prototype._resolve_array_size = function(node) {
     if (!node.is_array) {
-        return;
+        return false;
     }
 
     this._annotate_node(node.array_size);
 
-    if (!node.array_size.is_const_expression) {
+    if (!node.array_size.t.is_const_expression) {
         this._error(node.array_size.location(), 'expected constant expression for array size');
-    } else if (node.array_size.type != glsl.builtins.Int.type.type) {
+        return false;
+    } else if (node.array_size.t.type != glsl.builtins.Int) {
         var n;
 
-        if (node.array_size.type == glsl.builtins.Float.type.type) {
+        if (node.array_size.t.type == glsl.builtins.Float) {
             n = 'float';
-        } else if (node.array_size.type == glsl.builtins.Bool.type.type) {
+        } else if (node.array_size.t.type == glsl.builtins.Bool) {
             n = 'boolean';
         } else {
             n = 'user type';
         }
 
         this._error(node.array_size.location(), 'expected constant integer expression for array size, but got ' + n);
+        return false;
     }
+
+    return true;
 }
 
 Annotator.prototype._annotate_function_header = function(node) {
     // return type
-    this._resolve_type(node.type);
+    this._annotate_node(node.type);
+
+    node.t.type = node.type.t.type;
 
     for (var i = 0; i < node.parameters.length; i++) {
-        var param = node.parameters[i];
-
-        this._resolve_type(param.type);
-        this._resolve_array_size(param);
+        this._annotate_node(node.parameters[i]);
     }
 }
 
@@ -363,6 +407,8 @@ Annotator.prototype._annotate_function_proto = function(node) {
     }
 
     this._annotate_node(node.header);
+
+    node.t.type = node.header.t.type;
 
     this._scope.function_protos.push(node);
     this._scope.function_proto_map[id] = node;
@@ -431,6 +477,7 @@ Annotator.prototype._annotate_function_def = function(node) {
     }
 
     this._annotate_node(node.header);
+    node.t.type = node.header.t.type;
 
     var proto = this._lookup_function_proto(id);
 
@@ -459,7 +506,7 @@ Annotator.prototype._annotate_function_def = function(node) {
     for (var i = 0; i < node.header.parameters.length; i++) {
         var param = node.header.parameters[i];
 
-        if (param.type.token.id == Tn.T_VOID) {
+        if (i == 0 && param.type.token.id == Tn.T_VOID) {
             continue;
         }
 
@@ -491,19 +538,19 @@ Annotator.prototype._annotate_block = function(node) {
 }
 
 Annotator.prototype._annotate_precision_stmt = function(node) {
-    this._resolve_type(node.type);
+    this._annotate_node(node.type);
 
-    if (node.type.type === null) {
+    if (node.type.t.type === null) {
         return
     }
 
-    var tp = node.type.type;
+    var tp = node.type.t.type;
 
     var allowed = [
-        glsl.builtins.Int.type.type,
-        glsl.builtins.Float.type.type,
-        glsl.builtins.Sampler2D.type.type,
-        glsl.builtins.SamplerCube.type.type
+        glsl.builtins.Int,
+        glsl.builtins.Float,
+        glsl.builtins.Sampler2D,
+        glsl.builtins.SamplerCube
     ];
 
     if (allowed.indexOf(tp) == -1) {
@@ -534,14 +581,15 @@ Annotator.prototype._annotate_invariant_decl = function(node) {
     for (var i = 0; i < node.names.length; i++) {
         var name = node.names[i];
 
-        name.symbol = this._lookup_symbol(name.name.text);
+        var symbol = this._lookup_symbol(name.text);
 
-        if (name.symbol === null) {
-            this._error(name.name.location, 'cannot make unknown variable ' + name.name.text + ' invariant');
-        } else if (!glsl.ast.VariableDecl.prototype.isPrototypeOf(name.symbol)) {
-            var n = this._error_symbol_type_name(name.symbol);
+        if (symbol === null) {
+            this._error(name.location, 'cannot make unknown variable ' + name.text + ' invariant');
+        } else if (!glsl.ast.Named.prototype.isPrototypeOf(symbol) ||
+                   !glsl.ast.VariableDecl.prototype.isPrototypeOf(symbol.decl)) {
+            var n = this._error_symbol_type_name(symbol);
 
-            this._error(name.name.location, 'cannot make the ' + n + ' ' + name.name.text + ' invariant');
+            this._error(name.location, 'cannot make the ' + n + ' ' + name.text + ' invariant');
         }
     }
 }
@@ -550,31 +598,37 @@ Annotator.prototype._annotate_expression_stmt = function(node) {
     this._annotate_node(node.expression);
 }
 
-Annotator.prototype._annotate_constant_expr = function(node) {
-    node.is_const_expression = true;
-    node.const_value = node.token.value;
+Annotator.prototype._init_expr = function(node) {
+    node.t.is_const_expression = false;
+    node.t.const_value = null;
+}
 
-    node.type = null;
+Annotator.prototype._annotate_constant_expr = function(node) {
+    this._init_expr(node);
+
+    node.t.is_const_expression = true;
+    node.t.const_value = node.token.value;
 
     switch (node.token.id) {
     case Tn.T_INTCONSTANT:
-        node.type = glsl.builtins.Int.type.type;
+        node.t.type = glsl.builtins.Int;
         break;
     case Tn.T_FLOATCONSTANT:
-        node.type = glsl.builtins.Float.type.type;
+        node.t.type = glsl.builtins.Float;
         break;
     case Tn.T_BOOLCONSTANT:
-        node.type = glsl.builtins.Bool.type.type;
+        node.t.type = glsl.builtins.Bool;
         break;
     }
 }
 
 Annotator.prototype._annotate_function_call_expr = function(node) {
+    this._init_expr(node);
+
     var argnames = [];
 
-    node.type = null;
-    node.decl = null;
-    node.is_constructor = false;
+    node.t.decl = null;
+    node.t.is_constructor = false;
 
     var isok = true;
 
@@ -583,29 +637,29 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
 
         this._annotate_node(arg);
 
-        if (arg.type === null) {
+        if (arg.t.type === null) {
             isok = false;
             continue;
         }
 
-        if (i == 0 && arg.type == glsl.builtins.Void.type.type) {
-            continue
+        if (i == 0 && arg.t.type == glsl.builtins.Void) {
+            continue;
         }
 
-        argnames.push(arg.type.name);
+        argnames.push(arg.t.type.name);
     }
 
     if (!isok) {
         return;
     }
 
-    var tp = this._lookup_typename(node.name.text);
+    var tp = this._lookup_type(node.name.text);
 
     if (tp !== null) {
         // Constructor, resulting type is tp
         // TODO: basic checks for arguments
-        node.type = tp.type.type;
-        node.is_constructor = true;
+        node.t.type = tp;
+        node.t.is_constructor = true;
         return;
     }
 
@@ -617,85 +671,122 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
         return;
     }
 
-    node.type = f.header.type.type;
-    node.decl = f;
+    node.t.type = f.header.type.t.type;
+    node.t.decl = f;
 }
 
 Annotator.prototype._annotate_variable_expr = function(node) {
+    this._init_expr(node);
+
     var sym = this._lookup_symbol(node.name.text);
-    node.type = null;
-    node.decl = null;
+
+    node.t.decl = null;
 
     if (sym == null) {
         this._error(node.location(), 'undefined variable ' + node.name.text);
-    } else if (!glsl.ast.VariableDecl.prototype.isPrototypeOf(sym) &&
-               !glsl.ast.ParamDecl.prototype.isPrototypeOf(sym)) {
-        this._error(node.location(), 'expected a variable for ' + node.name.text + ' but got a ' + this._error_symbol_type_name(sym));
+    } else if ((glsl.ast.Named.prototype.isPrototypeOf(sym) && glsl.ast.VariableDecl.prototype.isPrototypeOf(sym.decl)) ||
+               glsl.ast.ParamDecl.prototype.isPrototypeOf(sym)) {
+        node.t.decl = sym;
+        node.t.type = sym.type.t.type;
+
+        if (glsl.ast.Named.prototype.isPrototypeOf(sym) && sym.type.is_const()) {
+            node.t.is_const_expression = true;
+
+            if (sym.initial_value === null) {
+                node.t.const_value = sym.type.t.zero;
+            } else {
+                node.t.const_value = sym.initial_value.t.const_value;
+            }
+        }
     } else {
-        node.decl = sym;
-        node.type = sym.type.type;
+        this._error(node.location(), 'expected a variable for ' + node.name.text + ' but got a ' + this._error_symbol_type_name(sym));
     }
 }
 
 Annotator.prototype._annotate_assignment_expr = function(node) {
+    this._init_expr(node);
+
     this._annotate_node(node.lhs);
     this._annotate_node(node.rhs);
 
-    node.type = node.lhs.type;
+    if (node.lhs.t.is_const_expression) {
+        node.t.is_const_expression = true;
+        node.t.const_value = node.lhs.const_value;
+    }
 
-    if (node.lhs.type !== null && node.rhs.type !== null) {
-        if (node.lhs.type != node.rhs.type) {
-            this._error(node.lhs.location().extend(node.op.location), 'cannot assign expression of type ' + node.rhs.type.name + ' to a value of type ' + node.lhs.type.name);
+    node.t.type = node.lhs.t.type;
+
+    if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
+        if (node.lhs.t.type != node.rhs.t.type) {
+            this._error(node.lhs.location().extend(node.op.location), 'cannot assign expression of type ' + node.rhs.t.type.name + ' to a value of type ' + node.lhs.t.type.name);
         }
     }
 
     // TODO: check for valid l-value expressions
+    // TODO: check for array assignment
 }
 
 Annotator.prototype._annotate_bin_op_expr = function(node) {
+    this._init_expr(node);
+
     this._annotate_node(node.lhs);
     this._annotate_node(node.rhs);
 
-    node.type = null;
-
     // Make some guess if lhs or rhs could not be type checked
-    if (node.lhs.type === null) {
-        node.type = node.rhs.type;
-    } else if (node.rhs.type == null) {
-        node.type = node.lhs.type;
-    } else if (node.lhs.type !== null && node.rhs.type !== null) {
+    if (node.lhs.t.type === null) {
+        node.t.type = node.rhs.t.type;
+    } else if (node.rhs.t.type == null) {
+        node.t.type = node.lhs.t.type;
+    } else if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
         if (node.op.id == Tn.T_EQ_OP || node.op.id == Tn.T_NE_OP) {
-            if (node.lhs.type == node.rhs.type) {
-                node.type = node.lhs.type;
+            if (node.lhs.t.type == node.rhs.t.type) {
+                node.t.type = node.lhs.t.type;
                 return;
             }
         }
 
-        var sig = node.op.text + '(' + node.lhs.type.name + ',' + node.rhs.type.name + ')';
+        var sig = node.op.text + '(' + node.lhs.t.type.name + ',' + node.rhs.t.type.name + ')';
 
         if (sig in glsl.builtins.OperatorMap) {
-            node.type = glsl.builtins.OperatorMap[sig].ret;
+            var op = glsl.builtins.OperatorMap[sig];
+            node.t.type = op.ret;
+
+            if (node.lhs.t.is_const_expression && node.rhs.t.is_const_expression) {
+                node.t.is_const_expression = true;
+                node.t.const_value = op.evaluate(node.lhs.t.const_value, node.rhs.t.const_value);
+            }
         } else {
-            this._error(node.location(), 'cannot use the \'' + node.op.text + '\' operator on types ' + node.lhs.type.name + ' and ' + node.rhs.type.name);
+            this._error(node.location(), 'cannot use the \'' + node.op.text + '\' operator on types ' + node.lhs.t.type.name + ' and ' + node.rhs.t.type.name);
         }
     }
 }
 
 Annotator.prototype._annotate_unary_op_expr = function(node) {
+    this._init_expr(node);
+
     this._annotate_node(node.expression);
 
-    node.type = null;
-
-    if (node.expression.type === null) {
+    if (node.expression.t.type === null) {
         return;
     }
 
-    var sig = node.op.text + '(' + node.expression.type.name + ')';
+    var sig = node.op.text + '(' + node.expression.t.type.name + ')';
 
     if (sig in glsl.builtins.OperatorMap) {
-        node.type = glsl.builtins.OperatorMap[sig].ret;
+        var op = glsl.builtins.OperatorMap[sig];
+        node.t.type = op.ret;
+
+        if (node.expression.t.is_const_expression) {
+            node.t.is_const_expression = true;
+
+            if (glsl.ast.UnaryPostfixOpExpr.prototype.isPrototypeOf(node)) {
+                node.t.const_value = node.expression.t.const_value;
+            } else {
+                node.t.const_value = op.evaluate(node.expression.t.const_value);
+            }
+        }
     } else {
-        this._error(node.location(), 'cannot use the \'' + node.op.text + '\' operator on type ' + node.expression.type.name);
+        this._error(node.location(), 'cannot use the \'' + node.op.text + '\' operator on type ' + node.expression.t.type.name);
     }
 }
 
@@ -704,78 +795,89 @@ Annotator.prototype._annotate_unary_postfix_op_expr = function(node) {
 }
 
 Annotator.prototype._annotate_ternary_expr = function(node) {
+    this._init_expr(node);
+
     this._annotate_node(node.condition);
     this._annotate_node(node.true_expression);
     this._annotate_node(node.false_expression);
 
-    node.type = null;
-
-    if (node.condition.type !== null && node.condition.type != glsl.builtins.Bool.type.type) {
-        this._error(node.condition.location(), 'the condition of a ternary conditional expression must be of type bool');
+    if (node.condition.t.type !== null && node.condition.t.type != glsl.builtins.Bool) {
+        this._error(node.condition.location(), 'the condition of a ternary conditional expression must be of type bool, not ' + node.condition.t.type.name);
     }
 
-    if (node.true_expression.type === null && node.false_expression === null) {
+    if (node.true_expression.t.type === null && node.false_expression.t.type === null) {
         return;
     }
 
-    if (node.true_expression.type === null) {
-        node.type = node.false_expression.type;
-    } else if (node.false_expression.type === null) {
-        node.type = node.true_expression.type;
-    } else if (node.true_expression.type != node.false_expression.type) {
+    if (node.true_expression.t.type === null) {
+        node.t.type = node.false_expression.t.type;
+    } else if (node.false_expression.t.type === null) {
+        node.t.type = node.true_expression.t.type;
+    } else if (node.true_expression.t.type != node.false_expression.t.type) {
         this._error(node.true_expression.location().extend(node.false_expression.location()),
-                    'the true expression and false expression must be of the same type, but got ' + node.true_expression.type.name + ' and ' + node.false_expression.type.name);
-        node.type = node.true_expression.type;
+                    'the true expression and false expression must be of the same type, but got ' + node.true_expression.t.type.name + ' and ' + node.false_expression.t.type.name);
+        node.t.type = node.true_expression.t.type;
     } else {
-        node.type = node.true_expression.type;
+        node.t.type = node.true_expression.t.type;
+    }
+
+    if (node.condition.t.is_const_expression) {
+        if (node.condition.t.const_value) {
+            if (node.true_expression.t.is_const_expression) {
+                node.t.is_const_expression = true;
+                node.t.const_value = node.true_expression.t.const_value;
+            }
+        } else {
+            if (node.false_expression.t.is_const_expression) {
+                node.t.is_const_expression = true;
+                node.t.const_value = node.false_expression.t.const_value;
+            }
+        }
     }
 }
 
 Annotator.prototype._annotate_index_expr = function(node) {
+    this._init_expr(node);
+
     this._annotate_node(node.expression);
     this._annotate_node(node.index);
 
-    node.type = null;
-
-    var et = node.expression.type;
+    var et = node.expression.t.type;
 
     if (et !== null) {
-        if (et.length <= 1) {
+        if ((!et.is_array && !et.is_primitive) || et.length <= 1) {
             this._error(node.expression.location(), 'the expression cannot be indexed');
-        } else if (node.index.type !== null && node.index.type.is_const_expression && node.index.type.const_value >= et.length) {
-            this._error(node.index.location(), 'index out of bounds, trying to index element ' + node.index.type.const_value + ' in a value of length ' + et.length);
-        } else if (et.is_builtin) {
+        } else if (node.index.t.type !== null && node.index.t.type.is_const_expression && node.index.t.type.const_value >= et.length) {
+            this._error(node.index.location(), 'index out of bounds, trying to index element ' + node.index.t.type.const_value + ' in a value of length ' + et.length);
+        } else if (et.is_primitive) {
             if (et.is_mat) {
-                if (et.length == 2) {
-                    node.type = glsl.builtins.Vec2.type.type;
-                } else if (et.length == 3) {
-                    node.type = glsl.builtins.Vec3.type.type;
-                } else if (et.length == 4) {
-                    node.type = glsl.builtins.Vec4.type.type;
-                }
+                var m = {2: glsl.builtins.Vec2, 3: glsl.builtins.Vec3, 4: glsl.builtins.Vec4};
+                node.t.type = m[et.length];
             } else if (et.is_float) {
-                node.type = glsl.builtins.Float.type.type;
+                node.t.type = glsl.builtins.Float;
             } else if (et.is_int) {
-                node.type = glsl.builtins.Int.type.type;
+                node.t.type = glsl.builtins.Int;
             } else if (et.is_bool) {
-                node.type = glsl.builtins.Bool.type.type;
+                node.t.type = glsl.builtins.Bool;
             }
-        } else {
-            node.type = et.element_type;
+        } else if (et.is_array) {
+            node.t.type = et.element_type;
         }
     }
 
-    if (node.index.type !== null && (!node.index.type.is_const_expression || node.index.type != glsl.builtins.Int.type.type)) {
+    if (node.index.t.type !== null && (!node.index.t.type.is_const_expression || node.index.t.type != glsl.builtins.Int)) {
         this._error(node.index.location(), 'expected constant integer index expression');
+    } else if (node.expression.t.is_const_expression) {
+        node.t.const_value = node.expression.t.const_value[node.index.t.const_value];
+        node.t.is_const_expression = true;
     }
 }
 
 Annotator.prototype._annotate_field_selection_expr = function(node) {
+    this._init_expr(node);
     this._annotate_node(node.expression);
 
-    node.type = null;
-
-    var et = node.expression.type;
+    var et = node.expression.t.type;
 
     if (et === null) {
         return;
@@ -783,7 +885,7 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
 
     var s = node.selector.text;
 
-    if (et.is_builtin) {
+    if (et.is_primitive) {
         if (et.is_vec) {
             var components = {
                 'x': 0, 'y': 0, 'z': 0, 'w': 0,
@@ -812,7 +914,21 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
                 tps = [Tn.T_BOOL, Tn.T_BVEC2, Tn.T_BVEC3, Tn.T_BVEC4];
             }
 
-            node.type = glsl.builtins.TypeMap[tps[s.length]].type.type;
+            node.t.type = glsl.builtins.TypeMap[tps[s.length - 1]].type.t.type;
+
+            if (node.expression.t.is_const_expression) {
+                node.t.is_const_expression = true;
+
+                if (node.t.type.is_vec) {
+                    node.t.const_value = [];
+
+                    for (var i = 0; i < node.t.type.length; i++) {
+                        node.t.const_value.push(0);
+                    }
+                } else {
+                    node.t.const_value = 0;
+                }
+            }
 
             var ci = 0;
 
@@ -837,28 +953,41 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
 
                 if (j >= et.length) {
                     this._error(node.selector.location.start.advance_chars(i).to_range(),
-                                'selector out of bounds, expression has only ' + node.expression.type.length + ' components, but tried to select component ' + (ci + 1));
+                                'selector out of bounds, expression has only ' + et.length + ' components, but tried to select component ' + (ci + 1));
                     return;
+                }
+
+                if (node.expression.t.is_const_expression) {
+                    if (node.t.type.is_vec) {
+                        node.const_value[i] = node.expression.t.const_value[j];
+                    } else {
+                        node.const_value = node.expression.t.const_value[j];
+                    }
                 }
             }
         } else {
             this._error(node.expression.location().extend(node.op.location), 'selector \'' + s + '\' does not apply to an expression of type ' + et.name);
         }
-    } else {
+    } else if (et.is_composite) {
         // Select on field in user defined type
-        var fields = et.decl.fields;
-
-        for (var i = 0; i < fields.length; i++) {
-            var field = fields[i];
-
-            if (field.name.text == s) {
-                node.type = field.type.type;
-                return;
-            }
+        if (s in et.field_map) {
+            var f = et.field_map[s];
+            node.t.type = f.type;
+        } else {
+            this._error(node.selector.location, 'the field \'' + s + '\' does not exist in the struct type ' + et.name);
         }
-
-        this._error(node.selector.location, 'the field \'' + s + '\' does not exist in the struct type ' + et.name);
+    } else {
+        this._error(node.selector.location, 'cannot apply selector \'' + s + '\' to expression of type ' + et.name);
     }
+}
+
+Annotator.prototype._annotate_group_expr = function(node) {
+    this._init_expr(node);
+    this._annotate_node(node.expression);
+
+    node.t.type = node.expression.t.type;
+    node.t.is_const_expression = node.expression.t.is_const_expression;
+    node.t.const_value = node.expression.t.const_value
 }
 
 Annotator.prototype._error = function(loc, message) {
@@ -866,8 +995,6 @@ Annotator.prototype._error = function(loc, message) {
 }
 
 exports.Annotate = Annotate;
-
-exports.UserType = UserType;
 
 })(ns);
 
