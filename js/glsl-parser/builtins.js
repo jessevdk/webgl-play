@@ -94,6 +94,12 @@ function ArrayType(element_type, length) {
     this.element_type = element_type;
     this.length = length;
 
+    this.zero = [];
+
+    for (var i = 0; i < length; i++) {
+        this.zero.push(element_type.zero);
+    }
+
     this.is_array = true;
 }
 
