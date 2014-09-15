@@ -8,14 +8,7 @@
           "token": "FLOAT:float@(3.17-3.22)",
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "float",
-              "is_primitive": true,
-              "id": 15,
-              "is_scalar": true,
-              "is_float": true,
-              "length": 1
-            }
+            "type(builtins.PrimitiveType)": "$float"
           }
         },
         "semi": "SEMICOLON:;@(3.22-3.23)",
@@ -31,40 +24,7 @@
           ],
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "mat4",
-              "is_primitive": true,
-              "id": 29,
-              "zero": [
-                [
-                  0,
-                  0,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  0,
-                  0
-                ]
-              ],
-              "is_mat": true,
-              "is_float": true,
-              "length": 4
-            }
+            "type(builtins.PrimitiveType)": "$mat4"
           },
           "@id": 5
         },
@@ -75,40 +35,7 @@
               "decl(VariableDecl)": "@4",
               "type(TypeRef)": "@5",
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "mat4",
-                  "is_primitive": true,
-                  "id": 29,
-                  "zero": [
-                    [
-                      0,
-                      0,
-                      0,
-                      0
-                    ],
-                    [
-                      0,
-                      0,
-                      0,
-                      0
-                    ],
-                    [
-                      0,
-                      0,
-                      0,
-                      0
-                    ],
-                    [
-                      0,
-                      0,
-                      0,
-                      0
-                    ]
-                  ],
-                  "is_mat": true,
-                  "is_float": true,
-                  "length": 4
-                }
+                "type(builtins.PrimitiveType)": "$mat4"
               },
               "@id": 6
             }
@@ -128,19 +55,7 @@
           ],
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "vec3",
-              "is_primitive": true,
-              "id": 40,
-              "zero": [
-                0,
-                0,
-                0
-              ],
-              "is_vec": true,
-              "is_float": true,
-              "length": 3
-            }
+            "type(builtins.PrimitiveType)": "$vec3"
           },
           "@id": 8
         },
@@ -151,19 +66,7 @@
               "decl(VariableDecl)": "@7",
               "type(TypeRef)": "@8",
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "vec3",
-                  "is_primitive": true,
-                  "id": 40,
-                  "zero": [
-                    0,
-                    0,
-                    0
-                  ],
-                  "is_vec": true,
-                  "is_float": true,
-                  "length": 3
-                }
+                "type(builtins.PrimitiveType)": "$vec3"
               },
               "@id": 9
             }
@@ -183,14 +86,7 @@
           ],
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "int",
-              "is_primitive": true,
-              "id": 21,
-              "is_scalar": true,
-              "is_int": true,
-              "length": 1
-            }
+            "type(builtins.PrimitiveType)": "$int"
           },
           "@id": 11
         },
@@ -204,27 +100,13 @@
               "initial_value(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(8.22-8.23) = 4",
                 "t": {
-                  "type(builtins.PrimitiveType)": {
-                    "name": "int",
-                    "is_primitive": true,
-                    "id": 21,
-                    "is_scalar": true,
-                    "is_int": true,
-                    "length": 1
-                  },
+                  "type(builtins.PrimitiveType)": "$int",
                   "is_const_expression": true,
                   "const_value": 4
                 }
               },
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "int",
-                  "is_primitive": true,
-                  "id": 21,
-                  "is_scalar": true,
-                  "is_int": true,
-                  "length": 1
-                }
+                "type(builtins.PrimitiveType)": "$int"
               },
               "@id": 12
             }
@@ -244,14 +126,7 @@
           ],
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "float",
-              "is_primitive": true,
-              "id": 15,
-              "is_scalar": true,
-              "is_float": true,
-              "length": 1
-            }
+            "type(builtins.PrimitiveType)": "$float"
           },
           "@id": 15
         },
@@ -262,14 +137,7 @@
               "decl(VariableDecl)": "@14",
               "type(TypeRef)": "@15",
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "float",
-                  "is_primitive": true,
-                  "id": 15,
-                  "is_scalar": true,
-                  "is_float": true,
-                  "length": 1
-                }
+                "type(builtins.PrimitiveType)": "$float"
               },
               "@id": 16
             }
@@ -289,14 +157,7 @@
           ],
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "float",
-              "is_primitive": true,
-              "id": 15,
-              "is_scalar": true,
-              "is_float": true,
-              "length": 1
-            }
+            "type(builtins.PrimitiveType)": "$float"
           },
           "@id": 18
         },
@@ -307,14 +168,7 @@
               "decl(VariableDecl)": "@17",
               "type(TypeRef)": "@18",
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "float",
-                  "is_primitive": true,
-                  "id": 15,
-                  "is_scalar": true,
-                  "is_float": true,
-                  "length": 1
-                }
+                "type(builtins.PrimitiveType)": "$float"
               },
               "@id": 19
             }
@@ -334,14 +188,7 @@
           ],
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "float",
-              "is_primitive": true,
-              "id": 15,
-              "is_scalar": true,
-              "is_float": true,
-              "length": 1
-            }
+            "type(builtins.PrimitiveType)": "$float"
           },
           "@id": 21
         },
@@ -352,14 +199,7 @@
               "decl(VariableDecl)": "@20",
               "type(TypeRef)": "@21",
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "float",
-                  "is_primitive": true,
-                  "id": 15,
-                  "is_scalar": true,
-                  "is_float": true,
-                  "length": 1
-                }
+                "type(builtins.PrimitiveType)": "$float"
               },
               "@id": 22
             }
@@ -391,14 +231,7 @@
           ],
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "int",
-              "is_primitive": true,
-              "id": 21,
-              "is_scalar": true,
-              "is_int": true,
-              "length": 1
-            }
+            "type(builtins.PrimitiveType)": "$int"
           },
           "@id": 25
         },
@@ -409,14 +242,7 @@
               "decl(VariableDecl)": "@24",
               "type(TypeRef)": "@25",
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "int",
-                  "is_primitive": true,
-                  "id": 21,
-                  "is_scalar": true,
-                  "is_int": true,
-                  "length": 1
-                }
+                "type(builtins.PrimitiveType)": "$int"
               },
               "@id": 26
             }
@@ -436,14 +262,7 @@
           ],
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "bool",
-              "is_primitive": true,
-              "id": 5,
-              "is_scalar": true,
-              "is_bool": true,
-              "length": 1
-            }
+            "type(builtins.PrimitiveType)": "$bool"
           },
           "@id": 28
         },
@@ -457,14 +276,7 @@
               "array_size(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(16.24-16.25) = 4",
                 "t": {
-                  "type(builtins.PrimitiveType)": {
-                    "name": "int",
-                    "is_primitive": true,
-                    "id": 21,
-                    "is_scalar": true,
-                    "is_int": true,
-                    "length": 1
-                  },
+                  "type(builtins.PrimitiveType)": "$int",
                   "is_const_expression": true,
                   "const_value": 4
                 }
@@ -475,15 +287,14 @@
                 "type(builtins.ArrayType)": {
                   "name": "bool[4]",
                   "is_array": true,
-                  "element_type(builtins.PrimitiveType)": {
-                    "name": "bool",
-                    "is_primitive": true,
-                    "id": 5,
-                    "is_scalar": true,
-                    "is_bool": true,
-                    "length": 1
-                  },
+                  "element_type(builtins.PrimitiveType)": "$bool",
                   "length": 4,
+                  "zero": [
+                    false,
+                    false,
+                    false,
+                    false
+                  ],
                   "@id": 31
                 }
               },
@@ -502,14 +313,7 @@
           "token": "INT:int@(18.1-18.4)",
           "is_primitive": true,
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "int",
-              "is_primitive": true,
-              "id": 21,
-              "is_scalar": true,
-              "is_int": true,
-              "length": 1
-            }
+            "type(builtins.PrimitiveType)": "$int"
           },
           "@id": 33
         },
@@ -520,14 +324,7 @@
               "decl(VariableDecl)": "@32",
               "type(TypeRef)": "@33",
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "int",
-                  "is_primitive": true,
-                  "id": 21,
-                  "is_scalar": true,
-                  "is_int": true,
-                  "length": 1
-                }
+                "type(builtins.PrimitiveType)": "$int"
               },
               "@id": 34
             }
@@ -541,27 +338,13 @@
               "initial_value(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(18.28-18.29) = 4",
                 "t": {
-                  "type(builtins.PrimitiveType)": {
-                    "name": "int",
-                    "is_primitive": true,
-                    "id": 21,
-                    "is_scalar": true,
-                    "is_int": true,
-                    "length": 1
-                  },
+                  "type(builtins.PrimitiveType)": "$int",
                   "is_const_expression": true,
                   "const_value": 4
                 }
               },
               "t": {
-                "type(builtins.PrimitiveType)": {
-                  "name": "int",
-                  "is_primitive": true,
-                  "id": 21,
-                  "is_scalar": true,
-                  "is_int": true,
-                  "length": 1
-                }
+                "type(builtins.PrimitiveType)": "$int"
               },
               "@id": 35
             }
@@ -575,14 +358,7 @@
               "array_size(ConstantExpr)": {
                 "token": "INTCONSTANT:2@(18.41-18.42) = 2",
                 "t": {
-                  "type(builtins.PrimitiveType)": {
-                    "name": "int",
-                    "is_primitive": true,
-                    "id": 21,
-                    "is_scalar": true,
-                    "is_int": true,
-                    "length": 1
-                  },
+                  "type(builtins.PrimitiveType)": "$int",
                   "is_const_expression": true,
                   "const_value": 2
                 }
@@ -593,15 +369,12 @@
                 "type(builtins.ArrayType)": {
                   "name": "int[2]",
                   "is_array": true,
-                  "element_type(builtins.PrimitiveType)": {
-                    "name": "int",
-                    "is_primitive": true,
-                    "id": 21,
-                    "is_scalar": true,
-                    "is_int": true,
-                    "length": 1
-                  },
+                  "element_type(builtins.PrimitiveType)": "$int",
                   "length": 2,
+                  "zero": [
+                    0,
+                    0
+                  ],
                   "@id": 39
                 }
               },
@@ -628,14 +401,7 @@
                   "token": "INT:int@(21.5-21.8)",
                   "is_primitive": true,
                   "t": {
-                    "type(builtins.PrimitiveType)": {
-                      "name": "int",
-                      "is_primitive": true,
-                      "id": 21,
-                      "is_scalar": true,
-                      "is_int": true,
-                      "length": 1
-                    }
+                    "type(builtins.PrimitiveType)": "$int"
                   },
                   "@id": 43
                 },
@@ -646,14 +412,7 @@
                       "decl(FieldDecl)": "@42",
                       "type(TypeRef)": "@43",
                       "t": {
-                        "type(builtins.PrimitiveType)": {
-                          "name": "int",
-                          "is_primitive": true,
-                          "id": 21,
-                          "is_scalar": true,
-                          "is_int": true,
-                          "length": 1
-                        }
+                        "type(builtins.PrimitiveType)": "$int"
                       },
                       "@id": 44
                     }
@@ -664,14 +423,7 @@
                       "decl(FieldDecl)": "@42",
                       "type(TypeRef)": "@43",
                       "t": {
-                        "type(builtins.PrimitiveType)": {
-                          "name": "int",
-                          "is_primitive": true,
-                          "id": 21,
-                          "is_scalar": true,
-                          "is_int": true,
-                          "length": 1
-                        }
+                        "type(builtins.PrimitiveType)": "$int"
                       },
                       "@id": 45
                     }
@@ -692,28 +444,14 @@
                 "a": {
                   "name": "a",
                   "type": {
-                    "type(builtins.PrimitiveType)": {
-                      "name": "int",
-                      "is_primitive": true,
-                      "id": 21,
-                      "is_scalar": true,
-                      "is_int": true,
-                      "length": 1
-                    }
+                    "type(builtins.PrimitiveType)": "$int"
                   },
                   "decl(Named)": "@44"
                 },
                 "b": {
                   "name": "b",
                   "type": {
-                    "type(builtins.PrimitiveType)": {
-                      "name": "int",
-                      "is_primitive": true,
-                      "id": 21,
-                      "is_scalar": true,
-                      "is_int": true,
-                      "length": 1
-                    }
+                    "type(builtins.PrimitiveType)": "$int"
                   },
                   "decl(Named)": "@45"
                 }
@@ -722,28 +460,14 @@
                 {
                   "name": "a",
                   "type": {
-                    "type(builtins.PrimitiveType)": {
-                      "name": "int",
-                      "is_primitive": true,
-                      "id": 21,
-                      "is_scalar": true,
-                      "is_int": true,
-                      "length": 1
-                    }
+                    "type(builtins.PrimitiveType)": "$int"
                   },
                   "decl(Named)": "@44"
                 },
                 {
                   "name": "b",
                   "type": {
-                    "type(builtins.PrimitiveType)": {
-                      "name": "int",
-                      "is_primitive": true,
-                      "id": 21,
-                      "is_scalar": true,
-                      "is_int": true,
-                      "length": 1
-                    }
+                    "type(builtins.PrimitiveType)": "$int"
                   },
                   "decl(Named)": "@45"
                 }
@@ -806,11 +530,7 @@
             "token": "VOID:void@(26.1-26.5)",
             "is_primitive": true,
             "t": {
-              "type(builtins.PrimitiveType)": {
-                "name": "void",
-                "is_primitive": true,
-                "id": 42
-              }
+              "type(builtins.PrimitiveType)": "$void"
             }
           },
           "name": "IDENTIFIER:f@(26.6-26.7)",
@@ -834,11 +554,7 @@
           "left_paren": "LEFT_PAREN:(@(26.7-26.8)",
           "right_paren": "RIGHT_PAREN:)@(26.18-26.19)",
           "t": {
-            "type(builtins.PrimitiveType)": {
-              "name": "void",
-              "is_primitive": true,
-              "id": 42
-            }
+            "type(builtins.PrimitiveType)": "$void"
           }
         },
         "body(Block)": {
@@ -887,11 +603,7 @@
           "parent_scope(FunctionDef)": "@51"
         },
         "t": {
-          "type(builtins.PrimitiveType)": {
-            "name": "void",
-            "is_primitive": true,
-            "id": 42
-          }
+          "type(builtins.PrimitiveType)": "$void"
         },
         "variables": [
           "ParamDecl@54"
