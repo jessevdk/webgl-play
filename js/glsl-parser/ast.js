@@ -2756,40 +2756,46 @@ Parser.prototype._parse_init_declarator_list = function(decl, opts) {
             return decl;
         }
 
-        var name = new Named(ident, decl);
-        name.type = decl.type;
+        if (!opts.array && !opts.equal) {
+            decl.names.push(ident);
+        } else {
 
-        decl.names.push(name);
+            var name = new Named(ident, decl);
+            name.type = decl.type;
 
-        var isarray = false;
+            decl.names.push(name);
 
-        tok = this._t.peek();
+            var isarray = false;
 
-        if (opts.array) {
+            tok = this._t.peek();
+
+            if (opts.array) {
+                name.complete();
+
+                if (this._parse_optional_array_spec(name)) {
+                    isarray = true;
+                }
+
+                if (name.incomplete) {
+                    return decl;
+                }
+            }
+
+            if (!isarray && opts.equal && tok.id == Tn.T_EQUAL) {
+                // consume peeked token
+                this._t.next();
+
+                name.initial_value = this._parse_rule(this._parse_initializer, this._t.next());
+                name.initial_assign = tok;
+
+                if (name.initial_value.incomplete) {
+                    return decl;
+                }
+            }
+
             name.complete();
-
-            if (this._parse_optional_array_spec(name)) {
-                isarray = true;
-            }
-
-            if (name.incomplete) {
-                return decl;
-            }
         }
 
-        if (!isarray && opts.equal && tok.id == Tn.T_EQUAL) {
-            // consume peeked token
-            this._t.next();
-
-            name.initial_value = this._parse_rule(this._parse_initializer, this._t.next());
-            name.initial_assign = tok;
-
-            if (name.initial_value.incomplete) {
-                return decl;
-            }
-        }
-
-        name.complete();
         tok = this._t.peek();
     }
 
