@@ -846,7 +846,7 @@ Annotator.prototype._annotate_index_expr = function(node) {
 
     if (et !== null) {
         if ((!et.is_array && !et.is_primitive) || et.length <= 1) {
-            this._error(node.expression.location(), 'the expression cannot be indexed');
+            this._error(node.expression.location(), 'only vectors, matrices and arrays can be indexed, not ' + et.name);
         } else if (node.index.t.type !== null && node.index.t.type.is_const_expression && node.index.t.type.const_value >= et.length) {
             this._error(node.index.location(), 'index out of bounds, trying to index element ' + node.index.t.type.const_value + ' in a value of length ' + et.length);
         } else if (et.is_primitive) {
