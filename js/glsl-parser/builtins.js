@@ -464,6 +464,114 @@ function Operator(op) {
     this.rhs = null;
 }
 
+Operator.prototype._evaluate_elem = function(a, b) {
+    switch (this.op) {
+    case Tn.T_PLUS:
+        return a + b;
+    case Tn.T_DASH:
+        return a - b;
+    case Tn.T_STAR:
+        return a * b;
+    case Tn.T_SLASH:
+        return a / b;
+    case Tn.T_LEFT_ANGLE:
+        return a < b;
+    case Tn.T_RIGHT_ANGLE:
+        return a > b;
+    case Tn.T_LE_OP:
+        return a <= b;
+    case Tn.T_GE_OP:
+        return a >= b;
+    case Tn.T_EQ_OP:
+        return a == b;
+    case Tn.T_NE_OP:
+        return a != b;
+    case Tn.T_AND_OP:
+        return a && b;
+    case Tn.T_OR_OP:
+        return a || b;
+    case Tn.T_XOR_OP:
+        return (a && !b) || (b && !a);
+    }
+}
+
+Operator.prototype.evaluate = function(a, b) {
+    if (this.op == Tn.T_STAR) {
+        if (this.lhs.is_vec && this.rhs.is_mat) {
+            var ret = [];
+
+            for (var i = 0; i < this.lhs.length; i++) {
+                var s = 0;
+
+                for (var j = 0; j < this.lhs.length; j++) {
+                    s += a[j] * b[i][j];
+                }
+
+                ret.push(s);
+            }
+
+            return ret;
+        } else if (this.lhs.is_mat && this.rhs.is_vec) {
+            var ret = [];
+
+            for (var i = 0; i < this.lhs.length; i++) {
+                var s = 0;
+
+                for (var j = 0; j < this.lhs.length; j++) {
+                    s += a[j][i] * b[j];
+                }
+
+                ret.push(s);
+            }
+
+            return ret;
+        }
+    }
+
+    if (this.lhs.is_vec || this.rhs.is_vec) {
+        var ret = [];
+        var l = (this.lhs.is_vec ? this.lhs.length : this.rhs.length);
+
+        for (var i = 0; i < l; i++) {
+            ret.push(this._evaluate_elem(this.lhs.is_vec ? a[i] : a, this.rhs.is_vec ? b[i] : b));
+        }
+
+        return ret;
+    } else if (this.lhs.is_mat || this.rhs.is_mat) {
+        var ret = [];
+        var l = (this.lhs.is_mat ? this.lhs.length : this.rhs.length);
+
+        for (var i = 0; i < l; i++) {
+            for (var j = 0; j < l; j++) {
+                ret.push(this._evaluate_elem(this.lhs.is_mat ? a[i][j] : a, this.rhs.is_mat ? b[i][j] : b));
+            }
+        }
+
+        return ret;
+    } else {
+        return this._evaluate_elem(a, b);
+    }
+}
+
+function UnaryOperator(op) {
+    this.op = op;
+    this.ret = null;
+    this.expr = null;
+}
+
+UnaryOperator.prototype.evaluate = function(a) {
+    switch (this.op) {
+    case Tn.T_BANG:
+        return !a;
+    case Tn.T_DASH:
+        return -a;
+    case Tn.T_INC_OP:
+        return a + 1;
+    case Tn.T_DEC_OP:
+        return a - 1;
+    }
+}
+
 exports.Operators = [];
 exports.OperatorMap = {};
 
