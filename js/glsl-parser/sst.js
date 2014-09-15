@@ -981,13 +981,24 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
     }
 }
 
+Annotator.prototype._copy_type = function(dest, src) {
+    dest.t.type = src.t.type;
+    dest.t.is_const_expression = src.t.is_const_expression;
+    dest.t.const_value = src.t.const_value
+}
 Annotator.prototype._annotate_group_expr = function(node) {
     this._init_expr(node);
     this._annotate_node(node.expression);
 
-    node.t.type = node.expression.t.type;
-    node.t.is_const_expression = node.expression.t.is_const_expression;
-    node.t.const_value = node.expression.t.const_value
+    this._copy_type(node, node.expression);
+}
+
+Annotator.prototype._annotate_expression_list_stmt = function(node) {
+    for (var i = 0; i < node.expressions.length; i++) {
+        this._annotate_node(node.expressions[i]);
+    }
+
+    this._copy_type(node, node.expressions[node.expressions.length - 1]);
 }
 
 Annotator.prototype._error = function(loc, message) {
