@@ -263,7 +263,15 @@ TypeRef.prototype.location = function() {
 }
 
 TypeRef.prototype.is_const = function() {
-    return this.qualifiers.indexOf(Tn.T_CONST) != -1;
+    for (var i = 0; i < this.qualifiers.length; i++) {
+        var q = this.qualifiers[i];
+
+        if (q.id == Tn.T_CONST) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function StructDecl(stok) {
