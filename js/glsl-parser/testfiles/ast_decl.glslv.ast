@@ -158,16 +158,9 @@
         "token": "INVARIANT:invariant@(12.1-12.10)",
         "names": [
           "IDENTIFIER:low_float@(12.11-12.20)",
-          {
-            "Named": {
-              "name": "IDENTIFIER:medium_float@(12.22-12.34)",
-              "decl(InvariantDecl)": "@23",
-              "type": "undefined"
-            }
-          }
+          "IDENTIFIER:medium_float@(12.22-12.34)"
         ],
-        "semi": "SEMICOLON:;@(12.34-12.35)",
-        "@id": 23
+        "semi": "SEMICOLON:;@(12.34-12.35)"
       }
     },
     {
@@ -179,19 +172,19 @@
             "VARYING:varying@(14.11-14.18)"
           ],
           "is_primitive": true,
-          "@id": 26
+          "@id": 25
         },
         "names": [
           {
             "Named": {
               "name": "IDENTIFIER:nonvariant@(14.23-14.33)",
-              "decl(VariableDecl)": "@25",
-              "type(TypeRef)": "@26"
+              "decl(VariableDecl)": "@24",
+              "type(TypeRef)": "@25"
             }
           }
         ],
         "semi": "SEMICOLON:;@(14.33-14.34)",
-        "@id": 25
+        "@id": 24
       }
     },
     {
@@ -202,14 +195,14 @@
             "UNIFORM:uniform@(16.1-16.8)"
           ],
           "is_primitive": true,
-          "@id": 29
+          "@id": 28
         },
         "names": [
           {
             "Named": {
               "name": "IDENTIFIER:boolarray@(16.14-16.23)",
-              "decl(VariableDecl)": "@28",
-              "type(TypeRef)": "@29",
+              "decl(VariableDecl)": "@27",
+              "type(TypeRef)": "@28",
               "is_array": true,
               "array_size(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(16.24-16.25) = 4"
@@ -220,7 +213,7 @@
           }
         ],
         "semi": "SEMICOLON:;@(16.26-16.27)",
-        "@id": 28
+        "@id": 27
       }
     },
     {
@@ -228,21 +221,21 @@
         "type(TypeRef)": {
           "token": "INT:int@(18.1-18.4)",
           "is_primitive": true,
-          "@id": 33
+          "@id": 32
         },
         "names": [
           {
             "Named": {
               "name": "IDENTIFIER:multivar1@(18.5-18.14)",
-              "decl(VariableDecl)": "@32",
-              "type(TypeRef)": "@33"
+              "decl(VariableDecl)": "@31",
+              "type(TypeRef)": "@32"
             }
           },
           {
             "Named": {
               "name": "IDENTIFIER:multivar2@(18.16-18.25)",
-              "decl(VariableDecl)": "@32",
-              "type(TypeRef)": "@33",
+              "decl(VariableDecl)": "@31",
+              "type(TypeRef)": "@32",
               "initial_assign": "EQUAL:=@(18.26-18.27)",
               "initial_value(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(18.28-18.29) = 4"
@@ -252,8 +245,8 @@
           {
             "Named": {
               "name": "IDENTIFIER:multivar3@(18.31-18.40)",
-              "decl(VariableDecl)": "@32",
-              "type(TypeRef)": "@33",
+              "decl(VariableDecl)": "@31",
+              "type(TypeRef)": "@32",
               "is_array": true,
               "array_size(ConstantExpr)": {
                 "token": "INTCONSTANT:2@(18.41-18.42) = 2"
@@ -264,7 +257,7 @@
           }
         ],
         "semi": "SEMICOLON:;@(18.43-18.44)",
-        "@id": 32
+        "@id": 31
       }
     },
     {
@@ -280,198 +273,105 @@
                 "type(TypeRef)": {
                   "token": "INT:int@(21.5-21.8)",
                   "is_primitive": true,
-                  "@id": 42
+                  "@id": 41
                 },
                 "names": [
                   {
                     "Named": {
                       "name": "IDENTIFIER:a@(21.9-21.10)",
-                      "decl(FieldDecl)": "@41",
-                      "type(TypeRef)": "@42"
+                      "decl(FieldDecl)": "@40",
+                      "type(TypeRef)": "@41"
                     }
                   },
                   {
                     "Named": {
                       "name": "IDENTIFIER:b@(21.12-21.13)",
-                      "decl(FieldDecl)": "@41",
-                      "type(TypeRef)": "@42"
+                      "decl(FieldDecl)": "@40",
+                      "type(TypeRef)": "@41"
                     }
                   }
                 ],
                 "semi": "SEMICOLON:;@(21.13-21.14)",
-                "@id": 41
+                "@id": 40
               }
             }
           ],
-          "@id": 40
+          "@id": 39
         },
         "names": [
           {
             "Named": {
               "name": "IDENTIFIER:uservalue1@(22.3-22.13)",
-              "decl(VariableDecl)": "@39",
-              "type(StructDecl)": "@40"
+              "decl(VariableDecl)": "@38",
+              "type(StructDecl)": "@39"
             }
           }
         ],
         "semi": "SEMICOLON:;@(22.13-22.14)",
-        "@id": 39
+        "@id": 38
       }
     },
     {
       "VariableDecl": {
         "type(TypeRef)": {
           "token": "IDENTIFIER:usertype@(24.1-24.9)",
-          "@id": 47
+          "@id": 46
         },
         "names": [
           {
             "Named": {
               "name": "IDENTIFIER:uservalue2@(24.10-24.20)",
-              "decl(VariableDecl)": "@46",
-              "type(TypeRef)": "@47"
+              "decl(VariableDecl)": "@45",
+              "type(TypeRef)": "@46"
             }
           }
         ],
         "semi": "SEMICOLON:;@(24.20-24.21)",
-        "@id": 46
-      }
-    },
-    {
-      "VariableDecl": {
-        "type(StructDecl)": {
-          "token": "STRUCT:struct@(26.1-26.7)",
-          "left_brace": "LEFT_BRACE:{@(26.8-26.9)",
-          "right_brace": "RIGHT_BRACE:}@(32.1-32.2)",
-          "fields": [
-            {
-              "FieldDecl": {
-                "type(StructDecl)": {
-                  "token": "STRUCT:struct@(27.5-27.11)",
-                  "name": "IDENTIFIER:A@(27.12-27.13)",
-                  "left_brace": "LEFT_BRACE:{@(27.14-27.15)",
-                  "right_brace": "RIGHT_BRACE:}@(29.5-29.6)",
-                  "fields": [
-                    {
-                      "FieldDecl": {
-                        "type(TypeRef)": {
-                          "token": "INT:int@(28.9-28.12)",
-                          "is_primitive": true,
-                          "@id": 54
-                        },
-                        "names": [
-                          {
-                            "Named": {
-                              "name": "IDENTIFIER:v@(28.13-28.14)",
-                              "decl(FieldDecl)": "@53",
-                              "type(TypeRef)": "@54"
-                            }
-                          }
-                        ],
-                        "semi": "SEMICOLON:;@(28.14-28.15)",
-                        "@id": 53
-                      }
-                    }
-                  ],
-                  "@id": 52
-                },
-                "names": [
-                  {
-                    "Named": {
-                      "name": "IDENTIFIER:a@(29.7-29.8)",
-                      "decl(FieldDecl)": "@51",
-                      "type(StructDecl)": "@52"
-                    }
-                  },
-                  {
-                    "Named": {
-                      "name": "IDENTIFIER:b@(29.10-29.11)",
-                      "decl(FieldDecl)": "@51",
-                      "type(StructDecl)": "@52"
-                    }
-                  }
-                ],
-                "semi": "SEMICOLON:;@(29.11-29.12)",
-                "@id": 51
-              }
-            },
-            {
-              "FieldDecl": {
-                "type(TypeRef)": {
-                  "token": "IDENTIFIER:A@(31.5-31.6)",
-                  "@id": 59
-                },
-                "names": [
-                  {
-                    "Named": {
-                      "name": "IDENTIFIER:c@(31.7-31.8)",
-                      "decl(FieldDecl)": "@58",
-                      "type(TypeRef)": "@59"
-                    }
-                  }
-                ],
-                "semi": "SEMICOLON:;@(31.8-31.9)",
-                "@id": 58
-              }
-            }
-          ],
-          "@id": 50
-        },
-        "names": [
-          {
-            "Named": {
-              "name": "IDENTIFIER:uservalue3@(32.3-32.13)",
-              "decl(VariableDecl)": "@49",
-              "type(StructDecl)": "@50"
-            }
-          }
-        ],
-        "semi": "SEMICOLON:;@(32.13-32.14)",
-        "@id": 49
+        "@id": 45
       }
     },
     {
       "FunctionDef": {
         "header(FunctionHeader)": {
           "type(TypeRef)": {
-            "token": "VOID:void@(35.1-35.5)",
+            "token": "VOID:void@(26.1-26.5)",
             "is_primitive": true
           },
-          "name": "IDENTIFIER:f@(35.6-35.7)",
+          "name": "IDENTIFIER:f@(26.6-26.7)",
           "parameters": [
             {
               "ParamDecl": {
                 "type(TypeRef)": {
-                  "token": "IDENTIFIER:usertype@(35.8-35.16)"
+                  "token": "IDENTIFIER:usertype@(26.8-26.16)"
                 },
-                "name": "IDENTIFIER:a@(35.17-35.18)"
+                "name": "IDENTIFIER:a@(26.17-26.18)"
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(35.7-35.8)",
-          "right_paren": "RIGHT_PAREN:)@(35.18-35.19)"
+          "left_paren": "LEFT_PAREN:(@(26.7-26.8)",
+          "right_paren": "RIGHT_PAREN:)@(26.18-26.19)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(37.1-37.2)",
-          "left_brace": "LEFT_BRACE:{@(35.20-35.21)",
+          "right_brace": "RIGHT_BRACE:}@(28.1-28.2)",
+          "left_brace": "LEFT_BRACE:{@(26.20-26.21)",
           "body": [
             {
               "VariableDecl": {
                 "type(TypeRef)": {
-                  "token": "IDENTIFIER:usertype@(36.2-36.10)",
-                  "@id": 69
+                  "token": "IDENTIFIER:usertype@(27.2-27.10)",
+                  "@id": 55
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:b@(36.11-36.12)",
-                      "decl(VariableDecl)": "@68",
-                      "type(TypeRef)": "@69"
+                      "name": "IDENTIFIER:b@(27.11-27.12)",
+                      "decl(VariableDecl)": "@54",
+                      "type(TypeRef)": "@55"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(36.12-36.13)",
-                "@id": 68
+                "semi": "SEMICOLON:;@(27.12-27.13)",
+                "@id": 54
               }
             }
           ],
@@ -481,6 +381,6 @@
     }
   ],
   "comments": [
-    "COMMENT:// vi:ts=4:et@(39.1-39.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// vi:ts=4:et@(30.1-30.14), multi:false =  vi:ts=4:et"
   ]
 }

@@ -23,15 +23,6 @@ struct usertype {
 
 usertype uservalue2;
 
-struct {
-    struct A {
-        int v;
-    } a, b;
-
-    A c;
-} uservalue3;
-
-
 void f(usertype a) {
 	usertype b;
 }
