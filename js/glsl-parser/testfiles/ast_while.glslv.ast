@@ -3,9 +3,9 @@
     {
       "FunctionDef": {
         "header(FunctionHeader)": {
-          "type(Type)": {
+          "type(TypeRef)": {
             "token": "VOID:void@(3.1-3.5)",
-            "is_builtin": true
+            "is_primitive": true
           },
           "name": "IDENTIFIER:main@(3.6-3.10)",
           "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
@@ -79,14 +79,17 @@
                 "token": "WHILE:while@(13.2-13.7)",
                 "left_paren": "LEFT_PAREN:(@(13.8-13.9)",
                 "condition(VariableDecl)": {
-                  "type(Type)": {
+                  "type(TypeRef)": {
                     "token": "INT:int@(13.9-13.12)",
-                    "is_builtin": true
+                    "is_primitive": true,
+                    "@id": 23
                   },
                   "names": [
                     {
                       "Named": {
                         "name": "IDENTIFIER:t@(13.13-13.14)",
+                        "decl(VariableDecl)": "@22",
+                        "type(TypeRef)": "@23",
                         "initial_assign": "EQUAL:=@(13.15-13.16)",
                         "initial_value(FunctionCallExpr)": {
                           "name": "IDENTIFIER:f@(13.17-13.18)",
@@ -95,7 +98,8 @@
                         }
                       }
                     }
-                  ]
+                  ],
+                  "@id": 22
                 },
                 "right_paren": "RIGHT_PAREN:)@(13.20-13.21)",
                 "body(Block)": {
@@ -110,13 +114,16 @@
                 "token": "WHILE:while@(16.5-16.10)",
                 "left_paren": "LEFT_PAREN:(@(16.11-16.12)",
                 "condition(VariableDecl)": {
-                  "type(Type)": {
-                    "token": "IDENTIFIER:usertype@(16.12-16.20)"
+                  "type(TypeRef)": {
+                    "token": "IDENTIFIER:usertype@(16.12-16.20)",
+                    "@id": 29
                   },
                   "names": [
                     {
                       "Named": {
                         "name": "IDENTIFIER:t@(16.21-16.22)",
+                        "decl(VariableDecl)": "@28",
+                        "type(TypeRef)": "@29",
                         "initial_assign": "EQUAL:=@(16.23-16.24)",
                         "initial_value(FunctionCallExpr)": {
                           "name": "IDENTIFIER:f@(16.25-16.26)",
@@ -125,7 +132,8 @@
                         }
                       }
                     }
-                  ]
+                  ],
+                  "@id": 28
                 },
                 "right_paren": "RIGHT_PAREN:)@(16.28-16.29)",
                 "body(Block)": {

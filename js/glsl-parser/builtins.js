@@ -30,33 +30,104 @@ var dtn = new Tn(null);
 exports.Functions = [];
 exports.FunctionMap = {};
 
-function Type(id) {
-    glsl.ast.Node.call(this);
+exports.Types = [];
+exports.TypeMap = {};
 
-    this.id = id;
-    this.name = Type._name(id);
+
+function TypeClass(name) {
+    glsl.ast.Node.call(this);
     this.incomplete = false;
 
-    this.is_scalar = Type._is_scalar(id);
-    this.is_vec = Type._is_vec(id);
-    this.is_mat = Type._is_mat(id);
+    this.name = name;
 
-    this.is_int = Type._is_int(id);
-    this.is_float = Type._is_float(id);
-    this.is_bool = Type._is_bool(id);
+    this.is_primitive = false;
+    this.is_array = false;
+    this.is_composite = false;
+    this.is_user = false;
 
-    this.length = Type._length(id);
-
-    this.is_builtin = true;
+    this.decl = null;
 }
 
-Type.prototype = glsl.ast.Node.create('builtins.Type', Type);
+TypeClass.prototype = glsl.ast.Node.create('TypeClass', TypeClass);
+exports.TypeClass = TypeClass;
 
-Type.prototype.marshal_can_ref = function() {
+
+function CompositeType(name) {
+    TypeClass.call(this, name);
+
+    this.field_map = {};
+    this.fields = [];
+    this.is_composite = true;
+}
+
+CompositeType.prototype = glsl.ast.Node.create('builtins.CompositeType', CompositeType, TypeClass);
+exports.CompositeType = CompositeType;
+
+CompositeType.prototype.declare_field = function(name, type) {
+    var field = {
+        name: name,
+        type: type,
+        decl: null
+    };
+
+    this.fields.push(field);
+    this.field_map[name] = field;
+
+    return field;
+}
+
+
+function UserType(name, decl) {
+    CompositeType.call(this, name);
+
+    this.decl = decl;
+    this.is_user = true;
+}
+
+UserType.prototype = glsl.ast.Node.create('builtins.UserType', UserType, CompositeType);
+exports.UserType = UserType;
+
+
+function ArrayType(element_type, length) {
+    TypeClass.call(this, element_type.name + '[' + length + ']');
+
+    this.element_type = element_type;
+    this.length = length;
+
+    this.is_array = true;
+}
+
+ArrayType.prototype = glsl.ast.Node.create('builtins.ArrayType', ArrayType, TypeClass);
+exports.ArrayType = ArrayType;
+
+
+function PrimitiveType(id, zero) {
+    TypeClass.call(this, PrimitiveType._name(id));
+
+    this.id = id;
+    this.zero = zero;
+
+    this.is_scalar = PrimitiveType._is_scalar(id);
+    this.is_vec = PrimitiveType._is_vec(id);
+    this.is_mat = PrimitiveType._is_mat(id);
+
+    this.is_int = PrimitiveType._is_int(id);
+    this.is_float = PrimitiveType._is_float(id);
+    this.is_bool = PrimitiveType._is_bool(id);
+
+    this.is_primitive = true;
+
+    this.length = PrimitiveType._length(id);
+}
+
+PrimitiveType.prototype = glsl.ast.Node.create('builtins.PrimitiveType', PrimitiveType, TypeClass);
+exports.PrimitiveType = PrimitiveType;
+
+PrimitiveType.prototype.marshal_can_ref = function() {
     return false;
 }
 
-Type._is_vec = function(tok) {
+PrimitiveType._is_vec = function(tok) {
     switch (tok) {
     case Tn.T_VEC2:
     case Tn.T_VEC3:
@@ -73,7 +144,7 @@ Type._is_vec = function(tok) {
     return false;
 }
 
-Type._is_mat = function(tok) {
+PrimitiveType._is_mat = function(tok) {
     switch (tok) {
     case Tn.T_MAT2:
     case Tn.T_MAT3:
@@ -84,7 +155,7 @@ Type._is_mat = function(tok) {
     return false;
 }
 
-Type._is_scalar = function(tok) {
+PrimitiveType._is_scalar = function(tok) {
     switch (tok) {
     case Tn.T_FLOAT:
     case Tn.T_INT:
@@ -95,7 +166,7 @@ Type._is_scalar = function(tok) {
     return false;
 }
 
-Type._is_int = function(tok) {
+PrimitiveType._is_int = function(tok) {
     switch (tok) {
     case Tn.T_INT:
     case Tn.T_IVEC2:
@@ -107,7 +178,7 @@ Type._is_int = function(tok) {
     return false;
 }
 
-Type._is_bool = function(tok) {
+PrimitiveType._is_bool = function(tok) {
     switch (tok) {
     case Tn.T_BOOL:
     case Tn.T_BVEC2:
@@ -119,7 +190,7 @@ Type._is_bool = function(tok) {
     return false;
 }
 
-Type._is_float = function(tok) {
+PrimitiveType._is_float = function(tok) {
     switch (tok) {
     case Tn.T_FLOAT:
     case Tn.T_VEC2:
@@ -134,7 +205,7 @@ Type._is_float = function(tok) {
     return false;
 }
 
-Type._length = function(tok) {
+PrimitiveType._length = function(tok) {
     switch (tok) {
     case Tn.T_FLOAT:
     case Tn.T_INT:
@@ -160,7 +231,7 @@ Type._length = function(tok) {
     return 0;
 }
 
-Type._name = function(tok) {
+PrimitiveType._name = function(tok) {
     switch (tok) {
     case Tn.T_VOID:
         return "void";
@@ -207,44 +278,60 @@ Type._name = function(tok) {
     }
 }
 
-Type._create_builtin = function(exports) {
+PrimitiveType._create_builtins = function() {
     var btypetoks = [
-        Tn.T_VOID,
-        Tn.T_FLOAT, Tn.T_INT, Tn.T_BOOL,
+        [Tn.T_VOID, 0],
+        [Tn.T_FLOAT, 0.0],
+        [Tn.T_INT, 0],
+        [Tn.T_BOOL, false],
 
-        Tn.T_VEC2,  Tn.T_VEC3,  Tn.T_VEC4,
-        Tn.T_BVEC2, Tn.T_BVEC3, Tn.T_BVEC4,
-        Tn.T_IVEC2, Tn.T_IVEC3, Tn.T_IVEC4,
-        Tn.T_MAT2,  Tn.T_MAT3,  Tn.T_MAT4,
+        [Tn.T_VEC2, [0.0, 0.0]],
+        [Tn.T_VEC3, [0.0, 0.0, 0.0]],
+        [Tn.T_VEC4, [0.0, 0.0, 0.0, 0.0]],
 
-        Tn.T_SAMPLER2D, Tn.T_SAMPLERCUBE
+        [Tn.T_BVEC2, [false, false]],
+        [Tn.T_BVEC3, [false, false, false]],
+        [Tn.T_BVEC4, [false, false, false, false]],
+
+        [Tn.T_IVEC2, [0, 0]],
+        [Tn.T_IVEC3, [0, 0, 0]],
+        [Tn.T_IVEC4, [0, 0, 0, 0]],
+
+        [Tn.T_MAT2, [[0, 0], [0, 0]]],
+        [Tn.T_MAT3, [[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
+        [Tn.T_MAT4, [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]],
+
+        [Tn.T_SAMPLER2D, 0],
+        [Tn.T_SAMPLERCUBE, 0]
     ];
 
-    exports.Types = [];
-    exports.TypeMap = {};
-
     for (var i = 0; i < btypetoks.length; i++) {
-        var name = Type._name(btypetoks[i]);
+        var tokid = btypetoks[i][0];
+        var zero = btypetoks[i][1];
+
+        var name = PrimitiveType._name(tokid);
 
         var bloc = new glsl.source.BuiltinRange()
-        var tok = dtn.create_token(btypetoks[i], name, bloc);
+        var tok = dtn.create_token(tokid, name, bloc);
 
-        var decl = new glsl.ast.TypeDecl((new glsl.ast.Type(tok)).complete());
+        var decl = new glsl.ast.TypeDecl((new glsl.ast.TypeRef(tok)).complete());
         decl.semi = dtn.create_token(Tn.T_SEMICOLON, ';', bloc);
         decl.incomplete = false;
 
-        decl.type.type = new Type(btypetoks[i]);
+        decl.type.t = {
+            type: new PrimitiveType(tokid, zero)
+        };
 
         exports.Types.push(decl);
-        exports.TypeMap[btypetoks[i]] = decl;
+        exports.TypeMap[tokid] = decl;
 
         name = name[0].toUpperCase() + name.slice(1);
 
-        exports[name] = decl;
+        exports[name] = decl.type.t.type;
     }
 }
 
-Type._create_builtin(exports);
+PrimitiveType._create_builtins();
 
 function define_builtin_function(rettype, name, params) {
     if (!glsl.ast.TypeDecl.prototype.isPrototypeOf(rettype)) {
@@ -263,9 +350,12 @@ function define_builtin_function(rettype, name, params) {
 
     var bloc = new glsl.source.BuiltinRange();
 
-    var type = new glsl.ast.Type(dtn.create_token(rettype.id, Type._name(rettype.id), bloc));
+    var type = new glsl.ast.TypeRef(dtn.create_token(rettype.id, PrimitiveType._name(rettype.id), bloc));
     type.incomplete = false;
-    type.type = rettype;
+
+    type.t = {
+        type: rettype
+    };
 
     var name = dtn.create_token(Tn.T_IDENTIFIER, name, bloc);
 
@@ -369,10 +459,21 @@ function define_builtin_relvec_function(rettype, name, params) {
 
 function Operator(op) {
     this.op = op;
+    this.ret = null;
+    this.lhs = null;
+    this.rhs = null;
 }
 
 exports.Operators = [];
 exports.OperatorMap = {};
+
+function find_type(t, def) {
+    if (t === null) {
+        t = def;
+    }
+
+    return exports.TypeMap[t].type.t.type;
+}
 
 function define_builtin_bin_operator_gen(rettype, optypes, lhs, rhs, gens) {
     for (var i = 0; i < optypes.length; i++) {
@@ -382,24 +483,9 @@ function define_builtin_bin_operator_gen(rettype, optypes, lhs, rhs, gens) {
             var g = gens[j];
 
             var o = new Operator(op);
-
-            if (rettype === null) {
-                o.ret = exports.TypeMap[g].type.type;
-            } else {
-                o.ret = exports.TypeMap[rettype].type.type;
-            }
-
-            if (lhs === null) {
-                o.lhs = exports.TypeMap[g].type.type;
-            } else {
-                o.lhs = exports.TypeMap[lhs].type.type;
-            }
-
-            if (rhs === null) {
-                o.rhs = exports.TypeMap[g].type.type;
-            } else {
-                o.rhs = exports.TypeMap[rhs].type.type;
-            }
+            o.ret = find_type(rettype, g);
+            o.lhs = find_type(lhs, g);
+            o.rhs = find_type(rhs, g);
 
             var sig = dtn.token_name(op) + '(' + o.lhs.name + ',' + o.rhs.name + ')';
 
@@ -416,19 +502,9 @@ function define_builtin_unary_operator_gen(rettype, optypes, expr, gens) {
         for (var j = 0; j < gens.length; j++) {
             var g = gens[j];
 
-            var o = new Operator(op);
-
-            if (rettype === null) {
-                o.ret = exports.TypeMap[g].type.type;
-            } else {
-                o.ret = exports.TypeMap[rettype].type.type;
-            }
-
-            if (expr === null) {
-                o.expr = exports.TypeMap[g].type.type;
-            } else {
-                o.expr = exports.TypeMap[expr].type.type;
-            }
+            var o = new UnaryOperator(op);
+            o.ret = find_type(rettype, g);
+            o.expr = find_type(expr, g);
 
             var sig = dtn.token_name(op) + '(' + o.expr.name + ')';
 

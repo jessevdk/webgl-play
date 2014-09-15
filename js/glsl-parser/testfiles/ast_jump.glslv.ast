@@ -3,9 +3,9 @@
     {
       "FunctionDef": {
         "header(FunctionHeader)": {
-          "type(Type)": {
+          "type(TypeRef)": {
             "token": "VOID:void@(3.1-3.5)",
-            "is_builtin": true
+            "is_primitive": true
           },
           "name": "IDENTIFIER:main@(3.6-3.10)",
           "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
@@ -43,14 +43,17 @@
                 "token": "FOR:for@(8.5-8.8)",
                 "left_paren": "LEFT_PAREN:(@(8.9-8.10)",
                 "init(VariableDecl)": {
-                  "type(Type)": {
+                  "type(TypeRef)": {
                     "token": "INT:int@(8.10-8.13)",
-                    "is_builtin": true
+                    "is_primitive": true,
+                    "@id": 12
                   },
                   "names": [
                     {
                       "Named": {
                         "name": "IDENTIFIER:i@(8.14-8.15)",
+                        "decl(VariableDecl)": "@11",
+                        "type(TypeRef)": "@12",
                         "initial_assign": "EQUAL:=@(8.16-8.17)",
                         "initial_value(ConstantExpr)": {
                           "token": "INTCONSTANT:0@(8.18-8.19) = 0"
@@ -58,7 +61,8 @@
                       }
                     }
                   ],
-                  "semi": "SEMICOLON:;@(8.19-8.20)"
+                  "semi": "SEMICOLON:;@(8.19-8.20)",
+                  "@id": 11
                 },
                 "rest(ForRestStmt)": {
                   "condition(BinOpExpr)": {
@@ -114,9 +118,9 @@
     {
       "FunctionDef": {
         "header(FunctionHeader)": {
-          "type(Type)": {
+          "type(TypeRef)": {
             "token": "INT:int@(16.1-16.4)",
-            "is_builtin": true
+            "is_primitive": true
           },
           "name": "IDENTIFIER:f@(16.5-16.6)",
           "left_paren": "LEFT_PAREN:(@(16.6-16.7)",

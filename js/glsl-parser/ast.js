@@ -247,19 +247,23 @@ Node.prototype.to_json = function() {
     });
 }
 
-function Type(tok) {
+function TypeRef(tok) {
     Node.call(this);
 
     this.token = tok;
     this.qualifiers = [];
-    this.is_builtin = (tok.id != Tn.T_IDENTIFIER);
+    this.is_primitive = (tok.id != Tn.T_IDENTIFIER);
 }
 
-Type.prototype = Node.create('Type', Type);
-exports.Type = Type;
+TypeRef.prototype = Node.create('TypeRef', TypeRef);
+exports.TypeRef = TypeRef;
 
-Type.prototype.location = function() {
+TypeRef.prototype.location = function() {
     return glsl.source.Range.spans(this.token, this.qualifiers);
+}
+
+TypeRef.prototype.is_const = function() {
+    return this.qualifers.indexOf(Tn.T_CONST) != -1;
 }
 
 function StructDecl(stok) {
@@ -397,10 +401,12 @@ ParamDecl.prototype.location = function() {
 }
 
 
-function Named(name) {
+function Named(name, decl) {
     Node.call(this);
 
     this.name = name;
+    this.decl = decl;
+    this.type = null;
 
     this.initial_assign = null;
     this.initial_value = null;
@@ -1138,10 +1144,10 @@ Parser.prototype._parse_function_call = function(tok, m) {
 }
 
 Parser.prototype._parse_function_identifier = function(tok) {
-    return (new Named(tok)).complete();
+    return (new Named(tok, null)).complete();
 }
 
-Parser.prototype._is_builtin_type = function(id) {
+Parser.prototype._is_primitive_type = function(id) {
     switch (id) {
     case Tn.T_FLOAT:
     case Tn.T_INT:
@@ -1167,7 +1173,7 @@ Parser.prototype._is_builtin_type = function(id) {
 }
 
 Parser.prototype._parse_function_identifier.match = function(tok) {
-    return this._is_builtin_type(tok.id) || tok.id == Tn.T_IDENTIFIER;
+    return this._is_primitive_type(tok.id) || tok.id == Tn.T_IDENTIFIER;
 }
 
 Parser.prototype._parse_primary_expression = function(tok, m) {
@@ -1645,7 +1651,7 @@ Parser.prototype._parse_constant_expression.expected = Parser.prototype._parse_c
 Parser.prototype._parse_field_declaration_name = function(tok) {
     var name = tok;
 
-    var ret = new Named(name);
+    var ret = new Named(name, null);
     ret.complete();
 
     this._parse_optional_array_spec(ret);
@@ -1685,6 +1691,10 @@ Parser.prototype._parse_field_declaration = function(tok, m) {
         }
 
         var fname = this._parse_rule(this._parse_field_declaration_name, tok);
+
+        fname.decl = sdecl;
+        fname.type = type;
+
         sdecl.names.push(fname);
 
         if (fname.incomplete) {
@@ -1756,7 +1766,7 @@ Parser.prototype._parse_struct_specifier.match = function(tok) {
 }
 
 Parser.prototype._parse_type_specifier_no_prec_impl = function(tok) {
-    return (new Type(tok)).complete();
+    return (new TypeRef(tok)).complete();
 }
 
 Parser.prototype._parse_type_specifier_no_prec = function(tok, m) {
@@ -1844,7 +1854,7 @@ Parser.prototype._parse_type_qualifier = function(tok) {
         var varying = this._require_one_of([Tn.T_VARYING]);
 
         if (varying === null) {
-            node = new Type(null);
+            node = new TypeRef(null);
         } else {
             node = this._parse_rule(this._parse_type_specifier, this._t.next());
             node.qualifiers.unshift(varying);
@@ -2041,7 +2051,7 @@ Parser.prototype._parse_function_header = function(type, name) {
 }
 
 Parser.prototype._sync_statement = function(tok) {
-    if (this._is_builtin_type(tok.id)) {
+    if (this._is_primitive_type(tok.id)) {
         return SYNC_OK;
     }
 
@@ -2232,7 +2242,8 @@ Parser.prototype._parse_condition_var_init = function(tok, m) {
         return ret;
     }
 
-    var named = new Named(ident);
+    var named = new Named(ident, ret);
+    named.type = type;
     ret.names.push(named);
 
     named.initial_assign = equal;
@@ -2694,7 +2705,8 @@ Parser.prototype._parse_single_declaration = function(type, ident) {
         return decl;
     }
 
-    var named = new Named(ident);
+    var named = new Named(ident, decl);
+    named.type = type;
     decl.names.push(named.complete());
 
     var n = this._t.peek();
@@ -2744,7 +2756,9 @@ Parser.prototype._parse_init_declarator_list = function(decl, opts) {
             return decl;
         }
 
-        var name = new Named(ident);
+        var name = new Named(ident, decl);
+        name.type = decl.type;
+
         decl.names.push(name);
 
         var isarray = false;
@@ -2800,7 +2814,8 @@ Parser.prototype._parse_declaration = function(tok, m) {
 
         if (n.id == Tn.T_IDENTIFIER) {
             decl = new InvariantDecl(tok);
-            decl.names.push((new Named(this._t.next())).complete());
+
+            decl.names.push(this._t.next());
 
             opts.equal = false;
             opts.array = false;
@@ -2887,7 +2902,7 @@ Parser.prototype._parse_external_declaration = function(tok, m) {
 }
 
 Parser.prototype._sync_declaration = function(tok) {
-    if (this._is_builtin_type(tok.id)) {
+    if (this._is_primitive_type(tok.id)) {
         return SYNC_OK;
     }
 

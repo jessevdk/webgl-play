@@ -3,9 +3,9 @@
     {
       "FunctionDef": {
         "header(FunctionHeader)": {
-          "type(Type)": {
+          "type(TypeRef)": {
             "token": "VOID:void@(3.1-3.5)",
-            "is_builtin": true
+            "is_primitive": true
           },
           "name": "IDENTIFIER:main@(3.6-3.10)",
           "left_paren": "LEFT_PAREN:(@(3.10-3.11)",

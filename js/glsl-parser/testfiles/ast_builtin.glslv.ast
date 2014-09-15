@@ -2,333 +2,401 @@
   "body": [
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "VEC2:vec2@(3.9-3.13)",
           "qualifiers": [
             "UNIFORM:uniform@(3.1-3.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 3
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_vec2@(3.14-3.19)"
+              "name": "IDENTIFIER:_vec2@(3.14-3.19)",
+              "decl(VariableDecl)": "@2",
+              "type(TypeRef)": "@3"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(3.19-3.20)"
+        "semi": "SEMICOLON:;@(3.19-3.20)",
+        "@id": 2
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "VEC3:vec3@(4.9-4.13)",
           "qualifiers": [
             "UNIFORM:uniform@(4.1-4.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 6
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_vec3@(4.14-4.19)"
+              "name": "IDENTIFIER:_vec3@(4.14-4.19)",
+              "decl(VariableDecl)": "@5",
+              "type(TypeRef)": "@6"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(4.19-4.20)"
+        "semi": "SEMICOLON:;@(4.19-4.20)",
+        "@id": 5
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "VEC4:vec4@(5.9-5.13)",
           "qualifiers": [
             "UNIFORM:uniform@(5.1-5.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 9
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_vec4@(5.14-5.19)"
+              "name": "IDENTIFIER:_vec4@(5.14-5.19)",
+              "decl(VariableDecl)": "@8",
+              "type(TypeRef)": "@9"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(5.19-5.20)"
+        "semi": "SEMICOLON:;@(5.19-5.20)",
+        "@id": 8
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "IVEC2:ivec2@(7.9-7.14)",
           "qualifiers": [
             "UNIFORM:uniform@(7.1-7.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 12
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_ivec2@(7.15-7.21)"
+              "name": "IDENTIFIER:_ivec2@(7.15-7.21)",
+              "decl(VariableDecl)": "@11",
+              "type(TypeRef)": "@12"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(7.21-7.22)"
+        "semi": "SEMICOLON:;@(7.21-7.22)",
+        "@id": 11
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "IVEC3:ivec3@(8.9-8.14)",
           "qualifiers": [
             "UNIFORM:uniform@(8.1-8.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 15
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_ivec3@(8.15-8.21)"
+              "name": "IDENTIFIER:_ivec3@(8.15-8.21)",
+              "decl(VariableDecl)": "@14",
+              "type(TypeRef)": "@15"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(8.21-8.22)"
+        "semi": "SEMICOLON:;@(8.21-8.22)",
+        "@id": 14
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "IVEC4:ivec4@(9.9-9.14)",
           "qualifiers": [
             "UNIFORM:uniform@(9.1-9.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 18
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_ivec4@(9.15-9.21)"
+              "name": "IDENTIFIER:_ivec4@(9.15-9.21)",
+              "decl(VariableDecl)": "@17",
+              "type(TypeRef)": "@18"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(9.21-9.22)"
+        "semi": "SEMICOLON:;@(9.21-9.22)",
+        "@id": 17
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "BVEC2:bvec2@(11.9-11.14)",
           "qualifiers": [
             "UNIFORM:uniform@(11.1-11.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 21
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_bvec2@(11.15-11.21)"
+              "name": "IDENTIFIER:_bvec2@(11.15-11.21)",
+              "decl(VariableDecl)": "@20",
+              "type(TypeRef)": "@21"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(11.21-11.22)"
+        "semi": "SEMICOLON:;@(11.21-11.22)",
+        "@id": 20
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "BVEC3:bvec3@(12.9-12.14)",
           "qualifiers": [
             "UNIFORM:uniform@(12.1-12.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 24
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_bvec3@(12.15-12.21)"
+              "name": "IDENTIFIER:_bvec3@(12.15-12.21)",
+              "decl(VariableDecl)": "@23",
+              "type(TypeRef)": "@24"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(12.21-12.22)"
+        "semi": "SEMICOLON:;@(12.21-12.22)",
+        "@id": 23
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "BVEC4:bvec4@(13.9-13.14)",
           "qualifiers": [
             "UNIFORM:uniform@(13.1-13.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 27
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_bvec4@(13.15-13.21)"
+              "name": "IDENTIFIER:_bvec4@(13.15-13.21)",
+              "decl(VariableDecl)": "@26",
+              "type(TypeRef)": "@27"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(13.21-13.22)"
+        "semi": "SEMICOLON:;@(13.21-13.22)",
+        "@id": 26
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "MAT2:mat2@(15.9-15.13)",
           "qualifiers": [
             "UNIFORM:uniform@(15.1-15.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 30
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_mat2@(15.14-15.19)"
+              "name": "IDENTIFIER:_mat2@(15.14-15.19)",
+              "decl(VariableDecl)": "@29",
+              "type(TypeRef)": "@30"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(15.19-15.20)"
+        "semi": "SEMICOLON:;@(15.19-15.20)",
+        "@id": 29
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "MAT3:mat3@(16.9-16.13)",
           "qualifiers": [
             "UNIFORM:uniform@(16.1-16.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 33
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_mat3@(16.14-16.19)"
+              "name": "IDENTIFIER:_mat3@(16.14-16.19)",
+              "decl(VariableDecl)": "@32",
+              "type(TypeRef)": "@33"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(16.19-16.20)"
+        "semi": "SEMICOLON:;@(16.19-16.20)",
+        "@id": 32
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "MAT4:mat4@(17.9-17.13)",
           "qualifiers": [
             "UNIFORM:uniform@(17.1-17.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 36
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_mat4@(17.14-17.19)"
+              "name": "IDENTIFIER:_mat4@(17.14-17.19)",
+              "decl(VariableDecl)": "@35",
+              "type(TypeRef)": "@36"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(17.19-17.20)"
+        "semi": "SEMICOLON:;@(17.19-17.20)",
+        "@id": 35
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "FLOAT:float@(19.9-19.14)",
           "qualifiers": [
             "UNIFORM:uniform@(19.1-19.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 39
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_float@(19.15-19.21)"
+              "name": "IDENTIFIER:_float@(19.15-19.21)",
+              "decl(VariableDecl)": "@38",
+              "type(TypeRef)": "@39"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(19.21-19.22)"
+        "semi": "SEMICOLON:;@(19.21-19.22)",
+        "@id": 38
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "INT:int@(20.9-20.12)",
           "qualifiers": [
             "UNIFORM:uniform@(20.1-20.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 42
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_int@(20.13-20.17)"
+              "name": "IDENTIFIER:_int@(20.13-20.17)",
+              "decl(VariableDecl)": "@41",
+              "type(TypeRef)": "@42"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(20.17-20.18)"
+        "semi": "SEMICOLON:;@(20.17-20.18)",
+        "@id": 41
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "BOOL:bool@(21.9-21.13)",
           "qualifiers": [
             "UNIFORM:uniform@(21.1-21.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 45
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_bool@(21.14-21.19)"
+              "name": "IDENTIFIER:_bool@(21.14-21.19)",
+              "decl(VariableDecl)": "@44",
+              "type(TypeRef)": "@45"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(21.19-21.20)"
+        "semi": "SEMICOLON:;@(21.19-21.20)",
+        "@id": 44
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "SAMPLER2D:sampler2D@(23.9-23.18)",
           "qualifiers": [
             "UNIFORM:uniform@(23.1-23.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 48
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_sampler2D@(23.19-23.29)"
+              "name": "IDENTIFIER:_sampler2D@(23.19-23.29)",
+              "decl(VariableDecl)": "@47",
+              "type(TypeRef)": "@48"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(23.29-23.30)"
+        "semi": "SEMICOLON:;@(23.29-23.30)",
+        "@id": 47
       }
     },
     {
       "VariableDecl": {
-        "type(Type)": {
+        "type(TypeRef)": {
           "token": "SAMPLERCUBE:samplerCube@(24.9-24.20)",
           "qualifiers": [
             "UNIFORM:uniform@(24.1-24.8)"
           ],
-          "is_builtin": true
+          "is_primitive": true,
+          "@id": 51
         },
         "names": [
           {
             "Named": {
-              "name": "IDENTIFIER:_samplercube@(24.21-24.33)"
+              "name": "IDENTIFIER:_samplercube@(24.21-24.33)",
+              "decl(VariableDecl)": "@50",
+              "type(TypeRef)": "@51"
             }
           }
         ],
-        "semi": "SEMICOLON:;@(24.33-24.34)"
+        "semi": "SEMICOLON:;@(24.33-24.34)",
+        "@id": 50
       }
     },
     {
       "FunctionDef": {
         "header(FunctionHeader)": {
-          "type(Type)": {
+          "type(TypeRef)": {
             "token": "VOID:void@(26.1-26.5)",
-            "is_builtin": true
+            "is_primitive": true
           },
           "name": "IDENTIFIER:main@(26.6-26.10)",
           "left_paren": "LEFT_PAREN:(@(26.10-26.11)",
@@ -340,242 +408,302 @@
           "body": [
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "FLOAT:float@(27.5-27.10)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 58
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:f@(27.11-27.12)"
+                      "name": "IDENTIFIER:f@(27.11-27.12)",
+                      "decl(VariableDecl)": "@57",
+                      "type(TypeRef)": "@58"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(27.12-27.13)"
+                "semi": "SEMICOLON:;@(27.12-27.13)",
+                "@id": 57
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "VEC2:vec2@(28.5-28.9)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 61
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:v2@(28.10-28.12)"
+                      "name": "IDENTIFIER:v2@(28.10-28.12)",
+                      "decl(VariableDecl)": "@60",
+                      "type(TypeRef)": "@61"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(28.12-28.13)"
+                "semi": "SEMICOLON:;@(28.12-28.13)",
+                "@id": 60
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "VEC3:vec3@(28.14-28.18)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 64
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:v3@(28.19-28.21)"
+                      "name": "IDENTIFIER:v3@(28.19-28.21)",
+                      "decl(VariableDecl)": "@63",
+                      "type(TypeRef)": "@64"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(28.21-28.22)"
+                "semi": "SEMICOLON:;@(28.21-28.22)",
+                "@id": 63
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "VEC4:vec4@(28.23-28.27)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 67
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:v4@(28.28-28.30)"
+                      "name": "IDENTIFIER:v4@(28.28-28.30)",
+                      "decl(VariableDecl)": "@66",
+                      "type(TypeRef)": "@67"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(28.30-28.31)"
+                "semi": "SEMICOLON:;@(28.30-28.31)",
+                "@id": 66
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "IVEC2:ivec2@(29.5-29.10)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 70
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:i2@(29.11-29.13)"
+                      "name": "IDENTIFIER:i2@(29.11-29.13)",
+                      "decl(VariableDecl)": "@69",
+                      "type(TypeRef)": "@70"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(29.13-29.14)"
+                "semi": "SEMICOLON:;@(29.13-29.14)",
+                "@id": 69
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "IVEC3:ivec3@(29.15-29.20)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 73
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:i3@(29.21-29.23)"
+                      "name": "IDENTIFIER:i3@(29.21-29.23)",
+                      "decl(VariableDecl)": "@72",
+                      "type(TypeRef)": "@73"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(29.23-29.24)"
+                "semi": "SEMICOLON:;@(29.23-29.24)",
+                "@id": 72
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "IVEC4:ivec4@(29.25-29.30)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 76
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:i4@(29.31-29.33)"
+                      "name": "IDENTIFIER:i4@(29.31-29.33)",
+                      "decl(VariableDecl)": "@75",
+                      "type(TypeRef)": "@76"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(29.33-29.34)"
+                "semi": "SEMICOLON:;@(29.33-29.34)",
+                "@id": 75
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "BVEC2:bvec2@(30.5-30.10)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 79
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:b2@(30.11-30.13)"
+                      "name": "IDENTIFIER:b2@(30.11-30.13)",
+                      "decl(VariableDecl)": "@78",
+                      "type(TypeRef)": "@79"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(30.13-30.14)"
+                "semi": "SEMICOLON:;@(30.13-30.14)",
+                "@id": 78
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "BVEC3:bvec3@(30.15-30.20)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 82
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:b3@(30.21-30.23)"
+                      "name": "IDENTIFIER:b3@(30.21-30.23)",
+                      "decl(VariableDecl)": "@81",
+                      "type(TypeRef)": "@82"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(30.23-30.24)"
+                "semi": "SEMICOLON:;@(30.23-30.24)",
+                "@id": 81
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "BVEC4:bvec4@(30.25-30.30)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 85
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:b4@(30.31-30.33)"
+                      "name": "IDENTIFIER:b4@(30.31-30.33)",
+                      "decl(VariableDecl)": "@84",
+                      "type(TypeRef)": "@85"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(30.33-30.34)"
+                "semi": "SEMICOLON:;@(30.33-30.34)",
+                "@id": 84
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "MAT2:mat2@(31.5-31.9)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 88
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:m2@(31.10-31.12)"
+                      "name": "IDENTIFIER:m2@(31.10-31.12)",
+                      "decl(VariableDecl)": "@87",
+                      "type(TypeRef)": "@88"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(31.12-31.13)"
+                "semi": "SEMICOLON:;@(31.12-31.13)",
+                "@id": 87
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "MAT3:mat3@(31.14-31.18)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 91
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:m3@(31.19-31.21)"
+                      "name": "IDENTIFIER:m3@(31.19-31.21)",
+                      "decl(VariableDecl)": "@90",
+                      "type(TypeRef)": "@91"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(31.21-31.22)"
+                "semi": "SEMICOLON:;@(31.21-31.22)",
+                "@id": 90
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "MAT4:mat4@(31.23-31.27)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 94
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:m4@(31.28-31.30)"
+                      "name": "IDENTIFIER:m4@(31.28-31.30)",
+                      "decl(VariableDecl)": "@93",
+                      "type(TypeRef)": "@94"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(31.30-31.31)"
+                "semi": "SEMICOLON:;@(31.30-31.31)",
+                "@id": 93
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "SAMPLER2D:sampler2D@(32.5-32.14)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 97
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:s2d@(32.15-32.18)"
+                      "name": "IDENTIFIER:s2d@(32.15-32.18)",
+                      "decl(VariableDecl)": "@96",
+                      "type(TypeRef)": "@97"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(32.18-32.19)"
+                "semi": "SEMICOLON:;@(32.18-32.19)",
+                "@id": 96
               }
             },
             {
               "VariableDecl": {
-                "type(Type)": {
+                "type(TypeRef)": {
                   "token": "SAMPLERCUBE:samplerCube@(33.5-33.16)",
-                  "is_builtin": true
+                  "is_primitive": true,
+                  "@id": 100
                 },
                 "names": [
                   {
                     "Named": {
-                      "name": "IDENTIFIER:sc@(33.17-33.19)"
+                      "name": "IDENTIFIER:sc@(33.17-33.19)",
+                      "decl(VariableDecl)": "@99",
+                      "type(TypeRef)": "@100"
                     }
                   }
                 ],
-                "semi": "SEMICOLON:;@(33.19-33.20)"
+                "semi": "SEMICOLON:;@(33.19-33.20)",
+                "@id": 99
               }
             },
             {
