@@ -1,0 +1,4885 @@
+{
+  "body": [
+    {
+      "FunctionDef": {
+        "header(FunctionHeader)": {
+          "type(TypeRef)": {
+            "token": "VOID:void@(3.1-3.5)",
+            "is_primitive": true
+          },
+          "name": "IDENTIFIER:main@(3.6-3.10)",
+          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
+          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
+        },
+        "body(Block)": {
+          "right_brace": "RIGHT_BRACE:}@(89.1-89.2)",
+          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "body": [
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "FLOAT:float@(4.8-4.13)",
+                  "qualifiers": [
+                    "CONST:const@(4.2-4.7)"
+                  ],
+                  "is_primitive": true,
+                  "@id": 7
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:f@(4.14-4.15)",
+                      "decl(VariableDecl)": "@6",
+                      "type(TypeRef)": "@7",
+                      "initial_assign": "EQUAL:=@(4.16-4.17)",
+                      "initial_value(ConstantExpr)": {
+                        "token": "FLOATCONSTANT:0.5@(4.18-4.21) = 0.5"
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(4.21-4.22)",
+                "@id": 6
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "VEC2:vec2@(5.11-5.15)",
+                  "qualifiers": [
+                    "CONST:const@(5.5-5.10)"
+                  ],
+                  "is_primitive": true,
+                  "@id": 11
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:v2@(5.16-5.18)",
+                      "decl(VariableDecl)": "@10",
+                      "type(TypeRef)": "@11",
+                      "initial_assign": "EQUAL:=@(5.19-5.20)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "VEC2:vec2@(5.21-5.25)",
+                        "left_paren": "LEFT_PAREN:(@(5.25-5.26)",
+                        "right_paren": "RIGHT_PAREN:)@(5.34-5.35)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:1.0@(5.26-5.29) = 1"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:2.0@(5.31-5.34) = 2"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(5.35-5.36)",
+                "@id": 10
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "VEC3:vec3@(6.11-6.15)",
+                  "qualifiers": [
+                    "CONST:const@(6.5-6.10)"
+                  ],
+                  "is_primitive": true,
+                  "@id": 17
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:v3@(6.16-6.18)",
+                      "decl(VariableDecl)": "@16",
+                      "type(TypeRef)": "@17",
+                      "initial_assign": "EQUAL:=@(6.19-6.20)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "VEC3:vec3@(6.21-6.25)",
+                        "left_paren": "LEFT_PAREN:(@(6.25-6.26)",
+                        "right_paren": "RIGHT_PAREN:)@(6.39-6.40)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:1.0@(6.26-6.29) = 1"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:2.0@(6.31-6.34) = 2"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:3.0@(6.36-6.39) = 3"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(6.40-6.41)",
+                "@id": 16
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "VEC4:vec4@(7.11-7.15)",
+                  "qualifiers": [
+                    "CONST:const@(7.5-7.10)"
+                  ],
+                  "is_primitive": true,
+                  "@id": 24
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:v4@(7.16-7.18)",
+                      "decl(VariableDecl)": "@23",
+                      "type(TypeRef)": "@24",
+                      "initial_assign": "EQUAL:=@(7.19-7.20)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "VEC4:vec4@(7.21-7.25)",
+                        "left_paren": "LEFT_PAREN:(@(7.25-7.26)",
+                        "right_paren": "RIGHT_PAREN:)@(7.44-7.45)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:1.0@(7.26-7.29) = 1"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:2.0@(7.31-7.34) = 2"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:3.0@(7.36-7.39) = 3"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "FLOATCONSTANT:4.0@(7.41-7.44) = 4"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(7.45-7.46)",
+                "@id": 23
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "IVEC2:ivec2@(9.11-9.16)",
+                  "qualifiers": [
+                    "CONST:const@(9.5-9.10)"
+                  ],
+                  "is_primitive": true,
+                  "@id": 32
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:i2@(9.17-9.19)",
+                      "decl(VariableDecl)": "@31",
+                      "type(TypeRef)": "@32",
+                      "initial_assign": "EQUAL:=@(9.20-9.21)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "IVEC2:ivec2@(9.22-9.27)",
+                        "left_paren": "LEFT_PAREN:(@(9.27-9.28)",
+                        "right_paren": "RIGHT_PAREN:)@(9.32-9.33)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:1@(9.28-9.29) = 1"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:2@(9.31-9.32) = 2"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(9.33-9.34)",
+                "@id": 31
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "IVEC3:ivec3@(10.11-10.16)",
+                  "qualifiers": [
+                    "CONST:const@(10.5-10.10)"
+                  ],
+                  "is_primitive": true,
+                  "@id": 38
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:i3@(10.17-10.19)",
+                      "decl(VariableDecl)": "@37",
+                      "type(TypeRef)": "@38",
+                      "initial_assign": "EQUAL:=@(10.20-10.21)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "IVEC3:ivec3@(10.22-10.27)",
+                        "left_paren": "LEFT_PAREN:(@(10.27-10.28)",
+                        "right_paren": "RIGHT_PAREN:)@(10.35-10.36)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:1@(10.28-10.29) = 1"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:2@(10.31-10.32) = 2"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:3@(10.34-10.35) = 3"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(10.36-10.37)",
+                "@id": 37
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "IVEC4:ivec4@(11.11-11.16)",
+                  "qualifiers": [
+                    "CONST:const@(11.5-11.10)"
+                  ],
+                  "is_primitive": true,
+                  "@id": 45
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:i4@(11.17-11.19)",
+                      "decl(VariableDecl)": "@44",
+                      "type(TypeRef)": "@45",
+                      "initial_assign": "EQUAL:=@(11.20-11.21)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "IVEC4:ivec4@(11.22-11.27)",
+                        "left_paren": "LEFT_PAREN:(@(11.27-11.28)",
+                        "right_paren": "RIGHT_PAREN:)@(11.38-11.39)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:1@(11.28-11.29) = 1"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:2@(11.31-11.32) = 2"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:3@(11.34-11.35) = 3"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "INTCONSTANT:4@(11.37-11.38) = 4"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(11.39-11.40)",
+                "@id": 44
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "BVEC2:bvec2@(13.5-13.10)",
+                  "is_primitive": true,
+                  "@id": 53
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b2@(13.11-13.13)",
+                      "decl(VariableDecl)": "@52",
+                      "type(TypeRef)": "@53",
+                      "initial_assign": "EQUAL:=@(13.14-13.15)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "BVEC2:bvec2@(13.16-13.21)",
+                        "left_paren": "LEFT_PAREN:(@(13.21-13.22)",
+                        "right_paren": "RIGHT_PAREN:)@(13.33-13.34)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:true@(13.22-13.26) = true"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:false@(13.28-13.33) = false"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(13.34-13.35)",
+                "@id": 52
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "BVEC3:bvec3@(14.5-14.10)",
+                  "is_primitive": true,
+                  "@id": 59
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b3@(14.11-14.13)",
+                      "decl(VariableDecl)": "@58",
+                      "type(TypeRef)": "@59",
+                      "initial_assign": "EQUAL:=@(14.14-14.15)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "BVEC3:bvec3@(14.16-14.21)",
+                        "left_paren": "LEFT_PAREN:(@(14.21-14.22)",
+                        "right_paren": "RIGHT_PAREN:)@(14.38-14.39)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:true@(14.22-14.26) = true"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:true@(14.28-14.32) = true"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:true@(14.34-14.38) = true"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(14.39-14.40)",
+                "@id": 58
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "BVEC4:bvec4@(15.5-15.10)",
+                  "is_primitive": true,
+                  "@id": 66
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:b4@(15.11-15.13)",
+                      "decl(VariableDecl)": "@65",
+                      "type(TypeRef)": "@66",
+                      "initial_assign": "EQUAL:=@(15.14-15.15)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "BVEC4:bvec4@(15.16-15.21)",
+                        "left_paren": "LEFT_PAREN:(@(15.21-15.22)",
+                        "right_paren": "RIGHT_PAREN:)@(15.48-15.49)",
+                        "arguments": [
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:false@(15.22-15.27) = false"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:false@(15.29-15.34) = false"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:false@(15.36-15.41) = false"
+                            }
+                          },
+                          {
+                            "ConstantExpr": {
+                              "token": "BOOLCONSTANT:false@(15.43-15.48) = false"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(15.49-15.50)",
+                "@id": 65
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "MAT2:mat2@(17.5-17.9)",
+                  "is_primitive": true,
+                  "@id": 74
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:m2@(17.10-17.12)",
+                      "decl(VariableDecl)": "@73",
+                      "type(TypeRef)": "@74",
+                      "initial_assign": "EQUAL:=@(17.13-17.14)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "MAT2:mat2@(17.15-17.19)",
+                        "left_paren": "LEFT_PAREN:(@(17.19-17.20)",
+                        "right_paren": "RIGHT_PAREN:)@(17.50-17.51)",
+                        "arguments": [
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC2:vec2@(17.20-17.24)",
+                              "left_paren": "LEFT_PAREN:(@(17.24-17.25)",
+                              "right_paren": "RIGHT_PAREN:)@(17.33-17.34)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:1.0@(17.25-17.28) = 1"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:2.0@(17.30-17.33) = 2"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC2:vec2@(17.36-17.40)",
+                              "left_paren": "LEFT_PAREN:(@(17.40-17.41)",
+                              "right_paren": "RIGHT_PAREN:)@(17.49-17.50)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:2.0@(17.41-17.44) = 2"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:3.0@(17.46-17.49) = 3"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(17.51-17.52)",
+                "@id": 73
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "MAT3:mat3@(18.5-18.9)",
+                  "is_primitive": true,
+                  "@id": 84
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:m3@(18.10-18.12)",
+                      "decl(VariableDecl)": "@83",
+                      "type(TypeRef)": "@84",
+                      "initial_assign": "EQUAL:=@(18.13-18.14)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "MAT3:mat3@(18.15-18.19)",
+                        "left_paren": "LEFT_PAREN:(@(18.19-18.20)",
+                        "right_paren": "RIGHT_PAREN:)@(18.81-18.82)",
+                        "arguments": [
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC3:vec3@(18.20-18.24)",
+                              "left_paren": "LEFT_PAREN:(@(18.24-18.25)",
+                              "right_paren": "RIGHT_PAREN:)@(18.38-18.39)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:1.0@(18.25-18.28) = 1"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:2.0@(18.30-18.33) = 2"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:3.0@(18.35-18.38) = 3"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC3:vec3@(18.41-18.45)",
+                              "left_paren": "LEFT_PAREN:(@(18.45-18.46)",
+                              "right_paren": "RIGHT_PAREN:)@(18.59-18.60)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:2.0@(18.46-18.49) = 2"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:3.0@(18.51-18.54) = 3"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:4.0@(18.56-18.59) = 4"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC3:vec3@(18.62-18.66)",
+                              "left_paren": "LEFT_PAREN:(@(18.66-18.67)",
+                              "right_paren": "RIGHT_PAREN:)@(18.80-18.81)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:3.0@(18.67-18.70) = 3"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:4.0@(18.72-18.75) = 4"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:5.0@(18.77-18.80) = 5"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(18.82-18.83)",
+                "@id": 83
+              }
+            },
+            {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "MAT4:mat4@(19.5-19.9)",
+                  "is_primitive": true,
+                  "@id": 100
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:m4@(19.10-19.12)",
+                      "decl(VariableDecl)": "@99",
+                      "type(TypeRef)": "@100",
+                      "initial_assign": "EQUAL:=@(19.13-19.14)",
+                      "initial_value(FunctionCallExpr)": {
+                        "name": "MAT4:mat4@(19.15-19.19)",
+                        "left_paren": "LEFT_PAREN:(@(19.19-19.20)",
+                        "right_paren": "RIGHT_PAREN:)@(19.122-19.123)",
+                        "arguments": [
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC4:vec4@(19.20-19.24)",
+                              "left_paren": "LEFT_PAREN:(@(19.24-19.25)",
+                              "right_paren": "RIGHT_PAREN:)@(19.43-19.44)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:1.0@(19.25-19.28) = 1"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:2.0@(19.30-19.33) = 2"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:3.0@(19.35-19.38) = 3"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:4.0@(19.40-19.43) = 4"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC4:vec4@(19.46-19.50)",
+                              "left_paren": "LEFT_PAREN:(@(19.50-19.51)",
+                              "right_paren": "RIGHT_PAREN:)@(19.69-19.70)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:2.0@(19.51-19.54) = 2"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:3.0@(19.56-19.59) = 3"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:4.0@(19.61-19.64) = 4"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:5.0@(19.66-19.69) = 5"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC4:vec4@(19.72-19.76)",
+                              "left_paren": "LEFT_PAREN:(@(19.76-19.77)",
+                              "right_paren": "RIGHT_PAREN:)@(19.95-19.96)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:3.0@(19.77-19.80) = 3"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:4.0@(19.82-19.85) = 4"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:5.0@(19.87-19.90) = 5"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:6.0@(19.92-19.95) = 6"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "FunctionCallExpr": {
+                              "name": "VEC4:vec4@(19.98-19.102)",
+                              "left_paren": "LEFT_PAREN:(@(19.102-19.103)",
+                              "right_paren": "RIGHT_PAREN:)@(19.121-19.122)",
+                              "arguments": [
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:4.0@(19.103-19.106) = 4"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:5.0@(19.108-19.111) = 5"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:6.0@(19.113-19.116) = 6"
+                                  }
+                                },
+                                {
+                                  "ConstantExpr": {
+                                    "token": "FLOATCONSTANT:7.0@(19.118-19.121) = 7"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(19.123-19.124)",
+                "@id": 99
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:radians@(22.5-22.12)",
+                  "left_paren": "LEFT_PAREN:(@(22.12-22.13)",
+                  "right_paren": "RIGHT_PAREN:)@(22.14-22.15)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(22.13-22.14)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(22.15-22.16)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:radians@(22.17-22.24)",
+                  "left_paren": "LEFT_PAREN:(@(22.24-22.25)",
+                  "right_paren": "RIGHT_PAREN:)@(22.27-22.28)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(22.25-22.27)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(22.28-22.29)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:radians@(22.30-22.37)",
+                  "left_paren": "LEFT_PAREN:(@(22.37-22.38)",
+                  "right_paren": "RIGHT_PAREN:)@(22.40-22.41)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(22.38-22.40)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(22.41-22.42)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:radians@(22.43-22.50)",
+                  "left_paren": "LEFT_PAREN:(@(22.50-22.51)",
+                  "right_paren": "RIGHT_PAREN:)@(22.53-22.54)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(22.51-22.53)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(22.54-22.55)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:degrees@(23.5-23.12)",
+                  "left_paren": "LEFT_PAREN:(@(23.12-23.13)",
+                  "right_paren": "RIGHT_PAREN:)@(23.14-23.15)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(23.13-23.14)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(23.15-23.16)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:degrees@(23.17-23.24)",
+                  "left_paren": "LEFT_PAREN:(@(23.24-23.25)",
+                  "right_paren": "RIGHT_PAREN:)@(23.27-23.28)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(23.25-23.27)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(23.28-23.29)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:degrees@(23.30-23.37)",
+                  "left_paren": "LEFT_PAREN:(@(23.37-23.38)",
+                  "right_paren": "RIGHT_PAREN:)@(23.40-23.41)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(23.38-23.40)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(23.41-23.42)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:degrees@(23.43-23.50)",
+                  "left_paren": "LEFT_PAREN:(@(23.50-23.51)",
+                  "right_paren": "RIGHT_PAREN:)@(23.53-23.54)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(23.51-23.53)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(23.54-23.55)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sin@(24.5-24.8)",
+                  "left_paren": "LEFT_PAREN:(@(24.8-24.9)",
+                  "right_paren": "RIGHT_PAREN:)@(24.10-24.11)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(24.9-24.10)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(24.11-24.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sin@(24.13-24.16)",
+                  "left_paren": "LEFT_PAREN:(@(24.16-24.17)",
+                  "right_paren": "RIGHT_PAREN:)@(24.19-24.20)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(24.17-24.19)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(24.20-24.21)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sin@(24.22-24.25)",
+                  "left_paren": "LEFT_PAREN:(@(24.25-24.26)",
+                  "right_paren": "RIGHT_PAREN:)@(24.28-24.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(24.26-24.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(24.29-24.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sin@(24.31-24.34)",
+                  "left_paren": "LEFT_PAREN:(@(24.34-24.35)",
+                  "right_paren": "RIGHT_PAREN:)@(24.37-24.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(24.35-24.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(24.38-24.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:cos@(25.5-25.8)",
+                  "left_paren": "LEFT_PAREN:(@(25.8-25.9)",
+                  "right_paren": "RIGHT_PAREN:)@(25.10-25.11)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(25.9-25.10)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(25.11-25.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:cos@(25.13-25.16)",
+                  "left_paren": "LEFT_PAREN:(@(25.16-25.17)",
+                  "right_paren": "RIGHT_PAREN:)@(25.19-25.20)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(25.17-25.19)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(25.20-25.21)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:cos@(25.22-25.25)",
+                  "left_paren": "LEFT_PAREN:(@(25.25-25.26)",
+                  "right_paren": "RIGHT_PAREN:)@(25.28-25.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(25.26-25.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(25.29-25.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:cos@(25.31-25.34)",
+                  "left_paren": "LEFT_PAREN:(@(25.34-25.35)",
+                  "right_paren": "RIGHT_PAREN:)@(25.37-25.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(25.35-25.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(25.38-25.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sin@(26.5-26.8)",
+                  "left_paren": "LEFT_PAREN:(@(26.8-26.9)",
+                  "right_paren": "RIGHT_PAREN:)@(26.10-26.11)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(26.9-26.10)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(26.11-26.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sin@(26.13-26.16)",
+                  "left_paren": "LEFT_PAREN:(@(26.16-26.17)",
+                  "right_paren": "RIGHT_PAREN:)@(26.19-26.20)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(26.17-26.19)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(26.20-26.21)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sin@(26.22-26.25)",
+                  "left_paren": "LEFT_PAREN:(@(26.25-26.26)",
+                  "right_paren": "RIGHT_PAREN:)@(26.28-26.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(26.26-26.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(26.29-26.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sin@(26.31-26.34)",
+                  "left_paren": "LEFT_PAREN:(@(26.34-26.35)",
+                  "right_paren": "RIGHT_PAREN:)@(26.37-26.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(26.35-26.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(26.38-26.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:asin@(27.5-27.9)",
+                  "left_paren": "LEFT_PAREN:(@(27.9-27.10)",
+                  "right_paren": "RIGHT_PAREN:)@(27.11-27.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(27.10-27.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(27.12-27.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:asin@(27.14-27.18)",
+                  "left_paren": "LEFT_PAREN:(@(27.18-27.19)",
+                  "right_paren": "RIGHT_PAREN:)@(27.21-27.22)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(27.19-27.21)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(27.22-27.23)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:asin@(27.24-27.28)",
+                  "left_paren": "LEFT_PAREN:(@(27.28-27.29)",
+                  "right_paren": "RIGHT_PAREN:)@(27.31-27.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(27.29-27.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(27.32-27.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:asin@(27.34-27.38)",
+                  "left_paren": "LEFT_PAREN:(@(27.38-27.39)",
+                  "right_paren": "RIGHT_PAREN:)@(27.41-27.42)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(27.39-27.41)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(27.42-27.43)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:acos@(28.5-28.9)",
+                  "left_paren": "LEFT_PAREN:(@(28.9-28.10)",
+                  "right_paren": "RIGHT_PAREN:)@(28.11-28.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(28.10-28.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(28.12-28.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:acos@(28.14-28.18)",
+                  "left_paren": "LEFT_PAREN:(@(28.18-28.19)",
+                  "right_paren": "RIGHT_PAREN:)@(28.21-28.22)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(28.19-28.21)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(28.22-28.23)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:acos@(28.24-28.28)",
+                  "left_paren": "LEFT_PAREN:(@(28.28-28.29)",
+                  "right_paren": "RIGHT_PAREN:)@(28.31-28.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(28.29-28.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(28.32-28.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:acos@(28.34-28.38)",
+                  "left_paren": "LEFT_PAREN:(@(28.38-28.39)",
+                  "right_paren": "RIGHT_PAREN:)@(28.41-28.42)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(28.39-28.41)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(28.42-28.43)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:atan@(29.5-29.9)",
+                  "left_paren": "LEFT_PAREN:(@(29.9-29.10)",
+                  "right_paren": "RIGHT_PAREN:)@(29.14-29.15)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(29.10-29.11)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(29.13-29.14)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(29.15-29.16)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:atan@(29.17-29.21)",
+                  "left_paren": "LEFT_PAREN:(@(29.21-29.22)",
+                  "right_paren": "RIGHT_PAREN:)@(29.28-29.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(29.22-29.24)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(29.26-29.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(29.29-29.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:atan@(29.31-29.35)",
+                  "left_paren": "LEFT_PAREN:(@(29.35-29.36)",
+                  "right_paren": "RIGHT_PAREN:)@(29.42-29.43)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(29.36-29.38)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(29.40-29.42)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(29.43-29.44)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:atan@(29.45-29.49)",
+                  "left_paren": "LEFT_PAREN:(@(29.49-29.50)",
+                  "right_paren": "RIGHT_PAREN:)@(29.56-29.57)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(29.50-29.52)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(29.54-29.56)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(29.57-29.58)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:atan@(30.5-30.9)",
+                  "left_paren": "LEFT_PAREN:(@(30.9-30.10)",
+                  "right_paren": "RIGHT_PAREN:)@(30.11-30.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(30.10-30.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(30.12-30.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:atan@(30.14-30.18)",
+                  "left_paren": "LEFT_PAREN:(@(30.18-30.19)",
+                  "right_paren": "RIGHT_PAREN:)@(30.21-30.22)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(30.19-30.21)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(30.22-30.23)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:atan@(30.24-30.28)",
+                  "left_paren": "LEFT_PAREN:(@(30.28-30.29)",
+                  "right_paren": "RIGHT_PAREN:)@(30.31-30.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(30.29-30.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(30.32-30.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:atan@(30.34-30.38)",
+                  "left_paren": "LEFT_PAREN:(@(30.38-30.39)",
+                  "right_paren": "RIGHT_PAREN:)@(30.41-30.42)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(30.39-30.41)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(30.42-30.43)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:pow@(33.5-33.8)",
+                  "left_paren": "LEFT_PAREN:(@(33.8-33.9)",
+                  "right_paren": "RIGHT_PAREN:)@(33.13-33.14)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(33.9-33.10)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(33.12-33.13)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(33.14-33.15)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:pow@(33.16-33.19)",
+                  "left_paren": "LEFT_PAREN:(@(33.19-33.20)",
+                  "right_paren": "RIGHT_PAREN:)@(33.26-33.27)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(33.20-33.22)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(33.24-33.26)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(33.27-33.28)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:pow@(33.29-33.32)",
+                  "left_paren": "LEFT_PAREN:(@(33.32-33.33)",
+                  "right_paren": "RIGHT_PAREN:)@(33.39-33.40)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(33.33-33.35)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(33.37-33.39)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(33.40-33.41)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:pow@(33.42-33.45)",
+                  "left_paren": "LEFT_PAREN:(@(33.45-33.46)",
+                  "right_paren": "RIGHT_PAREN:)@(33.52-33.53)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(33.46-33.48)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(33.50-33.52)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(33.53-33.54)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:exp@(34.5-34.8)",
+                  "left_paren": "LEFT_PAREN:(@(34.8-34.9)",
+                  "right_paren": "RIGHT_PAREN:)@(34.10-34.11)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(34.9-34.10)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(34.11-34.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:exp@(34.13-34.16)",
+                  "left_paren": "LEFT_PAREN:(@(34.16-34.17)",
+                  "right_paren": "RIGHT_PAREN:)@(34.19-34.20)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(34.17-34.19)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(34.20-34.21)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:exp@(34.22-34.25)",
+                  "left_paren": "LEFT_PAREN:(@(34.25-34.26)",
+                  "right_paren": "RIGHT_PAREN:)@(34.28-34.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(34.26-34.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(34.29-34.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:exp@(34.31-34.34)",
+                  "left_paren": "LEFT_PAREN:(@(34.34-34.35)",
+                  "right_paren": "RIGHT_PAREN:)@(34.37-34.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(34.35-34.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(34.38-34.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:log@(35.5-35.8)",
+                  "left_paren": "LEFT_PAREN:(@(35.8-35.9)",
+                  "right_paren": "RIGHT_PAREN:)@(35.10-35.11)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(35.9-35.10)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(35.11-35.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:log@(35.13-35.16)",
+                  "left_paren": "LEFT_PAREN:(@(35.16-35.17)",
+                  "right_paren": "RIGHT_PAREN:)@(35.19-35.20)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(35.17-35.19)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(35.20-35.21)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:log@(35.22-35.25)",
+                  "left_paren": "LEFT_PAREN:(@(35.25-35.26)",
+                  "right_paren": "RIGHT_PAREN:)@(35.28-35.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(35.26-35.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(35.29-35.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:log@(35.31-35.34)",
+                  "left_paren": "LEFT_PAREN:(@(35.34-35.35)",
+                  "right_paren": "RIGHT_PAREN:)@(35.37-35.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(35.35-35.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(35.38-35.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:exp2@(36.5-36.9)",
+                  "left_paren": "LEFT_PAREN:(@(36.9-36.10)",
+                  "right_paren": "RIGHT_PAREN:)@(36.11-36.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(36.10-36.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(36.12-36.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:exp2@(36.14-36.18)",
+                  "left_paren": "LEFT_PAREN:(@(36.18-36.19)",
+                  "right_paren": "RIGHT_PAREN:)@(36.21-36.22)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(36.19-36.21)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(36.22-36.23)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:exp2@(36.24-36.28)",
+                  "left_paren": "LEFT_PAREN:(@(36.28-36.29)",
+                  "right_paren": "RIGHT_PAREN:)@(36.31-36.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(36.29-36.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(36.32-36.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:exp2@(36.34-36.38)",
+                  "left_paren": "LEFT_PAREN:(@(36.38-36.39)",
+                  "right_paren": "RIGHT_PAREN:)@(36.41-36.42)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(36.39-36.41)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(36.42-36.43)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:log2@(37.5-37.9)",
+                  "left_paren": "LEFT_PAREN:(@(37.9-37.10)",
+                  "right_paren": "RIGHT_PAREN:)@(37.11-37.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(37.10-37.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(37.12-37.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:log2@(37.14-37.18)",
+                  "left_paren": "LEFT_PAREN:(@(37.18-37.19)",
+                  "right_paren": "RIGHT_PAREN:)@(37.21-37.22)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(37.19-37.21)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(37.22-37.23)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:log2@(37.24-37.28)",
+                  "left_paren": "LEFT_PAREN:(@(37.28-37.29)",
+                  "right_paren": "RIGHT_PAREN:)@(37.31-37.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(37.29-37.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(37.32-37.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:log2@(37.34-37.38)",
+                  "left_paren": "LEFT_PAREN:(@(37.38-37.39)",
+                  "right_paren": "RIGHT_PAREN:)@(37.41-37.42)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(37.39-37.41)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(37.42-37.43)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sqrt@(38.5-38.9)",
+                  "left_paren": "LEFT_PAREN:(@(38.9-38.10)",
+                  "right_paren": "RIGHT_PAREN:)@(38.11-38.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(38.10-38.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(38.12-38.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sqrt@(38.14-38.18)",
+                  "left_paren": "LEFT_PAREN:(@(38.18-38.19)",
+                  "right_paren": "RIGHT_PAREN:)@(38.21-38.22)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(38.19-38.21)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(38.22-38.23)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sqrt@(38.24-38.28)",
+                  "left_paren": "LEFT_PAREN:(@(38.28-38.29)",
+                  "right_paren": "RIGHT_PAREN:)@(38.31-38.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(38.29-38.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(38.32-38.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sqrt@(38.34-38.38)",
+                  "left_paren": "LEFT_PAREN:(@(38.38-38.39)",
+                  "right_paren": "RIGHT_PAREN:)@(38.41-38.42)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(38.39-38.41)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(38.42-38.43)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:inversesqrt@(39.5-39.16)",
+                  "left_paren": "LEFT_PAREN:(@(39.16-39.17)",
+                  "right_paren": "RIGHT_PAREN:)@(39.18-39.19)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(39.17-39.18)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(39.19-39.20)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:inversesqrt@(39.21-39.32)",
+                  "left_paren": "LEFT_PAREN:(@(39.32-39.33)",
+                  "right_paren": "RIGHT_PAREN:)@(39.35-39.36)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(39.33-39.35)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(39.36-39.37)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:inversesqrt@(39.38-39.49)",
+                  "left_paren": "LEFT_PAREN:(@(39.49-39.50)",
+                  "right_paren": "RIGHT_PAREN:)@(39.52-39.53)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(39.50-39.52)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(39.53-39.54)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:inversesqrt@(39.55-39.66)",
+                  "left_paren": "LEFT_PAREN:(@(39.66-39.67)",
+                  "right_paren": "RIGHT_PAREN:)@(39.69-39.70)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(39.67-39.69)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(39.70-39.71)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:abs@(42.5-42.8)",
+                  "left_paren": "LEFT_PAREN:(@(42.8-42.9)",
+                  "right_paren": "RIGHT_PAREN:)@(42.10-42.11)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(42.9-42.10)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(42.11-42.12)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:abs@(42.13-42.16)",
+                  "left_paren": "LEFT_PAREN:(@(42.16-42.17)",
+                  "right_paren": "RIGHT_PAREN:)@(42.19-42.20)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(42.17-42.19)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(42.20-42.21)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:abs@(42.22-42.25)",
+                  "left_paren": "LEFT_PAREN:(@(42.25-42.26)",
+                  "right_paren": "RIGHT_PAREN:)@(42.28-42.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(42.26-42.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(42.29-42.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:abs@(42.31-42.34)",
+                  "left_paren": "LEFT_PAREN:(@(42.34-42.35)",
+                  "right_paren": "RIGHT_PAREN:)@(42.37-42.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(42.35-42.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(42.38-42.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sign@(43.5-43.9)",
+                  "left_paren": "LEFT_PAREN:(@(43.9-43.10)",
+                  "right_paren": "RIGHT_PAREN:)@(43.11-43.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(43.10-43.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(43.12-43.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sign@(43.14-43.18)",
+                  "left_paren": "LEFT_PAREN:(@(43.18-43.19)",
+                  "right_paren": "RIGHT_PAREN:)@(43.21-43.22)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(43.19-43.21)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(43.22-43.23)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sign@(43.24-43.28)",
+                  "left_paren": "LEFT_PAREN:(@(43.28-43.29)",
+                  "right_paren": "RIGHT_PAREN:)@(43.31-43.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(43.29-43.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(43.32-43.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:sign@(43.34-43.38)",
+                  "left_paren": "LEFT_PAREN:(@(43.38-43.39)",
+                  "right_paren": "RIGHT_PAREN:)@(43.41-43.42)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(43.39-43.41)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(43.42-43.43)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:floor@(44.5-44.10)",
+                  "left_paren": "LEFT_PAREN:(@(44.10-44.11)",
+                  "right_paren": "RIGHT_PAREN:)@(44.12-44.13)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(44.11-44.12)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(44.13-44.14)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:floor@(44.15-44.20)",
+                  "left_paren": "LEFT_PAREN:(@(44.20-44.21)",
+                  "right_paren": "RIGHT_PAREN:)@(44.23-44.24)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(44.21-44.23)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(44.24-44.25)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:floor@(44.26-44.31)",
+                  "left_paren": "LEFT_PAREN:(@(44.31-44.32)",
+                  "right_paren": "RIGHT_PAREN:)@(44.34-44.35)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(44.32-44.34)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(44.35-44.36)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:floor@(44.37-44.42)",
+                  "left_paren": "LEFT_PAREN:(@(44.42-44.43)",
+                  "right_paren": "RIGHT_PAREN:)@(44.45-44.46)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(44.43-44.45)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(44.46-44.47)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:ceil@(45.5-45.9)",
+                  "left_paren": "LEFT_PAREN:(@(45.9-45.10)",
+                  "right_paren": "RIGHT_PAREN:)@(45.11-45.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(45.10-45.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(45.12-45.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:ceil@(45.14-45.18)",
+                  "left_paren": "LEFT_PAREN:(@(45.18-45.19)",
+                  "right_paren": "RIGHT_PAREN:)@(45.21-45.22)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(45.19-45.21)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(45.22-45.23)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:ceil@(45.24-45.28)",
+                  "left_paren": "LEFT_PAREN:(@(45.28-45.29)",
+                  "right_paren": "RIGHT_PAREN:)@(45.31-45.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(45.29-45.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(45.32-45.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:ceil@(45.34-45.38)",
+                  "left_paren": "LEFT_PAREN:(@(45.38-45.39)",
+                  "right_paren": "RIGHT_PAREN:)@(45.41-45.42)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(45.39-45.41)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(45.42-45.43)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:fract@(46.5-46.10)",
+                  "left_paren": "LEFT_PAREN:(@(46.10-46.11)",
+                  "right_paren": "RIGHT_PAREN:)@(46.12-46.13)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(46.11-46.12)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(46.13-46.14)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:fract@(46.15-46.20)",
+                  "left_paren": "LEFT_PAREN:(@(46.20-46.21)",
+                  "right_paren": "RIGHT_PAREN:)@(46.23-46.24)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(46.21-46.23)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(46.24-46.25)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:fract@(46.26-46.31)",
+                  "left_paren": "LEFT_PAREN:(@(46.31-46.32)",
+                  "right_paren": "RIGHT_PAREN:)@(46.34-46.35)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(46.32-46.34)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(46.35-46.36)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:fract@(46.37-46.42)",
+                  "left_paren": "LEFT_PAREN:(@(46.42-46.43)",
+                  "right_paren": "RIGHT_PAREN:)@(46.45-46.46)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(46.43-46.45)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(46.46-46.47)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:mod@(47.5-47.8)",
+                  "left_paren": "LEFT_PAREN:(@(47.8-47.9)",
+                  "right_paren": "RIGHT_PAREN:)@(47.13-47.14)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(47.9-47.10)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(47.12-47.13)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(47.14-47.15)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:mod@(47.16-47.19)",
+                  "left_paren": "LEFT_PAREN:(@(47.19-47.20)",
+                  "right_paren": "RIGHT_PAREN:)@(47.26-47.27)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(47.20-47.22)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(47.24-47.26)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(47.27-47.28)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:mod@(47.29-47.32)",
+                  "left_paren": "LEFT_PAREN:(@(47.32-47.33)",
+                  "right_paren": "RIGHT_PAREN:)@(47.39-47.40)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(47.33-47.35)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(47.37-47.39)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(47.40-47.41)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:mod@(47.42-47.45)",
+                  "left_paren": "LEFT_PAREN:(@(47.45-47.46)",
+                  "right_paren": "RIGHT_PAREN:)@(47.52-47.53)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(47.46-47.48)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(47.50-47.52)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(47.53-47.54)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:min@(48.5-48.8)",
+                  "left_paren": "LEFT_PAREN:(@(48.8-48.9)",
+                  "right_paren": "RIGHT_PAREN:)@(48.13-48.14)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(48.9-48.10)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(48.12-48.13)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(48.14-48.15)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:min@(48.16-48.19)",
+                  "left_paren": "LEFT_PAREN:(@(48.19-48.20)",
+                  "right_paren": "RIGHT_PAREN:)@(48.26-48.27)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(48.20-48.22)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(48.24-48.26)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(48.27-48.28)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:min@(48.29-48.32)",
+                  "left_paren": "LEFT_PAREN:(@(48.32-48.33)",
+                  "right_paren": "RIGHT_PAREN:)@(48.39-48.40)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(48.33-48.35)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(48.37-48.39)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(48.40-48.41)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:min@(48.42-48.45)",
+                  "left_paren": "LEFT_PAREN:(@(48.45-48.46)",
+                  "right_paren": "RIGHT_PAREN:)@(48.52-48.53)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(48.46-48.48)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(48.50-48.52)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(48.53-48.54)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:min@(49.16-49.19)",
+                  "left_paren": "LEFT_PAREN:(@(49.19-49.20)",
+                  "right_paren": "RIGHT_PAREN:)@(49.25-49.26)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(49.20-49.22)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(49.24-49.25)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(49.26-49.27)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:min@(49.28-49.31)",
+                  "left_paren": "LEFT_PAREN:(@(49.31-49.32)",
+                  "right_paren": "RIGHT_PAREN:)@(49.37-49.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(49.32-49.34)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(49.36-49.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(49.38-49.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:min@(49.40-49.43)",
+                  "left_paren": "LEFT_PAREN:(@(49.43-49.44)",
+                  "right_paren": "RIGHT_PAREN:)@(49.49-49.50)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(49.44-49.46)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(49.48-49.49)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(49.50-49.51)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:max@(50.5-50.8)",
+                  "left_paren": "LEFT_PAREN:(@(50.8-50.9)",
+                  "right_paren": "RIGHT_PAREN:)@(50.13-50.14)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(50.9-50.10)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(50.12-50.13)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(50.14-50.15)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:max@(50.16-50.19)",
+                  "left_paren": "LEFT_PAREN:(@(50.19-50.20)",
+                  "right_paren": "RIGHT_PAREN:)@(50.26-50.27)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(50.20-50.22)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(50.24-50.26)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(50.27-50.28)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:max@(50.29-50.32)",
+                  "left_paren": "LEFT_PAREN:(@(50.32-50.33)",
+                  "right_paren": "RIGHT_PAREN:)@(50.39-50.40)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(50.33-50.35)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(50.37-50.39)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(50.40-50.41)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:max@(50.42-50.45)",
+                  "left_paren": "LEFT_PAREN:(@(50.45-50.46)",
+                  "right_paren": "RIGHT_PAREN:)@(50.52-50.53)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(50.46-50.48)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(50.50-50.52)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(50.53-50.54)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:max@(51.16-51.19)",
+                  "left_paren": "LEFT_PAREN:(@(51.19-51.20)",
+                  "right_paren": "RIGHT_PAREN:)@(51.25-51.26)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(51.20-51.22)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(51.24-51.25)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(51.26-51.27)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:max@(51.28-51.31)",
+                  "left_paren": "LEFT_PAREN:(@(51.31-51.32)",
+                  "right_paren": "RIGHT_PAREN:)@(51.37-51.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(51.32-51.34)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(51.36-51.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(51.38-51.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:max@(51.40-51.43)",
+                  "left_paren": "LEFT_PAREN:(@(51.43-51.44)",
+                  "right_paren": "RIGHT_PAREN:)@(51.49-51.50)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(51.44-51.46)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(51.48-51.49)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(51.50-51.51)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:clamp@(52.5-52.10)",
+                  "left_paren": "LEFT_PAREN:(@(52.10-52.11)",
+                  "right_paren": "RIGHT_PAREN:)@(52.18-52.19)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(52.11-52.12)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(52.14-52.15)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(52.17-52.18)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(52.19-52.20)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:clamp@(52.21-52.26)",
+                  "left_paren": "LEFT_PAREN:(@(52.26-52.27)",
+                  "right_paren": "RIGHT_PAREN:)@(52.37-52.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(52.27-52.29)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(52.31-52.33)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(52.35-52.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(52.38-52.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:clamp@(52.40-52.45)",
+                  "left_paren": "LEFT_PAREN:(@(52.45-52.46)",
+                  "right_paren": "RIGHT_PAREN:)@(52.56-52.57)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(52.46-52.48)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(52.50-52.52)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(52.54-52.56)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(52.57-52.58)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:clamp@(52.59-52.64)",
+                  "left_paren": "LEFT_PAREN:(@(52.64-52.65)",
+                  "right_paren": "RIGHT_PAREN:)@(52.75-52.76)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(52.65-52.67)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(52.69-52.71)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(52.73-52.75)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(52.76-52.77)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:clamp@(53.21-53.26)",
+                  "left_paren": "LEFT_PAREN:(@(53.26-53.27)",
+                  "right_paren": "RIGHT_PAREN:)@(53.35-53.36)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(53.27-53.29)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(53.31-53.32)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(53.34-53.35)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(53.36-53.37)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:clamp@(53.38-53.43)",
+                  "left_paren": "LEFT_PAREN:(@(53.43-53.44)",
+                  "right_paren": "RIGHT_PAREN:)@(53.52-53.53)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(53.44-53.46)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(53.48-53.49)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(53.51-53.52)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(53.53-53.54)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:clamp@(53.55-53.60)",
+                  "left_paren": "LEFT_PAREN:(@(53.60-53.61)",
+                  "right_paren": "RIGHT_PAREN:)@(53.69-53.70)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(53.61-53.63)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(53.65-53.66)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(53.68-53.69)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(53.70-53.71)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:step@(54.5-54.9)",
+                  "left_paren": "LEFT_PAREN:(@(54.9-54.10)",
+                  "right_paren": "RIGHT_PAREN:)@(54.14-54.15)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(54.10-54.11)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(54.13-54.14)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(54.15-54.16)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:step@(54.17-54.21)",
+                  "left_paren": "LEFT_PAREN:(@(54.21-54.22)",
+                  "right_paren": "RIGHT_PAREN:)@(54.28-54.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(54.22-54.24)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(54.26-54.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(54.29-54.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:step@(54.31-54.35)",
+                  "left_paren": "LEFT_PAREN:(@(54.35-54.36)",
+                  "right_paren": "RIGHT_PAREN:)@(54.42-54.43)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(54.36-54.38)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(54.40-54.42)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(54.43-54.44)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:step@(54.45-54.49)",
+                  "left_paren": "LEFT_PAREN:(@(54.49-54.50)",
+                  "right_paren": "RIGHT_PAREN:)@(54.56-54.57)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(54.50-54.52)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(54.54-54.56)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(54.57-54.58)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:step@(55.17-55.21)",
+                  "left_paren": "LEFT_PAREN:(@(55.21-55.22)",
+                  "right_paren": "RIGHT_PAREN:)@(55.27-55.28)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(55.22-55.23)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(55.25-55.27)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(55.28-55.29)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:step@(55.30-55.34)",
+                  "left_paren": "LEFT_PAREN:(@(55.34-55.35)",
+                  "right_paren": "RIGHT_PAREN:)@(55.40-55.41)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(55.35-55.36)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(55.38-55.40)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(55.41-55.42)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:step@(55.43-55.47)",
+                  "left_paren": "LEFT_PAREN:(@(55.47-55.48)",
+                  "right_paren": "RIGHT_PAREN:)@(55.53-55.54)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(55.48-55.49)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(55.51-55.53)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(55.54-55.55)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:smoothstep@(56.5-56.15)",
+                  "left_paren": "LEFT_PAREN:(@(56.15-56.16)",
+                  "right_paren": "RIGHT_PAREN:)@(56.23-56.24)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(56.16-56.17)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(56.19-56.20)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(56.22-56.23)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(56.24-56.25)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:smoothstep@(56.26-56.36)",
+                  "left_paren": "LEFT_PAREN:(@(56.36-56.37)",
+                  "right_paren": "RIGHT_PAREN:)@(56.47-56.48)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(56.37-56.39)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(56.41-56.43)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(56.45-56.47)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(56.48-56.49)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:smoothstep@(56.50-56.60)",
+                  "left_paren": "LEFT_PAREN:(@(56.60-56.61)",
+                  "right_paren": "RIGHT_PAREN:)@(56.71-56.72)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(56.61-56.63)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(56.65-56.67)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(56.69-56.71)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(56.72-56.73)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:smoothstep@(56.74-56.84)",
+                  "left_paren": "LEFT_PAREN:(@(56.84-56.85)",
+                  "right_paren": "RIGHT_PAREN:)@(56.95-56.96)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(56.85-56.87)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(56.89-56.91)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(56.93-56.95)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(56.96-56.97)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:smoothstep@(57.23-57.33)",
+                  "left_paren": "LEFT_PAREN:(@(57.33-57.34)",
+                  "right_paren": "RIGHT_PAREN:)@(57.42-57.43)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(57.34-57.35)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(57.37-57.38)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(57.40-57.42)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(57.43-57.44)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:smoothstep@(57.45-57.55)",
+                  "left_paren": "LEFT_PAREN:(@(57.55-57.56)",
+                  "right_paren": "RIGHT_PAREN:)@(57.64-57.65)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(57.56-57.57)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(57.59-57.60)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(57.62-57.64)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(57.65-57.66)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:smoothstep@(57.67-57.77)",
+                  "left_paren": "LEFT_PAREN:(@(57.77-57.78)",
+                  "right_paren": "RIGHT_PAREN:)@(57.86-57.87)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(57.78-57.79)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(57.81-57.82)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(57.84-57.86)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(57.87-57.88)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:length@(60.5-60.11)",
+                  "left_paren": "LEFT_PAREN:(@(60.11-60.12)",
+                  "right_paren": "RIGHT_PAREN:)@(60.13-60.14)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(60.12-60.13)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(60.14-60.15)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:length@(60.16-60.22)",
+                  "left_paren": "LEFT_PAREN:(@(60.22-60.23)",
+                  "right_paren": "RIGHT_PAREN:)@(60.25-60.26)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(60.23-60.25)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(60.26-60.27)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:length@(60.28-60.34)",
+                  "left_paren": "LEFT_PAREN:(@(60.34-60.35)",
+                  "right_paren": "RIGHT_PAREN:)@(60.37-60.38)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(60.35-60.37)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(60.38-60.39)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:length@(60.40-60.46)",
+                  "left_paren": "LEFT_PAREN:(@(60.46-60.47)",
+                  "right_paren": "RIGHT_PAREN:)@(60.49-60.50)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(60.47-60.49)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(60.50-60.51)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:distance@(61.5-61.13)",
+                  "left_paren": "LEFT_PAREN:(@(61.13-61.14)",
+                  "right_paren": "RIGHT_PAREN:)@(61.18-61.19)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(61.14-61.15)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(61.17-61.18)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(61.19-61.20)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:distance@(61.21-61.29)",
+                  "left_paren": "LEFT_PAREN:(@(61.29-61.30)",
+                  "right_paren": "RIGHT_PAREN:)@(61.36-61.37)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(61.30-61.32)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(61.34-61.36)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(61.37-61.38)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:distance@(61.39-61.47)",
+                  "left_paren": "LEFT_PAREN:(@(61.47-61.48)",
+                  "right_paren": "RIGHT_PAREN:)@(61.54-61.55)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(61.48-61.50)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(61.52-61.54)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(61.55-61.56)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:distance@(61.57-61.65)",
+                  "left_paren": "LEFT_PAREN:(@(61.65-61.66)",
+                  "right_paren": "RIGHT_PAREN:)@(61.72-61.73)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(61.66-61.68)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(61.70-61.72)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(61.73-61.74)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:dot@(62.5-62.8)",
+                  "left_paren": "LEFT_PAREN:(@(62.8-62.9)",
+                  "right_paren": "RIGHT_PAREN:)@(62.13-62.14)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(62.9-62.10)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(62.12-62.13)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(62.14-62.15)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:dot@(62.16-62.19)",
+                  "left_paren": "LEFT_PAREN:(@(62.19-62.20)",
+                  "right_paren": "RIGHT_PAREN:)@(62.26-62.27)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(62.20-62.22)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(62.24-62.26)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(62.27-62.28)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:dot@(62.29-62.32)",
+                  "left_paren": "LEFT_PAREN:(@(62.32-62.33)",
+                  "right_paren": "RIGHT_PAREN:)@(62.39-62.40)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(62.33-62.35)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(62.37-62.39)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(62.40-62.41)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:dot@(62.42-62.45)",
+                  "left_paren": "LEFT_PAREN:(@(62.45-62.46)",
+                  "right_paren": "RIGHT_PAREN:)@(62.52-62.53)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(62.46-62.48)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(62.50-62.52)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(62.53-62.54)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:cross@(63.5-63.10)",
+                  "left_paren": "LEFT_PAREN:(@(63.10-63.11)",
+                  "right_paren": "RIGHT_PAREN:)@(63.17-63.18)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(63.11-63.13)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(63.15-63.17)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(63.18-63.19)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:normalize@(64.5-64.14)",
+                  "left_paren": "LEFT_PAREN:(@(64.14-64.15)",
+                  "right_paren": "RIGHT_PAREN:)@(64.16-64.17)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(64.15-64.16)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(64.17-64.18)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:normalize@(64.19-64.28)",
+                  "left_paren": "LEFT_PAREN:(@(64.28-64.29)",
+                  "right_paren": "RIGHT_PAREN:)@(64.31-64.32)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(64.29-64.31)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(64.32-64.33)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:normalize@(64.34-64.43)",
+                  "left_paren": "LEFT_PAREN:(@(64.43-64.44)",
+                  "right_paren": "RIGHT_PAREN:)@(64.46-64.47)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(64.44-64.46)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(64.47-64.48)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:normalize@(64.49-64.58)",
+                  "left_paren": "LEFT_PAREN:(@(64.58-64.59)",
+                  "right_paren": "RIGHT_PAREN:)@(64.61-64.62)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(64.59-64.61)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(64.62-64.63)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:faceforward@(65.5-65.16)",
+                  "left_paren": "LEFT_PAREN:(@(65.16-65.17)",
+                  "right_paren": "RIGHT_PAREN:)@(65.24-65.25)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(65.17-65.18)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(65.20-65.21)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(65.23-65.24)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(65.25-65.26)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:faceforward@(65.27-65.38)",
+                  "left_paren": "LEFT_PAREN:(@(65.38-65.39)",
+                  "right_paren": "RIGHT_PAREN:)@(65.49-65.50)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(65.39-65.41)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(65.43-65.45)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(65.47-65.49)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(65.50-65.51)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:faceforward@(65.52-65.63)",
+                  "left_paren": "LEFT_PAREN:(@(65.63-65.64)",
+                  "right_paren": "RIGHT_PAREN:)@(65.74-65.75)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(65.64-65.66)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(65.68-65.70)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(65.72-65.74)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(65.75-65.76)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:faceforward@(65.77-65.88)",
+                  "left_paren": "LEFT_PAREN:(@(65.88-65.89)",
+                  "right_paren": "RIGHT_PAREN:)@(65.99-65.100)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(65.89-65.91)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(65.93-65.95)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(65.97-65.99)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(65.100-65.101)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:reflect@(66.5-66.12)",
+                  "left_paren": "LEFT_PAREN:(@(66.12-66.13)",
+                  "right_paren": "RIGHT_PAREN:)@(66.17-66.18)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(66.13-66.14)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(66.16-66.17)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(66.18-66.19)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:reflect@(66.20-66.27)",
+                  "left_paren": "LEFT_PAREN:(@(66.27-66.28)",
+                  "right_paren": "RIGHT_PAREN:)@(66.34-66.35)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(66.28-66.30)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(66.32-66.34)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(66.35-66.36)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:reflect@(66.37-66.44)",
+                  "left_paren": "LEFT_PAREN:(@(66.44-66.45)",
+                  "right_paren": "RIGHT_PAREN:)@(66.51-66.52)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(66.45-66.47)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(66.49-66.51)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(66.52-66.53)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:reflect@(66.54-66.61)",
+                  "left_paren": "LEFT_PAREN:(@(66.61-66.62)",
+                  "right_paren": "RIGHT_PAREN:)@(66.68-66.69)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(66.62-66.64)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(66.66-66.68)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(66.69-66.70)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:refract@(67.5-67.12)",
+                  "left_paren": "LEFT_PAREN:(@(67.12-67.13)",
+                  "right_paren": "RIGHT_PAREN:)@(67.20-67.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(67.13-67.14)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(67.16-67.17)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(67.19-67.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(67.21-67.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:refract@(67.23-67.30)",
+                  "left_paren": "LEFT_PAREN:(@(67.30-67.31)",
+                  "right_paren": "RIGHT_PAREN:)@(67.40-67.41)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(67.31-67.33)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(67.35-67.37)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(67.39-67.40)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(67.41-67.42)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:refract@(67.43-67.50)",
+                  "left_paren": "LEFT_PAREN:(@(67.50-67.51)",
+                  "right_paren": "RIGHT_PAREN:)@(67.60-67.61)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(67.51-67.53)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(67.55-67.57)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(67.59-67.60)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(67.61-67.62)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:refract@(67.63-67.70)",
+                  "left_paren": "LEFT_PAREN:(@(67.70-67.71)",
+                  "right_paren": "RIGHT_PAREN:)@(67.80-67.81)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(67.71-67.73)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(67.75-67.77)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:f@(67.79-67.80)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(67.81-67.82)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:matrixCompMult@(70.5-70.19)",
+                  "left_paren": "LEFT_PAREN:(@(70.19-70.20)",
+                  "right_paren": "RIGHT_PAREN:)@(70.26-70.27)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:m2@(70.20-70.22)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:m2@(70.24-70.26)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(70.27-70.28)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:matrixCompMult@(70.29-70.43)",
+                  "left_paren": "LEFT_PAREN:(@(70.43-70.44)",
+                  "right_paren": "RIGHT_PAREN:)@(70.50-70.51)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:m3@(70.44-70.46)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:m3@(70.48-70.50)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(70.51-70.52)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:matrixCompMult@(70.53-70.67)",
+                  "left_paren": "LEFT_PAREN:(@(70.67-70.68)",
+                  "right_paren": "RIGHT_PAREN:)@(70.74-70.75)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:m4@(70.68-70.70)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:m4@(70.72-70.74)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(70.75-70.76)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThan@(73.5-73.13)",
+                  "left_paren": "LEFT_PAREN:(@(73.13-73.14)",
+                  "right_paren": "RIGHT_PAREN:)@(73.20-73.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(73.14-73.16)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(73.18-73.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(73.21-73.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThan@(73.23-73.31)",
+                  "left_paren": "LEFT_PAREN:(@(73.31-73.32)",
+                  "right_paren": "RIGHT_PAREN:)@(73.38-73.39)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(73.32-73.34)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(73.36-73.38)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(73.39-73.40)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThan@(73.41-73.49)",
+                  "left_paren": "LEFT_PAREN:(@(73.49-73.50)",
+                  "right_paren": "RIGHT_PAREN:)@(73.56-73.57)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(73.50-73.52)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(73.54-73.56)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(73.57-73.58)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThan@(74.5-74.13)",
+                  "left_paren": "LEFT_PAREN:(@(74.13-74.14)",
+                  "right_paren": "RIGHT_PAREN:)@(74.20-74.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(74.14-74.16)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(74.18-74.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(74.21-74.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThan@(74.23-74.31)",
+                  "left_paren": "LEFT_PAREN:(@(74.31-74.32)",
+                  "right_paren": "RIGHT_PAREN:)@(74.38-74.39)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(74.32-74.34)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(74.36-74.38)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(74.39-74.40)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThan@(74.41-74.49)",
+                  "left_paren": "LEFT_PAREN:(@(74.49-74.50)",
+                  "right_paren": "RIGHT_PAREN:)@(74.56-74.57)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(74.50-74.52)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(74.54-74.56)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(74.57-74.58)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThanEqual@(75.5-75.18)",
+                  "left_paren": "LEFT_PAREN:(@(75.18-75.19)",
+                  "right_paren": "RIGHT_PAREN:)@(75.25-75.26)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(75.19-75.21)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(75.23-75.25)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(75.26-75.27)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThanEqual@(75.28-75.41)",
+                  "left_paren": "LEFT_PAREN:(@(75.41-75.42)",
+                  "right_paren": "RIGHT_PAREN:)@(75.48-75.49)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(75.42-75.44)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(75.46-75.48)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(75.49-75.50)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThanEqual@(75.51-75.64)",
+                  "left_paren": "LEFT_PAREN:(@(75.64-75.65)",
+                  "right_paren": "RIGHT_PAREN:)@(75.71-75.72)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(75.65-75.67)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(75.69-75.71)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(75.72-75.73)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThanEqual@(76.5-76.18)",
+                  "left_paren": "LEFT_PAREN:(@(76.18-76.19)",
+                  "right_paren": "RIGHT_PAREN:)@(76.25-76.26)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(76.19-76.21)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(76.23-76.25)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(76.26-76.27)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThanEqual@(76.28-76.41)",
+                  "left_paren": "LEFT_PAREN:(@(76.41-76.42)",
+                  "right_paren": "RIGHT_PAREN:)@(76.48-76.49)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(76.42-76.44)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(76.46-76.48)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(76.49-76.50)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:lessThanEqual@(76.51-76.64)",
+                  "left_paren": "LEFT_PAREN:(@(76.64-76.65)",
+                  "right_paren": "RIGHT_PAREN:)@(76.71-76.72)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(76.65-76.67)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(76.69-76.71)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(76.72-76.73)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThan@(77.5-77.16)",
+                  "left_paren": "LEFT_PAREN:(@(77.16-77.17)",
+                  "right_paren": "RIGHT_PAREN:)@(77.23-77.24)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(77.17-77.19)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(77.21-77.23)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(77.24-77.25)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThan@(77.26-77.37)",
+                  "left_paren": "LEFT_PAREN:(@(77.37-77.38)",
+                  "right_paren": "RIGHT_PAREN:)@(77.44-77.45)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(77.38-77.40)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(77.42-77.44)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(77.45-77.46)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThan@(77.47-77.58)",
+                  "left_paren": "LEFT_PAREN:(@(77.58-77.59)",
+                  "right_paren": "RIGHT_PAREN:)@(77.65-77.66)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(77.59-77.61)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(77.63-77.65)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(77.66-77.67)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThan@(78.5-78.16)",
+                  "left_paren": "LEFT_PAREN:(@(78.16-78.17)",
+                  "right_paren": "RIGHT_PAREN:)@(78.23-78.24)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(78.17-78.19)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(78.21-78.23)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(78.24-78.25)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThan@(78.26-78.37)",
+                  "left_paren": "LEFT_PAREN:(@(78.37-78.38)",
+                  "right_paren": "RIGHT_PAREN:)@(78.44-78.45)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(78.38-78.40)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(78.42-78.44)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(78.45-78.46)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThan@(78.47-78.58)",
+                  "left_paren": "LEFT_PAREN:(@(78.58-78.59)",
+                  "right_paren": "RIGHT_PAREN:)@(78.65-78.66)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(78.59-78.61)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(78.63-78.65)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(78.66-78.67)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThanEqual@(79.5-79.21)",
+                  "left_paren": "LEFT_PAREN:(@(79.21-79.22)",
+                  "right_paren": "RIGHT_PAREN:)@(79.28-79.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(79.22-79.24)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(79.26-79.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(79.29-79.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThanEqual@(79.31-79.47)",
+                  "left_paren": "LEFT_PAREN:(@(79.47-79.48)",
+                  "right_paren": "RIGHT_PAREN:)@(79.54-79.55)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(79.48-79.50)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(79.52-79.54)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(79.55-79.56)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThanEqual@(79.57-79.73)",
+                  "left_paren": "LEFT_PAREN:(@(79.73-79.74)",
+                  "right_paren": "RIGHT_PAREN:)@(79.80-79.81)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(79.74-79.76)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(79.78-79.80)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(79.81-79.82)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThanEqual@(80.5-80.21)",
+                  "left_paren": "LEFT_PAREN:(@(80.21-80.22)",
+                  "right_paren": "RIGHT_PAREN:)@(80.28-80.29)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(80.22-80.24)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(80.26-80.28)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(80.29-80.30)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThanEqual@(80.31-80.47)",
+                  "left_paren": "LEFT_PAREN:(@(80.47-80.48)",
+                  "right_paren": "RIGHT_PAREN:)@(80.54-80.55)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(80.48-80.50)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(80.52-80.54)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(80.55-80.56)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:greaterThanEqual@(80.57-80.73)",
+                  "left_paren": "LEFT_PAREN:(@(80.73-80.74)",
+                  "right_paren": "RIGHT_PAREN:)@(80.80-80.81)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(80.74-80.76)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(80.78-80.80)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(80.81-80.82)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:equal@(81.5-81.10)",
+                  "left_paren": "LEFT_PAREN:(@(81.10-81.11)",
+                  "right_paren": "RIGHT_PAREN:)@(81.17-81.18)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(81.11-81.13)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(81.15-81.17)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(81.18-81.19)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:equal@(81.20-81.25)",
+                  "left_paren": "LEFT_PAREN:(@(81.25-81.26)",
+                  "right_paren": "RIGHT_PAREN:)@(81.32-81.33)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(81.26-81.28)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(81.30-81.32)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(81.33-81.34)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:equal@(81.35-81.40)",
+                  "left_paren": "LEFT_PAREN:(@(81.40-81.41)",
+                  "right_paren": "RIGHT_PAREN:)@(81.47-81.48)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(81.41-81.43)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(81.45-81.47)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(81.48-81.49)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:equal@(82.5-82.10)",
+                  "left_paren": "LEFT_PAREN:(@(82.10-82.11)",
+                  "right_paren": "RIGHT_PAREN:)@(82.17-82.18)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(82.11-82.13)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(82.15-82.17)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(82.18-82.19)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:equal@(82.20-82.25)",
+                  "left_paren": "LEFT_PAREN:(@(82.25-82.26)",
+                  "right_paren": "RIGHT_PAREN:)@(82.32-82.33)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(82.26-82.28)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(82.30-82.32)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(82.33-82.34)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:equal@(82.35-82.40)",
+                  "left_paren": "LEFT_PAREN:(@(82.40-82.41)",
+                  "right_paren": "RIGHT_PAREN:)@(82.47-82.48)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(82.41-82.43)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(82.45-82.47)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(82.48-82.49)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(83.5-83.13)",
+                  "left_paren": "LEFT_PAREN:(@(83.13-83.14)",
+                  "right_paren": "RIGHT_PAREN:)@(83.20-83.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(83.14-83.16)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v2@(83.18-83.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(83.21-83.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(83.23-83.31)",
+                  "left_paren": "LEFT_PAREN:(@(83.31-83.32)",
+                  "right_paren": "RIGHT_PAREN:)@(83.38-83.39)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(83.32-83.34)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v3@(83.36-83.38)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(83.39-83.40)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(83.41-83.49)",
+                  "left_paren": "LEFT_PAREN:(@(83.49-83.50)",
+                  "right_paren": "RIGHT_PAREN:)@(83.56-83.57)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(83.50-83.52)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:v4@(83.54-83.56)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(83.57-83.58)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(84.5-84.13)",
+                  "left_paren": "LEFT_PAREN:(@(84.13-84.14)",
+                  "right_paren": "RIGHT_PAREN:)@(84.20-84.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(84.14-84.16)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i2@(84.18-84.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(84.21-84.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(84.23-84.31)",
+                  "left_paren": "LEFT_PAREN:(@(84.31-84.32)",
+                  "right_paren": "RIGHT_PAREN:)@(84.38-84.39)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(84.32-84.34)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i3@(84.36-84.38)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(84.39-84.40)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(84.41-84.49)",
+                  "left_paren": "LEFT_PAREN:(@(84.49-84.50)",
+                  "right_paren": "RIGHT_PAREN:)@(84.56-84.57)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(84.50-84.52)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:i4@(84.54-84.56)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(84.57-84.58)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(85.5-85.13)",
+                  "left_paren": "LEFT_PAREN:(@(85.13-85.14)",
+                  "right_paren": "RIGHT_PAREN:)@(85.20-85.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b2@(85.14-85.16)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b2@(85.18-85.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(85.21-85.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(85.23-85.31)",
+                  "left_paren": "LEFT_PAREN:(@(85.31-85.32)",
+                  "right_paren": "RIGHT_PAREN:)@(85.38-85.39)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b3@(85.32-85.34)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b3@(85.36-85.38)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(85.39-85.40)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:notEqual@(85.41-85.49)",
+                  "left_paren": "LEFT_PAREN:(@(85.49-85.50)",
+                  "right_paren": "RIGHT_PAREN:)@(85.56-85.57)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b4@(85.50-85.52)"
+                      }
+                    },
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b4@(85.54-85.56)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(85.57-85.58)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:any@(86.5-86.8)",
+                  "left_paren": "LEFT_PAREN:(@(86.8-86.9)",
+                  "right_paren": "RIGHT_PAREN:)@(86.11-86.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b2@(86.9-86.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(86.12-86.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:any@(86.14-86.17)",
+                  "left_paren": "LEFT_PAREN:(@(86.17-86.18)",
+                  "right_paren": "RIGHT_PAREN:)@(86.20-86.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b3@(86.18-86.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(86.21-86.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:any@(86.23-86.26)",
+                  "left_paren": "LEFT_PAREN:(@(86.26-86.27)",
+                  "right_paren": "RIGHT_PAREN:)@(86.29-86.30)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b4@(86.27-86.29)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(86.30-86.31)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:all@(87.5-87.8)",
+                  "left_paren": "LEFT_PAREN:(@(87.8-87.9)",
+                  "right_paren": "RIGHT_PAREN:)@(87.11-87.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b2@(87.9-87.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(87.12-87.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:all@(87.14-87.17)",
+                  "left_paren": "LEFT_PAREN:(@(87.17-87.18)",
+                  "right_paren": "RIGHT_PAREN:)@(87.20-87.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b3@(87.18-87.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(87.21-87.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:all@(87.23-87.26)",
+                  "left_paren": "LEFT_PAREN:(@(87.26-87.27)",
+                  "right_paren": "RIGHT_PAREN:)@(87.29-87.30)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b4@(87.27-87.29)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(87.30-87.31)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:not@(88.5-88.8)",
+                  "left_paren": "LEFT_PAREN:(@(88.8-88.9)",
+                  "right_paren": "RIGHT_PAREN:)@(88.11-88.12)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b2@(88.9-88.11)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(88.12-88.13)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:not@(88.14-88.17)",
+                  "left_paren": "LEFT_PAREN:(@(88.17-88.18)",
+                  "right_paren": "RIGHT_PAREN:)@(88.20-88.21)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b3@(88.18-88.20)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(88.21-88.22)"
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "expression(FunctionCallExpr)": {
+                  "name": "IDENTIFIER:not@(88.23-88.26)",
+                  "left_paren": "LEFT_PAREN:(@(88.26-88.27)",
+                  "right_paren": "RIGHT_PAREN:)@(88.29-88.30)",
+                  "arguments": [
+                    {
+                      "VariableExpr": {
+                        "name": "IDENTIFIER:b4@(88.27-88.29)"
+                      }
+                    }
+                  ]
+                },
+                "semi": "SEMICOLON:;@(88.30-88.31)"
+              }
+            }
+          ],
+          "new_scope": true
+        }
+      }
+    }
+  ],
+  "comments": [
+    "COMMENT:// Angle and Trigonometry functions@(21.2-21.37), multi:false =  Angle and Trigonometry functions",
+    "COMMENT:// Exponential Functions@(32.5-32.29), multi:false =  Exponential Functions",
+    "COMMENT:// Common Functions@(41.5-41.24), multi:false =  Common Functions",
+    "COMMENT:// Geometric Functions@(59.5-59.27), multi:false =  Geometric Functions",
+    "COMMENT:// Matrix Functions@(69.5-69.24), multi:false =  Matrix Functions",
+    "COMMENT:// Vector Relational Functions@(72.5-72.35), multi:false =  Vector Relational Functions"
+  ]
+}
