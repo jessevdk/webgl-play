@@ -385,6 +385,8 @@ Annotator.prototype._resolve_array_size = function(node) {
 
         this._error(node.array_size.location(), 'expected constant integer expression for array size, but got ' + n);
         return false;
+    } else if (node.array_size.const_value <= 0) {
+        this._error(node.array_size.location(), 'array size must be larger or equal to 1, but got ' + node.array_size_.const_value);
     }
 
     return true;
