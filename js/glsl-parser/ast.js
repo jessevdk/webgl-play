@@ -251,12 +251,34 @@ function TypeRef(tok) {
     Node.call(this);
 
     this.token = tok;
+    this.decl = null;
+
     this.qualifiers = [];
-    this.is_primitive = (tok.id != Tn.T_IDENTIFIER);
+
+    if (tok !== null) {
+        this.is_primitive = (tok.id != Tn.T_IDENTIFIER);
+    } else {
+        this.is_primitive = false;
+    }
 }
 
 TypeRef.prototype = Node.create('TypeRef', TypeRef);
 exports.TypeRef = TypeRef;
+
+TypeRef.wrap_decl = function(decl) {
+    if (TypeRef.prototype.isPrototypeOf(decl)) {
+        return decl;
+    }
+
+    var ret = new TypeRef(null);
+    ret.decl = decl;
+
+    if (!decl.incomplete) {
+        ret.complete();
+    }
+
+    return ret;
+}
 
 TypeRef.prototype.location = function() {
     return glsl.source.Range.spans(this.token, this.qualifiers);
@@ -1841,8 +1863,10 @@ Parser.prototype._parse_precision_qualifier.expected = function() {
 
 Parser.prototype._parse_type_precision_qualifier = function(tok, m) {
     var type = this._parse_rule(this._parse_type_specifier_no_prec, this._t.next());
-    type.qualifiers.unshift(tok);
 
+    type = TypeRef.wrap_decl(type);
+
+    type.qualifiers.unshift(tok);
     return type;
 }
 
@@ -1864,13 +1888,17 @@ Parser.prototype._parse_type_qualifier = function(tok) {
         var varying = this._require_one_of([Tn.T_VARYING]);
 
         if (varying === null) {
+            // Should have been followed by varying (invariant IDENT is handled elsewhere).
+            // Create empty, incomplete TypeRef.
             node = new TypeRef(null);
         } else {
             node = this._parse_rule(this._parse_type_specifier, this._t.next());
-            node.qualifiers.unshift(varying);
         }
+
+        node.qualifiers.unshift(varying);
     } else {
         node = this._parse_rule(this._parse_type_specifier, this._t.next());
+        node = TypeRef.wrap_decl(node);
     }
 
     if (node) {
@@ -2234,6 +2262,8 @@ Parser.prototype._parse_selection_statement.expected = function() {
 
 Parser.prototype._parse_condition_var_init = function(tok, m) {
     var type = this._parse_fully_specified_type(tok, m);
+
+    type = TypeRef.wrap_decl(type);
     var ret = new VariableDecl(type);
 
     if (type.incomplete) {
@@ -2709,6 +2739,7 @@ Parser.prototype._parse_initializer.match = Parser.prototype._parse_assignment_e
 Parser.prototype._parse_initializer.expected = Parser.prototype._parse_assignment_expression.expected;
 
 Parser.prototype._parse_single_declaration = function(type, ident) {
+    type = TypeRef.wrap_decl(type);
     var decl = new VariableDecl(type);
 
     if (type.incomplete) {
