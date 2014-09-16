@@ -1,47 +1,131 @@
 {
   "body": [
     {
+      "TypeDecl": {
+        "type(StructDecl)": {
+          "token": "STRUCT:struct@(3.1-3.7)",
+          "name": "IDENTIFIER:usertype@(3.8-3.16)",
+          "left_brace": "LEFT_BRACE:{@(3.17-3.18)",
+          "right_brace": "RIGHT_BRACE:}@(5.1-5.2)",
+          "fields": [
+            {
+              "FieldDecl": {
+                "type(TypeRef)": {
+                  "token": "BOOL:bool@(4.5-4.9)",
+                  "is_primitive": true,
+                  "@id": 5
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:valid@(4.10-4.15)",
+                      "decl(FieldDecl)": "@4",
+                      "type(TypeRef)": "@5"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(4.15-4.16)",
+                "@id": 4
+              }
+            }
+          ]
+        },
+        "semi": "SEMICOLON:;@(5.2-5.3)"
+      }
+    },
+    {
+      "FunctionProto": {
+        "header(FunctionHeader)": {
+          "type(TypeRef)": {
+            "token": "INT:int@(7.1-7.4)",
+            "is_primitive": true
+          },
+          "name": "IDENTIFIER:f@(7.5-7.6)",
+          "left_paren": "LEFT_PAREN:(@(7.6-7.7)",
+          "right_paren": "RIGHT_PAREN:)@(7.7-7.8)"
+        },
+        "semi": "SEMICOLON:;@(7.8-7.9)"
+      }
+    },
+    {
+      "FunctionProto": {
+        "header(FunctionHeader)": {
+          "type(TypeRef)": {
+            "token": "IDENTIFIER:usertype@(8.1-8.9)"
+          },
+          "name": "IDENTIFIER:ft@(8.10-8.12)",
+          "left_paren": "LEFT_PAREN:(@(8.12-8.13)",
+          "right_paren": "RIGHT_PAREN:)@(8.13-8.14)"
+        },
+        "semi": "SEMICOLON:;@(8.14-8.15)"
+      }
+    },
+    {
       "FunctionDef": {
         "header(FunctionHeader)": {
           "type(TypeRef)": {
-            "token": "VOID:void@(3.1-3.5)",
+            "token": "VOID:void@(10.1-10.5)",
             "is_primitive": true
           },
-          "name": "IDENTIFIER:main@(3.6-3.10)",
-          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
-          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
+          "name": "IDENTIFIER:main@(10.6-10.10)",
+          "left_paren": "LEFT_PAREN:(@(10.10-10.11)",
+          "right_paren": "RIGHT_PAREN:)@(10.11-10.12)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(21.1-21.2)",
-          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "right_brace": "RIGHT_BRACE:}@(34.1-34.2)",
+          "left_brace": "LEFT_BRACE:{@(10.13-10.14)",
           "body": [
             {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "INT:int@(11.5-11.8)",
+                  "is_primitive": true,
+                  "@id": 18
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:i@(11.9-11.10)",
+                      "decl(VariableDecl)": "@17",
+                      "type(TypeRef)": "@18",
+                      "initial_assign": "EQUAL:=@(11.11-11.12)",
+                      "initial_value(ConstantExpr)": {
+                        "token": "INTCONSTANT:0@(11.13-11.14) = 0"
+                      }
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(11.14-11.15)",
+                "@id": 17
+              }
+            },
+            {
               "WhileStmt": {
-                "token": "WHILE:while@(5.5-5.10)",
-                "left_paren": "LEFT_PAREN:(@(5.11-5.12)",
+                "token": "WHILE:while@(14.5-14.10)",
+                "left_paren": "LEFT_PAREN:(@(14.11-14.12)",
                 "condition(BinOpExpr)": {
                   "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:i@(5.12-5.13)"
+                    "name": "IDENTIFIER:i@(14.12-14.13)"
                   },
-                  "op": "LEFT_ANGLE:<@(5.14-5.15)",
+                  "op": "LEFT_ANGLE:<@(14.14-14.15)",
                   "rhs(ConstantExpr)": {
-                    "token": "INTCONSTANT:10@(5.16-5.18) = 10"
+                    "token": "INTCONSTANT:10@(14.16-14.18) = 10"
                   }
                 },
-                "right_paren": "RIGHT_PAREN:)@(5.18-5.19)",
+                "right_paren": "RIGHT_PAREN:)@(14.18-14.19)",
                 "body(Block)": {
-                  "right_brace": "RIGHT_BRACE:}@(7.5-7.6)",
-                  "left_brace": "LEFT_BRACE:{@(5.20-5.21)",
+                  "right_brace": "RIGHT_BRACE:}@(16.5-16.6)",
+                  "left_brace": "LEFT_BRACE:{@(14.20-14.21)",
                   "body": [
                     {
                       "ExpressionStmt": {
                         "expression(UnaryPostfixOpExpr)": {
-                          "op": "INC_OP:++@(6.10-6.12)",
+                          "op": "INC_OP:++@(15.10-15.12)",
                           "expression(VariableExpr)": {
-                            "name": "IDENTIFIER:i@(6.9-6.10)"
+                            "name": "IDENTIFIER:i@(15.9-15.10)"
                           }
                         },
-                        "semi": "SEMICOLON:;@(6.12-6.13)"
+                        "semi": "SEMICOLON:;@(15.12-15.13)"
                       }
                     }
                   ],
@@ -50,118 +134,177 @@
               }
             },
             {
+              "ExpressionStmt": {
+                "expression(AssignmentExpr)": {
+                  "lhs(VariableExpr)": {
+                    "name": "IDENTIFIER:i@(18.5-18.6)"
+                  },
+                  "op": "EQUAL:=@(18.7-18.8)",
+                  "rhs(ConstantExpr)": {
+                    "token": "INTCONSTANT:0@(18.9-18.10) = 0"
+                  }
+                },
+                "semi": "SEMICOLON:;@(18.10-18.11)"
+              }
+            },
+            {
               "WhileStmt": {
-                "token": "WHILE:while@(10.5-10.10)",
-                "left_paren": "LEFT_PAREN:(@(10.11-10.12)",
+                "token": "WHILE:while@(21.5-21.10)",
+                "left_paren": "LEFT_PAREN:(@(21.11-21.12)",
                 "condition(BinOpExpr)": {
                   "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:i@(10.12-10.13)"
+                    "name": "IDENTIFIER:i@(21.12-21.13)"
                   },
-                  "op": "LEFT_ANGLE:<@(10.14-10.15)",
+                  "op": "LEFT_ANGLE:<@(21.14-21.15)",
                   "rhs(ConstantExpr)": {
-                    "token": "INTCONSTANT:10@(10.16-10.18) = 10"
+                    "token": "INTCONSTANT:10@(21.16-21.18) = 10"
                   }
                 },
-                "right_paren": "RIGHT_PAREN:)@(10.18-10.19)",
+                "right_paren": "RIGHT_PAREN:)@(21.18-21.19)",
                 "body(ExpressionStmt)": {
                   "expression(UnaryPostfixOpExpr)": {
-                    "op": "INC_OP:++@(11.10-11.12)",
+                    "op": "INC_OP:++@(22.10-22.12)",
                     "expression(VariableExpr)": {
-                      "name": "IDENTIFIER:i@(11.9-11.10)"
+                      "name": "IDENTIFIER:i@(22.9-22.10)"
                     }
                   },
-                  "semi": "SEMICOLON:;@(11.12-11.13)"
+                  "semi": "SEMICOLON:;@(22.12-22.13)"
                 }
               }
             },
             {
               "WhileStmt": {
-                "token": "WHILE:while@(13.2-13.7)",
-                "left_paren": "LEFT_PAREN:(@(13.8-13.9)",
+                "token": "WHILE:while@(24.2-24.7)",
+                "left_paren": "LEFT_PAREN:(@(24.8-24.9)",
                 "condition(VariableDecl)": {
                   "type(TypeRef)": {
-                    "token": "INT:int@(13.9-13.12)",
+                    "token": "BOOL:bool@(24.9-24.13)",
                     "is_primitive": true,
-                    "@id": 23
+                    "@id": 42
                   },
                   "names": [
                     {
                       "Named": {
-                        "name": "IDENTIFIER:t@(13.13-13.14)",
-                        "decl(VariableDecl)": "@22",
-                        "type(TypeRef)": "@23",
-                        "initial_assign": "EQUAL:=@(13.15-13.16)",
-                        "initial_value(FunctionCallExpr)": {
-                          "name": "IDENTIFIER:f@(13.17-13.18)",
-                          "left_paren": "LEFT_PAREN:(@(13.18-13.19)",
-                          "right_paren": "RIGHT_PAREN:)@(13.19-13.20)"
+                        "name": "IDENTIFIER:t@(24.14-24.15)",
+                        "decl(VariableDecl)": "@41",
+                        "type(TypeRef)": "@42",
+                        "initial_assign": "EQUAL:=@(24.16-24.17)",
+                        "initial_value(GroupExpr)": {
+                          "left_paren": "LEFT_PAREN:(@(24.18-24.19)",
+                          "expression(BinOpExpr)": {
+                            "lhs(FunctionCallExpr)": {
+                              "name": "IDENTIFIER:f@(24.19-24.20)",
+                              "left_paren": "LEFT_PAREN:(@(24.20-24.21)",
+                              "right_paren": "RIGHT_PAREN:)@(24.21-24.22)"
+                            },
+                            "op": "LEFT_ANGLE:<@(24.23-24.24)",
+                            "rhs(ConstantExpr)": {
+                              "token": "INTCONSTANT:10@(24.25-24.27) = 10"
+                            }
+                          },
+                          "right_paren": "RIGHT_PAREN:)@(24.27-24.28)"
                         }
                       }
                     }
                   ],
-                  "@id": 22
+                  "@id": 41
                 },
-                "right_paren": "RIGHT_PAREN:)@(13.20-13.21)",
+                "right_paren": "RIGHT_PAREN:)@(24.28-24.29)",
                 "body(Block)": {
-                  "right_brace": "RIGHT_BRACE:}@(14.5-14.6)",
-                  "left_brace": "LEFT_BRACE:{@(13.22-13.23)",
+                  "right_brace": "RIGHT_BRACE:}@(25.5-25.6)",
+                  "left_brace": "LEFT_BRACE:{@(24.30-24.31)",
                   "new_scope": true
                 }
               }
             },
             {
               "WhileStmt": {
-                "token": "WHILE:while@(16.5-16.10)",
-                "left_paren": "LEFT_PAREN:(@(16.11-16.12)",
+                "token": "WHILE:while@(27.5-27.10)",
+                "left_paren": "LEFT_PAREN:(@(27.11-27.12)",
                 "condition(VariableDecl)": {
                   "type(TypeRef)": {
-                    "token": "IDENTIFIER:usertype@(16.12-16.20)",
-                    "@id": 29
+                    "token": "BOOL:bool@(27.12-27.16)",
+                    "is_primitive": true,
+                    "@id": 51
                   },
                   "names": [
                     {
                       "Named": {
-                        "name": "IDENTIFIER:t@(16.21-16.22)",
-                        "decl(VariableDecl)": "@28",
-                        "type(TypeRef)": "@29",
-                        "initial_assign": "EQUAL:=@(16.23-16.24)",
-                        "initial_value(FunctionCallExpr)": {
-                          "name": "IDENTIFIER:f@(16.25-16.26)",
-                          "left_paren": "LEFT_PAREN:(@(16.26-16.27)",
-                          "right_paren": "RIGHT_PAREN:)@(16.27-16.28)"
+                        "name": "IDENTIFIER:t@(27.17-27.18)",
+                        "decl(VariableDecl)": "@50",
+                        "type(TypeRef)": "@51",
+                        "initial_assign": "EQUAL:=@(27.19-27.20)",
+                        "initial_value(FieldSelectionExpr)": {
+                          "expression(FunctionCallExpr)": {
+                            "name": "IDENTIFIER:ft@(27.21-27.23)",
+                            "left_paren": "LEFT_PAREN:(@(27.23-27.24)",
+                            "right_paren": "RIGHT_PAREN:)@(27.24-27.25)"
+                          },
+                          "op": "DOT:.@(27.25-27.26)",
+                          "selector": "IDENTIFIER:valid@(27.26-27.31)"
                         }
                       }
                     }
                   ],
-                  "@id": 28
+                  "@id": 50
                 },
-                "right_paren": "RIGHT_PAREN:)@(16.28-16.29)",
+                "right_paren": "RIGHT_PAREN:)@(27.31-27.32)",
                 "body(Block)": {
-                  "right_brace": "RIGHT_BRACE:}@(17.5-17.6)",
-                  "left_brace": "LEFT_BRACE:{@(16.30-16.31)",
+                  "right_brace": "RIGHT_BRACE:}@(28.5-28.6)",
+                  "left_brace": "LEFT_BRACE:{@(27.33-27.34)",
                   "new_scope": true
                 }
               }
             },
             {
+              "VariableDecl": {
+                "type(TypeRef)": {
+                  "token": "BOOL:bool@(30.5-30.9)",
+                  "is_primitive": true,
+                  "@id": 57
+                },
+                "names": [
+                  {
+                    "Named": {
+                      "name": "IDENTIFIER:t@(30.10-30.11)",
+                      "decl(VariableDecl)": "@56",
+                      "type(TypeRef)": "@57"
+                    }
+                  }
+                ],
+                "semi": "SEMICOLON:;@(30.11-30.12)",
+                "@id": 56
+              }
+            },
+            {
               "WhileStmt": {
-                "token": "WHILE:while@(19.5-19.10)",
-                "left_paren": "LEFT_PAREN:(@(19.11-19.12)",
+                "token": "WHILE:while@(32.5-32.10)",
+                "left_paren": "LEFT_PAREN:(@(32.11-32.12)",
                 "condition(AssignmentExpr)": {
                   "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:t@(19.12-19.13)"
+                    "name": "IDENTIFIER:t@(32.12-32.13)"
                   },
-                  "op": "EQUAL:=@(19.14-19.15)",
-                  "rhs(FunctionCallExpr)": {
-                    "name": "IDENTIFIER:f@(19.16-19.17)",
-                    "left_paren": "LEFT_PAREN:(@(19.17-19.18)",
-                    "right_paren": "RIGHT_PAREN:)@(19.18-19.19)"
+                  "op": "EQUAL:=@(32.14-32.15)",
+                  "rhs(GroupExpr)": {
+                    "left_paren": "LEFT_PAREN:(@(32.16-32.17)",
+                    "expression(BinOpExpr)": {
+                      "lhs(FunctionCallExpr)": {
+                        "name": "IDENTIFIER:f@(32.17-32.18)",
+                        "left_paren": "LEFT_PAREN:(@(32.18-32.19)",
+                        "right_paren": "RIGHT_PAREN:)@(32.19-32.20)"
+                      },
+                      "op": "LEFT_ANGLE:<@(32.21-32.22)",
+                      "rhs(ConstantExpr)": {
+                        "token": "INTCONSTANT:10@(32.23-32.25) = 10"
+                      }
+                    },
+                    "right_paren": "RIGHT_PAREN:)@(32.25-32.26)"
                   }
                 },
-                "right_paren": "RIGHT_PAREN:)@(19.19-19.20)",
+                "right_paren": "RIGHT_PAREN:)@(32.26-32.27)",
                 "body(Block)": {
-                  "right_brace": "RIGHT_BRACE:}@(20.5-20.6)",
-                  "left_brace": "LEFT_BRACE:{@(19.21-19.22)",
+                  "right_brace": "RIGHT_BRACE:}@(33.5-33.6)",
+                  "left_brace": "LEFT_BRACE:{@(32.28-32.29)",
                   "new_scope": true
                 }
               }
@@ -173,8 +316,8 @@
     }
   ],
   "comments": [
-    "COMMENT:// simple while loop@(4.5-4.25), multi:false =  simple while loop",
-    "COMMENT:// without braces@(9.5-9.22), multi:false =  without braces",
-    "COMMENT:// vi:ts=4:et@(23.1-23.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// simple while loop@(13.5-13.25), multi:false =  simple while loop",
+    "COMMENT:// without braces@(20.5-20.22), multi:false =  without braces",
+    "COMMENT:// vi:ts=4:et@(36.1-36.14), multi:false =  vi:ts=4:et"
   ]
 }

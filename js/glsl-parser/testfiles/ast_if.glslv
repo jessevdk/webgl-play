@@ -6,7 +6,7 @@ void main() {
     }
 
     if (true)
-        a = 2;
+        int a = 2;
 
     if (true) {
         // something

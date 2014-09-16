@@ -21,17 +21,27 @@
                 "left_brace": "LEFT_BRACE:{@(4.5-4.6)",
                 "body": [
                   {
-                    "ExpressionStmt": {
-                      "expression(AssignmentExpr)": {
-                        "lhs(VariableExpr)": {
-                          "name": "IDENTIFIER:a@(6.9-6.10)"
-                        },
-                        "op": "EQUAL:=@(6.11-6.12)",
-                        "rhs(ConstantExpr)": {
-                          "token": "INTCONSTANT:2@(6.13-6.14) = 2"
-                        }
+                    "VariableDecl": {
+                      "type(TypeRef)": {
+                        "token": "INT:int@(6.9-6.12)",
+                        "is_primitive": true,
+                        "@id": 8
                       },
-                      "semi": "SEMICOLON:;@(6.14-6.15)"
+                      "names": [
+                        {
+                          "Named": {
+                            "name": "IDENTIFIER:a@(6.13-6.14)",
+                            "decl(VariableDecl)": "@7",
+                            "type(TypeRef)": "@8",
+                            "initial_assign": "EQUAL:=@(6.15-6.16)",
+                            "initial_value(ConstantExpr)": {
+                              "token": "INTCONSTANT:2@(6.17-6.18) = 2"
+                            }
+                          }
+                        }
+                      ],
+                      "semi": "SEMICOLON:;@(6.18-6.19)",
+                      "@id": 7
                     }
                   }
                 ],

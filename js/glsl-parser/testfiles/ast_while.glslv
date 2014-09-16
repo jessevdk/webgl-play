@@ -1,22 +1,35 @@
 #version 100
 
+struct usertype {
+    bool valid;
+};
+
+int f();
+usertype ft();
+
 void main() {
+    int i = 0;
+
     // simple while loop
     while (i < 10) {
         i++;
     }
 
+    i = 0;
+
     // without braces
     while (i < 10)
         i++;
 
-	while (int t = f()) {
+	while (bool t = (f() < 10)) {
     }
 
-    while (usertype t = f()) {
+    while (bool t = ft().valid) {
     }
 
-    while (t = f()) {
+    bool t;
+
+    while (t = (f() < 10)) {
     }
 }
 

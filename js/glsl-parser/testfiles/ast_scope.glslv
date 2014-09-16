@@ -3,7 +3,7 @@
 void main() {
     {
         // a new scope
-        a = 2;
+        int a = 2;
     }
 }
 

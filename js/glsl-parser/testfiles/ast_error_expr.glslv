@@ -1,6 +1,8 @@
 #version 100
 
 void main() {
+	int a;
+
     a = ;
     a = 2 *;
     a = (;

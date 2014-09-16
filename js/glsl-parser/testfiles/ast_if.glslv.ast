@@ -37,17 +37,27 @@
                   "token": "BOOLCONSTANT:true@(8.9-8.13) = true"
                 },
                 "right_paren": "RIGHT_PAREN:)@(8.13-8.14)",
-                "body(ExpressionStmt)": {
-                  "expression(AssignmentExpr)": {
-                    "lhs(VariableExpr)": {
-                      "name": "IDENTIFIER:a@(9.9-9.10)"
-                    },
-                    "op": "EQUAL:=@(9.11-9.12)",
-                    "rhs(ConstantExpr)": {
-                      "token": "INTCONSTANT:2@(9.13-9.14) = 2"
-                    }
+                "body(VariableDecl)": {
+                  "type(TypeRef)": {
+                    "token": "INT:int@(9.9-9.12)",
+                    "is_primitive": true,
+                    "@id": 12
                   },
-                  "semi": "SEMICOLON:;@(9.14-9.15)"
+                  "names": [
+                    {
+                      "Named": {
+                        "name": "IDENTIFIER:a@(9.13-9.14)",
+                        "decl(VariableDecl)": "@11",
+                        "type(TypeRef)": "@12",
+                        "initial_assign": "EQUAL:=@(9.15-9.16)",
+                        "initial_value(ConstantExpr)": {
+                          "token": "INTCONSTANT:2@(9.17-9.18) = 2"
+                        }
+                      }
+                    }
+                  ],
+                  "semi": "SEMICOLON:;@(9.18-9.19)",
+                  "@id": 11
                 }
               }
             },

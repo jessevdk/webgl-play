@@ -1,6 +1,8 @@
 #version 100
 
 void main() {
+    int i;
+
     // simple for loop
     for (i = 0; i < 10; i++) {
         // something
