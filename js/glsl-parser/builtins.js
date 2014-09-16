@@ -58,6 +58,8 @@ function CompositeType(name) {
     this.field_map = {};
     this.fields = [];
     this.is_composite = true;
+
+    this.zero = {};
 }
 
 CompositeType.prototype = glsl.ast.Node.create('builtins.CompositeType', CompositeType, TypeClass);
@@ -73,6 +75,7 @@ CompositeType.prototype.declare_field = function(name, type) {
     this.fields.push(field);
     this.field_map[name] = field;
 
+    this.zero[name] = type.zero;
     return field;
 }
 
