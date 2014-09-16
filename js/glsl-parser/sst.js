@@ -212,10 +212,16 @@ Annotator.prototype._annotate_type_ref = function(type) {
         return;
     }
 
-    if (type.is_primitive) {
-        type.t.type = glsl.builtins.TypeMap[type.token.id].type.t.type;
+    if (type.decl !== null) {
+        this._annotate_node(type.decl);
+
+        type.t.type = type.decl.t.type;
     } else {
-        type.t.type = this._lookup_type(type.token.text);
+        if (type.is_primitive) {
+            type.t.type = glsl.builtins.TypeMap[type.token.id].type.t.type;
+        } else {
+            type.t.type = this._lookup_type(type.token.text);
+        }
     }
 
     if (type.t.type === null) {
@@ -240,8 +246,20 @@ Annotator.prototype._annotate_named = function(node) {
         this._annotate_array(node, node.type.t.type);
     }
 
-    if (node.initial_value !== null && node.type.is_const() && !node.initial_value.t.is_const_expression) {
-        this._error(bode.initial_value, 'expected constant initial value expression');
+    if (node.type.is_const()) {
+        if (node.initial_value !== null) {
+            if (!node.initial_value.t.is_const_expression) {
+                this._error(node.initial_value.location(), 'expected constant initial value expression');
+            } else {
+                node.t.is_const_expression = true;
+                node.t.const_value = node.initial_value.t.const_value;
+            }
+        } else {
+            this._error(node.location(), 'missing constant value initialization');
+
+            node.t.is_const_expression = true;
+            node.t.const_value = node.t.type.zero;
+        }
     }
 }
 
@@ -330,7 +348,7 @@ Annotator.prototype._annotate_struct_decl = function(node) {
 
             this._annotate_node(name);
 
-            var f = node.t.type.declare_field(name.name.text, name.type.t);
+            var f = node.t.type.declare_field(name.name.text, name.type.t.type);
             f.decl = name;
 
             if (name.name.text in field_map) {
@@ -823,7 +841,7 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                 if (arg.t.type != field.type) {
                     this._error(arg.location(), 'cannot initialize ' + tp.name + '.' + field.name + ' with type ' + field.type.name + ' from argument of type ' + arg.t.type.name);
                     continue;
-                } else if (arg.t.is_const_expression && field.decl.type.is_const()) {
+                } else if (arg.t.is_const_expression) {
                     val[field.name] = arg.t.const_value;
                     node.t.is_const_expression = true;
                 }
@@ -883,14 +901,9 @@ Annotator.prototype._annotate_variable_expr = function(node) {
         node.t.decl = sym;
         node.t.type = sym.t.type;
 
-        if (glsl.ast.Named.prototype.isPrototypeOf(sym) && sym.type.is_const()) {
+        if (glsl.ast.Named.prototype.isPrototypeOf(sym) && sym.t.is_const_expression) {
             node.t.is_const_expression = true;
-
-            if (sym.initial_value === null) {
-                node.t.const_value = sym.t.type.zero;
-            } else {
-                node.t.const_value = sym.initial_value.t.const_value;
-            }
+            node.t.const_value = sym.t.const_value;
         }
     } else {
         this._error(node.location(), 'expected a variable for ' + node.name.text + ' but got a ' + this._error_symbol_type_name(sym));

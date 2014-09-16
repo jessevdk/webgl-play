@@ -258,7 +258,9 @@
                         }
                       },
                       "t": {
-                        "type(builtins.PrimitiveType)": "$int"
+                        "type(builtins.PrimitiveType)": "$int",
+                        "is_const_expression": true,
+                        "const_value": 1
                       },
                       "@id": 30
                     }

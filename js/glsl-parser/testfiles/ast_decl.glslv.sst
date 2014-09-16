@@ -106,7 +106,9 @@
                 }
               },
               "t": {
-                "type(builtins.PrimitiveType)": "$int"
+                "type(builtins.PrimitiveType)": "$int",
+                "is_const_expression": true,
+                "const_value": 4
               },
               "@id": 12
             }
@@ -389,93 +391,92 @@
     },
     {
       "VariableDecl": {
-        "type(StructDecl)": {
-          "token": "STRUCT:struct@(20.1-20.7)",
-          "name": "IDENTIFIER:usertype@(20.8-20.16)",
-          "left_brace": "LEFT_BRACE:{@(20.17-20.18)",
-          "right_brace": "RIGHT_BRACE:}@(22.1-22.2)",
-          "fields": [
-            {
-              "FieldDecl": {
-                "type(TypeRef)": {
-                  "token": "INT:int@(21.5-21.8)",
-                  "is_primitive": true,
-                  "t": {
-                    "type(builtins.PrimitiveType)": "$int"
+        "type(TypeRef)": {
+          "decl(StructDecl)": {
+            "token": "STRUCT:struct@(20.1-20.7)",
+            "name": "IDENTIFIER:usertype@(20.8-20.16)",
+            "left_brace": "LEFT_BRACE:{@(20.17-20.18)",
+            "right_brace": "RIGHT_BRACE:}@(22.1-22.2)",
+            "fields": [
+              {
+                "FieldDecl": {
+                  "type(TypeRef)": {
+                    "token": "INT:int@(21.5-21.8)",
+                    "is_primitive": true,
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int"
+                    },
+                    "@id": 44
                   },
+                  "names": [
+                    {
+                      "Named": {
+                        "name": "IDENTIFIER:a@(21.9-21.10)",
+                        "decl(FieldDecl)": "@43",
+                        "type(TypeRef)": "@44",
+                        "t": {
+                          "type(builtins.PrimitiveType)": "$int"
+                        },
+                        "@id": 45
+                      }
+                    },
+                    {
+                      "Named": {
+                        "name": "IDENTIFIER:b@(21.12-21.13)",
+                        "decl(FieldDecl)": "@43",
+                        "type(TypeRef)": "@44",
+                        "t": {
+                          "type(builtins.PrimitiveType)": "$int"
+                        },
+                        "@id": 46
+                      }
+                    }
+                  ],
+                  "semi": "SEMICOLON:;@(21.13-21.14)",
                   "@id": 43
+                }
+              }
+            ],
+            "t": {
+              "type(builtins.UserType)": {
+                "name": "usertype",
+                "is_composite": true,
+                "is_user": true,
+                "decl(StructDecl)": "@42",
+                "field_map": {
+                  "a": {
+                    "name": "a",
+                    "type(builtins.PrimitiveType)": "$int",
+                    "decl(Named)": "@45"
+                  },
+                  "b": {
+                    "name": "b",
+                    "type(builtins.PrimitiveType)": "$int",
+                    "decl(Named)": "@46"
+                  }
                 },
-                "names": [
+                "fields": [
                   {
-                    "Named": {
-                      "name": "IDENTIFIER:a@(21.9-21.10)",
-                      "decl(FieldDecl)": "@42",
-                      "type(TypeRef)": "@43",
-                      "t": {
-                        "type(builtins.PrimitiveType)": "$int"
-                      },
-                      "@id": 44
-                    }
+                    "name": "a",
+                    "type(builtins.PrimitiveType)": "$int",
+                    "decl(Named)": "@45"
                   },
                   {
-                    "Named": {
-                      "name": "IDENTIFIER:b@(21.12-21.13)",
-                      "decl(FieldDecl)": "@42",
-                      "type(TypeRef)": "@43",
-                      "t": {
-                        "type(builtins.PrimitiveType)": "$int"
-                      },
-                      "@id": 45
-                    }
+                    "name": "b",
+                    "type(builtins.PrimitiveType)": "$int",
+                    "decl(Named)": "@46"
                   }
                 ],
-                "semi": "SEMICOLON:;@(21.13-21.14)",
-                "@id": 42
+                "zero": {},
+                "@id": 47
               }
-            }
-          ],
-          "t": {
-            "type(builtins.UserType)": {
-              "name": "usertype",
-              "is_composite": true,
-              "is_user": true,
-              "decl(StructDecl)": "@41",
-              "field_map": {
-                "a": {
-                  "name": "a",
-                  "type": {
-                    "type(builtins.PrimitiveType)": "$int"
-                  },
-                  "decl(Named)": "@44"
-                },
-                "b": {
-                  "name": "b",
-                  "type": {
-                    "type(builtins.PrimitiveType)": "$int"
-                  },
-                  "decl(Named)": "@45"
-                }
-              },
-              "fields": [
-                {
-                  "name": "a",
-                  "type": {
-                    "type(builtins.PrimitiveType)": "$int"
-                  },
-                  "decl(Named)": "@44"
-                },
-                {
-                  "name": "b",
-                  "type": {
-                    "type(builtins.PrimitiveType)": "$int"
-                  },
-                  "decl(Named)": "@45"
-                }
-              ],
-              "@id": 46
-            }
+            },
+            "parent_scope(Parser)": "@1",
+            "@id": 42
           },
-          "parent_scope(Parser)": "@1",
+          "t": {
+            "type(builtins.UserType)": "@47"
+          },
           "@id": 41
         },
         "names": [
@@ -483,11 +484,11 @@
             "Named": {
               "name": "IDENTIFIER:uservalue1@(22.3-22.13)",
               "decl(VariableDecl)": "@40",
-              "type(StructDecl)": "@41",
+              "type(TypeRef)": "@41",
               "t": {
-                "type(builtins.UserType)": "@46"
+                "type(builtins.UserType)": "@47"
               },
-              "@id": 47
+              "@id": 48
             }
           }
         ],
@@ -501,26 +502,26 @@
         "type(TypeRef)": {
           "token": "IDENTIFIER:usertype@(24.1-24.9)",
           "t": {
-            "type(builtins.UserType)": "@46"
+            "type(builtins.UserType)": "@47"
           },
-          "@id": 49
+          "@id": 50
         },
         "names": [
           {
             "Named": {
               "name": "IDENTIFIER:uservalue2@(24.10-24.20)",
-              "decl(VariableDecl)": "@48",
-              "type(TypeRef)": "@49",
+              "decl(VariableDecl)": "@49",
+              "type(TypeRef)": "@50",
               "t": {
-                "type(builtins.UserType)": "@46"
+                "type(builtins.UserType)": "@47"
               },
-              "@id": 50
+              "@id": 51
             }
           }
         ],
         "semi": "SEMICOLON:;@(24.20-24.21)",
         "t": {},
-        "@id": 48
+        "@id": 49
       }
     },
     {
@@ -540,14 +541,14 @@
                 "type(TypeRef)": {
                   "token": "IDENTIFIER:usertype@(26.8-26.16)",
                   "t": {
-                    "type(builtins.UserType)": "@46"
+                    "type(builtins.UserType)": "@47"
                   }
                 },
                 "name": "IDENTIFIER:a@(26.17-26.18)",
                 "t": {
-                  "type(builtins.UserType)": "@46"
+                  "type(builtins.UserType)": "@47"
                 },
-                "@id": 54
+                "@id": 55
               }
             }
           ],
@@ -566,56 +567,56 @@
                 "type(TypeRef)": {
                   "token": "IDENTIFIER:usertype@(27.2-27.10)",
                   "t": {
-                    "type(builtins.UserType)": "@46"
+                    "type(builtins.UserType)": "@47"
                   },
-                  "@id": 58
+                  "@id": 59
                 },
                 "names": [
                   {
                     "Named": {
                       "name": "IDENTIFIER:b@(27.11-27.12)",
-                      "decl(VariableDecl)": "@57",
-                      "type(TypeRef)": "@58",
+                      "decl(VariableDecl)": "@58",
+                      "type(TypeRef)": "@59",
                       "t": {
-                        "type(builtins.UserType)": "@46"
+                        "type(builtins.UserType)": "@47"
                       },
-                      "@id": 59
+                      "@id": 60
                     }
                   }
                 ],
                 "semi": "SEMICOLON:;@(27.12-27.13)",
                 "t": {},
-                "@id": 57
+                "@id": 58
               }
             }
           ],
           "new_scope": true,
           "t": {},
           "variables": [
-            "Named@59"
+            "Named@60"
           ],
           "variable_map": {
-            "b(Named)": "@59"
+            "b(Named)": "@60"
           },
           "symbols": {
-            "b(Named)": "@59"
+            "b(Named)": "@60"
           },
-          "parent_scope(FunctionDef)": "@51"
+          "parent_scope(FunctionDef)": "@52"
         },
         "t": {
           "type(builtins.PrimitiveType)": "$void"
         },
         "variables": [
-          "ParamDecl@54"
+          "ParamDecl@55"
         ],
         "variable_map": {
-          "a(ParamDecl)": "@54"
+          "a(ParamDecl)": "@55"
         },
         "symbols": {
-          "a(ParamDecl)": "@54"
+          "a(ParamDecl)": "@55"
         },
         "parent_scope(Parser)": "@1",
-        "@id": 51
+        "@id": 52
       }
     }
   ],
@@ -623,10 +624,10 @@
     "COMMENT:// vi:ts=4:et@(30.1-30.14), multi:false =  vi:ts=4:et"
   ],
   "functions": [
-    "FunctionDef@51"
+    "FunctionDef@52"
   ],
   "function_map": {
-    "f(usertype)(FunctionDef)": "@51"
+    "f(usertype)(FunctionDef)": "@52"
   },
   "variables": [
     "Named@6",
@@ -640,8 +641,8 @@
     "Named@34",
     "Named@35",
     "Named@37",
-    "Named@47",
-    "Named@50"
+    "Named@48",
+    "Named@51"
   ],
   "variable_map": {
     "projection(Named)": "@6",
@@ -655,18 +656,18 @@
     "multivar1(Named)": "@34",
     "multivar2(Named)": "@35",
     "multivar3(Named)": "@37",
-    "uservalue1(Named)": "@47",
-    "uservalue2(Named)": "@50"
+    "uservalue1(Named)": "@48",
+    "uservalue2(Named)": "@51"
   },
   "types": [
     "builtins.ArrayType@31",
     "builtins.ArrayType@39",
-    "builtins.UserType@46"
+    "builtins.UserType@47"
   ],
   "type_map": {
     "bool[4](builtins.ArrayType)": "@31",
     "int[2](builtins.ArrayType)": "@39",
-    "usertype(builtins.UserType)": "@46"
+    "usertype(builtins.UserType)": "@47"
   },
   "symbols": {
     "projection(Named)": "@6",
@@ -682,9 +683,9 @@
     "multivar2(Named)": "@35",
     "int[2](builtins.ArrayType)": "@39",
     "multivar3(Named)": "@37",
-    "usertype(builtins.UserType)": "@46",
-    "uservalue1(Named)": "@47",
-    "uservalue2(Named)": "@50"
+    "usertype(builtins.UserType)": "@47",
+    "uservalue1(Named)": "@48",
+    "uservalue2(Named)": "@51"
   },
   "parent_scope": "(builtin scope)",
   "t": {},
