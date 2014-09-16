@@ -150,6 +150,10 @@ Range.spans = function() {
     while (args.length > 0) {
         var arg = args.pop();
 
+        if (arg === null) {
+            continue;
+        }
+
         if (Range.prototype.isPrototypeOf(arg)) {
             locs.push(arg);
         } else if (Location.prototype.isPrototypeOf(arg)) {
