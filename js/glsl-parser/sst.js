@@ -286,23 +286,11 @@ Annotator.prototype._annotate_variable_decl = function(node) {
         if (name.name !== null && name.name.text in this._scope.symbols) {
             var sym = this._scope.symbols[name.name.text];
 
-            if (glsl.ast.VariableDecl.prototype.isPrototypeOf(sym)) {
-                var loc;
-
-                for (var j = 0; j < sym.names.length; j++) {
-                    var item = sym.names[j];
-
-                    if (item.name.text == name.name.text) {
-                        loc = item.location();
-                        break;
-                    }
-                }
-
-                this._error(name.location(), 'the variable \'' + name.name.text + '\' has already been declared in this scope, previous declaration was at ' + loc.inspect());
-
+            if (glsl.ast.Named.prototype.isPrototypeOf(sym) && glsl.ast.VariableDecl.prototype.isPrototypeOf(sym.decl)) {
+                this._error(name.location(), 'the variable \'' + name.name.text + '\' has already been declared in this scope, previous declaration was at ' + sym.location().inspect());
                 continue;
             } else {
-                this._error(name.location(), 'a ' + this._error_symbol_type_name(sym) + ' \'' + name.name.text + '\' has already been declared in this scope, previous declaration was at ' + sym.location());
+                this._error(name.location(), 'a ' + this._error_symbol_type_name(sym) + ' \'' + name.name.text + '\' has already been declared in this scope, previous declaration was at ' + sym.location().inspect());
             }
         }
 
