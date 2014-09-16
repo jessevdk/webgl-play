@@ -18,6 +18,11 @@ void main() {
     mat3 m3 = mat3(vec3(1.0, 2.0, 3.0), vec3(2.0, 3.0, 4.0), vec3(3.0, 4.0, 5.0));
     mat4 m4 = mat4(vec4(1.0, 2.0, 3.0, 4.0), vec4(2.0, 3.0, 4.0, 5.0), vec4(3.0, 4.0, 5.0, 6.0), vec4(4.0, 5.0, 6.0, 7.0));
 
+    const struct A {
+        int a;
+        vec3 b;
+    } a = A(5 + 3, vec3(v2, 3.2)), b;
+
 	// Angle and Trigonometry functions
     radians(f); radians(v2); radians(v3); radians(v4);
     degrees(f); degrees(v2); degrees(v3); degrees(v4);
