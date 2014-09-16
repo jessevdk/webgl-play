@@ -1208,6 +1208,96 @@ Annotator.prototype._annotate_expression_list_stmt = function(node) {
     this._copy_type(node, node.expressions[node.expressions.length - 1]);
 }
 
+Annotator.prototype._annotate_do_stmt = function(node) {
+    this._annotate_node(node.condition);
+
+    if (node.condition.t.type !== null && node.condition.t.type !== glsl.builtins.Bool) {
+        this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
+    }
+
+    this._annotate_node(node.body);
+}
+
+Annotator.prototype._annotate_while_stmt = function(node) {
+    this._push_scope(node);
+    this._annotate_node(node.condition);
+
+    if (node.condition.t.type !== null && node.condition.t.type !== glsl.builtins.Bool) {
+        this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
+    }
+
+    this._annotate_node(node.body);
+    this._pop_scope();
+}
+
+Annotator.prototype._annotate_for_rest_stmt = function(node) {
+    this._annotate_node(node.condition);
+
+    if (node.condition.t.type !== null && node.condition.t.type !== glsl.builtins.Bool) {
+        this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
+    }
+
+    this._annotate_node(node.expression);
+}
+
+Annotator.prototype._annotate_for_stmt = function(node) {
+    this._push_scope(node);
+
+    this._annotate_node(node.init);
+    this._annotate_node(node.rest);
+    this._annotate_node(node.body);
+
+    this._pop_scope();
+}
+
+Annotator.prototype._annotate_selection_stmt = function(node) {
+    this._annotate_node(node.condition);
+
+    if (node.condition.t.type !== null && node.condition.t.type !== glsl.builtins.Bool) {
+        this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
+    }
+
+    this._annotate_node(node.body);
+    this._annotate_node(node.els);
+}
+
+Annotator.prototype._annotate_selection_else_stmt = function(node) {
+    this._annotate_node(node.body);
+}
+
+Annotator.prototype._annotate_break_stmt = function(node) {
+}
+
+Annotator.prototype._annotate_continue_stmt = function(node) {
+}
+
+Annotator.prototype._annotate_discard_stmt = function(node) {
+}
+
+Annotator.prototype._annotate_return_stmt = function(node) {
+    this._annotate_node(node.expression);
+
+    var scope = this._scope;
+
+    while (scope !== null && !glsl.ast.FunctionDef.prototype.isPrototypeOf(scope)) {
+        scope = scope.parent_scope;
+    }
+
+    if (scope !== null) {
+        if (scope.t.type === glsl.builtins.Void && node.expression !== null) {
+            this._error(node.expression.location(), 'returning value in a function with type void');
+        } else if (scope.t.type !== glsl.builtins.Void && node.expression !== null && node.expression.t.type !== null && node.expression.t.type != scope.t.type) {
+            this._error(node.expression.location(), 'expected return value of type ' + scope.t.type.name + ' but got value of type ' + node.expression.t.type.name);
+        }
+    }
+}
+
+Annotator.prototype._annotate_no_match = function(node) {
+}
+
+Annotator.prototype._annotate_empty_stmt = function(node) {
+}
+
 Annotator.prototype._error = function(loc, message) {
     this._errors.push(new Error(loc, message));
 }
