@@ -20,7 +20,7 @@ if (process.argv.length > 2) {
 
         var annotatems = (end - start);
 
-        process.stderr.write( process.argv[i] + '.sst, parse: ' + parsems + 'ms, annotate: ' + annotatems + 'ms\n');
+        process.stderr.write(process.argv[i] + '.sst, parse: ' + parsems + 'ms, annotate: ' + annotatems + 'ms\n');
 
         var j = JSON.stringify(p.marshal(), null, '  ') + '\n';
 
