@@ -79,6 +79,18 @@ function Annotator(ast) {
         this._scope.function_protos.push(f);
     }
 
+    // Push builtin constants into the scope
+    for (var i = 0; i < glsl.builtins.Constants.length; i++) {
+        var c = glsl.builtins.Constants[i];
+        this._declare_variable(c.names[0]);
+    }
+
+    // Push builtin variables into the scope
+    for (var i = 0; i < glsl.builtins.Variables.length; i++) {
+        var v = glsl.builtins.Variables[i];
+        this._declare_variable(v.names[0]);
+    }
+
     this._push_scope(ast);
     this._errors = [];
 }
