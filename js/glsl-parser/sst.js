@@ -270,6 +270,13 @@ Annotator.prototype._annotate_named = function(node) {
             }
         }
 
+        if (node.type.is_varying()) {
+            if (node.t.type.is_composite) {
+                this._error(node.location(), 'structures cannot be varying');
+            }
+        }
+    }
+
     if (node.type.is_const()) {
         if (node.initial_value !== null) {
             if (!node.initial_value.t.is_const_expression) {
