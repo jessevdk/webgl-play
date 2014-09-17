@@ -278,6 +278,12 @@ Annotator.prototype._annotate_named = function(node) {
     }
 
     if (node.type.is_const()) {
+        if (node.is_array) {
+            this._error(node.location(), 'arrays cannot be declared as const');
+        } else if (node.t.type.is_composite && node.t.type.has_array_field) {
+            this._error(node.location(), 'cannot declare a struct containing an array as const');
+        }
+
         if (node.initial_value !== null) {
             if (!node.initial_value.t.is_const_expression) {
                 this._error(node.initial_value.location(), 'expected constant initial value expression');
