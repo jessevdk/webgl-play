@@ -979,27 +979,107 @@ Annotator.prototype._annotate_variable_expr = function(node) {
     }
 };
 
+Annotator.prototype._validate_lvalue = function(node) {
+    if (node.t.type === null) {
+        return false;
+    }
+
+    switch (Object.getPrototypeOf(node)) {
+    case glsl.ast.GroupExpr.prototype:
+        return this._validate_lvalue(node.expression);
+    case glsl.ast.VariableExpr.prototype:
+        if (node.t.decl.type.is_uniform()) {
+            this._error(node.location(), 'cannot assign to uniform value');
+            return false;
+        } else if (node.t.decl.type.is_const()) {
+            this._error(node.location(), 'cannot assign to const value');
+        }
+
+        return true;
+    case glsl.ast.FieldSelectionExpr.prototype:
+        if (!this._validate_lvalue(node.expression)) {
+            return false;
+        }
+
+        if (node.expression.t.type.is_vec) {
+            // check for repeated values in the swizzle
+            var chars = node.selector.text.split('');
+            chars.sort();
+            var found = null;
+
+            for (var i = 0; i < chars.length - 1; i++) {
+                if (chars[i] == chars[i + 1]) {
+                    found = chars[i];
+                    break;
+                }
+            }
+
+            if (found !== null) {
+                var first = node.selector.text.indexOf(found);
+                var second = node.selector.text.indexOf(found, first + 1);
+
+                this._error(node.selector.location().advance_chars(second), 'cannot assign to repeated swizzle');
+                return false;
+            }
+        }
+
+        return true;
+    case glsl.ast.IndexExpr.prototype:
+        if (!this._validate_lvalue(node.expression)) {
+            return false;
+        }
+
+        return true;
+    default:
+        this._error(node.location(), 'cannot assign to expression');
+        return false;
+    }
+};
+
 Annotator.prototype._annotate_assignment_expr = function(node) {
     this._init_expr(node);
 
     this._annotate_node(node.lhs);
     this._annotate_node(node.rhs);
 
-    if (node.lhs.t.is_const_expression) {
-        node.t.is_const_expression = true;
-        node.t.const_value = node.lhs.const_value;
-    }
-
     node.t.type = node.lhs.t.type;
 
+    var binop = null;
+
+    switch (node.op.id) {
+    case Tn.T_MUL_ASSIGN:
+        binop = Tn.T_STAR;
+        break;
+    case Tn.T_DIV_ASSIGN:
+        binop = Tn.T_SLASH;
+        break;
+    case Tn.T_ADD_ASSIGN:
+        binop = Tn.T_PLUS;
+        break;
+    case Tn.T_SUB_ASSIGN:
+        binop = Tn.T_DASH;
+        break;
+    }
+
     if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
+        if (binop !== null) {
+            var sig = Tn.token_name(binop) + '(' + node.lhs.t.type.name + ',' + node.rhs.t.type.name + ')';
+
+            if (!(sig in this._builtins.operator_map)) {
+                this._error(node.location(), 'cannot use the operator \'' + Tn.token_name(binop) + '\' on types ' + node.lhs.t.type.name + ' and ' + node.rhs.t.type.name);
+            }
+        }
+
         if (node.lhs.t.type != node.rhs.t.type) {
             this._error(node.lhs.location().extend(node.op.location), 'cannot assign expression of type ' + node.rhs.t.type.name + ' to a value of type ' + node.lhs.t.type.name);
         }
     }
 
-    // TODO: check for valid l-value expressions
-    // TODO: check for array assignment
+    if (glsl.ast.VariableExpr.prototype.isPrototypeOf(node.lhs) && node.lhs.t.type !== null && node.lhs.t.type.is_array) {
+        this._error(node.lhs.location(), 'cannot assign to array');
+    }
+
+    this._validate_lvalue(node.lhs);
 };
 
 Annotator.prototype._annotate_bin_op_expr = function(node) {

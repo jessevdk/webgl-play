@@ -31,6 +31,18 @@ void main() {
     a /= 2.0;
 
     f();
+
+    // various l-value tests
+    struct S {
+        int a;
+    } s;
+
+    c[2] = vec2(1.0, 1.0);
+    c[0].xy = vec2(2.0, 2.0);
+    a = 2.0;
+    (a) = 3.0;
+    s = S(2);
+    s.a = 3;
 }
 
 // vi:ts=4:et
