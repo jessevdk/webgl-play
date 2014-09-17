@@ -1035,6 +1035,8 @@ var Emulate = {
 };
 
 Builtins.prototype._define_functions = function() {
+    this._define_builtin_function(Tn.T_VOID, 'main', []);
+
     // Angle and Trigonometry functions
     this._define_builtin_gentype_function(null, 'radians', [null, 'degrees'], Emulate.radians);
     this._define_builtin_gentype_function(null, 'degrees', [null, 'radians'], Emulate.degrees);
