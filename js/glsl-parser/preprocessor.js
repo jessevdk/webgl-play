@@ -84,7 +84,7 @@ Tokenizer.keywords = {
 
 Tokenizer.prototype = new glsl.tokenizer.Base(Tokenizer);
 
-function Preprocessor(source, type) {
+function Preprocessor(source, type, options) {
     this._source = '';
     this._type = type;
 
@@ -94,6 +94,16 @@ function Preprocessor(source, type) {
         '__FILE__': '0',
         'GL_ES': '1'
     };
+
+    if (typeof options === 'undefined') {
+        options = {};
+    }
+
+    if (typeof options.defines !== 'undefined') {
+        for (var k in options.defines) {
+            this._defines[k] = options.defines[k];
+        }
+    }
 
     this._source_mapping = [];
     this._source_location = new glsl.source.Location(1, 1);

@@ -995,10 +995,18 @@ NoMatch.prototype.location = function() {
 };
 
 
-function Parser(source, type) {
+function Parser(source, type, options) {
     Node.call(this);
 
-    this._preprocessor = new glsl.preprocessor.Preprocessor(source, type);
+    if (typeof options === 'undefined') {
+        options = {};
+    }
+
+    if (typeof options.preprocessor === 'undefined') {
+        options.preprocessor = {};
+    }
+
+    this._preprocessor = new glsl.preprocessor.Preprocessor(source, type, options.preprocessor);
     this._t = new Tn(this._preprocessor);
 
     this._errors = [];
