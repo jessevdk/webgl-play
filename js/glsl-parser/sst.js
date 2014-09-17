@@ -321,6 +321,10 @@ Annotator.prototype._annotate_type_decl = function(node) {
 Annotator.prototype._annotate_struct_decl = function(node) {
     var type;
 
+    if (glsl.ast.StructDecl.prototype.isPrototypeOf(this._scope)) {
+        this._error(node.location(), 'nested struct declarations are not allowed');
+    }
+
     if (node.name !== null) {
         var tp = this._lookup_symbol(node.name.text);
 
