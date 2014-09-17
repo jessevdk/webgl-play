@@ -524,7 +524,8 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
             // TODO: error
             return null;
         }
-        break;
+
+        return ret;
     case ExpressionTokenizer.T_DEFINED:
         var id = tokenizer.next();
 
