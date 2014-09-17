@@ -38,12 +38,22 @@ Error.prototype.constructor = Error;
 
 exports.Error = Error;
 
-function Annotate(ast) {
-    (new Annotator(ast)).annotate();
+function Annotate(ast, opts) {
+    (new Annotator(ast, opts)).annotate();
 }
 
-function Annotator(ast) {
+function Annotator(ast, opts) {
     this._ast = ast;
+
+    if (typeof opts === 'undefined') {
+        opts = {};
+    }
+
+    if (typeof opts.builtins !== 'undefined') {
+        this._builtins = opts.builtins;
+    } else {
+        this._builtins = new glsl.builtins.Builtins(ast.type);
+    }
 
     this._ast.function_protos = [];
     this._ast.function_proto_map = {};
@@ -64,30 +74,24 @@ function Annotator(ast) {
     }
 
     // Push builtin types into the scope
-    for (var i = 0; i < glsl.builtins.Types.length; i++) {
-        var btype = glsl.builtins.Types[i];
+    for (var i = 0; i < this._builtins.types.length; i++) {
+        var btype = this._builtins.types[i];
         var t = btype.type.t.type;
 
         this._declare_type(t);
     }
 
     // Push builtin functions into the scope
-    for (var i = 0; i < glsl.builtins.Functions.length; i++) {
-        var f = glsl.builtins.Functions[i];
+    for (var i = 0; i < this._builtins.functions.length; i++) {
+        var f = this._builtins.functions[i];
 
         this._scope.function_proto_map[f.header.signature()] = f;
         this._scope.function_protos.push(f);
     }
 
-    // Push builtin constants into the scope
-    for (var i = 0; i < glsl.builtins.Constants.length; i++) {
-        var c = glsl.builtins.Constants[i];
-        this._declare_variable(c.names[0]);
-    }
-
     // Push builtin variables into the scope
-    for (var i = 0; i < glsl.builtins.Variables.length; i++) {
-        var v = glsl.builtins.Variables[i];
+    for (var i = 0; i < this._builtins.variables.length; i++) {
+        var v = this._builtins.variables[i];
         this._declare_variable(v.names[0]);
     }
 
@@ -230,7 +234,7 @@ Annotator.prototype._annotate_type_ref = function(type) {
         type.t.type = type.decl.t.type;
     } else {
         if (type.is_primitive) {
-            type.t.type = glsl.builtins.TypeMap[type.token.id].type.t.type;
+            type.t.type = this._builtins.type_map[type.token.id].type.t.type;
         } else {
             type.t.type = this._lookup_type(type.token.text);
         }
@@ -372,12 +376,12 @@ Annotator.prototype._resolve_array_size = function(node) {
     if (!node.array_size.t.is_const_expression) {
         this._error(node.array_size.location(), 'expected constant expression for array size');
         return false;
-    } else if (node.array_size.t.type != glsl.builtins.Int) {
+    } else if (node.array_size.t.type != this._builtins.Int) {
         var n;
 
-        if (node.array_size.t.type == glsl.builtins.Float) {
+        if (node.array_size.t.type == this._builtins.Float) {
             n = 'float';
-        } else if (node.array_size.t.type == glsl.builtins.Bool) {
+        } else if (node.array_size.t.type == this._builtins.Bool) {
             n = 'boolean';
         } else {
             n = 'user type';
@@ -565,10 +569,10 @@ Annotator.prototype._annotate_precision_stmt = function(node) {
     var tp = node.type.t.type;
 
     var allowed = [
-        glsl.builtins.Int,
-        glsl.builtins.Float,
-        glsl.builtins.Sampler2D,
-        glsl.builtins.SamplerCube
+        this._builtins.Int,
+        this._builtins.Float,
+        this._builtins.Sampler2D,
+        this._builtins.SamplerCube
     ];
 
     if (allowed.indexOf(tp) == -1) {
@@ -629,13 +633,13 @@ Annotator.prototype._annotate_constant_expr = function(node) {
 
     switch (node.token.id) {
     case Tn.T_INTCONSTANT:
-        node.t.type = glsl.builtins.Int;
+        node.t.type = this._builtins.Int;
         break;
     case Tn.T_FLOATCONSTANT:
-        node.t.type = glsl.builtins.Float;
+        node.t.type = this._builtins.Float;
         break;
     case Tn.T_BOOLCONSTANT:
-        node.t.type = glsl.builtins.Bool;
+        node.t.type = this._builtins.Bool;
         break;
     }
 }
@@ -660,7 +664,7 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
             continue;
         }
 
-        if (i == 0 && arg.t.type == glsl.builtins.Void) {
+        if (i == 0 && arg.t.type == this._builtins.Void) {
             continue;
         }
 
@@ -949,15 +953,15 @@ Annotator.prototype._annotate_bin_op_expr = function(node) {
     } else if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
         if (node.op.id == Tn.T_EQ_OP || node.op.id == Tn.T_NE_OP) {
             if (node.lhs.t.type == node.rhs.t.type) {
-                node.t.type = glsl.builtins.Bool;
+                node.t.type = this._builtins.Bool;
                 return;
             }
         }
 
         var sig = node.op.text + '(' + node.lhs.t.type.name + ',' + node.rhs.t.type.name + ')';
 
-        if (sig in glsl.builtins.OperatorMap) {
-            var op = glsl.builtins.OperatorMap[sig];
+        if (sig in this._builtins.operator_map) {
+            var op = this._builtins.operator_map[sig];
             node.t.type = op.ret;
 
             if (node.lhs.t.is_const_expression && node.rhs.t.is_const_expression) {
@@ -981,8 +985,8 @@ Annotator.prototype._annotate_unary_op_expr = function(node) {
 
     var sig = node.op.text + '(' + node.expression.t.type.name + ')';
 
-    if (sig in glsl.builtins.OperatorMap) {
-        var op = glsl.builtins.OperatorMap[sig];
+    if (sig in this._builtins.operator_map) {
+        var op = this._builtins.operator_map[sig];
         node.t.type = op.ret;
 
         if (node.expression.t.is_const_expression) {
@@ -1010,7 +1014,7 @@ Annotator.prototype._annotate_ternary_expr = function(node) {
     this._annotate_node(node.true_expression);
     this._annotate_node(node.false_expression);
 
-    if (node.condition.t.type !== null && node.condition.t.type != glsl.builtins.Bool) {
+    if (node.condition.t.type !== null && node.condition.t.type != this._builtins.Bool) {
         this._error(node.condition.location(), 'the condition of a ternary conditional expression must be of type bool, not ' + node.condition.t.type.name);
     }
 
@@ -1060,14 +1064,14 @@ Annotator.prototype._annotate_index_expr = function(node) {
             this._error(node.index.location(), 'index out of bounds, trying to index element ' + node.index.t.type.const_value + ' in a value of length ' + et.length);
         } else if (et.is_primitive) {
             if (et.is_mat) {
-                var m = {2: glsl.builtins.Vec2, 3: glsl.builtins.Vec3, 4: glsl.builtins.Vec4};
+                var m = {2: this._builtins.Vec2, 3: this._builtins.Vec3, 4: this._builtins.Vec4};
                 node.t.type = m[et.length];
             } else if (et.is_float) {
-                node.t.type = glsl.builtins.Float;
+                node.t.type = this._builtins.Float;
             } else if (et.is_int) {
-                node.t.type = glsl.builtins.Int;
+                node.t.type = this._builtins.Int;
             } else if (et.is_bool) {
-                node.t.type = glsl.builtins.Bool;
+                node.t.type = this._builtins.Bool;
             }
         } else if (et.is_array) {
             node.t.type = et.element_type;
@@ -1075,7 +1079,7 @@ Annotator.prototype._annotate_index_expr = function(node) {
     }
 
     if (node.index.t.type !== null) {
-        if (node.index.t.type != glsl.builtins.Int) {
+        if (node.index.t.type != this._builtins.Int) {
             this._error(node.index.location(), 'expected integer index expression, but got expression of type ' + node.index.t.type.name);
         } else if (!node.index.t.is_const_expression) {
             this._error(node.index.location(), 'cannot use dynamic indexing');
@@ -1127,7 +1131,7 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
                 tps = [Tn.T_BOOL, Tn.T_BVEC2, Tn.T_BVEC3, Tn.T_BVEC4];
             }
 
-            node.t.type = glsl.builtins.TypeMap[tps[s.length - 1]].type.t.type;
+            node.t.type = this._builtins.type_map[tps[s.length - 1]].type.t.type;
 
             if (node.expression.t.is_const_expression) {
                 node.t.is_const_expression = true;
@@ -1223,7 +1227,7 @@ Annotator.prototype._annotate_expression_list_stmt = function(node) {
 Annotator.prototype._annotate_do_stmt = function(node) {
     this._annotate_node(node.condition);
 
-    if (node.condition.t.type !== null && node.condition.t.type !== glsl.builtins.Bool) {
+    if (node.condition.t.type !== null && node.condition.t.type !== this._builtins.Bool) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
@@ -1234,7 +1238,7 @@ Annotator.prototype._annotate_while_stmt = function(node) {
     this._push_scope(node);
     this._annotate_node(node.condition);
 
-    if (node.condition.t.type !== null && node.condition.t.type !== glsl.builtins.Bool) {
+    if (node.condition.t.type !== null && node.condition.t.type !== this._builtins.Bool) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
@@ -1245,7 +1249,7 @@ Annotator.prototype._annotate_while_stmt = function(node) {
 Annotator.prototype._annotate_for_rest_stmt = function(node) {
     this._annotate_node(node.condition);
 
-    if (node.condition.t.type !== null && node.condition.t.type !== glsl.builtins.Bool) {
+    if (node.condition.t.type !== null && node.condition.t.type !== this._builtins.Bool) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
@@ -1265,7 +1269,7 @@ Annotator.prototype._annotate_for_stmt = function(node) {
 Annotator.prototype._annotate_selection_stmt = function(node) {
     this._annotate_node(node.condition);
 
-    if (node.condition.t.type !== null && node.condition.t.type !== glsl.builtins.Bool) {
+    if (node.condition.t.type !== null && node.condition.t.type !== this._builtins.Bool) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
@@ -1296,9 +1300,9 @@ Annotator.prototype._annotate_return_stmt = function(node) {
     }
 
     if (scope !== null) {
-        if (scope.t.type === glsl.builtins.Void && node.expression !== null) {
+        if (scope.t.type === this._builtins.Void && node.expression !== null) {
             this._error(node.expression.location(), 'returning value in a function with type void');
-        } else if (scope.t.type !== glsl.builtins.Void && node.expression !== null && node.expression.t.type !== null && node.expression.t.type != scope.t.type) {
+        } else if (scope.t.type !== this._builtins.Void && node.expression !== null && node.expression.t.type !== null && node.expression.t.type != scope.t.type) {
             this._error(node.expression.location(), 'expected return value of type ' + scope.t.type.name + ' but got value of type ' + node.expression.t.type.name);
         }
     }

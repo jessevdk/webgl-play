@@ -989,6 +989,7 @@ function Parser(source, type) {
 
     this._errors = [];
 
+    this.type = type;
     this.body = [];
     this.comments = this._t.comments();
 
