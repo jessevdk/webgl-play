@@ -261,6 +261,15 @@ Annotator.prototype._annotate_named = function(node) {
         this._annotate_array(node, node.type.t.type);
     }
 
+    if (node.t.type !== null) {
+        if (node.type.is_attribute()) {
+            if (node.t.type.is_composite) {
+                this._error(node.location(), 'structures cannot be attributes');
+            } else if (node.t.type.is_array) {
+                this._error(node.location(), 'arrays cannot be attributes');
+            }
+        }
+
     if (node.type.is_const()) {
         if (node.initial_value !== null) {
             if (!node.initial_value.t.is_const_expression) {
