@@ -85,8 +85,10 @@ Tokenizer.keywords = {
 
 Tokenizer.prototype = new glsl.tokenizer.Base(Tokenizer);
 
-function Preprocessor(source) {
+function Preprocessor(source, type) {
     this._source = '';
+    this._type = type;
+
     this._defines = {
         '__VERSION__': '100',
         '__LINE__': '0',
@@ -199,8 +201,12 @@ function Preprocessor(source) {
         }
     }
 
-    this._source_reader = new glsl.source.Source(this._source);
+    this._source_reader = new glsl.source.Source(this._source, this._type);
     this._source_reader._source_map = this._source_map.bind(this);
+}
+
+Preprocessor.prototype.type = function() {
+    return this._source.type();
 }
 
 Preprocessor.prototype._source_map = function(range) {

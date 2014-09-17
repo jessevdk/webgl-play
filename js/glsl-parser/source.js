@@ -223,10 +223,11 @@ SourceError.prototype.formatted_message = function() {
     return l + '.' + c + ': ' + this.message;
 }
 
-function Source(s) {
+function Source(s, type) {
     this._source = s;
     this._remainder = this._source;
     this._location = new Location(1, 1);
+    this._type = type
 }
 
 Source.prototype.location = function() {
@@ -257,6 +258,10 @@ Source.prototype.next = function(r) {
     return this._next(r, true);
 }
 
+Source.prototype.type = function() {
+    return this._type;
+}
+
 Source.prototype._next = function(r, tokenize) {
     var m = this._remainder.match(r);
 
@@ -282,6 +287,9 @@ exports.Error = SourceError;
 exports.Location = Location;
 exports.Range = Range;
 exports.Source = Source;
+
+exports.VERTEX = 0;
+exports.FRAGMENT = 1;
 
 })(ns);
 

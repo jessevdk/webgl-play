@@ -10,7 +10,7 @@ suite('preprocessor', function() {
         var unprocessed = fs.readFileSync('testfiles/preprocessor.glslv', 'utf8');
         var processed = fs.readFileSync('testfiles/preprocessor_result.glslv', 'utf8');
 
-        var p = new glsl.preprocessor.Preprocessor(unprocessed);
+        var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
 
         var errors = p.errors();
 
@@ -25,7 +25,7 @@ suite('preprocessor', function() {
         var unprocessed = fs.readFileSync('testfiles/preprocessor_all.glslv', 'utf8');
         var processed = fs.readFileSync('testfiles/preprocessor_all_result.glslv', 'utf8');
 
-        var p = new glsl.preprocessor.Preprocessor(unprocessed);
+        var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
 
         var errors = p.errors();
 
@@ -38,7 +38,7 @@ suite('preprocessor', function() {
 
     test('source_map', function() {
         var unprocessed = fs.readFileSync('testfiles/preprocessor.glslv', 'utf8');
-        var p = new glsl.preprocessor.Preprocessor(unprocessed);
+        var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
 
         var expected_map = [
             [[[1, 1], [2, 1]], [[2, 1], [3, 1]], false],
@@ -86,7 +86,7 @@ suite('preprocessor', function() {
 
     test('tokenizer', function() {
         var unprocessed = fs.readFileSync('testfiles/preprocessor.glslv', 'utf8');
-        var p = new glsl.preprocessor.Preprocessor(unprocessed);
+        var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
         var t = new glsl.tokenizer.Tokenizer(p);
 
         var expected_tokens = [

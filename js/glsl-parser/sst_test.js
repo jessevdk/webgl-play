@@ -30,7 +30,7 @@ function make_suite(name, prefix, filter) {
 
             test(f.slice(prefix.length, f.length - 6), (function(f) {
                 var unprocessed = fs.readFileSync('testfiles/' + f, 'utf8');
-                var p = new glsl.ast.Parser(unprocessed);
+                var p = new glsl.ast.Parser(unprocessed, glsl.source.VERTEX);
 
                 glsl.sst.Annotate(p);
 

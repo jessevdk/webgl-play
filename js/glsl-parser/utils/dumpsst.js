@@ -9,7 +9,7 @@ if (process.argv.length > 2) {
         var source = fs.readFileSync(process.argv[i], 'utf8');
 
         var start = Date.now();
-        var p = new glsl.ast.Parser(source);
+        var p = new glsl.ast.Parser(source, glsl.source.VERTEX);
         var end = Date.now();
 
         var parsems = (end - start);
