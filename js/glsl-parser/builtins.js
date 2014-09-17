@@ -334,6 +334,139 @@ PrimitiveType._create_builtins = function() {
 
 PrimitiveType._create_builtins();
 
+function declare_variable(qualifiers, typeid, name, arsize, defintval) {
+    var type = exports.TypeMap[typeid];
+    var bloc = new glsl.source.BuiltinRange();
+
+    var tp = new glsl.ast.TypeRef(dtn.create_token(typeid, PrimitiveType._name(typeid), bloc));
+    tp.complete();
+
+    for (var i = 0; i < qualifiers.length; i++) {
+        var q = qualifiers[i];
+
+        tp.qualifiers.push(dtn.create_token(q, dtn.token_name(q), bloc));
+    }
+
+    tp.t = {
+        type: type.type.t.type
+    };
+
+    var decl = new glsl.ast.VariableDecl(tp);
+
+    var n = new glsl.ast.Named(dtn.create_token(Tn.T_IDENTIFIER, name, bloc), decl);
+
+    n.type = tp;
+
+    n.t = {
+        type: n.type.t.type,
+    };
+
+    var Int = exports.TypeMap[Tn.T_INT].type.t.type;
+
+    if (typeof arsize !== 'undefined' && arsize !== null) {
+        n.is_array = true;
+        n.left_bracket = dtn.create_token(Tn.T_LEFT_BRACKET, dtn.token_name(Tn.T_LEFT_BRACKET), bloc);
+        n.right_bracket = dtn.create_token(Tn.T_RIGHT_BRACKET, dtn.token_name(Tn.T_RIGHT_BRACKET), bloc);
+
+        if (typeof arsize === 'string') {
+            var expr = new glsl.ast.VariableExpr(dtn.create_token(Tn.T_IDENTIFIER, arsize, bloc));
+            expr.complete();
+
+            var c = exports.ConstantMap[arsize];
+
+            expr.t = {
+                decl: c,
+                type: c.names[0].t.type,
+                is_const_expression: true,
+                const_value: c.names[0].t.const_value
+            };
+
+            n.array_size = expr;
+        } else {
+            var tok = dtn.create_token(Tn.T_INTCONSTANT, "" + arsize, bloc);
+            tok.value = arsize;
+
+            n.array_size = new glsl.ast.ConstantExpr(tok);
+            n.array_size.complete();
+
+            n.array_size.t = {
+                type: Int,
+                is_const_expression: true,
+                const_value: arsize
+            }
+        }
+    }
+
+    if (typeof defintval !== 'undefined' && defintval !== null) {
+        n.initial_assign = dtn.create_token(Tn.T_EQUAL, dtn.token_name(Tn.T_EQUAL), bloc);
+
+        var tok = dtn.create_token(Tn.T_INTCONSTANT, "" + defintval, bloc);
+        tok.value = defintval;
+
+        n.initial_value = new glsl.ast.ConstantExpr(tok);
+        n.initial_value.complete();
+        n.initial_value.t = {
+            type: Int,
+            is_const_expression: true,
+            const_value: defintval
+        };
+
+        n.t.is_const_expression = true;
+        n.t.const_value = defintval;
+    }
+
+    n.complete();
+
+    decl.names.push(n);
+    decl.complete();
+
+    decl.t = {
+        type: tp.t.type
+    };
+
+    return decl;
+}
+
+function create_builtin_constants() {
+    exports.Constants = [
+        declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexAttribs', null, 8),
+        declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexUniformVectors', null, 128),
+        declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVaryingVectors', null, 8),
+        declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexTextureImageUnits', null, 0),
+        declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxCombinedTextureImageUnits', null, 8),
+        declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxTextureImageUnits', null, 8),
+        declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxFragmentUniformVectors', null, 16),
+        declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxDrawBuffers', null, 1)
+    ];
+
+    exports.ConstantMap = {};
+
+    for (var i = 0; i < exports.Constants.length; i++) {
+        var c = exports.Constants[i];
+
+        exports.ConstantMap[c.names[0].name.text] = c;
+    }
+}
+
+function create_builtin_variables() {
+    exports.Variables = {};
+    exports.Variables[glsl.source.VERTEX] = [
+        declare_variable([Tn.T_HIGHP], Tn.T_VEC4, 'gl_Position'),
+        declare_variable([Tn.T_MEDIUMP], Tn.T_FLOAT, 'gl_PointSize')
+    ];
+
+    exports.Variables[glsl.source.FRAGMENT] = [
+        declare_variable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragCoord'),
+        declare_variable([], Tn.T_BOOL, 'gl_FrontFacing'),
+        declare_variable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragColor'),
+        declare_variable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragData', 'gl_MaxDrawBuffers'),
+        declare_variable([Tn.T_MEDIUMP], Tn.T_VEC2, 'gl_PointCoord'),
+    ];
+}
+
+create_builtin_constants();
+create_builtin_variables();
+
 function elem_evaluator() {
     var l = 0;
 
