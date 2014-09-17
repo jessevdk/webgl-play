@@ -2602,7 +2602,14 @@ Parser.prototype._parse_jump_statement = function(tok, m) {
         break;
     case Tn.T_DISCARD:
         ret = new DiscardStmt(tok);
-        break;
+        ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
+
+        if (this.type !== glsl.source.FRAGMENT) {
+            this._error(tok.location, 'invalid use of discard outside of fragment shader');
+            return ret;
+        }
+
+        return ret.complete();
     }
 
     ret.semi = this._require_one_of([Tn.T_SEMICOLON]);

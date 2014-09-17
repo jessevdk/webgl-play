@@ -9,7 +9,6 @@ void main() {
         continue;
     }
 
-    discard;
     return;
 }
 

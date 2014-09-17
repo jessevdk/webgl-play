@@ -12,7 +12,7 @@
           "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(14.1-14.2)",
+          "right_brace": "RIGHT_BRACE:}@(13.1-13.2)",
           "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
           "body": [
             {
@@ -99,15 +99,9 @@
               }
             },
             {
-              "DiscardStmt": {
-                "token": "DISCARD:discard@(12.5-12.12)",
-                "semi": "SEMICOLON:;@(12.12-12.13)"
-              }
-            },
-            {
               "ReturnStmt": {
-                "token": "RETURN:return@(13.5-13.11)",
-                "semi": "SEMICOLON:;@(13.11-13.12)"
+                "token": "RETURN:return@(12.5-12.11)",
+                "semi": "SEMICOLON:;@(12.11-12.12)"
               }
             }
           ],
@@ -119,24 +113,24 @@
       "FunctionDef": {
         "header(FunctionHeader)": {
           "type(TypeRef)": {
-            "token": "INT:int@(16.1-16.4)",
+            "token": "INT:int@(15.1-15.4)",
             "is_primitive": true
           },
-          "name": "IDENTIFIER:f@(16.5-16.6)",
-          "left_paren": "LEFT_PAREN:(@(16.6-16.7)",
-          "right_paren": "RIGHT_PAREN:)@(16.7-16.8)"
+          "name": "IDENTIFIER:f@(15.5-15.6)",
+          "left_paren": "LEFT_PAREN:(@(15.6-15.7)",
+          "right_paren": "RIGHT_PAREN:)@(15.7-15.8)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(18.1-18.2)",
-          "left_brace": "LEFT_BRACE:{@(16.9-16.10)",
+          "right_brace": "RIGHT_BRACE:}@(17.1-17.2)",
+          "left_brace": "LEFT_BRACE:{@(15.9-15.10)",
           "body": [
             {
               "ReturnStmt": {
-                "token": "RETURN:return@(17.2-17.8)",
+                "token": "RETURN:return@(16.2-16.8)",
                 "expression(ConstantExpr)": {
-                  "token": "INTCONSTANT:1@(17.9-17.10) = 1"
+                  "token": "INTCONSTANT:1@(16.9-16.10) = 1"
                 },
-                "semi": "SEMICOLON:;@(17.10-17.11)"
+                "semi": "SEMICOLON:;@(16.10-16.11)"
               }
             }
           ],
@@ -146,6 +140,6 @@
     }
   ],
   "comments": [
-    "COMMENT:// vi:ts=4:et@(20.1-20.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// vi:ts=4:et@(19.1-19.14), multi:false =  vi:ts=4:et"
   ]
 }
