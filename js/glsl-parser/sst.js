@@ -459,6 +459,10 @@ Annotator.prototype._annotate_function_header = function(node) {
     // return type
     this._annotate_node(node.type);
 
+    if (node.type.t.type !== null && node.type.t.type.is_array) {
+        this._error(node.type.location(), 'array return values are not allowed');
+    }
+
     node.t.type = node.type.t.type;
 
     for (var i = 0; i < node.parameters.length; i++) {
