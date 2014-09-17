@@ -1133,14 +1133,16 @@ Builtins.prototype._define_functions = function() {
     this._define_builtin_function(Tn.T_VEC4, 'texture2DProj',
                                   [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC4, 'coord', Tn.T_FLOAT, 'bias']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'texture2DLod',
-                                  [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC2, 'coord', Tn.T_FLOAT, 'lod']);
+    if (this.type == glsl.source.VERTEX) {
+        this._define_builtin_function(Tn.T_VEC4, 'texture2DLod',
+                                      [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC2, 'coord', Tn.T_FLOAT, 'lod']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'texture2DProjLod',
-                                  [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
+        this._define_builtin_function(Tn.T_VEC4, 'texture2DProjLod',
+                                      [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'texture2DProjLod',
-                                  [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC4, 'coord', Tn.T_FLOAT, 'lod']);
+        this._define_builtin_function(Tn.T_VEC4, 'texture2DProjLod',
+                                      [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC4, 'coord', Tn.T_FLOAT, 'lod']);
+    }
 
     this._define_builtin_function(Tn.T_VEC4, 'textureCube',
                                   [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord']);
@@ -1148,8 +1150,10 @@ Builtins.prototype._define_functions = function() {
     this._define_builtin_function(Tn.T_VEC4, 'textureCube',
                                   [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'bias']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'textureCubeLod',
-                                  [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
+    if (this.type == glsl.source.VERTEX) {
+        this._define_builtin_function(Tn.T_VEC4, 'textureCubeLod',
+                                      [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
+    }
 };
 
 Builtins.prototype._define_operators = function() {
