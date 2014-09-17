@@ -103,8 +103,8 @@ Annotator.prototype.annotate = function() {
     this._ast._errors = this._ast._errors.concat(this._errors);
 };
 
-Annotator.prototype._is_toplevel_scope = function(scope) {
-    return scope == this._ast;
+Annotator.prototype._is_toplevel_scope = function() {
+    return this._scope == this._ast;
 };
 
 Annotator.prototype._push_scope = function(node) {
@@ -277,6 +277,40 @@ Annotator.prototype._annotate_named = function(node) {
         }
     }
 
+    if (node.type.is_attribute()) {
+        if (this._ast.type != glsl.source.VERTEX) {
+            this._error(node.location(), 'attributes can only be declared in vertex shaders');
+        }
+
+        if (!this._is_toplevel_scope()) {
+            this._error(node.location(), 'attributes can only be declared globally');
+        }
+
+        if (node.initial_value !== null) {
+            this._error(node.initial_value.location(), 'attributes cannot have an initial value');
+        }
+    }
+
+    if (node.type.is_uniform()) {
+        if (!this._is_toplevel_scope() ) {
+            this._error(node.location(), 'uniforms can only be declared globally');
+        }
+
+        if (node.initial_value !== null) {
+            this._error(node.initial_value.location(), 'uniforms cannot have an initial value');
+        }
+    }
+
+    if (node.type.is_varying()) {
+        if (!this._is_toplevel_scope()) {
+            this._error(node.location(), 'varyings can only be declared globally');
+        }
+
+        if (node.initial_value !== null) {
+            this._error(node.initial_value.location(), 'varyings cannot have an initial value');
+        }
+    }
+
     if (node.type.is_const()) {
         if (node.is_array) {
             this._error(node.location(), 'arrays cannot be declared as const');
@@ -433,7 +467,7 @@ Annotator.prototype._annotate_function_header = function(node) {
 };
 
 Annotator.prototype._annotate_function_proto = function(node) {
-    if (!this._is_toplevel_scope(this._scope)) {
+    if (!this._is_toplevel_scope()) {
         this._error(node.location(), 'nested function prototypes are not allowed');
         return;
     }
@@ -503,7 +537,7 @@ Annotator.prototype._matching_qualifiers = function(a, b) {
 };
 
 Annotator.prototype._annotate_function_def = function(node) {
-    if (!this._is_toplevel_scope(this._scope)) {
+    if (!this._is_toplevel_scope()) {
         this._error(node.location(), 'nested function definitions are not allowed');
         return;
     }
