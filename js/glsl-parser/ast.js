@@ -283,16 +283,31 @@ TypeRef.prototype.location = function() {
     return glsl.source.Range.spans(this.token, this.qualifiers);
 };
 
-TypeRef.prototype.is_const = function() {
+TypeRef.prototype.has_qualifier = function(qid) {
     for (var i = 0; i < this.qualifiers.length; i++) {
         var q = this.qualifiers[i];
 
-        if (q.id == Tn.T_CONST) {
+        if (q.id == qid) {
             return true;
         }
     }
 
-    return false;
+    return false;}
+
+TypeRef.prototype.is_const = function() {
+    return this.has_qualifier(Tn.T_CONST);
+};
+
+TypeRef.prototype.is_attribute = function() {
+    return this.has_qualifier(Tn.T_ATTRIBUTE);
+};
+
+TypeRef.prototype.is_varying = function() {
+    return this.has_qualifier(Tn.T_VARYING);
+};
+
+TypeRef.prototype.is_uniform = function() {
+    return this.has_qualifier(Tn.T_UNIFORM);
 };
 
 function StructDecl(stok) {
