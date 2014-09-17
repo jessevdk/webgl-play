@@ -1,5 +1,3 @@
-"use strict";
-
 var ns;
 
 if (typeof window != 'undefined' || typeof self != 'undefined') {
@@ -20,12 +18,13 @@ if (typeof window != 'undefined' || typeof self != 'undefined') {
         ast: require('./ast'),
         tokenizer: require('./tokenizer'),
         builtins: require('./builtins'),
-    }
+    };
 
     ns = exports;
 }
 
 (function(exports) {
+'use strict';
 
 var Tn = glsl.tokenizer.Tokenizer;
 
@@ -71,7 +70,7 @@ function Annotator(ast, opts) {
 
     bscope.marshal = function() {
         return '(builtin scope)';
-    }
+    };
 
     // Push builtin types into the scope
     for (var i = 0; i < this._builtins.types.length; i++) {
@@ -102,11 +101,11 @@ function Annotator(ast, opts) {
 Annotator.prototype.annotate = function() {
     this._annotate_node(this._ast);
     this._ast._errors = this._ast._errors.concat(this._errors);
-}
+};
 
 Annotator.prototype._is_toplevel_scope = function(scope) {
     return scope == this._ast;
-}
+};
 
 Annotator.prototype._push_scope = function(node) {
     if (!glsl.ast.StructDecl.prototype.isPrototypeOf(node)) {
@@ -125,14 +124,14 @@ Annotator.prototype._push_scope = function(node) {
     this._scopes.unshift(this._scope);
 
     return node;
-}
+};
 
 Annotator.prototype._pop_scope = function() {
     var ret = this._scopes.shift();
     this._scope = this._scopes[0];
 
     return ret;
-}
+};
 
 Annotator.prototype._annotate_node = function(node) {
     if (node === null) {
@@ -151,13 +150,13 @@ Annotator.prototype._annotate_node = function(node) {
     };
 
     return this[fn](node);
-}
+};
 
 Annotator.prototype._annotate_parser = function(node) {
     for (var i = 0; i < node.body.length; i++) {
         this._annotate_node(node.body[i]);
     }
-}
+};
 
 Annotator.prototype._lookup = function(name, mapname) {
     var scope = this._scope;
@@ -171,23 +170,23 @@ Annotator.prototype._lookup = function(name, mapname) {
     }
 
     return null;
-}
+};
 
 Annotator.prototype._lookup_type = function(name) {
     return this._lookup(name, 'type_map');
-}
+};
 
 Annotator.prototype._lookup_symbol = function(name) {
     return this._lookup(name, 'symbols');
-}
+};
 
 Annotator.prototype._lookup_function = function(name) {
     return this._lookup(name, 'function_map');
-}
+};
 
 Annotator.prototype._lookup_function_proto = function(name) {
     return this._lookup(name, 'function_proto_map');
-}
+};
 
 Annotator.prototype._lookup_function_or_proto = function(name) {
     var f = this._lookup_function(name);
@@ -197,20 +196,20 @@ Annotator.prototype._lookup_function_or_proto = function(name) {
     }
 
     return this._lookup_function_proto(name);
-}
+};
 
 Annotator.prototype._declare_type = function(type) {
     this._scope.types.push(type);
     this._scope.type_map[type.name] = type;
     this._scope.symbols[type.name] = type;
-}
+};
 
 Annotator.prototype._declare_variable = function(node) {
     this._scope.variable_map[node.name.text] = node;
     this._scope.variables.push(node);
 
     this._scope.symbols[node.name.text] = node;
-}
+};
 
 Annotator.prototype._lookup_or_declare_type = function(type) {
     var tp = this._lookup_type(type.name);
@@ -221,7 +220,7 @@ Annotator.prototype._lookup_or_declare_type = function(type) {
     }
 
     return tp;
-}
+};
 
 Annotator.prototype._annotate_type_ref = function(type) {
     if (type.incomplete) {
@@ -243,7 +242,7 @@ Annotator.prototype._annotate_type_ref = function(type) {
     if (type.t.type === null) {
         this._error(type.location(), 'unknown type ' + type.token.text);
     }
-}
+};
 
 Annotator.prototype._annotate_array = function(node, element_type) {
     if (node.is_array) {
@@ -251,7 +250,7 @@ Annotator.prototype._annotate_array = function(node, element_type) {
             node.t.type = this._lookup_or_declare_type(new glsl.builtins.ArrayType(element_type, node.array_size.t.const_value));
         }
     }
-}
+};
 
 Annotator.prototype._annotate_named = function(node) {
     this._annotate_node(node.initial_value);
@@ -277,7 +276,7 @@ Annotator.prototype._annotate_named = function(node) {
             node.t.const_value = node.t.type.zero;
         }
     }
-}
+};
 
 Annotator.prototype._annotate_param_decl = function(node) {
     this._annotate_node(node.type);
@@ -287,7 +286,7 @@ Annotator.prototype._annotate_param_decl = function(node) {
     } else {
         this._annotate_array(node, node.type.t.type);
     }
-}
+};
 
 Annotator.prototype._annotate_variable_decl = function(node) {
     this._annotate_node(node.type);
@@ -313,11 +312,11 @@ Annotator.prototype._annotate_variable_decl = function(node) {
         // Declare variable
         this._declare_variable(name);
     }
-}
+};
 
 Annotator.prototype._annotate_type_decl = function(node) {
     this._annotate_node(node.type);
-}
+};
 
 Annotator.prototype._annotate_struct_decl = function(node) {
     var type;
@@ -364,7 +363,7 @@ Annotator.prototype._annotate_struct_decl = function(node) {
     }
 
     this._pop_scope(node);
-}
+};
 
 Annotator.prototype._resolve_array_size = function(node) {
     if (!node.is_array) {
@@ -394,7 +393,7 @@ Annotator.prototype._resolve_array_size = function(node) {
     }
 
     return true;
-}
+};
 
 Annotator.prototype._annotate_function_header = function(node) {
     // return type
@@ -405,7 +404,7 @@ Annotator.prototype._annotate_function_header = function(node) {
     for (var i = 0; i < node.parameters.length; i++) {
         this._annotate_node(node.parameters[i]);
     }
-}
+};
 
 Annotator.prototype._annotate_function_proto = function(node) {
     if (!this._is_toplevel_scope(this._scope)) {
@@ -434,7 +433,7 @@ Annotator.prototype._annotate_function_proto = function(node) {
 
     this._scope.function_protos.push(node);
     this._scope.function_proto_map[id] = node;
-}
+};
 
 Annotator.prototype._qualifiers_to_string = function(qualifiers) {
     var ret = '';
@@ -442,7 +441,7 @@ Annotator.prototype._qualifiers_to_string = function(qualifiers) {
     for (var i = 0; i < qualifiers.length; i++) {
         var q = qualifiers[i];
 
-        if (i != 0) {
+        if (i !== 0) {
             ret += ' ';
         }
 
@@ -450,7 +449,7 @@ Annotator.prototype._qualifiers_to_string = function(qualifiers) {
     }
 
     return ret;
-}
+};
 
 Annotator.prototype._matching_qualifiers = function(a, b) {
     if (a.length != b.length) {
@@ -463,19 +462,19 @@ Annotator.prototype._matching_qualifiers = function(a, b) {
     while (cpa.length > 0) {
         var i = b.indexOf(cpa.pop());
 
-        if (i != -1) {
+        if (i !== -1) {
             b.splice(i, 1);
         } else {
             return false;
         }
     }
 
-    if (b.length != 0) {
+    if (b.length !== 0) {
         return false;
     }
 
     return true;
-}
+};
 
 Annotator.prototype._annotate_function_def = function(node) {
     if (!this._is_toplevel_scope(this._scope)) {
@@ -528,7 +527,7 @@ Annotator.prototype._annotate_function_def = function(node) {
     for (var i = 0; i < node.header.parameters.length; i++) {
         var param = node.header.parameters[i];
 
-        if (i == 0 && param.type.token.id == Tn.T_VOID) {
+        if (i === 0 && param.type.token.id == Tn.T_VOID) {
             continue;
         }
 
@@ -541,7 +540,7 @@ Annotator.prototype._annotate_function_def = function(node) {
     this._annotate_node(node.body);
 
     this._pop_scope();
-}
+};
 
 Annotator.prototype._annotate_block = function(node) {
     if (node.new_scope) {
@@ -557,13 +556,13 @@ Annotator.prototype._annotate_block = function(node) {
     if (node.new_scope) {
         this._pop_scope();
     }
-}
+};
 
 Annotator.prototype._annotate_precision_stmt = function(node) {
     this._annotate_node(node.type);
 
     if (node.type.t.type === null) {
-        return
+        return;
     }
 
     var tp = node.type.t.type;
@@ -578,7 +577,7 @@ Annotator.prototype._annotate_precision_stmt = function(node) {
     if (allowed.indexOf(tp) == -1) {
         this._error(node.location(), 'precision can only be set for int, float and sampler types');
     }
-}
+};
 
 Annotator.prototype._error_symbol_type_name = function(node) {
     var map = [
@@ -597,7 +596,7 @@ Annotator.prototype._error_symbol_type_name = function(node) {
     }
 
     return node.node_name;
-}
+};
 
 Annotator.prototype._annotate_invariant_decl = function(node) {
     for (var i = 0; i < node.names.length; i++) {
@@ -614,16 +613,16 @@ Annotator.prototype._annotate_invariant_decl = function(node) {
             this._error(name.location, 'cannot make the ' + n + ' ' + name.text + ' invariant');
         }
     }
-}
+};
 
 Annotator.prototype._annotate_expression_stmt = function(node) {
     this._annotate_node(node.expression);
-}
+};
 
 Annotator.prototype._init_expr = function(node) {
     node.t.is_const_expression = false;
     node.t.const_value = null;
-}
+};
 
 Annotator.prototype._annotate_constant_expr = function(node) {
     this._init_expr(node);
@@ -642,7 +641,7 @@ Annotator.prototype._annotate_constant_expr = function(node) {
         node.t.type = this._builtins.Bool;
         break;
     }
-}
+};
 
 Annotator.prototype._annotate_function_call_expr = function(node) {
     this._init_expr(node);
@@ -664,7 +663,7 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
             continue;
         }
 
-        if (i == 0 && arg.t.type == this._builtins.Void) {
+        if (i === 0 && arg.t.type == this._builtins.Void) {
             continue;
         }
 
@@ -883,7 +882,7 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
             }
         }
 
-        if (cargs != null) {
+        if (cargs !== null) {
             node.t.is_const_expression = true;
             node.t.const_value = f.evaluate.apply(this, cargs);
         }
@@ -891,7 +890,7 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
 
     node.t.type = f.header.type.t.type;
     node.t.decl = f;
-}
+};
 
 Annotator.prototype._annotate_variable_expr = function(node) {
     this._init_expr(node);
@@ -900,7 +899,7 @@ Annotator.prototype._annotate_variable_expr = function(node) {
 
     node.t.decl = null;
 
-    if (sym == null) {
+    if (sym === null) {
         this._error(node.location(), 'undefined variable ' + node.name.text);
     } else if ((glsl.ast.Named.prototype.isPrototypeOf(sym) && glsl.ast.VariableDecl.prototype.isPrototypeOf(sym.decl)) ||
                glsl.ast.ParamDecl.prototype.isPrototypeOf(sym)) {
@@ -914,7 +913,7 @@ Annotator.prototype._annotate_variable_expr = function(node) {
     } else {
         this._error(node.location(), 'expected a variable for ' + node.name.text + ' but got a ' + this._error_symbol_type_name(sym));
     }
-}
+};
 
 Annotator.prototype._annotate_assignment_expr = function(node) {
     this._init_expr(node);
@@ -937,7 +936,7 @@ Annotator.prototype._annotate_assignment_expr = function(node) {
 
     // TODO: check for valid l-value expressions
     // TODO: check for array assignment
-}
+};
 
 Annotator.prototype._annotate_bin_op_expr = function(node) {
     this._init_expr(node);
@@ -948,7 +947,7 @@ Annotator.prototype._annotate_bin_op_expr = function(node) {
     // Make some guess if lhs or rhs could not be type checked
     if (node.lhs.t.type === null) {
         node.t.type = node.rhs.t.type;
-    } else if (node.rhs.t.type == null) {
+    } else if (node.rhs.t.type === null) {
         node.t.type = node.lhs.t.type;
     } else if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
         if (node.op.id == Tn.T_EQ_OP || node.op.id == Tn.T_NE_OP) {
@@ -972,7 +971,7 @@ Annotator.prototype._annotate_bin_op_expr = function(node) {
             this._error(node.location(), 'cannot use the \'' + node.op.text + '\' operator on types ' + node.lhs.t.type.name + ' and ' + node.rhs.t.type.name);
         }
     }
-}
+};
 
 Annotator.prototype._annotate_unary_op_expr = function(node) {
     this._init_expr(node);
@@ -1001,11 +1000,11 @@ Annotator.prototype._annotate_unary_op_expr = function(node) {
     } else {
         this._error(node.location(), 'cannot use the \'' + node.op.text + '\' operator on type ' + node.expression.t.type.name);
     }
-}
+};
 
 Annotator.prototype._annotate_unary_postfix_op_expr = function(node) {
     this._annotate_unary_op_expr(node);
-}
+};
 
 Annotator.prototype._annotate_ternary_expr = function(node) {
     this._init_expr(node);
@@ -1047,7 +1046,7 @@ Annotator.prototype._annotate_ternary_expr = function(node) {
             }
         }
     }
-}
+};
 
 Annotator.prototype._annotate_index_expr = function(node) {
     this._init_expr(node);
@@ -1088,7 +1087,7 @@ Annotator.prototype._annotate_index_expr = function(node) {
             node.t.is_const_expression = true;
         }
     }
-}
+};
 
 Annotator.prototype._annotate_field_selection_expr = function(node) {
     this._init_expr(node);
@@ -1158,7 +1157,7 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
                     return;
                 }
 
-                if (i != 0 && ci != components[c]) {
+                if (i !== 0 && ci != components[c]) {
                     this._error(node.selector.location.start.advance_chars(i).to_range(),
                                 'cannot mix components of different groups, expected one of \'' + cgroups[ci] + '\'');
                     return;
@@ -1202,19 +1201,19 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
     } else {
         this._error(node.selector.location, 'cannot apply selector \'' + s + '\' to expression of type ' + et.name);
     }
-}
+};
 
 Annotator.prototype._copy_type = function(dest, src) {
     dest.t.type = src.t.type;
     dest.t.is_const_expression = src.t.is_const_expression;
-    dest.t.const_value = src.t.const_value
-}
+    dest.t.const_value = src.t.const_value;
+};
 Annotator.prototype._annotate_group_expr = function(node) {
     this._init_expr(node);
     this._annotate_node(node.expression);
 
     this._copy_type(node, node.expression);
-}
+};
 
 Annotator.prototype._annotate_expression_list_stmt = function(node) {
     for (var i = 0; i < node.expressions.length; i++) {
@@ -1222,7 +1221,7 @@ Annotator.prototype._annotate_expression_list_stmt = function(node) {
     }
 
     this._copy_type(node, node.expressions[node.expressions.length - 1]);
-}
+};
 
 Annotator.prototype._annotate_do_stmt = function(node) {
     this._annotate_node(node.condition);
@@ -1232,7 +1231,7 @@ Annotator.prototype._annotate_do_stmt = function(node) {
     }
 
     this._annotate_node(node.body);
-}
+};
 
 Annotator.prototype._annotate_while_stmt = function(node) {
     this._push_scope(node);
@@ -1244,7 +1243,7 @@ Annotator.prototype._annotate_while_stmt = function(node) {
 
     this._annotate_node(node.body);
     this._pop_scope();
-}
+};
 
 Annotator.prototype._annotate_for_rest_stmt = function(node) {
     this._annotate_node(node.condition);
@@ -1254,7 +1253,7 @@ Annotator.prototype._annotate_for_rest_stmt = function(node) {
     }
 
     this._annotate_node(node.expression);
-}
+};
 
 Annotator.prototype._annotate_for_stmt = function(node) {
     this._push_scope(node);
@@ -1264,7 +1263,7 @@ Annotator.prototype._annotate_for_stmt = function(node) {
     this._annotate_node(node.body);
 
     this._pop_scope();
-}
+};
 
 Annotator.prototype._annotate_selection_stmt = function(node) {
     this._annotate_node(node.condition);
@@ -1275,20 +1274,20 @@ Annotator.prototype._annotate_selection_stmt = function(node) {
 
     this._annotate_node(node.body);
     this._annotate_node(node.els);
-}
+};
 
 Annotator.prototype._annotate_selection_else_stmt = function(node) {
     this._annotate_node(node.body);
-}
+};
 
 Annotator.prototype._annotate_break_stmt = function(node) {
-}
+};
 
 Annotator.prototype._annotate_continue_stmt = function(node) {
-}
+};
 
 Annotator.prototype._annotate_discard_stmt = function(node) {
-}
+};
 
 Annotator.prototype._annotate_return_stmt = function(node) {
     this._annotate_node(node.expression);
@@ -1306,17 +1305,17 @@ Annotator.prototype._annotate_return_stmt = function(node) {
             this._error(node.expression.location(), 'expected return value of type ' + scope.t.type.name + ' but got value of type ' + node.expression.t.type.name);
         }
     }
-}
+};
 
 Annotator.prototype._annotate_no_match = function(node) {
-}
+};
 
 Annotator.prototype._annotate_empty_stmt = function(node) {
-}
+};
 
 Annotator.prototype._error = function(loc, message) {
     this._errors.push(new Error(loc, message));
-}
+};
 
 exports.Annotate = Annotate;
 

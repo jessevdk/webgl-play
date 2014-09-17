@@ -1,5 +1,3 @@
-"use strict";
-
 var ns;
 
 if (typeof window != 'undefined' || typeof self != 'undefined') {
@@ -15,12 +13,13 @@ if (typeof window != 'undefined' || typeof self != 'undefined') {
     // in node
     var glsl = {
         tokenizer: require('./tokenizer')
-    }
+    };
 
     ns = exports;
 }
 
 (function(exports) {
+'use strict';
 
 function Location(line, column) {
     this.line = line;
@@ -29,22 +28,22 @@ function Location(line, column) {
 
 Location.prototype.copy = function() {
     return new Location(this.line, this.column);
-}
+};
 
 Location.prototype.to_range = function() {
     var rng = new Range(this, this);
     rng.end.column++;
 
     return rng;
-}
+};
 
 Location.prototype.inspect = function(depth) {
     return this.line + '.' + this.column;
-}
+};
 
 Location.prototype.marshal = function() {
     return this.line + '.' + this.column;
-}
+};
 
 Location.prototype.compare = function(loc) {
     if (this.line != loc.line) {
@@ -56,14 +55,14 @@ Location.prototype.compare = function(loc) {
     }
 
     return 0;
-}
+};
 
 Location.prototype.advance_chars = function(n) {
     var ret = this.copy();
     ret.column += n;
 
     return ret;
-}
+};
 
 Location.prototype.advance = function(s) {
     var li = -1;
@@ -84,7 +83,7 @@ Location.prototype.advance = function(s) {
     }
 
     return ret;
-}
+};
 
 function BuiltinLocation() {
     Location.call(this, 0, 0);
@@ -97,15 +96,15 @@ exports.BuiltinLocation = BuiltinLocation;
 
 BuiltinLocation.prototype.inspect = function() {
     return '(builtin)';
-}
+};
 
 BuiltinLocation.prototype.marshal = function() {
     return '(builtin)';
-}
+};
 
 BuiltinLocation.prototype.copy = function() {
     return new BuiltinLocation();
-}
+};
 
 function Range(start, end) {
     this.start = start.copy();
@@ -114,15 +113,15 @@ function Range(start, end) {
 
 Range.prototype.copy = function() {
     return new Range(this.start, this.end);
-}
+};
 
 Range.prototype.inspect = function(depth) {
     return '(' + this.start.inspect(depth + 1) + '-' + this.end.inspect(depth + 1) + ')';
-}
+};
 
 Range.prototype.marshal = function() {
     return '(' + this.start.marshal() + '-' + this.end.marshal() + ')';
-}
+};
 
 Range.prototype.extend = function(loc) {
     var ret = this.copy();
@@ -140,7 +139,7 @@ Range.prototype.extend = function(loc) {
     }
 
     return ret;
-}
+};
 
 Range.spans = function() {
     var q = arguments;
@@ -167,7 +166,7 @@ Range.spans = function() {
         }
     }
 
-    if (locs.length == 0) {
+    if (locs.length === 0) {
         return new Range(new Location(0, 0), new Location(0, 0));
     }
 
@@ -186,7 +185,7 @@ Range.spans = function() {
     }
 
     return ret;
-}
+};
 
 function BuiltinRange() {
     Range.call(this, new BuiltinLocation(), new BuiltinLocation());
@@ -197,15 +196,15 @@ BuiltinRange.prototype.constructor = BuiltinRange;
 
 BuiltinRange.prototype.inspect = function() {
     return '(builtin)';
-}
+};
 
 BuiltinRange.prototype.marshal = function() {
     return '(builtin)';
-}
+};
 
 BuiltinRange.prototype.copy = function() {
     return new BuiltinRange();
-}
+};
 
 exports.BuiltinRange = BuiltinRange;
 
@@ -221,7 +220,7 @@ SourceError.prototype.formatted_message = function() {
     var c = this.location.start.column;
 
     return l + '.' + c + ': ' + this.message;
-}
+};
 
 function Source(s, type) {
     this._source = s;
@@ -232,40 +231,40 @@ function Source(s, type) {
 
 Source.prototype.location = function() {
     return this._location;
-}
+};
 
 Source.prototype.offset = function(loc) {
     this._location = loc.copy();
-}
+};
 
 Source.prototype.eof = function() {
-    return this._remainder.length == 0;
-}
+    return this._remainder.length === 0;
+};
 
 Source.prototype._source_map = function(loc) {
     return loc;
-}
+};
 
 Source.prototype.skip = function(r) {
     this._next(r, false);
-}
+};
 
 Source.prototype.source = function() {
     return this._source;
-}
+};
 
 Source.prototype.next = function(r) {
     return this._next(r, true);
-}
+};
 
 Source.prototype.type = function() {
     return this._type;
-}
+};
 
 Source.prototype._next = function(r, tokenize) {
     var m = this._remainder.match(r);
 
-    if (m && m.index == 0) {
+    if (m && m.index === 0) {
         var l = m[0].length;
 
         var start = this._location.copy();
@@ -281,7 +280,7 @@ Source.prototype._next = function(r, tokenize) {
     }
 
     return null;
-}
+};
 
 exports.Error = SourceError;
 exports.Location = Location;

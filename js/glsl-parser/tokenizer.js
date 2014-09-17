@@ -1,5 +1,3 @@
-"use strict";
-
 var ns;
 
 if (typeof window != 'undefined' || typeof self != 'undefined') {
@@ -14,12 +12,13 @@ if (typeof window != 'undefined' || typeof self != 'undefined') {
 } else {
     // in node
     var glsl = {
-    }
+    };
 
     ns = exports;
 }
 
-(function(exports) {
+(function (exports) {
+'use strict';
 
 function Token(id, text, loc) {
     this.id = id;
@@ -29,11 +28,11 @@ function Token(id, text, loc) {
     this._tokenizer = null;
 }
 
-Token.prototype.marshal = function() {
+Token.prototype.marshal = function () {
     return this._tokenizer.token_id_name(this.id) + ':' + this.text + '@' + this.location.marshal();
-}
+};
 
-Token.prototype.for_assert = function() {
+Token.prototype.for_assert = function () {
     var ret = new Token(this.id, this.text, this.location);
     ret._tokenizer = this._tokenizer;
 
@@ -46,7 +45,7 @@ Token.prototype.for_assert = function() {
     }
 
     return ret;
-}
+};
 
 exports.Token = Token;
 
@@ -108,6 +107,9 @@ function BaseTokenizer(b, options) {
     }
 
     this._extract_operators();
+
+    b.token_name = this.token_name.bind(this);
+    b.token_id_name = this.token_id_name.bind(this);
 }
 
 BaseTokenizer.prototype._merge_options = function(defs, options) {
@@ -120,7 +122,7 @@ BaseTokenizer.prototype._merge_options = function(defs, options) {
     }
 
     return defs;
-}
+};
 
 BaseTokenizer.prototype.init = function(source) {
     this._source = source;
@@ -141,7 +143,7 @@ BaseTokenizer.prototype.init = function(source) {
                     return Token.prototype.marshal.call(this) + ', multi:' + this.multi + ' = ' + this.value;
                 };
             }).bind(this)
-        })
+        });
 
         this._matchers.push({
             regex: this._options.multiline_comment_class,
@@ -154,7 +156,7 @@ BaseTokenizer.prototype.init = function(source) {
                     return Token.prototype.marshal.call(this) + ', multi:' + this.multi + ' = ' + this.value;
                 };
             }).bind(this)
-        })
+        });
     }
 
     this._matchers.push({
@@ -241,22 +243,22 @@ BaseTokenizer.prototype.init = function(source) {
 
                 tok.marshal = function() {
                     return Token.prototype.marshal.call(this) + ' = ' + this.value;
-                }
+                };
             }).bind(this)
         });
     }
-}
+};
 
 BaseTokenizer.prototype.create_token = function(id, text, location) {
     var tok = new Token(id, text, location);
     tok._tokenizer = this;
 
     return tok;
-}
+};
 
 BaseTokenizer.prototype.comments = function() {
     return this._comments;
-}
+};
 
 function regex_escape(s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -291,12 +293,12 @@ BaseTokenizer.prototype._extract_operators = function() {
         ops.push(op);
     }
 
-    if (ops.length != 0) {
+    if (ops.length !== 0) {
         this._roperators = new RegExp('^' + regex_choices(ops));
     } else {
         this._roperators = null;
     }
-}
+};
 
 BaseTokenizer.prototype._define_token = function(b, name, t) {
     var id = ++this._last_token_id;
@@ -306,15 +308,15 @@ BaseTokenizer.prototype._define_token = function(b, name, t) {
 
     this._token_id_map[id] = t;
     this._token_name_map[id] = name;
-}
+};
 
 BaseTokenizer.prototype.token_name = function(id) {
     return this._token_name_map[id];
-}
+};
 
 BaseTokenizer.prototype.token_id_name = function(id) {
     return this._token_id_map[id];
-}
+};
 
 BaseTokenizer.prototype._define_tokens = function(b, tmap) {
     var ids = [];
@@ -328,27 +330,27 @@ BaseTokenizer.prototype._define_tokens = function(b, tmap) {
     for (var i = 0; i < ids.length; i++) {
         this._define_token(b, ids[i], tmap[ids[i]]);
     }
-}
+};
 
 BaseTokenizer.prototype._skip_ws = function() {
     this._source.skip(this._options.whitespace_class);
-}
+};
 
 BaseTokenizer.prototype.peek = function() {
-    if (this._cached.length != 0) {
+    if (this._cached.length !== 0) {
         return this._cached[0];
     }
 
     return this.unconsume(this.next());
-}
+};
 
 BaseTokenizer.prototype.unconsume = function(tok) {
     this._cached.push(tok);
     return tok;
-}
+};
 
 BaseTokenizer.prototype.next = function() {
-    if (this._cached.length != 0) {
+    if (this._cached.length !== 0) {
         var ret = this._cached[0];
         this._cached = this._cached.slice(1);
         return ret;
@@ -370,13 +372,13 @@ BaseTokenizer.prototype.next = function() {
         for (var i = 0; i < this._matchers.length; i++) {
             var m = this._matchers[i];
 
-            if (m.regex == null) {
+            if (m.regex === null) {
                 continue;
             }
 
             var tok = this._source.next(m.regex);
 
-            if (tok != null) {
+            if (tok !== null) {
                 tok._tokenizer = this;
 
                 m.finish_token(tok);
@@ -396,24 +398,24 @@ BaseTokenizer.prototype.next = function() {
     tok.id = this.T_UNSUPPORTED;
 
     return tok;
-}
+};
 
 BaseTokenizer.prototype.remainder = function() {
     this._skip_ws();
     return this._source.next(/.*/);
-}
+};
 
 BaseTokenizer.prototype.eof = function() {
     return this._source.eof();
-}
+};
 
 BaseTokenizer.prototype.location = function() {
     return this._source.location();
-}
+};
 
 BaseTokenizer.prototype._token = function(n) {
     return this['T_' + n];
-}
+};
 
 function Tokenizer(source) {
     BaseTokenizer.prototype.init.call(this, source);
@@ -460,7 +462,7 @@ Tokenizer.keywords = {
     'mediump': 'MEDIUM_PRECISION',
     'lowp': 'LOW_PRECISION',
     'precision': 'PRECISION'
-}
+};
 
 Tokenizer.operators = {
     '<<': 'LEFT_OP',
@@ -512,7 +514,7 @@ Tokenizer.operators = {
     '^': 'CARET',
     '&': 'AMPERSAND',
     '?': 'QUESTION',
-}
+};
 
 Tokenizer.prototype = new BaseTokenizer(Tokenizer, {
     floats: true,

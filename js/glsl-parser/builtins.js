@@ -1,5 +1,3 @@
-"use strict";
-
 var ns;
 
 if (typeof window != 'undefined' || typeof self != 'undefined') {
@@ -17,12 +15,13 @@ if (typeof window != 'undefined' || typeof self != 'undefined') {
         source: require('./source'),
         ast: require('./ast'),
         tokenizer: require('./tokenizer'),
-    }
+    };
 
     ns = exports;
 }
 
 (function(exports) {
+'use strict';
 
 var Tn = glsl.tokenizer.Tokenizer;
 var dtn = new Tn(null);
@@ -70,7 +69,7 @@ CompositeType.prototype.declare_field = function(name, type) {
 
     this.zero[name] = type.zero;
     return field;
-}
+};
 
 
 function UserType(name, decl) {
@@ -128,11 +127,11 @@ exports.PrimitiveType = PrimitiveType;
 
 PrimitiveType.prototype.marshal_can_ref = function() {
     return false;
-}
+};
 
 PrimitiveType.prototype.marshal = function() {
     return '$' + this.name;
-}
+};
 
 PrimitiveType._is_vec = function(tok) {
     switch (tok) {
@@ -149,7 +148,7 @@ PrimitiveType._is_vec = function(tok) {
     }
 
     return false;
-}
+};
 
 PrimitiveType._is_mat = function(tok) {
     switch (tok) {
@@ -160,7 +159,7 @@ PrimitiveType._is_mat = function(tok) {
     }
 
     return false;
-}
+};
 
 PrimitiveType._is_scalar = function(tok) {
     switch (tok) {
@@ -171,7 +170,7 @@ PrimitiveType._is_scalar = function(tok) {
     }
 
     return false;
-}
+};
 
 PrimitiveType._element_type = function(tok) {
     switch (tok) {
@@ -197,7 +196,7 @@ PrimitiveType._element_type = function(tok) {
     }
 
     return null;
-}
+};
 
 PrimitiveType._length = function(tok) {
     switch (tok) {
@@ -223,7 +222,7 @@ PrimitiveType._length = function(tok) {
     }
 
     return 0;
-}
+};
 
 function Operator(op) {
     this.op = op;
@@ -261,7 +260,7 @@ Operator.prototype._evaluate_elem = function(a, b) {
     case Tn.T_XOR_OP:
         return (a && !b) || (b && !a);
     }
-}
+};
 
 Operator.prototype.evaluate = function(a, b) {
     if (this.op == Tn.T_STAR) {
@@ -319,7 +318,7 @@ Operator.prototype.evaluate = function(a, b) {
     } else {
         return this._evaluate_elem(a, b);
     }
-}
+};
 
 function UnaryOperator(op) {
     this.op = op;
@@ -338,7 +337,7 @@ UnaryOperator.prototype.evaluate = function(a) {
     case Tn.T_DEC_OP:
         return a - 1;
     }
-}
+};
 
 function Builtins(type) {
     this.type = type;
@@ -397,7 +396,7 @@ Builtins.prototype._define_types = function() {
 
         var name = dtn.token_name(tokid);
 
-        var bloc = new glsl.source.BuiltinRange()
+        var bloc = new glsl.source.BuiltinRange();
         var tok = dtn.create_token(tokid, name, bloc);
 
         var decl = new glsl.ast.TypeDecl((new glsl.ast.TypeRef(tok)).complete());
@@ -415,7 +414,7 @@ Builtins.prototype._define_types = function() {
 
         this[name] = decl.type.t.type;
     }
-}
+};
 
 Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize, defintval) {
     var type = this.type_map[typeid];
@@ -476,7 +475,7 @@ Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize
                 type: Int,
                 is_const_expression: true,
                 const_value: arsize
-            }
+            };
         }
     }
 
@@ -509,18 +508,18 @@ Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize
 
     this.variables.push(decl);
     this.variable_map[name] = decl;
-}
+};
 
 Builtins.prototype._define_constants = function() {
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexAttribs', null, 8),
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexUniformVectors', null, 128),
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVaryingVectors', null, 8),
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexTextureImageUnits', null, 0),
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxCombinedTextureImageUnits', null, 8),
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxTextureImageUnits', null, 8),
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxFragmentUniformVectors', null, 16),
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxDrawBuffers', null, 1)
-}
+    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexAttribs', null, 8);
+    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexUniformVectors', null, 128);
+    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVaryingVectors', null, 8);
+    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexTextureImageUnits', null, 0);
+    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxCombinedTextureImageUnits', null, 8);
+    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxTextureImageUnits', null, 8);
+    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxFragmentUniformVectors', null, 16);
+    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxDrawBuffers', null, 1);
+};
 
 Builtins.prototype._define_variables = function() {
     switch (this.type) {
@@ -536,7 +535,7 @@ Builtins.prototype._define_variables = function() {
         this._declare_variable([Tn.T_MEDIUMP], Tn.T_VEC2, 'gl_PointCoord');
         break;
     }
-}
+};
 
 Builtins.prototype._elem_evaluator = function() {
     var l = 0;
@@ -548,7 +547,7 @@ Builtins.prototype._elem_evaluator = function() {
         }
     }
 
-    if (l == 0) {
+    if (l === 0) {
         return this.apply(this, arguments);
     } else {
         var ret = [];
@@ -571,7 +570,7 @@ Builtins.prototype._elem_evaluator = function() {
 
         return ret;
     }
-}
+};
 
 Builtins.prototype._func_evaluator = function() {
     var args = [];
@@ -585,7 +584,7 @@ Builtins.prototype._func_evaluator = function() {
     }
 
     return this.apply(this, args);
-}
+};
 
 Builtins.prototype._define_builtin_function = function(rettype, name, params, elemfunc, func) {
     if (!glsl.ast.TypeDecl.prototype.isPrototypeOf(rettype)) {
@@ -654,7 +653,7 @@ Builtins.prototype._define_builtin_function = function(rettype, name, params, el
     this.function_map[sig] = f;
 
     return f;
-}
+};
 
 Builtins.prototype._define_builtin_function_gen = function(gentypes, rettype, name, params, elemfunc, func) {
     if (rettype !== null) {
@@ -681,19 +680,19 @@ Builtins.prototype._define_builtin_function_gen = function(gentypes, rettype, na
                                 elemfunc,
                                 func);
     }
-}
+};
 
 Builtins.prototype._define_builtin_gentype_function = function(rettype, name, params, elemfunc, func) {
     var gentypes = [Tn.T_FLOAT, Tn.T_VEC2, Tn.T_VEC3, Tn.T_VEC4];
 
     this._define_builtin_function_gen(gentypes, rettype, name, params, elemfunc, func);
-}
+};
 
 Builtins.prototype._define_builtin_mat_function = function(rettype, name, params, elemfunc, func) {
     var gentypes = [Tn.T_MAT2, Tn.T_MAT3, Tn.T_MAT4];
 
     this._define_builtin_function_gen(gentypes, rettype, name, params, elemfunc, func);
-}
+};
 
 Builtins.prototype._define_builtin_relvec_function = function(rettype, name, params, elemfunc, func) {
     var vmap = {
@@ -721,7 +720,7 @@ Builtins.prototype._define_builtin_relvec_function = function(rettype, name, par
 
         this._define_builtin_function(ret, name, sp, elemfunc, func);
     }
-}
+};
 
 Builtins.prototype._find_type = function(t, def) {
     if (t === null) {
@@ -729,7 +728,7 @@ Builtins.prototype._find_type = function(t, def) {
     }
 
     return this.type_map[t].type.t.type;
-}
+};
 
 Builtins.prototype._define_builtin_bin_operator_gen = function(rettype, optypes, lhs, rhs, gens) {
     for (var i = 0; i < optypes.length; i++) {
@@ -749,7 +748,7 @@ Builtins.prototype._define_builtin_bin_operator_gen = function(rettype, optypes,
             this.operator_map[sig] = o;
         }
     }
-}
+};
 
 Builtins.prototype._define_builtin_unary_operator_gen = function(rettype, optypes, expr, gens) {
     for (var i = 0; i < optypes.length; i++) {
@@ -768,7 +767,7 @@ Builtins.prototype._define_builtin_unary_operator_gen = function(rettype, optype
             this.operator_map[sig] = o;
         }
     }
-}
+};
 
 var Emulate = {
     radians: function (degrees) {
@@ -973,7 +972,7 @@ var Emulate = {
     not: function(x) {
         return !x;
     },
-}
+};
 
 Builtins.prototype._define_functions = function() {
     // Angle and Trigonometry functions
@@ -1130,7 +1129,7 @@ Builtins.prototype._define_functions = function() {
 
     this._define_builtin_function(Tn.T_VEC4, 'textureCubeLod',
                                   [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
-}
+};
 
 Builtins.prototype._define_operators = function() {
     // Operators
@@ -1206,7 +1205,7 @@ Builtins.prototype._define_operators = function() {
                                             [Tn.T_BANG],
                                             null,
                                             [Tn.T_BOOL]);
-}
+};
 
 })(ns);
 

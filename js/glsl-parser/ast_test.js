@@ -1,4 +1,4 @@
-const glsl = require('./glslparser');
+glsl = require('./glslparser');
 
 var util = require('util');
 var fs = require('fs');
@@ -52,11 +52,11 @@ function make_suite(name, prefix, filter) {
 }
 
 make_suite('ast', 'ast_', function(f) {
-    return f.indexOf('ast_') == 0 && f.indexOf('ast_error_') != 0;
+    return f.indexOf('ast_') === 0 && f.indexOf('ast_error_') !== 0;
 });
 
 make_suite('ast-error', 'ast_error_', function(f) {
-    return f.indexOf('ast_error_') == 0;
+    return f.indexOf('ast_error_') === 0;
 });
 
 // vi:ts=4:et

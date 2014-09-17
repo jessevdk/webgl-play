@@ -1,5 +1,3 @@
-"use strict";
-
 var ns;
 
 if (typeof window != 'undefined' || typeof self != 'undefined') {
@@ -16,12 +14,13 @@ if (typeof window != 'undefined' || typeof self != 'undefined') {
     var glsl = {
         tokenizer: require('./tokenizer'),
         source: require('./source')
-    }
+    };
 
     ns = exports;
 }
 
 (function(exports) {
+'use strict';
 
 function ExpressionTokenizer(source) {
     glsl.tokenizer.Base.prototype.init.call(this, source);
@@ -29,7 +28,7 @@ function ExpressionTokenizer(source) {
 
 ExpressionTokenizer.keywords = {
     'defined': 'DEFINED'
-}
+};
 
 ExpressionTokenizer.operators = {
     '<<': 'LEFT_OP',
@@ -59,7 +58,7 @@ ExpressionTokenizer.operators = {
     '|': 'VERTICAL_BAR',
     '^': 'CARET',
     '&': 'AMPERSAND'
-}
+};
 
 ExpressionTokenizer.prototype = new glsl.tokenizer.Base(ExpressionTokenizer, {ints: true});
 
@@ -207,12 +206,12 @@ function Preprocessor(source, type) {
 
 Preprocessor.prototype.type = function() {
     return this._source.type();
-}
+};
 
 Preprocessor.prototype._source_map = function(range) {
     return new glsl.source.Range(this._source_map_one(range.start, false),
                                  this._source_map_one(range.end, true));
-}
+};
 
 Preprocessor.prototype._source_map_one = function(loc, isend) {
     for (var i = 0; i < this._source_mapping.length; i++) {
@@ -246,27 +245,27 @@ Preprocessor.prototype._source_map_one = function(loc, isend) {
     }
 
     return loc;
-}
+};
 
 Preprocessor.prototype.eof = function() {
     return this._source_reader.eof();
-}
+};
 
 Preprocessor.prototype.skip = function(r) {
     this._source_reader.skip(r);
-}
+};
 
 Preprocessor.prototype.next = function(r) {
     return this._source_reader.next(r);
-}
+};
 
 Preprocessor.prototype.location = function() {
     return this._source_reader.location();
-}
+};
 
 Preprocessor.prototype.errors = function() {
     return this._errors;
-}
+};
 
 Preprocessor.prototype._add_source = function(s, orig) {
     var expanded = this._expand(s, orig, this._source_location);
@@ -281,13 +280,13 @@ Preprocessor.prototype._add_source = function(s, orig) {
             this._source_location = expanded.mapping[i].current.end.copy();
         }
     }
-}
+};
 
 Preprocessor.prototype._expand = function(s, origloc, curloc) {
     // Expand any defines found in s
     var defre = [];
 
-    var trackloc = !(typeof origloc == 'undefined');
+    var trackloc = (typeof origloc !== 'undefined');
 
     for (var d in this._defines) {
         defre.push(d);
@@ -347,7 +346,7 @@ Preprocessor.prototype._expand = function(s, origloc, curloc) {
     } else {
         return ret;
     }
-}
+};
 
 Preprocessor.prototype._strip_comments = function(s) {
     var cpos = s.indexOf('//');
@@ -357,7 +356,7 @@ Preprocessor.prototype._strip_comments = function(s) {
     }
 
     return s;
-}
+};
 
 Preprocessor.prototype._define = function(tok, tokenizer) {
     var def = tokenizer.next();
@@ -367,19 +366,19 @@ Preprocessor.prototype._define = function(tok, tokenizer) {
         return;
     }
 
-    if (def.text.indexOf('__') == 0) {
+    if (def.text.indexOf('__') === 0) {
         this._error(def.location, 'defines are not allowed to start with __');
         return;
     }
 
-    if (def.text.indexOf('GL_') == 0) {
+    if (def.text.indexOf('GL_') === 0) {
         this._error(def.location, 'defines are not allowed to start with GL_');
         return;
     }
 
     var rest = tokenizer.remainder();
     this._defines[def.text] = this._expand(this._strip_comments(rest.text));
-}
+};
 
 Preprocessor.prototype._undef = function(tok, tokenizer) {
     var def = tokenizer.next();
@@ -396,7 +395,7 @@ Preprocessor.prototype._undef = function(tok, tokenizer) {
     } else {
         delete this._defines[def.text];
     }
-}
+};
 
 Preprocessor.prototype._if = function(tok, tokenizer) {
     var rest = tokenizer.remainder();
@@ -413,7 +412,7 @@ Preprocessor.prototype._if = function(tok, tokenizer) {
         skip: !expr,
         condition: expr
     });
-}
+};
 
 Preprocessor.prototype._ifdef = function(tok, tokenizer, negate) {
     var def = tokenizer.next();
@@ -439,11 +438,11 @@ Preprocessor.prototype._ifdef = function(tok, tokenizer, negate) {
             condition: !skip
         });
     }
-}
+};
 
 Preprocessor.prototype._else = function(tok, tokenizer) {
     if (this._pstack.length == 1) {
-        this._error(tok.location, 'unexpected #else without opening #if, #ifdef, or #ifndef')
+        this._error(tok.location, 'unexpected #else without opening #if, #ifdef, or #ifndef');
         return;
     }
 
@@ -455,11 +454,11 @@ Preprocessor.prototype._else = function(tok, tokenizer) {
     } else {
         p.skip = true;
     }
-}
+};
 
 Preprocessor.prototype._elif = function(tok, tokenizer) {
     if (this._pstack.length == 1) {
-        this._error(tok.location, 'unexpected #elif without opening #if, #ifdef, or #ifndef')
+        this._error(tok.location, 'unexpected #elif without opening #if, #ifdef, or #ifndef');
         return;
     }
 
@@ -483,7 +482,7 @@ Preprocessor.prototype._elif = function(tok, tokenizer) {
 
     p.skip = !expr;
     p.condition = expr;
-}
+};
 
 Preprocessor.prototype._endif = function(tok, tokenizer) {
     if (!tokenizer.eof()) {
@@ -492,12 +491,12 @@ Preprocessor.prototype._endif = function(tok, tokenizer) {
     }
 
     if (this._pstack.length == 1) {
-        this._error(tok.location, 'unexpected #endif without opening #if, #ifdef, or #ifndef')
+        this._error(tok.location, 'unexpected #endif without opening #if, #ifdef, or #ifndef');
         return;
     }
 
     this._pstack.pop();
-}
+};
 
 Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
     var tok = tokenizer.next();
@@ -577,7 +576,7 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
 
     this._error(tok.location, 'expected expression, but got ' + ExpressionTokenizer.token_name(tok.id) + ':' + tok.text);
     return null;
-}
+};
 
 Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
     var tok = tokenizer.peek();
@@ -627,7 +626,7 @@ Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
         return null;
     }
 
-    if (p != -1 && !(prec < p)) {
+    if (p !== -1 && prec >= p) {
         return null;
     }
 
@@ -680,11 +679,11 @@ Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
     }
 
     return null;
-}
+};
 
 Preprocessor.prototype._parse_expression_rhs = function(tokenizer, p, lhs) {
     return this._parse_expression_binop(tokenizer, p, lhs);
-}
+};
 
 Preprocessor.prototype._parse_expression = function(tokenizer, p) {
     var lhs = this._parse_expression_primary(tokenizer);
@@ -702,15 +701,15 @@ Preprocessor.prototype._parse_expression = function(tokenizer, p) {
             lhs = ret;
         }
     }
-}
+};
 
 Preprocessor.prototype._error = function(loc, text) {
     this._errors.push(new glsl.source.Error(loc, text));
-}
+};
 
 Preprocessor.prototype.source = function() {
     return this._source;
-}
+};
 
 exports.Preprocessor = Preprocessor;
 
