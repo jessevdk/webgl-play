@@ -952,6 +952,16 @@ Annotator.prototype._annotate_bin_op_expr = function(node) {
     } else if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
         if (node.op.id == Tn.T_EQ_OP || node.op.id == Tn.T_NE_OP) {
             if (node.lhs.t.type == node.rhs.t.type) {
+                if (node.lhs.t.type.is_composite && node.lhs.t.type.has_array_field) {
+                    this._error(node.op.location, 'cannot compare structures with array fields');
+                } else if (node.lhs.t.type.is_composite && node.lhs.t.type.has_sampler_field) {
+                    this._error(node.op.location, 'cannot compare structures with sampler fields');
+                } else if (node.lhs.t.type.is_array) {
+                    this._error(node.op.location, 'cannot compare arrays');
+                } else if (node.lhs.t.type.is_sampler) {
+                    this._error(node.op.location, 'cannot compare samplers');
+                }
+
                 node.t.type = this._builtins.Bool;
                 return;
             }
