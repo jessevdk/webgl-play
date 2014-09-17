@@ -292,7 +292,8 @@ TypeRef.prototype.has_qualifier = function(qid) {
         }
     }
 
-    return false;}
+    return false;
+};
 
 TypeRef.prototype.is_const = function() {
     return this.has_qualifier(Tn.T_CONST);

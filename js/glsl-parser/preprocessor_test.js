@@ -1,4 +1,4 @@
-const glsl = require('./glslparser');
+glsl = require('./glslparser');
 
 var util = require('util');
 var fs = require('fs');
@@ -118,7 +118,7 @@ suite('preprocessor', function() {
                 break;
             }
 
-            if (expected_tokens.length == 0) {
+            if (expected_tokens.length === 0) {
                 assert.ok(false, 'unexpected token ' + t.token_name(tok.id) + ' ' + tok.location.start.line + '.' + tok.location.start.column + '-' + tok.location.end.line + '.' + tok.location.end.column + ': ' + tok.text);
             } else {
                 var def = expected_tokens[0];

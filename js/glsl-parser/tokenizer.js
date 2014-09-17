@@ -378,7 +378,7 @@ BaseTokenizer.prototype._post_comments = function(tok) {
 
     this._options.skip_comments = true;
     return tok;
-}
+};
 
 BaseTokenizer.prototype.next = function() {
     var comments = [];

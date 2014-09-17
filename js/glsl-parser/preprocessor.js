@@ -225,7 +225,7 @@ Preprocessor.options_from_context = function(c) {
     return {
         defines: defines
     };
-}
+};
 
 Preprocessor.prototype.type = function() {
     return this._source.type();

@@ -21,6 +21,26 @@ function scan_files(filt) {
     return ret;
 }
 
+function test_one(f) {
+    var unprocessed = fs.readFileSync('testfiles/' + f, 'utf8');
+    var p = new glsl.ast.Parser(unprocessed, glsl.source.VERTEX);
+
+    var astj = fs.readFileSync('testfiles/' + f + '.ast', 'utf-8');
+
+    if (!astj) {
+        astj = '{}';
+    }
+
+    var seen = {};
+
+    var body = p.marshal();
+
+    if (JSON.stringify(body, null, '  ') + '\n' != astj) {
+        var ast = JSON.parse(astj);
+        assert.deepEqual(body, ast);
+    }
+}
+
 function make_suite(name, prefix, filter) {
     var files = scan_files(filter);
 
@@ -28,25 +48,7 @@ function make_suite(name, prefix, filter) {
         for (var i = 0; i < files.length; i++) {
             var f = files[i];
 
-            test(f.slice(prefix.length, f.length - 6), (function(f) {
-                var unprocessed = fs.readFileSync('testfiles/' + f, 'utf8');
-                var p = new glsl.ast.Parser(unprocessed, glsl.source.VERTEX);
-
-                var astj = fs.readFileSync('testfiles/' + f + '.ast', 'utf-8');
-
-                if (!astj) {
-                    astj = '{}';
-                }
-
-                var seen = {};
-
-                var body = p.marshal();
-
-                if (JSON.stringify(body, null, '  ') + '\n' != astj) {
-                    var ast = JSON.parse(astj);
-                    assert.deepEqual(body, ast);
-                }
-            }).bind(this, f));
+            test(f.slice(prefix.length, f.length - 6), test_one.bind(this, f));
         }
     });
 }

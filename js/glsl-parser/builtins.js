@@ -392,7 +392,7 @@ exports.Builtins = Builtins;
 
 Builtins.create_for_context = function(ctx, type) {
     return new Builtins(type, Builtins.options_from_context(ctx));
-}
+};
 
 Builtins.options_from_context = function(ctx) {
     var constants = {};
@@ -417,7 +417,7 @@ Builtins.options_from_context = function(ctx) {
     return {
         constants: constants
     };
-}
+};
 
 Builtins.prototype._define_types = function() {
     var btypetoks = [
