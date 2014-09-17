@@ -360,8 +360,14 @@ UnaryOperator.prototype.evaluate = function(a) {
     }
 };
 
-function Builtins(type) {
+function Builtins(type, options) {
     this.type = type;
+
+    if (typeof options === 'undefined') {
+        options = {};
+    }
+
+    this._options = options;
 
     this.types = [];
     this.type_map = {};
@@ -383,6 +389,31 @@ function Builtins(type) {
 }
 
 exports.Builtins = Builtins;
+
+Builtins.create_for_context = function(ctx, type) {
+    var constants = {};
+
+    var c = {
+        'gl_MaxVertexAttribs': 'MAX_VERTEX_ATTRIBS',
+        'gl_MaxVertexUniformVectors': 'MAX_VERTEX_UNIFORM_VECTORS',
+        'gl_MaxVaryingVectors': 'MAX_VARYING_VECTORS',
+        'gl_MaxVertexTextureImageUnits': 'MAX_VERTEX_TEXTURE_IMAGE_UNITS',
+        'gl_MaxCombinedTextureImageUnits': 'MAX_COMBINED_TEXTURE_IMAGE_UNITS',
+        'gl_MaxTextureImageUnits': 'MAX_TEXTURE_IMAGE_UNITS',
+        'gl_MaxFragmentUniformVectors': 'MAX_FRAGMENT_UNIFORM_VECTORS',
+        'gl_MaxDrawBuffers': 'MAX_DRAW_BUFFERS'
+    };
+
+    for (var name in c) {
+        if (typeof ctx[c[name]] !== 'undefined') {
+            contstants[name] = ctx.getParameter(ctx[c[name]]);
+        }
+    }
+
+    return new Builtins(type, {
+        constants: constants
+    });
+}
 
 Builtins.prototype._define_types = function() {
     var btypetoks = [
@@ -501,6 +532,10 @@ Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize
     }
 
     if (typeof defintval !== 'undefined' && defintval !== null) {
+        if (typeof this._options.constants !== 'undefined' && name in this._options.constants) {
+            defintval = this._options.constants[name];
+        }
+
         n.initial_assign = dtn.create_token(Tn.T_EQUAL, dtn.token_name(Tn.T_EQUAL), bloc);
 
         var tok = dtn.create_token(Tn.T_INTCONSTANT, "" + defintval, bloc);
