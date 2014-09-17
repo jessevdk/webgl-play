@@ -214,6 +214,19 @@ function Preprocessor(source, type, options) {
     this._source_reader._source_map = this._source_map.bind(this);
 }
 
+Preprocessor.options_from_context = function(c) {
+    var exts = c.getSupportedExtensions();
+    var defines = {};
+
+    for (var i = 0; i < exts.length; i++) {
+        defines[ext[i]] = '1';
+    }
+
+    return {
+        defines: defines
+    };
+}
+
 Preprocessor.prototype.type = function() {
     return this._source.type();
 };
