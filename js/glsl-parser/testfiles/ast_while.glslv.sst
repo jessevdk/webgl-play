@@ -173,7 +173,10 @@
             },
             {
               "WhileStmt": {
-                "token": "WHILE:while@(14.5-14.10)",
+                "token": [
+                  "WHILE:while@(14.5-14.10)",
+                  "COMMENT:// simple while loop@(13.5-13.25), multi:false =  simple while loop"
+                ],
                 "left_paren": "LEFT_PAREN:(@(14.11-14.12)",
                 "condition(BinOpExpr)": {
                   "lhs(VariableExpr)": {
@@ -258,7 +261,10 @@
             },
             {
               "WhileStmt": {
-                "token": "WHILE:while@(21.5-21.10)",
+                "token": [
+                  "WHILE:while@(21.5-21.10)",
+                  "COMMENT:// without braces@(20.5-20.22), multi:false =  without braces"
+                ],
                 "left_paren": "LEFT_PAREN:(@(21.11-21.12)",
                 "condition(BinOpExpr)": {
                   "lhs(VariableExpr)": {
@@ -568,8 +574,6 @@
     }
   ],
   "comments": [
-    "COMMENT:// simple while loop@(13.5-13.25), multi:false =  simple while loop",
-    "COMMENT:// without braces@(20.5-20.22), multi:false =  without braces",
     "COMMENT:// vi:ts=4:et@(36.1-36.14), multi:false =  vi:ts=4:et"
   ],
   "function_protos": [

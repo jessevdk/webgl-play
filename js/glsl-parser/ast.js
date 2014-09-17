@@ -990,7 +990,8 @@ function Parser(source, type) {
 
     this.type = type;
     this.body = [];
-    this.comments = this._t.comments();
+
+    this.comments = [];
 
     this._parse_tu();
     this.complete();
@@ -3010,6 +3011,7 @@ Parser.prototype._parse_tu = function() {
         var tok = this._t.next();
 
         if (tok.id == Tn.T_EOF) {
+            this.comments = tok.comments;
             break;
         }
 

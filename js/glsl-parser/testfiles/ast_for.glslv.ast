@@ -37,7 +37,10 @@
             },
             {
               "ForStmt": {
-                "token": "FOR:for@(7.5-7.8)",
+                "token": [
+                  "FOR:for@(7.5-7.8)",
+                  "COMMENT:// simple for loop@(6.5-6.23), multi:false =  simple for loop"
+                ],
                 "left_paren": "LEFT_PAREN:(@(7.9-7.10)",
                 "init(ExpressionStmt)": {
                   "expression(AssignmentExpr)": {
@@ -71,7 +74,10 @@
                 },
                 "right_paren": "RIGHT_PAREN:)@(7.28-7.29)",
                 "body(Block)": {
-                  "right_brace": "RIGHT_BRACE:}@(9.5-9.6)",
+                  "right_brace": [
+                    "RIGHT_BRACE:}@(9.5-9.6)",
+                    "COMMENT:// something@(8.9-8.21), multi:false =  something"
+                  ],
                   "left_brace": "LEFT_BRACE:{@(7.30-7.31)",
                   "new_scope": true
                 }
@@ -79,7 +85,10 @@
             },
             {
               "ForStmt": {
-                "token": "FOR:for@(12.5-12.8)",
+                "token": [
+                  "FOR:for@(12.5-12.8)",
+                  "COMMENT:// without expression@(11.5-11.26), multi:false =  without expression"
+                ],
                 "left_paren": "LEFT_PAREN:(@(12.9-12.10)",
                 "init(ExpressionStmt)": {
                   "expression(AssignmentExpr)": {
@@ -128,7 +137,10 @@
             },
             {
               "ForStmt": {
-                "token": "FOR:for@(17.5-17.8)",
+                "token": [
+                  "FOR:for@(17.5-17.8)",
+                  "COMMENT:// without braces@(16.5-16.22), multi:false =  without braces"
+                ],
                 "left_paren": "LEFT_PAREN:(@(17.9-17.10)",
                 "init(ExpressionStmt)": {
                   "expression(AssignmentExpr)": {
@@ -168,7 +180,10 @@
             },
             {
               "ForStmt": {
-                "token": "FOR:for@(21.5-21.8)",
+                "token": [
+                  "FOR:for@(21.5-21.8)",
+                  "COMMENT:// with inline declaration@(20.5-20.31), multi:false =  with inline declaration"
+                ],
                 "left_paren": "LEFT_PAREN:(@(21.9-21.10)",
                 "init(VariableDecl)": {
                   "type(TypeRef)": {
@@ -220,7 +235,10 @@
             },
             {
               "ForStmt": {
-                "token": "FOR:for@(25.5-25.8)",
+                "token": [
+                  "FOR:for@(25.5-25.8)",
+                  "COMMENT:// with multiple inline declaration@(24.5-24.40), multi:false =  with multiple inline declaration"
+                ],
                 "left_paren": "LEFT_PAREN:(@(25.9-25.10)",
                 "init(VariableDecl)": {
                   "type(TypeRef)": {
@@ -297,7 +315,10 @@
             },
             {
               "ForStmt": {
-                "token": "FOR:for@(29.5-29.8)",
+                "token": [
+                  "FOR:for@(29.5-29.8)",
+                  "COMMENT:// without inline expression declaration@(28.5-28.45), multi:false =  without inline expression declaration"
+                ],
                 "left_paren": "LEFT_PAREN:(@(29.9-29.10)",
                 "init(VariableDecl)": {
                   "type(TypeRef)": {
@@ -372,13 +393,6 @@
     }
   ],
   "comments": [
-    "COMMENT:// simple for loop@(6.5-6.23), multi:false =  simple for loop",
-    "COMMENT:// something@(8.9-8.21), multi:false =  something",
-    "COMMENT:// without expression@(11.5-11.26), multi:false =  without expression",
-    "COMMENT:// without braces@(16.5-16.22), multi:false =  without braces",
-    "COMMENT:// with inline declaration@(20.5-20.31), multi:false =  with inline declaration",
-    "COMMENT:// with multiple inline declaration@(24.5-24.40), multi:false =  with multiple inline declaration",
-    "COMMENT:// without inline expression declaration@(28.5-28.45), multi:false =  without inline expression declaration",
     "COMMENT:// vi:ts=4:et@(33.1-33.14), multi:false =  vi:ts=4:et"
   ]
 }

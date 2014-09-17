@@ -23,7 +23,10 @@
                   {
                     "VariableDecl": {
                       "type(TypeRef)": {
-                        "token": "INT:int@(6.9-6.12)",
+                        "token": [
+                          "INT:int@(6.9-6.12)",
+                          "COMMENT:// a new scope@(5.9-5.23), multi:false =  a new scope"
+                        ],
                         "is_primitive": true,
                         "@id": 8
                       },
@@ -55,7 +58,6 @@
     }
   ],
   "comments": [
-    "COMMENT:// a new scope@(5.9-5.23), multi:false =  a new scope",
     "COMMENT:// vi:ts=4:et@(10.1-10.14), multi:false =  vi:ts=4:et"
   ]
 }

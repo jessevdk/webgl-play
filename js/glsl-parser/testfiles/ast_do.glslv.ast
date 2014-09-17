@@ -25,7 +25,10 @@
                 },
                 "right_paren": "RIGHT_PAREN:)@(6.15-6.16)",
                 "body(Block)": {
-                  "right_brace": "RIGHT_BRACE:}@(6.2-6.3)",
+                  "right_brace": [
+                    "RIGHT_BRACE:}@(6.2-6.3)",
+                    "COMMENT:// something here@(5.3-5.20), multi:false =  something here"
+                  ],
                   "left_brace": "LEFT_BRACE:{@(4.5-4.6)"
                 },
                 "semi": "SEMICOLON:;@(6.16-6.17)"
@@ -36,8 +39,5 @@
         }
       }
     }
-  ],
-  "comments": [
-    "COMMENT:// something here@(5.3-5.20), multi:false =  something here"
   ]
 }

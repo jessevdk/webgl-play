@@ -1689,7 +1689,10 @@
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:radians@(27.5-27.12)",
+                  "name": [
+                    "IDENTIFIER:radians@(27.5-27.12)",
+                    "COMMENT:// Angle and Trigonometry functions@(26.2-26.37), multi:false =  Angle and Trigonometry functions"
+                  ],
                   "left_paren": "LEFT_PAREN:(@(27.12-27.13)",
                   "right_paren": "RIGHT_PAREN:)@(27.14-27.15)",
                   "arguments": [
@@ -3833,7 +3836,10 @@
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:pow@(38.5-38.8)",
+                  "name": [
+                    "IDENTIFIER:pow@(38.5-38.8)",
+                    "COMMENT:// Exponential Functions@(37.5-37.29), multi:false =  Exponential Functions"
+                  ],
                   "left_paren": "LEFT_PAREN:(@(38.8-38.9)",
                   "right_paren": "RIGHT_PAREN:)@(38.13-38.14)",
                   "arguments": [
@@ -5565,7 +5571,10 @@
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:abs@(47.5-47.8)",
+                  "name": [
+                    "IDENTIFIER:abs@(47.5-47.8)",
+                    "COMMENT:// Common Functions@(46.5-46.24), multi:false =  Common Functions"
+                  ],
                   "left_paren": "LEFT_PAREN:(@(47.8-47.9)",
                   "right_paren": "RIGHT_PAREN:)@(47.10-47.11)",
                   "arguments": [
@@ -10053,7 +10062,10 @@
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:length@(65.5-65.11)",
+                  "name": [
+                    "IDENTIFIER:length@(65.5-65.11)",
+                    "COMMENT:// Geometric Functions@(64.5-64.27), multi:false =  Geometric Functions"
+                  ],
                   "left_paren": "LEFT_PAREN:(@(65.11-65.12)",
                   "right_paren": "RIGHT_PAREN:)@(65.13-65.14)",
                   "arguments": [
@@ -12303,7 +12315,10 @@
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:matrixCompMult@(75.5-75.19)",
+                  "name": [
+                    "IDENTIFIER:matrixCompMult@(75.5-75.19)",
+                    "COMMENT:// Matrix Functions@(74.5-74.24), multi:false =  Matrix Functions"
+                  ],
                   "left_paren": "LEFT_PAREN:(@(75.19-75.20)",
                   "right_paren": "RIGHT_PAREN:)@(75.26-75.27)",
                   "arguments": [
@@ -12516,7 +12531,10 @@
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
-                  "name": "IDENTIFIER:lessThan@(78.5-78.13)",
+                  "name": [
+                    "IDENTIFIER:lessThan@(78.5-78.13)",
+                    "COMMENT:// Vector Relational Functions@(77.5-77.35), multi:false =  Vector Relational Functions"
+                  ],
                   "left_paren": "LEFT_PAREN:(@(78.13-78.14)",
                   "right_paren": "RIGHT_PAREN:)@(78.20-78.21)",
                   "arguments": [
@@ -16213,12 +16231,6 @@
     }
   ],
   "comments": [
-    "COMMENT:// Angle and Trigonometry functions@(26.2-26.37), multi:false =  Angle and Trigonometry functions",
-    "COMMENT:// Exponential Functions@(37.5-37.29), multi:false =  Exponential Functions",
-    "COMMENT:// Common Functions@(46.5-46.24), multi:false =  Common Functions",
-    "COMMENT:// Geometric Functions@(64.5-64.27), multi:false =  Geometric Functions",
-    "COMMENT:// Matrix Functions@(74.5-74.24), multi:false =  Matrix Functions",
-    "COMMENT:// Vector Relational Functions@(77.5-77.35), multi:false =  Vector Relational Functions",
     "COMMENT:// vi:ts=4:et@(96.1-96.14), multi:false =  vi:ts=4:et"
   ],
   "functions": [

@@ -20,16 +20,34 @@ if (typeof window != 'undefined' || typeof self != 'undefined') {
 (function (exports) {
 'use strict';
 
-function Token(id, text, loc) {
+function Token(id, text, loc, comments) {
     this.id = id;
     this.text = text;
     this.location = loc;
 
     this._tokenizer = null;
+
+    if (typeof comments === 'undefined') {
+        this.comments = [];
+    } else {
+        this.comments = comments;
+    }
 }
 
 Token.prototype.marshal = function () {
-    return this._tokenizer.token_id_name(this.id) + ':' + this.text + '@' + this.location.marshal();
+    var ret = this._tokenizer.token_id_name(this.id) + ':' + this.text + '@' + this.location.marshal();
+
+    if (this.comments.length > 0) {
+        var c = [ret];
+
+        for (var i = 0; i < this.comments.length; i++) {
+            c.push(this.comments[i].marshal());
+        }
+
+        return c;
+    } else {
+        return ret;
+    }
 };
 
 Token.prototype.for_assert = function () {
@@ -127,7 +145,6 @@ BaseTokenizer.prototype._merge_options = function(defs, options) {
 BaseTokenizer.prototype.init = function(source) {
     this._source = source;
     this._cached = [];
-    this._comments = [];
 
     this._matchers = [];
 
@@ -256,10 +273,6 @@ BaseTokenizer.prototype.create_token = function(id, text, location) {
     return tok;
 };
 
-BaseTokenizer.prototype.comments = function() {
-    return this._comments;
-};
-
 function regex_escape(s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
@@ -337,22 +350,49 @@ BaseTokenizer.prototype._skip_ws = function() {
 };
 
 BaseTokenizer.prototype.peek = function() {
-    if (this._cached.length !== 0) {
-        return this._cached[0];
-    }
-
     return this.unconsume(this.next());
 };
 
 BaseTokenizer.prototype.unconsume = function(tok) {
-    this._cached.push(tok);
+    this._cached.unshift(tok);
     return tok;
 };
 
+BaseTokenizer.prototype._post_comments = function(tok) {
+    this._options.skip_comments = false;
+
+    while (true) {
+        var ntok = this.peek();
+
+        if (ntok.id == this.T_COMMENT) {
+            if (ntok.location.start.line == tok.location.start.line) {
+                tok.comments.push(ntok);
+                this.next();
+            } else {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+
+    this._options.skip_comments = true;
+    return tok;
+}
+
 BaseTokenizer.prototype.next = function() {
+    var comments = [];
+
+    if (this._options.comments && this._options.skip_comments) {
+        while (this._cached.length > 0 && this._cached[0].id == this.T_COMMENT) {
+            comments.push(this._cached.shift());
+        }
+    }
+
     if (this._cached.length !== 0) {
-        var ret = this._cached[0];
-        this._cached = this._cached.slice(1);
+        var ret = this._cached.shift();
+        ret.comments = ret.comments.concat(comments);
+
         return ret;
     }
 
@@ -363,7 +403,7 @@ BaseTokenizer.prototype.next = function() {
         this._skip_ws();
 
         if (this._source.eof()) {
-            var tok = new Token(this.T_EOF, '', this.location().to_range());
+            var tok = new Token(this.T_EOF, '', this.location().to_range(), comments);
             tok._tokenizer = this;
 
             return tok;
@@ -383,13 +423,24 @@ BaseTokenizer.prototype.next = function() {
 
                 m.finish_token(tok);
 
-                if (this._options.comments && this._options.skip_comments && tok.id == this.T_COMMENT) {
-                    this._comments.push(tok);
-                    processing_comments = true;
-                    break;
+                if (tok.id == this.T_COMMENT) {
+                    if (this._options.comments && this._options.skip_comments) {
+                        comments.push(tok);
+                        processing_comments = true;
+                    } else {
+                        return tok;
+                    }
                 } else {
+                    tok.comments = comments;
+
+                    if (this._options.comments && this._options.skip_comments) {
+                        return this._post_comments(tok);
+                    }
+
                     return tok;
                 }
+
+                break;
             }
         }
     }
