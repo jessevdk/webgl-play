@@ -227,7 +227,7 @@ function Source(s, type) {
     this._source = s;
     this._remainder = this._source;
     this._location = new Location(1, 1);
-    this._type = type
+    this._type = type;
 }
 
 Source.prototype.location = function() {
