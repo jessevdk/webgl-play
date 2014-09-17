@@ -50,6 +50,8 @@ function CompositeType(name) {
     this.field_map = {};
     this.fields = [];
     this.is_composite = true;
+    this.has_array_field = false;
+    this.has_sampler_field = false;
 
     this.zero = {};
 }
@@ -63,6 +65,14 @@ CompositeType.prototype.declare_field = function(name, type) {
         type: type,
         decl: null
     };
+
+    if (type.is_array || (type.is_composite && type.has_array_field)) {
+        this.has_array_field = true;
+    }
+
+    if (type.is_sampler || (type.is_composite && type.has_sampler_field)) {
+        this.has_sampler_field = true;
+    }
 
     this.fields.push(field);
     this.field_map[name] = field;
@@ -111,6 +121,7 @@ function PrimitiveType(id, zero) {
     this.is_scalar = PrimitiveType._is_scalar(id);
     this.is_vec = PrimitiveType._is_vec(id);
     this.is_mat = PrimitiveType._is_mat(id);
+    this.is_sampler = PrimitiveType._is_sampler(id);
 
     this.element_type = PrimitiveType._element_type(id);
     this.is_int = (this.element_type == Tn.T_INT);
@@ -144,6 +155,16 @@ PrimitiveType._is_vec = function(tok) {
     case Tn.T_IVEC2:
     case Tn.T_IVEC3:
     case Tn.T_IVEC4:
+        return true;
+    }
+
+    return false;
+};
+
+PrimitiveType._is_sampler = function(tok) {
+    switch (tok) {
+    case Tn.T_SAMPLER2D:
+    case Tn.T_SAMPLERCUBE:
         return true;
     }
 
