@@ -1,10 +1,10 @@
-glsl = require('./glslparser');
+var glsl = require('../glsl');
 
 var util = require('util');
 var fs = require('fs');
 var assert = require('chai').assert;
 
-var files = fs.readdirSync('testfiles');
+var files = fs.readdirSync('tests/testfiles');
 
 function has_suffix(s, suf) {
     return s.slice(s.length - suf.length) == suf;
@@ -15,9 +15,9 @@ function scan_files(filt) {
 
     for (var i = 0; i < files.length; i++) {
         var f = files[i];
-        var ff = 'testfiles/' + f;
+        var ff = 'tests/testfiles/' + f;
 
-        if (filt(files[i]) && (has_suffix(f, '.glslv')|| has_suffix(f, '.glslf')) && fs.existsSync(ff + '.ast')) {
+        if (filt(files[i]) && (has_suffix(f, '.glslv') || has_suffix(f, '.glslf')) && fs.existsSync(ff + '.sst')) {
             ret.push(f);
         }
     }
@@ -26,22 +26,24 @@ function scan_files(filt) {
 }
 
 function test_one(f) {
-    var unprocessed = fs.readFileSync('testfiles/' + f, 'utf8');
+    var unprocessed = fs.readFileSync('tests/testfiles/' + f, 'utf8');
     var p = new glsl.ast.Parser(unprocessed, has_suffix(f, '.glslv') ? glsl.source.VERTEX : glsl.source.FRAGMENT);
 
-    var astj = fs.readFileSync('testfiles/' + f + '.ast', 'utf-8');
+    glsl.sst.Annotate(p);
 
-    if (!astj) {
-        astj = '{}';
+    var sstj = fs.readFileSync('tests/testfiles/' + f + '.sst', 'utf-8');
+
+    if (!sstj) {
+        sstj = '{}';
     }
 
     var seen = {};
 
     var body = p.marshal();
 
-    if (JSON.stringify(body, null, '  ') + '\n' != astj) {
-        var ast = JSON.parse(astj);
-        assert.deepEqual(body, ast);
+    if (JSON.stringify(body, null, '  ') + '\n' != sstj) {
+        var sst = JSON.parse(sstj);
+        assert.deepEqual(body, sst);
     }
 }
 
@@ -57,11 +59,11 @@ function make_suite(name, prefix, filter) {
     });
 }
 
-make_suite('ast', 'ast_', function(f) {
+make_suite('sst', 'ast_', function(f) {
     return f.indexOf('ast_') === 0 && f.indexOf('ast_error_') !== 0;
 });
 
-make_suite('ast-error', 'ast_error_', function(f) {
+make_suite('sst-error', 'ast_error_', function(f) {
     return f.indexOf('ast_error_') === 0;
 });
 

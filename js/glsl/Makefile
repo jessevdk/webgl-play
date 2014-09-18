@@ -1,6 +1,8 @@
 NODE_MODULES_BIN = ../../node_modules/.bin
+
 MOCHA_BIN = $(NODE_MODULES_BIN)/mocha
 _MOCHA_BIN = $(NODE_MODULES_BIN)/_mocha
+
 ISTANBUL_BIN = $(NODE_MODULES_BIN)/istanbul
 JSHINT_BIN = $(NODE_MODULES_BIN)/jshint
 
@@ -13,7 +15,7 @@ endif
 
 MOCHA = $(MOCHA_BIN) $(MOCHA_OPTS)
 
-TESTS = $(wildcard *_test.js)
+TESTS = $(wildcard tests/*_test.js)
 
 UNAME = $(shell uname)
 
@@ -22,6 +24,13 @@ OPEN = open
 else
 OPEN = xdg-open
 endif
+
+define make-test-rule
+test-$1: $(MOCHA_BIN)
+	@$(MOCHA) tests/$1_test.js
+
+.PHONY: test-$1
+endef
 
 all:
 
@@ -40,14 +49,7 @@ $(JSHINT_BIN):
 test: $(MOCHA_BIN)
 	@$(MOCHA) $(TESTS)
 
-test-ast: $(MOCHA_BIN)
-	@$(MOCHA) ast_test.js
-
-test-sst: $(MOCHA_BIN)
-	@$(MOCHA) sst_test.js
-
-test-preprocessor: $(MOCHA_BIN)
-	@$(MOCHA) preprocessor_test.js
+$(foreach t,$(TESTS),$(eval $(call make-test-rule,$(patsubst %_test.js,%,$(notdir $(t))))))
 
 test-coverage: $(MOCHA_BIN) $(ISTANBUL_BIN)
 	@$(ISTANBUL_BIN) cover $(_MOCHA_BIN) -- $(MOCHA_OPTS) -R spec $(TESTS) && \
@@ -70,4 +72,4 @@ linter: $(JSHINT_BIN)
 check: $(JSHINT_BIN) test
 	@$(call linter-func)
 
-.PHONY: all test test-ast test-sst test-preprocessor linter check
+.PHONY: all test test-coverage linter check

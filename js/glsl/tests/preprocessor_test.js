@@ -1,4 +1,4 @@
-glsl = require('./glslparser');
+var glsl = require('../glsl');
 
 var util = require('util');
 var fs = require('fs');
@@ -7,8 +7,8 @@ var assert = require('chai').assert;
 suite('preprocessor', function() {
 
     test('expand', function () {
-        var unprocessed = fs.readFileSync('testfiles/preprocessor.glslv', 'utf8');
-        var processed = fs.readFileSync('testfiles/preprocessor_result.glslv', 'utf8');
+        var unprocessed = fs.readFileSync('tests/testfiles/preprocessor.glslv', 'utf8');
+        var processed = fs.readFileSync('tests/testfiles/preprocessor_result.glslv', 'utf8');
 
         var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
 
@@ -22,8 +22,8 @@ suite('preprocessor', function() {
     });
 
     test('all', function () {
-        var unprocessed = fs.readFileSync('testfiles/preprocessor_all.glslv', 'utf8');
-        var processed = fs.readFileSync('testfiles/preprocessor_all_result.glslv', 'utf8');
+        var unprocessed = fs.readFileSync('tests/testfiles/preprocessor_all.glslv', 'utf8');
+        var processed = fs.readFileSync('tests/testfiles/preprocessor_all_result.glslv', 'utf8');
 
         var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
 
@@ -37,7 +37,7 @@ suite('preprocessor', function() {
     });
 
     test('source_map', function() {
-        var unprocessed = fs.readFileSync('testfiles/preprocessor.glslv', 'utf8');
+        var unprocessed = fs.readFileSync('tests/testfiles/preprocessor.glslv', 'utf8');
         var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
 
         var expected_map = [
@@ -85,7 +85,7 @@ suite('preprocessor', function() {
     });
 
     test('tokenizer', function() {
-        var unprocessed = fs.readFileSync('testfiles/preprocessor.glslv', 'utf8');
+        var unprocessed = fs.readFileSync('tests/testfiles/preprocessor.glslv', 'utf8');
         var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
         var t = new glsl.tokenizer.Tokenizer(p);
 
