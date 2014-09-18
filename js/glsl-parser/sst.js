@@ -1044,33 +1044,38 @@ Annotator.prototype._annotate_assignment_expr = function(node) {
 
     node.t.type = node.lhs.t.type;
 
-    var binop = null;
-
-    switch (node.op.id) {
-    case Tn.T_MUL_ASSIGN:
-        binop = Tn.T_STAR;
-        break;
-    case Tn.T_DIV_ASSIGN:
-        binop = Tn.T_SLASH;
-        break;
-    case Tn.T_ADD_ASSIGN:
-        binop = Tn.T_PLUS;
-        break;
-    case Tn.T_SUB_ASSIGN:
-        binop = Tn.T_DASH;
-        break;
-    }
-
     if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
+        var binop = null;
+
+        switch (node.op.id) {
+        case Tn.T_MUL_ASSIGN:
+            binop = Tn.T_STAR;
+            break;
+        case Tn.T_DIV_ASSIGN:
+            binop = Tn.T_SLASH;
+            break;
+        case Tn.T_ADD_ASSIGN:
+            binop = Tn.T_PLUS;
+            break;
+        case Tn.T_SUB_ASSIGN:
+            binop = Tn.T_DASH;
+            break;
+        }
+
+        var rettype = node.rhs.t.type;
+
         if (binop !== null) {
             var sig = Tn.token_name(binop) + '(' + node.lhs.t.type.name + ',' + node.rhs.t.type.name + ')';
 
             if (!(sig in this._builtins.operator_map)) {
                 this._error(node.location(), 'cannot use the operator \'' + Tn.token_name(binop) + '\' on types ' + node.lhs.t.type.name + ' and ' + node.rhs.t.type.name);
+            } else {
+                var oper = this._builtins.operator_map[sig];
+                rettype = oper.ret;
             }
         }
 
-        if (node.lhs.t.type != node.rhs.t.type) {
+        if (node.lhs.t.type != rettype) {
             this._error(node.lhs.location().extend(node.op.location), 'cannot assign expression of type ' + node.rhs.t.type.name + ' to a value of type ' + node.lhs.t.type.name);
         }
     }
