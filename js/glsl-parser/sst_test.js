@@ -6,6 +6,10 @@ var assert = require('chai').assert;
 
 var files = fs.readdirSync('testfiles');
 
+function has_suffix(s, suf) {
+    return s.slice(s.length - suf.length) == suf;
+}
+
 function scan_files(filt) {
     var ret = [];
 
@@ -13,7 +17,7 @@ function scan_files(filt) {
         var f = files[i];
         var ff = 'testfiles/' + f;
 
-        if (filt(files[i]) && f.lastIndexOf('.glslv') == f.length - 6 && fs.existsSync(ff + '.sst')) {
+        if (filt(files[i]) && (has_suffix(f, '.glslv') || has_suffix(f, '.glslf')) && fs.existsSync(ff + '.sst')) {
             ret.push(f);
         }
     }
@@ -23,7 +27,7 @@ function scan_files(filt) {
 
 function test_one(f) {
     var unprocessed = fs.readFileSync('testfiles/' + f, 'utf8');
-    var p = new glsl.ast.Parser(unprocessed, glsl.source.VERTEX);
+    var p = new glsl.ast.Parser(unprocessed, has_suffix(f, '.glslv') ? glsl.source.VERTEX : glsl.source.FRAGMENT);
 
     glsl.sst.Annotate(p);
 

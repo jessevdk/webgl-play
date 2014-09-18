@@ -4,12 +4,16 @@ const glsl = require('../glslparser');
 
 var fs = require('fs');
 
+function has_suffix(s, suf) {
+    return s.slice(s.length - suf.length) == suf;
+}
+
 if (process.argv.length > 2) {
     for (var i = 2; i < process.argv.length; i++) {
         var source = fs.readFileSync(process.argv[i], 'utf8');
 
         var start = Date.now();
-        var p = new glsl.ast.Parser(source, glsl.source.VERTEX);
+        var p = new glsl.ast.Parser(source, has_suffix(process.argv[i], '.glslv') ? glsl.source.VERTEX : glsl.source.FRAGMENT);
         var end = Date.now();
 
         var parsems = (end - start);
