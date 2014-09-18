@@ -5,6 +5,7 @@ _MOCHA_BIN = $(NODE_MODULES_BIN)/_mocha
 
 ISTANBUL_BIN = $(NODE_MODULES_BIN)/istanbul
 JSHINT_BIN = $(NODE_MODULES_BIN)/jshint
+UGLIFYJS_BIN = $(NODE_MODULES_BIN)/uglifyjs
 
 MOCHA_OPTS = -u tdd
 T ?=
@@ -16,6 +17,7 @@ endif
 MOCHA = $(MOCHA_BIN) $(MOCHA_OPTS)
 
 TESTS = $(wildcard tests/*_test.js)
+SOURCES = source.js tokenizer.js preprocessor.js ast.js builtins.js sst.js
 
 UNAME = $(shell uname)
 
@@ -32,7 +34,7 @@ test-$1: $(MOCHA_BIN)
 .PHONY: test-$1
 endef
 
-all:
+all: glsl.all.min.js
 
 $(MOCHA_BIN):
 	@echo 'Installing dependencies to run tests using npm'; \
@@ -46,6 +48,13 @@ $(JSHINT_BIN):
 	@echo 'Installing dependencies to run linter using npm'; \
 	npm install --loglevel error jshint >/dev/null
 
+$(UGLIFYJS_BIN):
+	@echo 'Installing dependencies to run uglifier using npm'; \
+	npm install --loglevel error uglify-js >/dev/null
+
+glsl.all.min.js: $(SOURCES) $(UGLIFYJS_BIN)
+	$(UGLIFYJS_BIN) -c -o $@ --source-map glsl.all.min.js.map $(SOURCES)
+
 test: $(MOCHA_BIN)
 	@$(MOCHA) $(TESTS)
 
@@ -57,7 +66,7 @@ test-coverage: $(MOCHA_BIN) $(ISTANBUL_BIN)
 
 linter-func = 										\
 	printf "[\033[1mLINT\033[0m] ... ";				\
-	ret=$$($(JSHINT_BIN) $(wildcard *.js));			\
+	ret=$$($(JSHINT_BIN) $(SOURCES));				\
 	if [ $$? -ne 0 ]; then							\
 		printf "[\033[31mfail\033[0m]\n";			\
 		echo "$$ret";								\
