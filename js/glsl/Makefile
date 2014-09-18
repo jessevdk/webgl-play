@@ -53,6 +53,7 @@ $(UGLIFYJS_BIN):
 	npm install --loglevel error uglify-js >/dev/null
 
 glsl.all.min.js: $(SOURCES) $(UGLIFYJS_BIN)
+	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	$(UGLIFYJS_BIN) -c -o $@ --source-map glsl.all.min.js.map $(SOURCES)
 
 test: $(MOCHA_BIN)
