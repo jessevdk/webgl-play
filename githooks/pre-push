@@ -1,0 +1,41 @@
+#!/bin/bash
+
+IFS=' '
+
+while read localref localsha1 remoteref remotesha1
+do
+	tmp=$(mktemp -d -t glsltest.XXXXXX)
+	git archive $localsha1 | tar -xC "$tmp"
+
+	printf "[\033[1mchecking glsl.all.min.js\033[0m] ... "
+
+	make -C "$tmp/js/glsl" 2>/dev/null >/dev/null
+
+	if ! diff -q "$tmp/js/glsl/glsl.all.min.js" "js/glsl/glsl.all.min.js" 2>/dev/null >/dev/null; then
+		printf "[\033[31mfail\033[0m]\n"
+
+		rm -rf "$tmp"
+
+		printf "\033[332mRefusing to push due to out of date \033[1mjs/glsl/glsl.all.min.js\033[0;31m. Please make sure to run '\033[1mmake\033[0;31m' in js/glsl and commit the updated files...\033[0m\n"
+		exit 1
+	else
+		printf "[\033[32mok\033[0m]\n"
+	fi
+
+	printf "[\033[1mrunning tests\033[0m]            ... "
+	outp=$(make -C "$tmp/js/glsl" check 2>&1)
+	retval=$?
+
+	rm -rf "$tmp"
+
+	if [ $retval -ne 0 ]; then
+		printf "[\033[31mfail\033[0m]\n"
+		printf "$outp\n"
+
+		exit $retval
+	else
+		printf "[\033[32mok\033[0m]\n"
+	fi
+done
+
+exit 0
