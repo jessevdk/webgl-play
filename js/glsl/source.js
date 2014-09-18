@@ -142,7 +142,6 @@ Range.prototype.extend = function(loc) {
 };
 
 Range.spans = function() {
-    var q = arguments;
     var locs = [];
     var args = Array.prototype.slice.call(arguments);
 
