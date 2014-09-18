@@ -524,16 +524,16 @@ Annotator.prototype._matching_qualifiers = function(a, b) {
     var cpb = b.slice();
 
     while (cpa.length > 0) {
-        var i = b.indexOf(cpa.pop());
+        var i = cpb.indexOf(cpa.pop());
 
         if (i !== -1) {
-            b.splice(i, 1);
+            cpb.splice(i, 1);
         } else {
             return false;
         }
     }
 
-    if (b.length !== 0) {
+    if (cpb.length !== 0) {
         return false;
     }
 
