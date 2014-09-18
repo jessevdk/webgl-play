@@ -463,7 +463,7 @@ Preprocessor.prototype._ifdef = function(tok, tokenizer, negate) {
     }
 };
 
-Preprocessor.prototype._else = function(tok, tokenizer) {
+Preprocessor.prototype._else = function(tok) {
     if (this._pstack.length == 1) {
         this._error(tok.location, 'unexpected #else without opening #if, #ifdef, or #ifndef');
         return;
@@ -521,7 +521,7 @@ Preprocessor.prototype._endif = function(tok, tokenizer) {
     this._pstack.pop();
 };
 
-Preprocessor.prototype._parse_expression_primary = function(tokenizer, p) {
+Preprocessor.prototype._parse_expression_primary = function(tokenizer) {
     var tok = tokenizer.next();
 
     switch (tok.id) {

@@ -37,7 +37,7 @@ Location.prototype.to_range = function() {
     return rng;
 };
 
-Location.prototype.inspect = function(depth) {
+Location.prototype.inspect = function() {
     return this.line + '.' + this.column;
 };
 

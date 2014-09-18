@@ -1439,13 +1439,13 @@ Annotator.prototype._annotate_selection_else_stmt = function(node) {
     this._annotate_node(node.body);
 };
 
-Annotator.prototype._annotate_break_stmt = function(node) {
+Annotator.prototype._annotate_break_stmt = function() {
 };
 
-Annotator.prototype._annotate_continue_stmt = function(node) {
+Annotator.prototype._annotate_continue_stmt = function() {
 };
 
-Annotator.prototype._annotate_discard_stmt = function(node) {
+Annotator.prototype._annotate_discard_stmt = function() {
 };
 
 Annotator.prototype._annotate_return_stmt = function(node) {
@@ -1466,10 +1466,10 @@ Annotator.prototype._annotate_return_stmt = function(node) {
     }
 };
 
-Annotator.prototype._annotate_no_match = function(node) {
+Annotator.prototype._annotate_no_match = function() {
 };
 
-Annotator.prototype._annotate_empty_stmt = function(node) {
+Annotator.prototype._annotate_empty_stmt = function() {
 };
 
 Annotator.prototype._error = function(loc, message) {

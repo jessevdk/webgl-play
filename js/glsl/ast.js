@@ -350,7 +350,7 @@ FieldDecl.prototype.location = function() {
 };
 
 
-function PrecisionStmt(token, qualifier, type) {
+function PrecisionStmt(token) {
     Node.call(this);
 
     this.token = token;
@@ -1076,7 +1076,7 @@ Parser.prototype._require_one_of = function(ids) {
 };
 
 Parser.prototype._match_one_of = function(matchers, tok) {
-    var retf = function(m, tok, t) {
+    var retf = function(m, tok) {
         return m.call(this, tok, ret);
     };
 
@@ -1157,7 +1157,7 @@ Parser.prototype._parse_binop_expression = function(tok, m, expr, opid, rule) {
     return ret;
 };
 
-Parser.prototype._parse_function_call = function(tok, m) {
+Parser.prototype._parse_function_call = function(tok) {
     var cl = new FunctionCallExpr(tok);
 
     cl.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
@@ -1234,7 +1234,7 @@ Parser.prototype._parse_function_identifier.match = function(tok) {
     return this._is_primitive_type(tok.id) || tok.id == Tn.T_IDENTIFIER;
 };
 
-Parser.prototype._parse_primary_expression = function(tok, m) {
+Parser.prototype._parse_primary_expression = function(tok) {
     if (this._parse_function_identifier.match.call(this, tok)) {
         var n = this._t.peek();
 
@@ -1594,7 +1594,7 @@ Parser.prototype._parse_conditional_expression.match = Parser.prototype._parse_l
 
 Parser.prototype._parse_conditional_expression.expected = Parser.prototype._parse_logical_or_expression.expected;
 
-Parser.prototype._parse_assignment_operator = function(tok, m) {
+Parser.prototype._parse_assignment_operator = function(tok) {
     return {token: tok, incomplete: false};
 };
 
@@ -1869,7 +1869,7 @@ Parser.prototype._parse_type_specifier = function(tok, m) {
     return m(tok);
 };
 
-Parser.prototype._parse_precision_qualifier = function(tok, m) {
+Parser.prototype._parse_precision_qualifier = function(tok) {
     return tok;
 };
 
@@ -1888,7 +1888,7 @@ Parser.prototype._parse_precision_qualifier.expected = function() {
     return ['highp', 'mediump', 'lowp'];
 };
 
-Parser.prototype._parse_type_precision_qualifier = function(tok, m) {
+Parser.prototype._parse_type_precision_qualifier = function(tok) {
     var type = this._parse_rule(this._parse_type_specifier_no_prec, this._t.next());
 
     type = TypeRef.wrap_decl(type);
@@ -2032,7 +2032,7 @@ Parser.prototype._parse_parameter_qualifier.match = function(tok) {
     return false;
 };
 
-Parser.prototype._parse_parameter_qualifier.expected = function(tok) {
+Parser.prototype._parse_parameter_qualifier.expected = function() {
     return ['in', 'out', 'inout'];
 };
 
@@ -2242,7 +2242,7 @@ Parser.prototype._parse_selection_rest_statement = function(tok, m) {
     return ret;
 };
 
-Parser.prototype._parse_selection_statement = function(tok, m) {
+Parser.prototype._parse_selection_statement = function(tok) {
     var sel = new SelectionStmt(tok);
 
     sel.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
@@ -2509,7 +2509,7 @@ Parser.prototype._parse_conditionopt = function(tok, m) {
     return this._parse_condition(tok, m);
 };
 
-Parser.prototype._parse_conditionopt.match = function(tok) {
+Parser.prototype._parse_conditionopt.match = function() {
     return true;
 };
 
@@ -2601,7 +2601,7 @@ match_one_of(Parser.prototype._parse_iteration_statement, [
     Parser.prototype._parse_for_statement
 ]);
 
-Parser.prototype._parse_jump_statement = function(tok, m) {
+Parser.prototype._parse_jump_statement = function(tok) {
     var ret = null;
 
     switch (tok.id) {
@@ -2937,7 +2937,7 @@ Parser.prototype._parse_declaration = function(tok, m) {
     return this._parse_init_declarator_list(decl, opts);
 };
 
-Parser.prototype._parse_declaration.match = function(tok, m) {
+Parser.prototype._parse_declaration.match = function(tok) {
     if (tok.id == Tn.T_PRECISION) {
         return true;
     }
