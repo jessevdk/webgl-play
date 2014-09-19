@@ -18,7 +18,7 @@
           }
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(11.1-11.2)",
+          "right_brace": "RIGHT_BRACE:}@(19.1-19.2)",
           "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
           "body": [
             {
@@ -230,6 +230,185 @@
                 },
                 "t": {}
               }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(IndexExpr)": {
+                  "incomplete": true,
+                  "expression(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(11.5-11.6)",
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "decl(Named)": "@8"
+                    }
+                  },
+                  "index(NoMatch)": {
+                    "incomplete": true,
+                    "token": "SEMICOLON:;@(11.7-11.8)",
+                    "t": {}
+                  },
+                  "left_bracket": "LEFT_BRACKET:[@(11.6-11.7)",
+                  "t": {}
+                },
+                "t": {}
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(IndexExpr)": {
+                  "incomplete": true,
+                  "expression(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(12.2-12.3)",
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "decl(Named)": "@8"
+                    }
+                  },
+                  "index(BinOpExpr)": {
+                    "lhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:2@(12.4-12.5) = 2",
+                      "t": {
+                        "type(builtins.PrimitiveType)": "$int",
+                        "is_const_expression": true,
+                        "const_value": 2
+                      }
+                    },
+                    "op": "STAR:*@(12.6-12.7)",
+                    "rhs(ConstantExpr)": {
+                      "token": "INTCONSTANT:2@(12.8-12.9) = 2",
+                      "t": {
+                        "type(builtins.PrimitiveType)": "$int",
+                        "is_const_expression": true,
+                        "const_value": 2
+                      }
+                    },
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "is_const_expression": true,
+                      "const_value": 4
+                    }
+                  },
+                  "left_bracket": "LEFT_BRACKET:[@(12.3-12.4)",
+                  "t": {}
+                },
+                "t": {}
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(FieldSelectionExpr)": {
+                  "incomplete": true,
+                  "expression(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(13.2-13.3)",
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "decl(Named)": "@8"
+                    }
+                  },
+                  "op": "DOT:.@(13.3-13.4)",
+                  "t": {}
+                },
+                "t": {}
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(TernaryExpr)": {
+                  "incomplete": true,
+                  "condition(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(15.2-15.3)",
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "decl(Named)": "@8"
+                    }
+                  },
+                  "question_token": "QUESTION:?@(15.4-15.5)",
+                  "true_expression(NoMatch)": {
+                    "incomplete": true,
+                    "token": "SEMICOLON:;@(15.5-15.6)",
+                    "t": {}
+                  },
+                  "t": {}
+                },
+                "t": {}
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(TernaryExpr)": {
+                  "incomplete": true,
+                  "condition(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(16.2-16.3)",
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "decl(Named)": "@8"
+                    }
+                  },
+                  "question_token": "QUESTION:?@(16.4-16.5)",
+                  "true_expression(ConstantExpr)": {
+                    "token": "INTCONSTANT:2@(16.6-16.7) = 2",
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "is_const_expression": true,
+                      "const_value": 2
+                    }
+                  },
+                  "t": {
+                    "type(builtins.PrimitiveType)": "$int"
+                  }
+                },
+                "t": {}
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(TernaryExpr)": {
+                  "incomplete": true,
+                  "condition(VariableExpr)": {
+                    "name": "IDENTIFIER:a@(17.2-17.3)",
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "decl(Named)": "@8"
+                    }
+                  },
+                  "question_token": "QUESTION:?@(17.4-17.5)",
+                  "true_expression(ConstantExpr)": {
+                    "token": "INTCONSTANT:2@(17.6-17.7) = 2",
+                    "t": {
+                      "type(builtins.PrimitiveType)": "$int",
+                      "is_const_expression": true,
+                      "const_value": 2
+                    }
+                  },
+                  "colon_token": "COLON::@(17.8-17.9)",
+                  "false_expression(NoMatch)": {
+                    "incomplete": true,
+                    "token": "SEMICOLON:;@(17.9-17.10)",
+                    "t": {}
+                  },
+                  "t": {
+                    "type(builtins.PrimitiveType)": "$int"
+                  }
+                },
+                "t": {}
+              }
+            },
+            {
+              "ExpressionStmt": {
+                "incomplete": true,
+                "expression(NoMatch)": {
+                  "incomplete": true,
+                  "token": "SEMICOLON:;@(18.5-18.6)",
+                  "t": {}
+                },
+                "t": {}
+              }
             }
           ],
           "new_scope": true,
@@ -254,7 +433,7 @@
     }
   ],
   "comments": [
-    "COMMENT:// vi:ts=4:et@(13.1-13.14), multi:false =  vi:ts=4:et"
+    "COMMENT:// vi:ts=4:et@(21.1-21.14), multi:false =  vi:ts=4:et"
   ],
   "functions": [
     "FunctionDef@2"
@@ -285,6 +464,50 @@
     {
       "location": "(10.13-10.14)",
       "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
+    },
+    {
+      "location": "(11.7-11.8)",
+      "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
+    },
+    {
+      "location": "(12.9-12.10)",
+      "message": "expected ], but got ;"
+    },
+    {
+      "location": "(13.4-13.5)",
+      "message": "expected identifier, but got ;"
+    },
+    {
+      "location": "(15.5-15.6)",
+      "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
+    },
+    {
+      "location": "(16.7-16.8)",
+      "message": "expected :, but got ;"
+    },
+    {
+      "location": "(17.9-17.10)",
+      "message": "expected `unary operator', `identifier', `integer', `float', `bool' or `grouped expression' but got `;'"
+    },
+    {
+      "location": "(11.5-11.6)",
+      "message": "only vectors, matrices and arrays can be indexed, not int"
+    },
+    {
+      "location": "(12.2-12.3)",
+      "message": "only vectors, matrices and arrays can be indexed, not int"
+    },
+    {
+      "location": "(15.2-15.3)",
+      "message": "the condition of a ternary conditional expression must be of type bool, not int"
+    },
+    {
+      "location": "(16.2-16.3)",
+      "message": "the condition of a ternary conditional expression must be of type bool, not int"
+    },
+    {
+      "location": "(17.2-17.3)",
+      "message": "the condition of a ternary conditional expression must be of type bool, not int"
     }
   ]
 }

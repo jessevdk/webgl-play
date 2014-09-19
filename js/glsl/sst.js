@@ -1157,13 +1157,14 @@ Annotator.prototype._annotate_ternary_expr = function(node) {
         this._error(node.condition.location(), 'the condition of a ternary conditional expression must be of type bool, not ' + node.condition.t.type.name);
     }
 
-    if (node.true_expression.t.type === null && node.false_expression.t.type === null) {
+    if ((node.true_expression === null || node.true_expression.t.type === null) &&
+        (node.false_expression === null || node.false_expression.t.type === null)) {
         return;
     }
 
-    if (node.true_expression.t.type === null) {
+    if (node.true_expression === null || node.true_expression.t.type === null) {
         node.t.type = node.false_expression.t.type;
-    } else if (node.false_expression.t.type === null) {
+    } else if (node.false_expression === null || node.false_expression.t.type === null) {
         node.t.type = node.true_expression.t.type;
     } else if (node.true_expression.t.type != node.false_expression.t.type) {
         this._error(node.true_expression.location().extend(node.false_expression.location()),
@@ -1236,6 +1237,10 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
     var et = node.expression.t.type;
 
     if (et === null) {
+        return;
+    }
+
+    if (node.selector === null) {
         return;
     }
 
