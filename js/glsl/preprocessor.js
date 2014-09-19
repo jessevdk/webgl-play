@@ -1,26 +1,9 @@
-var ns;
-
-if (typeof window != 'undefined' || typeof self != 'undefined') {
-    var ctx = (typeof window != 'undefined' ? window : self);
-
-    if (typeof ctx.glsl == 'undefined') {
-        ctx.glsl = {};
-    }
-
-    ctx.glsl.preprocessor = {};
-    ns = ctx.glsl.preprocessor;
-} else {
-    // in node
-    var glsl = {
-        tokenizer: require('./tokenizer'),
-        source: require('./source')
-    };
-
-    ns = exports;
-}
-
-(function(exports) {
 'use strict';
+
+var glsl = {
+    tokenizer: require('./tokenizer'),
+    source: require('./source')
+};
 
 function ExpressionTokenizer(source) {
     glsl.tokenizer.Base.prototype.init.call(this, source);
@@ -735,7 +718,5 @@ Preprocessor.prototype.source = function() {
 };
 
 exports.Preprocessor = Preprocessor;
-
-})(ns);
 
 // vi:ts=4:et

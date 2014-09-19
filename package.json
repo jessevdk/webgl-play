@@ -5,6 +5,10 @@
   "dependencies": {
     "mocha": "1.21.x",
     "chai": "1.9.x",
-    "istanbul": "0.3.x"
+    "istanbul": "0.3.x",
+    "browserify": "5.11.x",
+    "uglify-js": "2.4.x",
+    "exorcist": "0.1.x",
+    "jshint": "2.5.x"
   }
 }

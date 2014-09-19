@@ -1,30 +1,11 @@
-var ns;
-
-if (typeof window != 'undefined' || typeof self != 'undefined') {
-    var ctx = (typeof window != 'undefined' ? window : self);
-
-    if (typeof ctx.glsl == 'undefined') {
-        ctx.glsl = {};
-    }
-
-    ctx.glsl.sst = {};
-    ns = ctx.glsl.sst;
-
-    global = ctx;
-} else {
-    // in node
-    var glsl = {
-        source: require('./source'),
-        ast: require('./ast'),
-        tokenizer: require('./tokenizer'),
-        builtins: require('./builtins'),
-    };
-
-    ns = exports;
-}
-
-(function(exports) {
 'use strict';
+
+var glsl = {
+    source: require('./source'),
+    ast: require('./ast'),
+    tokenizer: require('./tokenizer'),
+    builtins: require('./builtins'),
+};
 
 var Tn = glsl.tokenizer.Tokenizer;
 
@@ -1477,7 +1458,5 @@ Annotator.prototype._error = function(loc, message) {
 };
 
 exports.Annotate = Annotate;
-
-})(ns);
 
 // vi:ts=4:et

@@ -1,25 +1,8 @@
-var ns;
-
-if (typeof window != 'undefined' || typeof self != 'undefined') {
-    var ctx = (typeof window != 'undefined' ? window : self);
-
-    if (typeof ctx.glsl == 'undefined') {
-        ctx.glsl = {};
-    }
-
-    ctx.glsl.source = {};
-    ns = ctx.glsl.source;
-} else {
-    // in node
-    var glsl = {
-        tokenizer: require('./tokenizer')
-    };
-
-    ns = exports;
-}
-
-(function(exports) {
 'use strict';
+
+var glsl = {
+    tokenizer: require('./tokenizer')
+};
 
 function Location(line, column) {
     this.line = line;
@@ -288,7 +271,5 @@ exports.Source = Source;
 
 exports.VERTEX = 0;
 exports.FRAGMENT = 1;
-
-})(ns);
 
 // vi:ts=4:et

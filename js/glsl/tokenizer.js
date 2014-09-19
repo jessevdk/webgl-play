@@ -1,23 +1,3 @@
-var ns;
-
-if (typeof window != 'undefined' || typeof self != 'undefined') {
-    var ctx = (typeof window != 'undefined' ? window : self);
-
-    if (typeof ctx.glsl == 'undefined') {
-        ctx.glsl = {};
-    }
-
-    ctx.glsl.tokenizer = {};
-    ns = ctx.glsl.tokenizer;
-} else {
-    // in node
-    var glsl = {
-    };
-
-    ns = exports;
-}
-
-(function (exports) {
 'use strict';
 
 function Token(id, text, loc, comments) {
@@ -579,7 +559,5 @@ exports.Tokenizer = Tokenizer;
 
 exports.regex_choices = regex_choices;
 exports.regex_escape = regex_escape;
-
-})(ns);
 
 // vi:ts=4:et

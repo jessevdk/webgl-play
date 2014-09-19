@@ -1,0 +1,111 @@
+@import 'solarized';
+@import 'widgets';
+
+$header_height: 30px;
+
+html, body, #main {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#main {
+  background-color: lighten($bg_color, 20%);
+  font-family: "Helvetica", "Arial", "FreeSans", "Verdana", "Tahoma", "Lucida Sans", "Lucida Sans Unicode", "Luxi Sans", sans-serif;
+  font-size: 14px;
+  color: $fg_color;
+}
+
+#header {
+  height: $header_height;
+  background-color: $bg_color;
+  border-bottom: 1px solid lighten($borders_color, 10%);
+  line-height: $header_height;
+  color: lighten($fg_color, 20%);
+
+  #title {
+    padding-left: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px white;
+  }
+
+  #doc-title {
+    margin-left: 30px;
+    padding: 3px;
+    min-width: 300px;
+    border: 0;
+    background: none;
+    font-size: 14px;
+    color: lighten($fg_color, 20%);
+    outline: none;
+  }
+
+  #doc-title:outline {
+    border: 0;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    float: right;
+    margin-right: 12px;
+
+    li {
+      float: right;
+      background-color: lighten($base01, 10%);
+      color: $bg_color;
+      text-shadow: 1px 1px $base02;
+      padding-left: 16px;
+      padding-right: 16px;
+      transition: background-color ease 0.1s;
+
+      &:hover {
+        background-color: lighten($base01, 20%);
+      }
+    }
+  }
+}
+
+#content {
+  position: absolute;
+  top: $header_height + 1px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+}
+
+.editor {
+  width: 100%;
+  height: 100%;
+}
+
+.editor-title {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 12px;
+  padding: 6px 8px 6px 8px;
+  background-color: $base2;
+  border-radius: 6px;
+  font-size: 0.8em;
+
+  transition: opacity ease 0.3s;
+}
+
+.editor-title.hidden {
+  opacity: 0.2;
+}
+
+.cm-s-webgl-play {
+  font-family: menlo, monaco, monospace;
+  font-size: 12px;
+  height: 100%;
+
+  .CodeMirror-scroll {
+    height: 100%;
+  }
+}
+
+/* vi:ts=2:et */

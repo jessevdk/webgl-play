@@ -1,27 +1,10 @@
-var ns;
-
-if (typeof window != 'undefined' || typeof self != 'undefined') {
-    var ctx = (typeof window != 'undefined' ? window : self);
-
-    if (typeof ctx.glsl == 'undefined') {
-        ctx.glsl = {};
-    }
-
-    ctx.glsl.ast = {};
-    ns = ctx.glsl.ast;
-} else {
-    // in node
-    var glsl = {
-        tokenizer: require('./tokenizer'),
-        preprocessor: require('./preprocessor'),
-        source: require('./source')
-    };
-
-    ns = exports;
-}
-
-(function(exports) {
 'use strict';
+
+var glsl = {
+    tokenizer: require('./tokenizer'),
+    preprocessor: require('./preprocessor'),
+    source: require('./source')
+};
 
 var Tn = glsl.tokenizer.Tokenizer;
 
@@ -3086,7 +3069,5 @@ Parser.prototype.errors = function() {
 };
 
 exports.Parser = Parser;
-
-})(ns);
 
 // vi:ts=4:et

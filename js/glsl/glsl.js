@@ -1,9 +1,10 @@
-if (typeof window === 'undefined' && typeof self === 'undefined') {
-    var mods = ['source', 'tokenizer', 'preprocessor', 'ast', 'builtins', 'sst'];
-
-    for (var i = 0; i < mods.length; i++) {
-        exports[mods[i]] = require('./' + mods[i]);
-    }
+module.exports = {
+	source: require('./source'),
+	tokenizer: require('./tokenizer'),
+	preprocessor: require('./preprocessor'),
+	ast: require('./ast'),
+	builtins: require('./builtins'),
+	sst: require('./sst')
 }
 
 // vi:ts=4:et
