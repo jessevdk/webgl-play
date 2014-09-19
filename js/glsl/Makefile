@@ -34,7 +34,7 @@ test-$1: $(MOCHA_BIN)
 .PHONY: test-$1
 endef
 
-all: glsl.all.min.js
+all:
 
 $(MOCHA_BIN):
 	@echo 'Installing dependencies to run tests using npm'; \
@@ -51,10 +51,6 @@ $(JSHINT_BIN):
 $(UGLIFYJS_BIN):
 	@echo 'Installing dependencies to run uglifier using npm'; \
 	npm install --loglevel error uglify-js >/dev/null
-
-glsl.all.min.js: $(SOURCES) $(UGLIFYJS_BIN)
-	@printf "[\033[1mGEN\033[0m] $@\n"; \
-	$(UGLIFYJS_BIN) -c -o $@ --source-map glsl.all.min.js.map $(SOURCES)
 
 test: $(MOCHA_BIN)
 	@$(MOCHA) $(TESTS)
