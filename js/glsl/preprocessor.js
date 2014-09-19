@@ -202,7 +202,7 @@ Preprocessor.options_from_context = function(c) {
     var defines = {};
 
     for (var i = 0; i < exts.length; i++) {
-        defines[ext[i]] = '1';
+        defines[exts[i]] = '1';
     }
 
     return {

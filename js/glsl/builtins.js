@@ -393,7 +393,7 @@ Builtins.options_from_context = function(ctx) {
 
     for (var name in c) {
         if (typeof ctx[c[name]] !== 'undefined') {
-            contstants[name] = ctx.getParameter(ctx[c[name]]);
+            constants[name] = ctx.getParameter(ctx[c[name]]);
         }
     }
 
