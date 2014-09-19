@@ -1,3 +1,5 @@
 {
-	"-W004": true
+	"-W004": true,
+	"node": true,
+	"globalstrict": false
 }
