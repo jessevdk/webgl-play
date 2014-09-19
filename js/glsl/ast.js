@@ -1251,6 +1251,8 @@ Parser.prototype._parse_primary_expression = function(tok) {
 
         return grp.complete();
     }
+
+    return new NoMatch(tok);
 };
 
 Parser.prototype._parse_primary_expression.match = function(tok) {
