@@ -1,3 +1,5 @@
+CURRENT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
 NODE_MODULES_BIN = node_modules/.bin
 
 GP = GEM_PATH=$(shell pwd)/.gem
@@ -58,11 +60,13 @@ site/css/site.css: $(SASS) $(wildcard css/*.scss)
 site: site/js/vendor.min.js site/js/site.min.js site/index.html site/css/vendor.css site/css/site.css
 
 watch:
-	@watchman watch $(shell pwd) >/dev/null && \
-	watchman -- trigger $(shell pwd) remake '**.js' '**.scss' '**.html' -- make site >/dev/null
+	@watchman watch "$(CURRENT_DIR)" >/dev/null && \
+	scripts/watch "$(CURRENT_DIR)"
+
+#watchman -- trigger $(CURRENT_DIR) remake '**.js' '**.scss' '**.css' '**.html' -- make site >/dev/null
 
 unwatch:
-	@watchman -- trigger-del $(shell pwd) remake >/dev/null && \
-	watchman watch-del $(shell pwd) >/dev/null
+	@watchman -- trigger-del $(CURRENT_DIR) remake >/dev/null && \
+	watchman watch-del $(CURRENT_DIR) >/dev/null
 
 .PHONY: all site watch

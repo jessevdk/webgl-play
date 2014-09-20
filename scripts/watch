@@ -1,0 +1,37 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+	echo "Please provide the directory to watch"
+	exit 1
+fi
+
+mkdir -p .log
+
+echo "Installing watch..."
+
+watchman -j <<-EOT >/dev/null || exit 1
+	["trigger", "$1", {
+	    "name": "remake",
+	    "stdout": ">.log/watch-out",
+	    "stderr": ">.log/watch-err",
+	    "expression": ["anyof",
+	        ["match", "js/**.js", "wholename"],
+	        ["match", "css/**.scss", "wholename"],
+	        ["match", "css/**.css", "wholename"],
+	    	    ["match", "html/**.html", "wholename"]
+	    ],
+	    "command": ["make", "site"]
+	}]
+EOT
+
+control_c() {
+	echo ""
+	echo "Removing watch..."
+	watchman -- trigger-del "$1" remake >/dev/null && \
+	watchman watch-del "$1" >/dev/null
+	exit 2
+}
+
+trap control_c SIGINT
+
+tail -n 15 -q -f .log/watch-out .log/watch-err
