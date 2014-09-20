@@ -53,7 +53,7 @@ site/css/vendor.css: $(wildcard css/*.css)
 site/css/site.css: $(SASS) $(wildcard css/*.scss)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
-	$(SASS) --sourcemap css/site.scss $@
+	$(GP) $(SASS) css/site.scss $@
 
 site: site/js/vendor.min.js site/js/site.min.js site/index.html site/css/vendor.css site/css/site.css
 
