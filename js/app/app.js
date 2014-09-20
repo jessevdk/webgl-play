@@ -1,3 +1,5 @@
+require('./glsl-mode');
+
 var widgets = require('../widgets/widgets');
 
 function App() {
@@ -89,8 +91,8 @@ App.prototype._init = function() {
 		}).bind(this, t));
 	}
 
-	this.vertex_editor.setOption('mode', 'text');
-	this.fragment_editor.setOption('mode', 'text');
+	this.vertex_editor.setOption('mode', 'glsl');
+	this.fragment_editor.setOption('mode', 'glsl');
 	this.js_editor.setOption('mode', 'javascript');
 
 	this._init_panels();
