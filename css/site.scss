@@ -1,5 +1,6 @@
 @import 'solarized';
 @import 'widgets';
+@import 'editor';
 
 $header_height: 30px;
 
@@ -74,46 +75,6 @@ html, body, #main {
   bottom: 0px;
   right: 0px;
   left: 0px;
-}
-
-.editor {
-  width: 100%;
-  height: 100%;
-}
-
-.editor-title {
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin: 12px;
-  padding: 6px 8px 6px 8px;
-  background-color: $base2;
-  border-radius: 6px;
-  font-size: 0.8em;
-
-  transition: opacity ease 0.3s;
-}
-
-.editor-title.hidden {
-  opacity: 0.2;
-}
-
-.CodeMirror {
-  transition: background ease 0.3s;
-}
-
-.CodeMirror-focused {
-  background-color: $base3;
-}
-
-.cm-s-webgl-play {
-  font-family: menlo, monaco, monospace;
-  font-size: 12px;
-  height: 100%;
-
-  .CodeMirror-scroll {
-    height: 100%;
-  }
 }
 
 /* vi:ts=2:et */
