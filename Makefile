@@ -11,13 +11,8 @@ VENDORJS = js/vendor/codemirror.min.js
 
 define install-npm-module
 $(NODE_MODULES_BIN)/$1:
-	@if [ ! -z "$2" ]; then \
-		mod="$2"; \
-	else \
-		mod="$1"; \
-	fi \
-	printf "Installing required dependency \033[1m$$mod\033[0m using npm\n"; \
-	npm install --loglevel error $$mod >/dev/null
+	@printf "Installing required dependency \033[1m$2\033[0m using npm\n"; \
+	npm install --loglevel error $2 >/dev/null
 endef
 
 all: site
@@ -26,16 +21,16 @@ $(SASS):
 	@printf "Installing required dependency \033[1msass\033[0m using gem\n"; \
 	gem install -i .gem -q -N sass
 
-$(eval $(call install-npm-module,browserify))
-$(eval $(call install-npm-module,exorcist))
-$(eval $(call install-npm-module,uglifyjs uglify-js))
+$(eval $(call install-npm-module,browserify,browserify))
+$(eval $(call install-npm-module,exorcist,exorcist))
+$(eval $(call install-npm-module,uglifyjs,uglify-js))
 
 .gen/js/site.js: $(BROWSERIFY) $(EXORCIST) $(shell find js -name '*.js')
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	$(BROWSERIFY) -d js/site.js | $(EXORCIST) $@.map > $@
 
-site/js/vendor.min.js: $(UGLIFYJS) $(VENDORJS)
+site/js/vendor.min.js: $(VENDORJS)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	cat $(VENDORJS) > $@
