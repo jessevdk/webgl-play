@@ -1,5 +1,6 @@
 NODE_MODULES_BIN = node_modules/.bin
 
+GP = GEM_PATH=$(shell pwd)/.gem
 SASS = .gem/bin/sass
 
 BROWSERIFY = $(NODE_MODULES_BIN)/browserify
