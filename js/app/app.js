@@ -1,6 +1,6 @@
-require('./glsl-mode');
-
+var Editor = require('./editor');
 var widgets = require('../widgets/widgets');
+var glsl = require('../glsl/glsl');
 
 function App() {
 	document.addEventListener('DOMContentLoaded', this._init.bind(this));
@@ -24,7 +24,7 @@ App.prototype.new_document = function() {
 		'}'
 	];
 
-	this.vertex_editor.setValue(v.join('\n'));
+	this.vertex_editor.value(v.join('\n'));
 
 	var f = [
 		'#version 100',
@@ -33,7 +33,7 @@ App.prototype.new_document = function() {
 		'}'
 	];
 
-	this.fragment_editor.setValue(v.join('\n'));
+	this.fragment_editor.value(v.join('\n'));
 }
 
 App.prototype._init_panels = function() {
@@ -91,9 +91,10 @@ App.prototype._init = function() {
 		}).bind(this, t));
 	}
 
-	this.vertex_editor.setOption('mode', 'glsl');
-	this.fragment_editor.setOption('mode', 'glsl');
-	this.js_editor.setOption('mode', 'javascript');
+	this.vertex_editor = new Editor(this.vertex_editor, glsl.source.VERTEX);
+	this.fragment_editor = new Editor(this.fragment_editor, glsl.source.FRAGMENT);
+
+	this.js_editor = new Editor(this.js_editor, 'javascript');
 
 	this._init_panels();
 

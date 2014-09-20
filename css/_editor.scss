@@ -64,4 +64,34 @@
   .cm-operator {
     color: lighten($fg_color, 30%);
   }
+
+  .error {
+    color: $red;
+
+    text-decoration: underline;
+  }
+
+  &.error {
+    background-color: lighten($red, 40%);
+  }
+
+  .error-message {
+    margin: 0px 0px 0px 0px;
+    padding: 6px 0px 3px 0px;
+    color: white;
+    list-style: none;
+
+    li {
+      background-color: lighten($orange, 10%);
+      padding: 3px;
+
+      &:first-child {
+        border-top: 1px solid $red;
+      }
+
+      &:last-child {
+        border-bottom: 1px solid $red;
+      }
+    }
+  }
 }
