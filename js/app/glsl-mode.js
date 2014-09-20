@@ -121,6 +121,30 @@ CodeMirror.defineMode('glsl', function(config, modeopts) {
             case t.T_BREAK:
             case t.T_CONTINUE:
                 return 'keyword';
+            case t.T_PLUS:
+            case t.T_DASH:
+            case t.T_STAR:
+            case t.T_SLASH:
+            case t.T_EQUAL:
+            case t.T_EQ_OP:
+            case t.T_NE_OP:
+            case t.T_LE_OP:
+            case t.T_GE_OP:
+            case t.T_ANGLE_RIGHT:
+            case t.T_ANGLE_LEFT:
+            case t.T_INC_OP:
+            case t.T_DEC_OP:
+            case t.T_MUL_ASSIGN:
+            case t.T_DIV_ASSIGN:
+            case t.T_ADD_ASSIGN:
+            case t.T_SUB_ASSIGN:
+            case t.T_AND_OP:
+            case t.T_OR_OP:
+            case t.T_XOR_OP:
+            case t.T_DOT:
+            case t.T_QUESTION:
+            case t.T_COLON:
+                return 'operator';
             }
 
             return null;
