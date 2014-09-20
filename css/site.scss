@@ -98,6 +98,14 @@ html, body, #main {
   opacity: 0.2;
 }
 
+.CodeMirror {
+  transition: background ease 0.3s;
+}
+
+.CodeMirror-focused {
+  background-color: $base3;
+}
+
 .cm-s-webgl-play {
   font-family: menlo, monaco, monospace;
   font-size: 12px;
