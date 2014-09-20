@@ -348,6 +348,13 @@ Annotator.prototype._annotate_variable_decl = function(node) {
 
         // Declare variable
         this._declare_variable(name);
+
+        if (node.type !== null && node.type.t.type !== null &&
+            name.initial_value !== null && name.initial_value.t.type !== null) {
+            if (node.type.t.type !== name.initial_value.t.type) {
+                this._error(name.location(), 'cannot assign value of type ' + name.initial_value.t.type.name + ' to variable of type ' + node.type.t.type.name);
+            }
+        }
     }
 };
 
