@@ -19,7 +19,7 @@ all: site
 
 $(SASS):
 	@printf "Installing required dependency \033[1msass\033[0m using gem\n"; \
-	gem install -i .gem -q -N sass
+	gem install -i .gem -q sass
 
 $(eval $(call install-npm-module,browserify,browserify))
 $(eval $(call install-npm-module,exorcist,exorcist))
