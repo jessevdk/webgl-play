@@ -641,6 +641,10 @@ Annotator.prototype._annotate_precision_stmt = function(node) {
 };
 
 Annotator.prototype._error_symbol_type_name = function(node) {
+    if (glsl.ast.Named.prototype.isPrototypeOf(node)) {
+        return this._error_symbol_type_name(node.decl);
+    }
+
     var map = [
         [glsl.ast.FunctionDef, 'function definition'],
         [glsl.ast.FunctionProto, 'function prototype'],
