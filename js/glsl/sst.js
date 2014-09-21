@@ -590,9 +590,12 @@ Annotator.prototype._annotate_function_def = function(node) {
         }
 
         this._scope.variables.push(param);
-        this._scope.variable_map[param.name.text] = param;
 
-        this._scope.symbols[param.name.text] = param;
+        if (param.name !== null) {
+            this._scope.variable_map[param.name.text] = param;
+
+            this._scope.symbols[param.name.text] = param;
+        }
     }
 
     this._annotate_node(node.body);
