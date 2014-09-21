@@ -467,6 +467,10 @@ Annotator.prototype._annotate_function_proto = function(node) {
     var id = node.header.signature();
     var name = node.header.name;
 
+    if (name.text === 'main') {
+        this._error(name.location, 'cannot overload main');
+    }
+
     var prev = this._lookup_function(id);
 
     if (prev !== null) {
@@ -569,6 +573,8 @@ Annotator.prototype._annotate_function_def = function(node) {
                 }
             }
         }
+    } else if (node.header.name.text === 'main') {
+        this._error(node.header.name.location, 'invalid definition of main, expected void main()');
     }
 
     this._scope.functions.push(node);
