@@ -9,18 +9,23 @@ mkdir -p .log
 
 echo "Installing watch..."
 
+echo > .log/watch-out
+echo > .log/watch-err
+
 watchman -j <<-EOT >/dev/null || exit 1
 	["trigger", "$1", {
 	    "name": "remake",
-	    "stdout": ">.log/watch-out",
-	    "stderr": ">.log/watch-err",
+	    "stdout": ">>.log/watch-out",
+	    "stderr": ">>.log/watch-err",
 	    "expression": ["anyof",
 	        ["match", "js/**.js", "wholename"],
 	        ["match", "css/**.scss", "wholename"],
 	        ["match", "css/**.css", "wholename"],
-	    	    ["match", "html/**.html", "wholename"]
+	        ["match", "html/**.html", "wholename"],
+	        ["match", "js/**.glslv", "wholename"],
+	        ["match", "js/**.glslf", "wholename"]
 	    ],
-	    "command": ["make", "site"]
+	    "command": ["$MAKE", "-s", "site"]
 	}]
 EOT
 
@@ -34,4 +39,4 @@ control_c() {
 
 trap control_c SIGINT
 
-tail -n 15 -q -f .log/watch-out .log/watch-err
+tail -n 15 -q -f .log/watch-out .log/watch-err | grep -v 'jobserver unavailable'
