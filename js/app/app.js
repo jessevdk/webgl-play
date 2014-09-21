@@ -1,4 +1,5 @@
 var Editor = require('./editor');
+var Document = require('./document');
 var widgets = require('../widgets/widgets');
 var glsl = require('../glsl/glsl');
 
@@ -17,23 +18,15 @@ App.prototype.find = function(elems) {
 }
 
 App.prototype.new_document = function() {
-	var v = [
-		'#version 100',
-		'',
-		'void main() {',
-		'}'
-	];
+	var doc = new Document(this);
 
-	this.vertex_editor.value(v.join('\n'));
+	this._load_doc(doc);
+}
 
-	var f = [
-		'#version 100',
-		'',
-		'void main() {',
-		'}'
-	];
-
-	this.fragment_editor.value(v.join('\n'));
+App.prototype._load_doc = function(doc) {
+	this.vertex_editor.value(doc.active_program.vertex);
+	this.fragment_editor.value(doc.active_program.fragment);
+	this.js_editor.value(doc.js);
 }
 
 App.prototype._init_panels = function() {
@@ -48,18 +41,18 @@ App.prototype._init_panels = function() {
 	}
 
 	this.panels['panel-main'].on('resized', (function() {
-		this.vertex_editor.refresh();
-		this.fragment_editor.refresh();
-		this.js_editor.refresh();
+		this.vertex_editor.editor.refresh();
+		this.fragment_editor.editor.refresh();
+		this.js_editor.editor.refresh();
 	}).bind(this));
 
 	this.panels['panel-program'].on('resized', (function() {
-		this.vertex_editor.refresh();
-		this.fragment_editor.refresh();
+		this.vertex_editor.editor.refresh();
+		this.fragment_editor.editor.refresh();
 	}).bind(this));
 
 	this.panels['panel-js'].on('resized', (function() {
-		this.js_editor.refresh();
+		this.js_editor.editor.refresh();
 	}).bind(this));
 }
 

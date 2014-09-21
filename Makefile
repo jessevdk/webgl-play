@@ -6,6 +6,7 @@ GP = GEM_PATH=$(shell pwd)/.gem
 SASS = .gem/bin/sass
 
 BROWSERIFY = $(NODE_MODULES_BIN)/browserify
+BRFS = $(NODE_MODULES_BIN)/brfs
 EXORCIST = $(NODE_MODULES_BIN)/exorcist
 UGLIFYJS = $(NODE_MODULES_BIN)/uglifyjs
 
@@ -24,13 +25,19 @@ $(SASS):
 	gem install -i .gem -q sass
 
 $(eval $(call install-npm-module,browserify,browserify))
+$(eval $(call install-npm-module,brfs,brfs))
 $(eval $(call install-npm-module,exorcist,exorcist))
 $(eval $(call install-npm-module,uglifyjs,uglify-js))
 
-.gen/js/site.js: $(BROWSERIFY) $(EXORCIST) $(shell find js -name '*.js')
+SITE_DEPS =			\
+	js/app/default.glslv	\
+	js/app/default.glslf	\
+	js/app/default.js
+
+.gen/js/site.js: $(BROWSERIFY) $(BRFS) $(EXORCIST) $(shell $(BROWSERIFY) --list js/site.js 2>/dev/null) $(SITE_DEPS)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
-	$(BROWSERIFY) -d js/site.js | $(EXORCIST) $@.map > $@
+	$(BROWSERIFY) -t brfs -d js/site.js | $(EXORCIST) $@.map > $@
 
 site/js/vendor.min.js: $(VENDORJS)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
