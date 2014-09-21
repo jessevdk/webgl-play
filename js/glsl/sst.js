@@ -549,7 +549,7 @@ Annotator.prototype._annotate_function_def = function(node) {
     } else if (name.text in this._scope.symbols) {
         var sym = this._scope.symbols[name.text];
 
-        this._error(name.location, 'a ' + this._error_symbol_type_name(sym) + ' ' + name.text + ' has already been declared, previous declaration was at ' + sym.location());
+        this._error(name.location, 'a ' + this._error_symbol_type_name(sym) + ' ' + name.text + ' has already been declared, previous declaration was at ' + sym.location().inspect());
         return;
     }
 
