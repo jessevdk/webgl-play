@@ -89,6 +89,18 @@ App.prototype._init = function() {
 
 	this.js_editor = new Editor(this.js_editor, 'javascript');
 
+	this.canvas = document.getElementById('view');
+
+	var t = this.canvas.parentElement.querySelector('.editor-title');
+
+	this.canvas.addEventListener('focus', (function(title) {
+		t.classList.add('hidden');
+	}).bind(this, t));
+
+	this.canvas.addEventListener('blur', (function(title) {
+		t.classList.remove('hidden');
+	}).bind(this, t));
+
 	this._init_panels();
 
 	this.new_document();
