@@ -1,3 +1,5 @@
 module.exports = {
-	Panel: require('./panel')
+    Panel: require('./panel')
 };
+
+// vi:ts=4:et
