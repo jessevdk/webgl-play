@@ -6,6 +6,7 @@ GP = GEM_PATH=$(shell pwd)/.gem
 SASS = .gem/bin/sass
 
 BROWSERIFY = $(NODE_MODULES_BIN)/browserify
+BROWSERIFYINC = $(NODE_MODULES_BIN)/browserifyinc
 BRFS = $(NODE_MODULES_BIN)/brfs
 EXORCIST = $(NODE_MODULES_BIN)/exorcist
 UGLIFYJS = $(NODE_MODULES_BIN)/uglifyjs
@@ -24,20 +25,33 @@ $(SASS):
 	@printf "Installing required dependency \033[1msass\033[0m using gem\n"; \
 	gem install -i .gem -q sass
 
+$(eval $(call install-npm-module,browserifyinc,browserifyinc))
 $(eval $(call install-npm-module,browserify,browserify))
 $(eval $(call install-npm-module,brfs,brfs))
 $(eval $(call install-npm-module,exorcist,exorcist))
 $(eval $(call install-npm-module,uglifyjs,uglify-js))
 
-SITE_DEPS =			\
+SITE_EXTERNAL_DEPS =		\
 	js/app/default.glslv	\
 	js/app/default.glslf	\
 	js/app/default.js
 
-.gen/js/site.js: $(BROWSERIFY) $(BRFS) $(EXORCIST) $(shell $(BROWSERIFY) --list js/site.js 2>/dev/null) $(SITE_DEPS)
-	@printf "[\033[1mGEN\033[0m] $@\n"; \
-	mkdir -p $(dir $@); \
-	$(BROWSERIFY) -t brfs -d js/site.js | $(EXORCIST) $@.map > $@
+.gen/js/site.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(shell $(BROWSERIFY) --list js/site.js 2>/dev/null) $(SITE_EXTERNAL_DEPS)
+	@mkdir -p $(dir $@); \
+	full=no; \
+	for f in $(SITE_EXTERNAL_DEPS); do \
+		if [ $$f -nt $@ ]; then \
+			full=yes; \
+			break; \
+		fi; \
+	done; \
+	if [ "$$full" = "yes" ]; then \
+		printf "[\033[1mGEN\033[0m] $@ (\033[31mfull\033[0m)\n"; \
+		$(BROWSERIFY) -t brfs -d js/site.js | $(EXORCIST) $@.map > $@; \
+	else \
+		printf "[\033[1mGEN\033[0m] $@\n"; \
+	fi; \
+	$(BROWSERIFYINC) -t brfs -o $@.tmp --cachefile .gen/js/.cache -d js/site.js && $(EXORCIST) $@.map > $@ < $@.tmp; rm -f $@.tmp
 
 site/js/vendor.min.js: $(VENDORJS)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
