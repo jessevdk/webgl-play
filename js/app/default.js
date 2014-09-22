@@ -1,7 +1,5 @@
-function init(context) {
-    // Initialize rendering
+function init() {
 }
 
-function render(context) {
-    // Render function
+function render() {
 }
