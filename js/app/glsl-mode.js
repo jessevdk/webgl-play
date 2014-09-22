@@ -1,7 +1,7 @@
 var tokenizer = require('../glsl/tokenizer');
 var source = require('../glsl/source');
 
-CodeMirror.defineMode('glsl', function(config, modeopts) {
+var mode = function(config, modeopts) {
     var wsource = {
         _stream: null,
 
@@ -233,6 +233,12 @@ CodeMirror.defineMode('glsl', function(config, modeopts) {
             return ret;
         }
     };
-});
+}
+
+CodeMirror.defineMode('glslv', mode);
+CodeMirror.defineMode('glslf', mode);
+
+CodeMirror.defineMIME("text/x-glslv", "glslv");
+CodeMirror.defineMIME("text/x-glslf", "glslf");
 
 /* vi:ts=4:et */

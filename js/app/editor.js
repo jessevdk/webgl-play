@@ -89,7 +89,12 @@ function Editor(editor, type) {
 
     if (type === glsl.source.VERTEX || type === glsl.source.FRAGMENT) {
         this.builtins = new glsl.builtins.Builtins(type);
-        this.editor.setOption('mode', 'glsl');
+
+        if (type === glsl.source.VERTEX) {
+            this.editor.setOption('mode', 'glslv');
+        } else {
+            this.editor.setOption('mode', 'glslf');
+        }
 
         this._init_glsl();
     } else {
