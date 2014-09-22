@@ -68,7 +68,9 @@
   .error {
     color: $red;
 
-    text-decoration: underline;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAFCAYAAABirU3bAAAARUlEQVQIW2NkAII7urrGKpcvnwWxGUEcBhamMwx//pmABBnvGOr/Z/z/v+E/I2MDSJDxroFevfKFS40gGiTICNIHAyBBAO6YHGQtR2KsAAAAAElFTkSuQmCC);
+    background-repeat: repeat-x;
+    background-position: bottom;
   }
 
   &.error {
