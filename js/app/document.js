@@ -3,7 +3,7 @@ var Program = require('./program');
 
 function Document() {
     this.programs = [Program.default()];
-    this.js = fs.readFileSync(__dirname + '/default.js', 'utf-8');
+    this.js = fs.readFileSync(__dirname + '/default.js', 'utf-8').trimRight('\n');
 
     this.active_program = this.programs[0];
 }

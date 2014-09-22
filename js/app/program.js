@@ -7,8 +7,8 @@ function Program(name, v, f) {
 }
 
 Program.default = function() {
-    var v = fs.readFileSync(__dirname + '/default.glslv', 'utf-8');
-    var f = fs.readFileSync(__dirname + '/default.glslf', 'utf-8');
+    var v = fs.readFileSync(__dirname + '/default.glslv', 'utf-8').trimRight('\n');
+    var f = fs.readFileSync(__dirname + '/default.glslf', 'utf-8').trimRight('\n');
 
     return new Program('default', v, f);
 }
