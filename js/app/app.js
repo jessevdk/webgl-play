@@ -25,8 +25,13 @@ App.prototype.new_document = function() {
 
 App.prototype._load_doc = function(doc) {
     this.vertex_editor.value(doc.active_program.vertex);
+    this.vertex_editor.editor.clearHistory();
+
     this.fragment_editor.value(doc.active_program.fragment);
+    this.fragment_editor.editor.clearHistory();
+
     this.js_editor.value(doc.js);
+    this.js_editor.editor.clearHistory();
 }
 
 App.prototype._init_panels = function() {
