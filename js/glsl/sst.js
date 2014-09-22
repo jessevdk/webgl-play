@@ -1433,7 +1433,9 @@ Annotator.prototype._annotate_for_stmt = function(node) {
 Annotator.prototype._annotate_selection_stmt = function(node) {
     this._annotate_node(node.condition);
 
-    if (node.condition.t.type !== null && node.condition.t.type !== this._builtins.Bool) {
+    if (node.condition !== null &&
+        node.condition.t.type !== null &&
+        node.condition.t.type !== this._builtins.Bool) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
