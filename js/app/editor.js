@@ -13,6 +13,77 @@ function Editor(editor, type) {
         Tab: function(cm) {
             var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
             cm.replaceSelection(spaces);
+        },
+
+        Backspace: function(cm) {
+            var doc = cm.getDoc();
+            var cur = doc.getCursor();
+
+            if (!doc.somethingSelected() && cur.ch !== 0) {
+                var line = doc.getLine(cur.line);
+
+                var prefix = line.slice(0, cur.ch);
+
+                for (var i = prefix.length - 1; i >= 0; i--) {
+                    if (prefix[i] !== ' ') {
+                        return CodeMirror.Pass;
+                    }
+                }
+
+                var m = 0;
+
+                if (cur.ch == line.length) {
+                    m = line.length;
+                } else {
+                    var n = cm.getOption("indentUnit");
+
+                    // all spaces, remove up to N indentUnit
+                    m = prefix.length % n;
+
+                    if (m == 0) {
+                        m = n;
+                    }
+                }
+
+                doc.replaceRange('', {line: cur.line, ch: cur.ch - m}, cur);
+
+                if (cur.ch == line.length) {
+                    CodeMirror.commands.delCharBefore(cm);
+                    cur.line -= 1;
+                }
+
+                cm.indentLine(cur.line, null, true);
+
+                return;
+            }
+
+            if (cur.ch === 0 && cur.line !== 0) {
+                CodeMirror.commands.delCharBefore(cm);
+                cm.indentLine(cur.line - 1, null, true);
+                return;
+            }
+
+            return CodeMirror.Pass;
+        },
+
+        Enter: function(cm) {
+            var doc = cm.getDoc();
+
+            if (doc.somethingSelected()) {
+                doc.replaceSelection('');
+            }
+
+            var cur = doc.getCursor();
+            var line = doc.getLine(cur.line);
+
+            for (var i = 0; i < line.length; i++) {
+                if (line[i] != ' ') {
+                    return CodeMirror.Pass;
+                }
+            }
+
+            doc.replaceRange('', {line: cur.line, ch: 0}, {line: cur.line, ch: line.length});
+            return CodeMirror.Pass;
         }
     });
 
