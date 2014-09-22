@@ -2254,8 +2254,10 @@ Parser.prototype._parse_selection_statement = function(tok) {
 
     var ret = this._parse_rule(this._parse_selection_rest_statement, tok);
 
-    sel.body = ret.body;
-    sel.els = ret.els;
+    if (!NoMatch.prototype.isPrototypeOf(ret)) {
+        sel.body = ret.body;
+        sel.els = ret.els;
+    }
 
     if (!ret.incomplete) {
         sel.complete();
