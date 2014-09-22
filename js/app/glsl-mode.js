@@ -49,21 +49,65 @@ CodeMirror.defineMode('glsl', function(config, modeopts) {
 
     var t = new T(wsource);
 
+    function Context(indented, column, closetok, align, prev) {
+        this.indented = indented;
+        this.column = column;
+        this.closetok = closetok;
+        this.align = align;
+        this.prev = prev;
+    }
+
+    Context.push = function(state, column, closetok, align) {
+        state.context = new Context(state.indented, column, closetok, align, state.context);
+    }
+
+    Context.pop = function(state) {
+        var tok = state.context.closetok;
+
+        if (tok == '}' || tok == ')') {
+            state.indented = state.context.indented;
+        }
+
+        state.context = state.context.prev;
+    }
+
     return {
         lineComment: '//',
         blockCommentStart: '/*',
         blockCommentEnd: '*/',
+        electricChars: "{})",
 
-        token: function(stream) {
+        startState: function(baseColumn) {
+            return {
+                context: new Context((baseColumn || 0) - config.indentUnit, 0, '', false, null),
+                indented: 0
+            };
+        },
+
+        token: function(stream, state) {
             wsource._stream = stream;
 
             var issol = stream.sol();
 
-            stream.eatSpace();
+            if (issol) {
+                if (state.context.align === null) {
+                    state.context.align = false;
+                }
 
-            if (issol && stream.peek() == '#') {
-                stream.skipToEnd();
-                return 'meta';
+                state.indented = stream.indentation();
+
+                if (stream.peek() == '#') {
+                    stream.skipToEnd();
+                    return 'meta';
+                }
+            }
+
+            if (stream.eatSpace()) {
+                return null;
+            }
+
+            if (state.context.align === null) {
+                state.context.align = true;
             }
 
             var tok = t.next();
@@ -145,9 +189,48 @@ CodeMirror.defineMode('glsl', function(config, modeopts) {
             case t.T_QUESTION:
             case t.T_COLON:
                 return 'operator';
+            case t.T_LEFT_BRACE:
+                Context.push(state, stream.column(), '}', null);
+                break;
+            case t.T_LEFT_PAREN:
+                Context.push(state, stream.column(), ')', null);
+                break;
+            case t.T_RIGHT_BRACE:
+            case t.T_RIGHT_PAREN:
+                if (state.context.closetok == tok.text) {
+                    Context.pop(state);
+                }
+                break;
             }
 
             return null;
+        },
+
+        indent: function(state, textAfter) {
+            var ctx = state.context;
+            var closing = false;
+
+            if (textAfter) {
+                closing = (ctx.closetok == textAfter.charAt(0));
+            }
+
+            if (ctx.align) {
+                var ret = ctx.column;
+
+                if (!closing) {
+                    ret += 1;
+                }
+
+                return ret;
+            }
+
+            var ret = ctx.indented;
+
+            if (!closing) {
+                ret += config.indentUnit;
+            }
+
+            return ret;
         }
     };
 });
