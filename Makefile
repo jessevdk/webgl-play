@@ -79,6 +79,7 @@ site/css/site.css: $(SASS) $(wildcard css/*.scss)
 	$(GP) $(SASS) css/site.scss $@
 
 site: site/js/vendor.min.js site/js/site.min.js site/index.html site/css/vendor.css site/css/site.css
+	@printf "[\033[1m$(shell date)\033[0m] ... [\033[32mdone\033[0m]\n\n"
 
 watch:
 	+@watchman watch "$(CURRENT_DIR)" >/dev/null && \
