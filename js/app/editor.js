@@ -130,12 +130,7 @@ Editor.prototype._on_change_timeout = function() {
         this._error_markers[i].clear();
     }
 
-    for (var i = 0; i < this._error_widgets.length; i++) {
-        this._error_widgets[i].clear();
-    }
-
     this._error_markers = [];
-    this._error_widgets = [];
     this._errors = errs;
 
     if (errs.length == 0) {
@@ -145,9 +140,12 @@ Editor.prototype._on_change_timeout = function() {
     }
 
     var doc = this.editor.getDoc();
+    var lines = {};
 
     for (var i = 0; i < errs.length; i++) {
         var e = errs[i];
+
+        lines[e.location.start.line - 1] = true;
 
         var m = doc.markText(this._make_loc(e.location.start),
                              this._make_loc(e.location.end), {
@@ -158,6 +156,18 @@ Editor.prototype._on_change_timeout = function() {
         this._error_markers.push(m);
     }
 
+    var rem = [];
+
+    for (var i = 0; i < this._error_widgets.length; i++) {
+        if (!(doc.getLineNumber(this._error_widgets[i].line) in lines)) {
+            this._error_widgets[i].clear();
+        } else {
+            rem.push(this._error_widgets[i]);
+        }
+    }
+
+    this._error_widgets = rem;
+
     this._error_widgets_timeout = setTimeout(this._on_error_widgets_timeout.bind(this), 600);
 }
 
@@ -165,6 +175,12 @@ Editor.prototype._on_error_widgets_timeout = function() {
     var perline = {};
 
     this._error_widgets_timeout = 0;
+
+    for (var i = 0; i < this._error_widgets.length; i++) {
+        this._error_widgets[i].clear();
+    }
+
+    this._error_widgets = [];
 
     for (var i = 0; i < this._errors.length; i++) {
         var e = this._errors[i];
