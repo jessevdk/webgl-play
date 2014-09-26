@@ -153,13 +153,22 @@ App.prototype._update_document = function(name, editor) {
     this._update_document_by(up);
 }
 
-App.prototype._init = function() {
-    this._store = new Store((function(store) {
-        store.last((function(_, doc) {
-            this.load_document(doc);
-        }).bind(this));
-    }).bind(this));
+App.prototype._init_canvas = function() {
+    this.canvas = document.getElementById('view');
 
+    var t = this.canvas.parentElement.querySelector('.editor-title');
+
+    this.canvas.addEventListener('focus', (function(title) {
+        t.classList.add('hidden');
+        this._update_document_by({active_editor: null});
+    }).bind(this, t));
+
+    this.canvas.addEventListener('blur', (function(title) {
+        t.classList.remove('hidden');
+    }).bind(this, t));
+}
+
+App.prototype._init_editors = function() {
     var elems = this.find({
         vertex_editor: '#vertex-editor',
         fragment_editor: '#fragment-editor',
@@ -196,9 +205,11 @@ App.prototype._init = function() {
         }).bind(this, t));
     }
 
-    this.vertex_editor = new Editor(this.vertex_editor, glsl.source.VERTEX);
-    this.fragment_editor = new Editor(this.fragment_editor, glsl.source.FRAGMENT);
-    this.js_editor = new Editor(this.js_editor, 'javascript');
+    var ctx = this.canvas.getContext('webgl');
+
+    this.vertex_editor = new Editor(this.vertex_editor, ctx, glsl.source.VERTEX);
+    this.fragment_editor = new Editor(this.fragment_editor, ctx, glsl.source.FRAGMENT);
+    this.js_editor = new Editor(this.js_editor, ctx, 'javascript');
 
     var editors = {
         'vertex': this.vertex_editor,
@@ -220,20 +231,19 @@ App.prototype._init = function() {
             });
         }).bind(this, n));
     }
+}
 
-    this.canvas = document.getElementById('view');
 
-    var t = this.canvas.parentElement.querySelector('.editor-title');
 
-    this.canvas.addEventListener('focus', (function(title) {
-        t.classList.add('hidden');
-        this._update_document_by({active_editor: null});
-    }).bind(this, t));
+App.prototype._init = function() {
+    this._store = new Store((function(store) {
+        store.last((function(_, doc) {
+            this.load_document(doc);
+        }).bind(this));
+    }).bind(this));
 
-    this.canvas.addEventListener('blur', (function(title) {
-        t.classList.remove('hidden');
-    }).bind(this, t));
-
+    this._init_canvas();
+    this._init_editors();
     this._init_panels();
 };
 

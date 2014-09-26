@@ -1,7 +1,7 @@
 require('./glsl-mode');
 var glsl = require('../glsl/glsl');
 
-function Editor(editor, type) {
+function Editor(editor, ctx, type) {
     this.editor = editor;
     this.type = type;
 
@@ -88,7 +88,9 @@ function Editor(editor, type) {
     });
 
     if (type === glsl.source.VERTEX || type === glsl.source.FRAGMENT) {
-        this.builtins = new glsl.builtins.Builtins(type);
+        this._preprocessor_options = glsl.preprocessor.Preprocessor.options_from_context(ctx);
+
+        this.builtins = glsl.builtins.Builtins.create_for_context(ctx, type);
 
         if (type === glsl.source.VERTEX) {
             this.editor.setOption('mode', 'glslv');
@@ -201,7 +203,10 @@ Editor.prototype._make_loc = function(l) {
 Editor.prototype._on_change_timeout = function() {
     this._change_timeout = 0;
 
-    var p = new glsl.ast.Parser(this.value(), this.type);
+    var p = new glsl.ast.Parser(this.value(), this.type, {
+        preprocessor: this._preprocessor_options
+    });
+
     glsl.sst.Annotate(p);
 
     this._errors = p.errors();
