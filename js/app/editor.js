@@ -105,7 +105,6 @@ function Editor(editor, type) {
 Editor.prototype._init_glsl = function() {
     this._change_timeout = 0;
     this._error_markers = [];
-    this._error_widgets = [];
     this._errors = [];
 
     this.editor.on('change', this._on_change.bind(this));
@@ -158,28 +157,25 @@ Editor.prototype._on_change_timeout = function() {
     var p = new glsl.ast.Parser(this.value(), this.type);
     glsl.sst.Annotate(p);
 
-    var errs = p.errors();
+    this._errors = p.errors();
 
     for (var i = 0; i < this._error_markers.length; i++) {
         this._error_markers[i].clear();
     }
 
     this._error_markers = [];
-    this._errors = errs;
 
-    if (errs.length == 0) {
+    if (this._errors.length == 0) {
         this.editor.display.wrapper.classList.remove('error');
     } else {
         this.editor.display.wrapper.classList.add('error');
     }
 
     var doc = this.editor.getDoc();
-    var lines = {};
 
-    for (var i = 0; i < errs.length; i++) {
-        var e = errs[i];
-
-        lines[e.location.start.line - 1] = true;
+    for (var i = 0; i < this._errors.length; i++) {
+        var e = this._errors[i];
+        var l = e.location.start.line - 1;
 
         var m = doc.markText(this._make_loc(e.location.start),
                              this._make_loc(e.location.end), {
@@ -189,81 +185,12 @@ Editor.prototype._on_change_timeout = function() {
 
         this._error_markers.push(m);
     }
-
-    var rem = [];
-
-    for (var i = 0; i < this._error_widgets.length; i++) {
-        if (!(doc.getLineNumber(this._error_widgets[i].line) in lines)) {
-            this._error_widgets[i].clear();
-        } else {
-            rem.push(this._error_widgets[i]);
-        }
-    }
-
-    this._error_widgets = rem;
-
-    this._error_widgets_timeout = setTimeout(this._on_error_widgets_timeout.bind(this), 600);
-}
-
-Editor.prototype._on_error_widgets_timeout = function() {
-    var perline = {};
-
-    this._error_widgets_timeout = 0;
-
-    for (var i = 0; i < this._error_widgets.length; i++) {
-        this._error_widgets[i].clear();
-    }
-
-    this._error_widgets = [];
-
-    for (var i = 0; i < this._errors.length; i++) {
-        var e = this._errors[i];
-
-        if (e.location.start.line in perline) {
-            perline[e.location.start.line].push(e);
-        } else {
-            perline[e.location.start.line] = [e];
-        }
-    }
-
-    for (var l in perline) {
-        var errs = perline[l];
-
-        errs.sort(function(a, b) {
-            var ac = a.location.start.column;
-            var bc = b.location.start.column;
-            return ac < bc ? -1 : (ac > bc ? 1 : 0);
-        });
-
-        var ul = document.createElement('ul');
-        ul.classList.add('error-message')
-
-        for (var i = 0; i < errs.length; i++) {
-            var e = errs[i];
-
-            var li = document.createElement('li');
-            li.innerText = e.formatted_message();
-
-            ul.appendChild(li);
-        }
-
-        var w = this.editor.addLineWidget(l - 1, ul, {
-            above: true,
-        });
-
-        this._error_widgets.push(w);
-    }
 }
 
 Editor.prototype._on_change = function(c, o) {
     if (this._change_timeout !== 0) {
         clearTimeout(this._change_timeout);
         this._change_timeout = 0;
-    }
-
-    if (this._error_widgets_timeout !== 0) {
-        clearTimeout(this._error_widgets_timeout);
-        this._error_widgets_timeout = 0;
     }
 
     this._change_timeout = setTimeout(this._on_change_timeout.bind(this), this.options.check_timeout);
