@@ -17,9 +17,13 @@ UGLIFYJS = $(NODE_MODULES_BIN)/uglifyjs
 VENDORJS = js/vendor/codemirror.min.js
 
 define install-npm-module
-$(NODE_MODULES_BIN)/$1:
+$1:
 	@printf "Installing required dependency \033[1m$2\033[0m using npm\n"; \
 	npm install --loglevel error $2 >/dev/null
+endef
+
+define install-bin-npm-module
+	$(eval $(call install-npm-module,$(NODE_MODULES_BIN)/$1,$2))
 endef
 
 all: site
@@ -28,19 +32,21 @@ $(SASS):
 	@printf "Installing required dependency \033[1msass\033[0m using gem\n"; \
 	gem install -i .gem -q sass
 
-$(eval $(call install-npm-module,browserifyinc,browserifyinc))
-$(eval $(call install-npm-module,browserify,browserify))
-$(eval $(call install-npm-module,brfs,brfs))
-$(eval $(call install-npm-module,exorcist,exorcist))
-$(eval $(call install-npm-module,uglifyjs,uglify-js))
-$(eval $(call install-npm-module,uglifyify,uglifyify))
+$(eval $(call install-bin-npm-module,browserifyinc,browserify-incremental))
+$(eval $(call install-bin-npm-module,browserify,browserify))
+$(eval $(call install-bin-npm-module,brfs,brfs))
+$(eval $(call install-bin-npm-module,exorcist,exorcist))
+$(eval $(call install-bin-npm-module,uglifyjs,uglify-js))
+$(eval $(call install-npm-module,node_modules/uglifyify,uglifyify))
 
 SITE_EXTERNAL_DEPS =		\
 	js/app/default.glslv	\
 	js/app/default.glslf	\
 	js/app/default.js
 
-site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(shell $(BROWSERIFY) $(UGLIFYIFY) --list js/site.js 2>/dev/null) $(SITE_EXTERNAL_DEPS)
+-include .gen/js/site.min.js.deps
+
+site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_EXTERNAL_DEPS)
 	@mkdir -p $(dir $@); \
 	full=no; \
 	for f in $(SITE_EXTERNAL_DEPS); do \
@@ -56,10 +62,15 @@ site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(shell 
 		printf "[\033[1mGEN\033[0m] $@\n"; \
 	fi; \
 	if [ "$(ENV)" = "development" ]; then \
-		$(BROWSERIFYINC) -d -t brfs -o $@ --cachefile .gen/js/.dev-cache js/site.js; \
+		$(BROWSERIFYINC) -d -t brfs -o $@ --cachefile .gen/js/.dev-cache js/site.js || exit 1; \
 	else \
-		$(BROWSERIFYINC) -t brfs -t uglifyify -o $@.tmp --cachefile .gen/js/.cache js/site.js && $(EXORCIST) $@.map > $@ < $@.tmp; rm -f $@.tmp; \
-	fi
+		$(BROWSERIFYINC) -t brfs -t uglifyify -o $@.tmp --cachefile .gen/js/.cache js/site.js && $(EXORCIST) $@.map > $@ < $@.tmp || exit 1; rm -f $@.tmp; \
+	fi; \
+	printf "[\033[1mGEN\033[0m] [deps]\n"; \
+	mkdir -p .gen/js; \
+	printf "site/js/site.min.js: " > .gen/js/site.min.js.deps; \
+	$(BROWSERIFY) --list js/site.js 2>/dev/null | tr "\\n" " " >> .gen/js/site.min.js.deps; \
+	echo "" >> $@
 
 site/js/vendor.min.js: $(VENDORJS)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
