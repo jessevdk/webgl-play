@@ -47,8 +47,6 @@ Store.prototype.save = function(doc, cb) {
 
     var req;
 
-    console.log('saving', doc);
-
     if (!('id' in doc)) {
         req = store.add(doc);
     } else {
@@ -59,8 +57,6 @@ Store.prototype.save = function(doc, cb) {
         if (!('id' in doc)) {
             doc.id = ev.target.result;
         }
-
-        console.log('saved', ev.target.result);
 
         if (typeof cb === 'function') {
             cb(this, doc);
