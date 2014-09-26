@@ -77,6 +77,8 @@ App.prototype._load_doc = function(doc) {
         this.canvas.focus();
     }
 
+    this.title.value = doc.title;
+
     this._loading = false;
 }
 
@@ -151,6 +153,10 @@ App.prototype._update_document = function(name, editor) {
     };
 
     this._update_document_by(up);
+}
+
+App.prototype._on_doc_title_change = function() {
+    this._update_document_by({title: this.title.value});
 }
 
 App.prototype._init_canvas = function() {
@@ -233,7 +239,12 @@ App.prototype._init_editors = function() {
     }
 }
 
+App.prototype._init_title = function() {
+    this.title = document.getElementById('doc-title');
 
+    this.title.addEventListener('change', this._on_doc_title_change.bind(this));
+    this.title.addEventListener('input', this._on_doc_title_change.bind(this));
+}
 
 App.prototype._init = function() {
     this._store = new Store((function(store) {
@@ -244,6 +255,7 @@ App.prototype._init = function() {
 
     this._init_canvas();
     this._init_editors();
+    this._init_title();
     this._init_panels();
 };
 
