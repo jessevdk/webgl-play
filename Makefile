@@ -1,3 +1,5 @@
+ENV ?= development
+
 CURRENT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 NODE_MODULES_BIN = node_modules/.bin
@@ -8,6 +10,7 @@ SASS = .gem/bin/sass
 BROWSERIFY = $(NODE_MODULES_BIN)/browserify
 BROWSERIFYINC = $(NODE_MODULES_BIN)/browserifyinc
 BRFS = $(NODE_MODULES_BIN)/brfs
+UGLIFYIFY = node_modules/uglifyify
 EXORCIST = $(NODE_MODULES_BIN)/exorcist
 UGLIFYJS = $(NODE_MODULES_BIN)/uglifyjs
 
@@ -30,13 +33,14 @@ $(eval $(call install-npm-module,browserify,browserify))
 $(eval $(call install-npm-module,brfs,brfs))
 $(eval $(call install-npm-module,exorcist,exorcist))
 $(eval $(call install-npm-module,uglifyjs,uglify-js))
+$(eval $(call install-npm-module,uglifyify,uglifyify))
 
 SITE_EXTERNAL_DEPS =		\
 	js/app/default.glslv	\
 	js/app/default.glslf	\
 	js/app/default.js
 
-.gen/js/site.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(shell $(BROWSERIFY) --list js/site.js 2>/dev/null) $(SITE_EXTERNAL_DEPS)
+site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(shell $(BROWSERIFY) $(UGLIFYIFY) --list js/site.js 2>/dev/null) $(SITE_EXTERNAL_DEPS)
 	@mkdir -p $(dir $@); \
 	full=no; \
 	for f in $(SITE_EXTERNAL_DEPS); do \
@@ -47,21 +51,20 @@ SITE_EXTERNAL_DEPS =		\
 	done; \
 	if [ "$$full" = "yes" ]; then \
 		printf "[\033[1mGEN\033[0m] $@ (\033[31mfull\033[0m)\n"; \
-		$(BROWSERIFY) -t brfs -d js/site.js | $(EXORCIST) $@.map > $@; \
+		rm -f .gen/js/.cache; \
 	else \
 		printf "[\033[1mGEN\033[0m] $@\n"; \
 	fi; \
-	$(BROWSERIFYINC) -t brfs -o $@.tmp --cachefile .gen/js/.cache -d js/site.js && $(EXORCIST) $@.map > $@ < $@.tmp; rm -f $@.tmp
+	if [ "$(ENV)" = "development" ]; then \
+		$(BROWSERIFYINC) -d -t brfs -o $@ --cachefile .gen/js/.dev-cache js/site.js; \
+	else \
+		$(BROWSERIFYINC) -t brfs -t uglifyify -o $@.tmp --cachefile .gen/js/.cache js/site.js && $(EXORCIST) $@.map > $@ < $@.tmp; rm -f $@.tmp; \
+	fi
 
 site/js/vendor.min.js: $(VENDORJS)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	cat $(VENDORJS) > $@
-
-site/js/site.min.js: $(UGLIFYJS) .gen/js/site.js
-	@printf "[\033[1mGEN\033[0m] $@\n"; \
-	mkdir -p $(dir $@); \
-	$(UGLIFYJS) -c -o $@ --in-source-map .gen/js/site.js.map --source-map site/js/site.min.js.map --source-map-url site.min.js.map .gen/js/site.js 2>/dev/null
 
 site/index.html: html/index.html
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
@@ -83,7 +86,7 @@ site: site/js/vendor.min.js site/js/site.min.js site/index.html site/css/vendor.
 
 watch:
 	+@watchman watch "$(CURRENT_DIR)" >/dev/null && \
-	MAKE=$(MAKE) scripts/watch "$(CURRENT_DIR)"
+	MAKE=$(MAKE) ENV=$(ENV) scripts/watch "$(CURRENT_DIR)"
 
 unwatch:
 	@watchman -- trigger-del $(CURRENT_DIR) remake >/dev/null && \
