@@ -106,8 +106,55 @@ Editor.prototype._init_glsl = function() {
     this._change_timeout = 0;
     this._error_markers = [];
     this._errors = [];
+    this._error_message = null;
 
     this.editor.on('change', this._on_change.bind(this));
+    this.editor.on('cursorActivity', this._on_cursor_activity.bind(this));
+}
+
+Editor.prototype._on_cursor_activity = function() {
+    var doc = this.editor.getDoc();
+    var cursor = this.cursor();
+    var marks = doc.findMarksAt(cursor);
+
+    var errs = [];
+
+    for (var i = 0; i < marks.length; i++) {
+        var m = marks[i];
+
+        if (m.className === 'error') {
+            errs.push(m.error);
+        }
+    }
+
+    if (this._error_message !== null && (errs.length === 0 || this._error_message.errors[0] !== errs[0])) {
+        this._error_message.widget.parentElement.removeChild(this._error_message.widget);
+        this._error_message = null;
+    }
+
+    if (this._error_message === null && errs.length > 0) {
+        var c = document.createElement('div');
+        c.classList.add('error-message-container');
+
+        var w = document.createElement('ul');
+        w.classList.add('error-message');
+
+        c.appendChild(w);
+
+        for (var i = 0; i < errs.length; i++) {
+            var li = document.createElement('li');
+            li.textContent = errs[i].formatted_message();
+
+            w.appendChild(li);
+        }
+
+        this._error_message = {
+            errors: errs,
+            widget: c
+        };
+
+        this.editor.addWidget({line: cursor.line, ch: 0}, this._error_message.widget, false, 'above');
+        c.style.left = '';    }
 }
 
 Editor.prototype.focus = function() {
@@ -163,6 +210,12 @@ Editor.prototype._on_change_timeout = function() {
         this._error_markers[i].clear();
     }
 
+    var doc = this.editor.getDoc();
+
+    for (var i = 0; i < doc.lineCount(); i++) {
+        doc.removeLineClass(i, 'wrap', 'line-error');
+    }
+
     this._error_markers = [];
 
     if (this._errors.length == 0) {
@@ -171,8 +224,6 @@ Editor.prototype._on_change_timeout = function() {
         this.editor.display.wrapper.classList.add('error');
     }
 
-    var doc = this.editor.getDoc();
-
     for (var i = 0; i < this._errors.length; i++) {
         var e = this._errors[i];
         var l = e.location.start.line - 1;
@@ -180,11 +231,18 @@ Editor.prototype._on_change_timeout = function() {
         var m = doc.markText(this._make_loc(e.location.start),
                              this._make_loc(e.location.end), {
                                 className: 'error',
-                                title: e.message
+                                title: e.message,
+                                inclusiveLeft: false,
+                                inclusiveRight: true
                              });
+
+        m.error = e;
+        doc.addLineClass(l, 'wrap', 'line-error');
 
         this._error_markers.push(m);
     }
+
+    this._on_cursor_activity();
 }
 
 Editor.prototype._on_change = function(c, o) {
