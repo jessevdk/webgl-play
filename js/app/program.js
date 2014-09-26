@@ -2,7 +2,11 @@ var fs = require('fs');
 
 function Program(name, v, f) {
     this.vertex = v;
+    this.vertex_history = { done: [], undone: [] };
+
     this.fragment = f;
+    this.fragment_history = { done: [], undone: [] };
+
     this.name = name;
 }
 
@@ -18,8 +22,24 @@ Program.prototype.serialize = function() {
         version: 1,
         name: this.name,
         vertex: this.vertex,
-        fragment: this.fragment
+        vertex_history: this.vertex_history,
+        fragment: this.fragment,
+        fragment_history: this.fragment_history,
     };
+}
+
+Program.deserialize = function(program) {
+    var ret = new Program();
+
+    ret.vertex = program.vertex;
+    ret.vertex_history = program.vertex_history;
+
+    ret.fragment = program.fragment;
+    ret.fragment_history = program.fragment_editor;
+
+    ret.name = program.name;
+
+    return ret;
 }
 
 module.exports = Program;

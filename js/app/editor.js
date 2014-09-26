@@ -111,12 +111,41 @@ Editor.prototype._init_glsl = function() {
     this.editor.on('change', this._on_change.bind(this));
 }
 
+Editor.prototype.focus = function() {
+    this.editor.focus();
+}
+
+Editor.prototype.cursor = function(v) {
+    if (typeof v === 'undefined') {
+        return this.editor.getCursor();
+    }
+
+    this.editor.setCursor(v);
+}
+
 Editor.prototype.value = function(v) {
     if (typeof v === 'undefined') {
         return this.editor.getValue();
     }
 
     this.editor.setValue(v);
+
+    if (this.type === glsl.source.VERTEX || this.type === glsl.source.FRAGMENT) {
+        if (this._change_timeout !== 0) {
+            clearTimeout(this._change_timeout);
+            this._change_timeout = 0;
+        }
+
+        this._on_change_timeout();
+    }
+}
+
+Editor.prototype.history = function(v) {
+    if (typeof v === 'undefined') {
+        return this.editor.getHistory();
+    }
+
+    this.editor.setHistory(v);
 }
 
 Editor.prototype._make_loc = function(l) {
