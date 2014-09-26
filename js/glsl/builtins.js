@@ -380,20 +380,22 @@ Builtins.create_for_context = function(ctx, type) {
 Builtins.options_from_context = function(ctx) {
     var constants = {};
 
-    var c = {
-        'gl_MaxVertexAttribs': 'MAX_VERTEX_ATTRIBS',
-        'gl_MaxVertexUniformVectors': 'MAX_VERTEX_UNIFORM_VECTORS',
-        'gl_MaxVaryingVectors': 'MAX_VARYING_VECTORS',
-        'gl_MaxVertexTextureImageUnits': 'MAX_VERTEX_TEXTURE_IMAGE_UNITS',
-        'gl_MaxCombinedTextureImageUnits': 'MAX_COMBINED_TEXTURE_IMAGE_UNITS',
-        'gl_MaxTextureImageUnits': 'MAX_TEXTURE_IMAGE_UNITS',
-        'gl_MaxFragmentUniformVectors': 'MAX_FRAGMENT_UNIFORM_VECTORS',
-        'gl_MaxDrawBuffers': 'MAX_DRAW_BUFFERS'
-    };
+    if (ctx !== null) {
+        var c = {
+            'gl_MaxVertexAttribs': 'MAX_VERTEX_ATTRIBS',
+            'gl_MaxVertexUniformVectors': 'MAX_VERTEX_UNIFORM_VECTORS',
+            'gl_MaxVaryingVectors': 'MAX_VARYING_VECTORS',
+            'gl_MaxVertexTextureImageUnits': 'MAX_VERTEX_TEXTURE_IMAGE_UNITS',
+            'gl_MaxCombinedTextureImageUnits': 'MAX_COMBINED_TEXTURE_IMAGE_UNITS',
+            'gl_MaxTextureImageUnits': 'MAX_TEXTURE_IMAGE_UNITS',
+            'gl_MaxFragmentUniformVectors': 'MAX_FRAGMENT_UNIFORM_VECTORS',
+            'gl_MaxDrawBuffers': 'MAX_DRAW_BUFFERS'
+        };
 
-    for (var name in c) {
-        if (typeof ctx[c[name]] !== 'undefined') {
-            constants[name] = ctx.getParameter(ctx[c[name]]);
+        for (var name in c) {
+            if (typeof ctx[c[name]] !== 'undefined') {
+                constants[name] = ctx.getParameter(ctx[c[name]]);
+            }
         }
     }
 

@@ -198,11 +198,14 @@ function Preprocessor(source, type, options) {
 }
 
 Preprocessor.options_from_context = function(c) {
-    var exts = c.getSupportedExtensions();
     var defines = {};
 
-    for (var i = 0; i < exts.length; i++) {
-        defines[exts[i]] = '1';
+    if (c !== null) {
+        var exts = c.getSupportedExtensions();
+
+        for (var i = 0; i < exts.length; i++) {
+            defines[exts[i]] = '1';
+        }
     }
 
     return {
