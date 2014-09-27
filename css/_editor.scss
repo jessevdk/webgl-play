@@ -93,6 +93,10 @@
     color: lighten($fg_color, 30%);
   }
 
+  .cm-def {
+    color: $blue;
+  }
+
   .error {
     color: $red;
 
