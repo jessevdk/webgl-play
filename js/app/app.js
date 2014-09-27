@@ -82,12 +82,16 @@ App.prototype._load_doc = function(doc) {
     this._loading = false;
 }
 
-App.prototype._save_current_doc = function() {
+App.prototype._save_current_doc = function(cb) {
     var doc = this.document;
 
     this._store.save(doc.serialize(), function(store, retdoc) {
         if (retdoc !== null) {
             doc.id = retdoc.id;
+        }
+
+        if (typeof cb === 'function') {
+            cb(retdoc !== null);
         }
     });
 }
@@ -246,6 +250,38 @@ App.prototype._init_title = function() {
     this.title.addEventListener('input', this._on_doc_title_change.bind(this));
 }
 
+App.prototype._init_buttons = function() {
+    var buttons = ['share', 'snapshot', 'new'];
+
+    this.buttons = {};
+
+    for (var i = 0; i < buttons.length; i++) {
+        var b = buttons[i];
+
+        var button = document.getElementById('button-' + b);
+
+        button.addEventListener('click', this['_on_button_' + b + '_click'].bind(this));
+
+        this.buttons[b] = button;
+    }
+}
+
+App.prototype._on_button_share_click = function() {
+
+}
+
+App.prototype._on_button_snapshot_click = function() {
+
+}
+
+App.prototype._on_button_new_click = function() {
+    this._save_current_doc((function(saved) {
+        if (saved) {
+            this.new_document();
+        }
+    }).bind(this));
+}
+
 App.prototype._init = function() {
     this._store = new Store((function(store) {
         store.last((function(_, doc) {
@@ -256,6 +292,7 @@ App.prototype._init = function() {
     this._init_canvas();
     this._init_editors();
     this._init_title();
+    this._init_buttons();
     this._init_panels();
 };
 
