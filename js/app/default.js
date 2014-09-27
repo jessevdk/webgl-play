@@ -1,5 +1,5 @@
-function init() {
+function init(c) {
 }
 
-function render() {
+function render(c) {
 }
