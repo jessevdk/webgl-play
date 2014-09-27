@@ -58,6 +58,7 @@ site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_E
 	if [ "$$full" = "yes" ]; then \
 		printf "[\033[1mGEN\033[0m] $@ (\033[31mfull\033[0m)\n"; \
 		rm -f .gen/js/.cache; \
+		rm -f .gen/js/.dev-cache; \
 	else \
 		printf "[\033[1mGEN\033[0m] $@\n"; \
 	fi; \
