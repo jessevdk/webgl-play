@@ -104,4 +104,8 @@
   &.error {
     background-color: lighten($orange, 50%);
   }
+
+  .CodeMirror-selected {
+    background: lighten($blue, 30%);
+  }
 }
