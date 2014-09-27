@@ -3,6 +3,7 @@ var Document = require('./document');
 var widgets = require('../widgets/widgets');
 var glsl = require('../glsl/glsl');
 var Store = require('./store');
+var Renderer = require('./renderer');
 
 function App() {
     if (document.readyState === 'complete') {
@@ -176,6 +177,8 @@ App.prototype._init_canvas = function() {
     this.canvas.addEventListener('blur', (function(title) {
         t.classList.remove('hidden');
     }).bind(this, t));
+
+    this.renderer = new Renderer(this.canvas);
 }
 
 App.prototype._init_editors = function() {
@@ -215,7 +218,7 @@ App.prototype._init_editors = function() {
         }).bind(this, t));
     }
 
-    var ctx = this.canvas.getContext('webgl');
+    var ctx = this.renderer.context;
 
     this.vertex_editor = new Editor(this.vertex_editor, ctx, glsl.source.VERTEX);
     this.fragment_editor = new Editor(this.fragment_editor, ctx, glsl.source.FRAGMENT);

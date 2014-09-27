@@ -88,9 +88,9 @@ function Editor(editor, ctx, type) {
     });
 
     if (type === glsl.source.VERTEX || type === glsl.source.FRAGMENT) {
-        this._preprocessor_options = glsl.preprocessor.Preprocessor.options_from_context(ctx);
+        this._preprocessor_options = glsl.preprocessor.Preprocessor.options_from_context(ctx.gl);
 
-        this.builtins = glsl.builtins.Builtins.create_for_context(ctx, type);
+        this.builtins = glsl.builtins.Builtins.create_for_context(ctx.gl, type);
 
         if (type === glsl.source.VERTEX) {
             this.editor.setOption('mode', 'glslv');
