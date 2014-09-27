@@ -5,6 +5,8 @@ var glsl = require('../glsl/glsl');
 var Store = require('./store');
 var Renderer = require('./renderer');
 
+require('./js-mode');
+
 function App() {
     if (document.readyState === 'complete') {
         this._init();

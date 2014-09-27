@@ -9,7 +9,7 @@ function Editor(editor, ctx, type) {
         check_timeout: 200
     };
 
-    editor.addKeyMap({
+    var keymap = {
         Tab: function(cm) {
             var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
             cm.replaceSelection(spaces);
@@ -85,7 +85,7 @@ function Editor(editor, ctx, type) {
             doc.replaceRange('', {line: cur.line, ch: 0}, {line: cur.line, ch: line.length});
             return CodeMirror.Pass;
         }
-    });
+    };
 
     if (type === glsl.source.VERTEX || type === glsl.source.FRAGMENT) {
         this._preprocessor_options = glsl.preprocessor.Preprocessor.options_from_context(ctx.gl);
@@ -100,8 +100,27 @@ function Editor(editor, ctx, type) {
 
         this._init_glsl();
     } else {
+        if (type === 'javascript') {
+            keymap['.'] = function(cm) {
+                cm.replaceSelection('.');
+                cm.showHint({
+                    completeSingle: false,
+                    context: {'c': ctx}
+                });
+            };
+
+            keymap['Ctrl-Space'] = function(cm) {
+                cm.showHint({
+                    completeSingle: false,
+                    context: {'c': ctx}
+                });
+            };
+        }
+
         this.editor.setOption('mode', type);
     }
+
+    editor.addKeyMap(keymap);
 }
 
 Editor.prototype._init_glsl = function() {
