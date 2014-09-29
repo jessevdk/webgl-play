@@ -17,6 +17,33 @@ Program.default = function() {
     return new Program('default', v, f);
 }
 
+Program.prototype._compile_shader = function(gl, type, source) {
+    var ret = gl.createShader(type);
+
+    gl.shaderSource(ret, source);
+    gl.compileShader(ret);
+
+    return ret;
+}
+
+Program.prototype.compile = function(gl) {
+    var v = this._compile_shader(gl, gl.VERTEX_SHADER, this.vertex);
+    var f = this._compile_shader(gl, gl.FRAGMENT_SHADER, this.fragment);
+
+    var p = gl.createProgram();
+
+    gl.attachShader(p, v);
+    gl.attachShader(p, f);
+
+    gl.linkProgram(p);
+
+    return {
+        vertex: v,
+        fragment: f,
+        program: p
+    }
+}
+
 Program.prototype.serialize = function() {
     return {
         version: 1,
