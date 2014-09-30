@@ -125,7 +125,7 @@ function Preprocessor(source, type, options) {
 
         if (ptr < line.length && line[ptr] == '#') {
             var lsource = new glsl.source.Source(line.slice(ptr + 1));
-            lsource.offset(new glsl.source.Location(i, ptr + 1));
+            lsource.offset(new glsl.source.Location(i + 1, ptr + 2));
 
             var tokenizer = new Tokenizer(lsource);
             var tok = tokenizer.next();

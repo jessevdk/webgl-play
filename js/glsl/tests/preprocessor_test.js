@@ -36,6 +36,20 @@ suite('preprocessor', function() {
         assert.equal(p.source(), processed);
     });
 
+    test('error', function () {
+        var unprocessed = fs.readFileSync('tests/testfiles/preprocessor_error.glslv', 'utf8');
+
+        var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
+        var errors = p.errors();
+
+        if (errors.length != 1) {
+            assert.ok(false, 'expected exactly 1 error, got ' + errors.length);
+            return;
+        }
+
+        assert.equal(errors[0].formatted_message(), '2.2-2.7: this is an error');
+    });
+
     test('source_map', function() {
         var unprocessed = fs.readFileSync('tests/testfiles/preprocessor.glslv', 'utf8');
         var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);

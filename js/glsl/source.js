@@ -201,7 +201,13 @@ SourceError.prototype.formatted_message = function() {
     var l = this.location.start.line;
     var c = this.location.start.column;
 
-    return l + '.' + c + ': ' + this.message;
+    var ret = l + '.' + c;
+
+    if (this.location.end.line !== l || this.location.end.column !== c) {
+        ret += '-' + this.location.end.line + '.' + this.location.end.column;
+    }
+
+    return ret + ': ' + this.message;
 };
 
 function Source(s, type) {
