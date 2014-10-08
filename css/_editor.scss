@@ -113,50 +113,53 @@
     background: lighten($blue, 30%);
   }
 
-  .CodeMirror-hints {
-    position: absolute;
-    z-index: 100;
-    overflow: hidden;
-    list-style: none;
-
-    margin: 0;
-    padding: 6px;
-
-    -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-    -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-    box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-    border-radius: 3px;
-    border: 1px solid silver;
-
-    background-color: white;
-    font-size: 90%;
-    font-family: monospace;
-
-    max-height: 20em;
-    overflow-y: auto;
+  .CodeMirror-ruler {
+    border-left: 1px solid lighten($borders_color, 20%);
   }
+}
 
-  .CodeMirror-hint {
-    margin: 0;
-    padding: 2px 4px;
-    max-width: 19em;
-    overflow: hidden;
-    white-space: pre;
-    color: black;
-    cursor: pointer;
-  }
+.CodeMirror-hints {
+  position: absolute;
+  z-index: 100;
+  overflow: hidden;
+  list-style: none;
 
-  li.CodeMirror-hint-active {
-    background: $blue;
-    color: white;
-  }
+  margin: 0;
+  padding: 6px;
 
-  li.CodeMirror-hint-active .match {
-    color: lighten($blue, 40%);
-  }
+  -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  border-radius: 3px;
+  border: 1px solid silver;
 
-  .CodeMirror-hint .match {
-    color: darker($blue, 5%);
-  }
+  background-color: white;
+  font-size: 90%;
+  font-family: monospace;
 
+  max-height: 20em;
+  overflow-y: auto;
+}
+
+.CodeMirror-hint {
+  margin: 0;
+  padding: 2px 4px;
+  max-width: 19em;
+  overflow: hidden;
+  white-space: pre;
+  color: black;
+  cursor: pointer;
+}
+
+li.CodeMirror-hint-active {
+  background: $blue;
+  color: white;
+}
+
+li.CodeMirror-hint-active .match {
+  color: lighten($blue, 40%);
+}
+
+.CodeMirror-hint .match {
+  color: darker($blue, 5%);
 }
