@@ -43,6 +43,15 @@ App.prototype.load_document = function(doc) {
     this._load_doc(doc);
 }
 
+App.prototype._update_renderer = function() {
+    this.renderer.update(this.document);
+
+    this.js_editor.completionContext({
+        c: this.renderer.context,
+        this: this.renderer.program
+    });
+}
+
 App.prototype._load_doc = function(doc) {
     this._loading = true;
 
@@ -83,6 +92,7 @@ App.prototype._load_doc = function(doc) {
     this.title.value = doc.title;
 
     this._loading = false;
+    this._update_renderer();
 }
 
 App.prototype._save_current_doc = function(cb) {
@@ -152,7 +162,11 @@ App.prototype._update_document_by = function(opts) {
     }
 
     this.document.update(opts);
-    this._save_current_doc_with_delay();
+    this._save_current_doc_with_delay((function() {
+        if ('vertex' in opts || 'fragment' in opts || 'js' in opts) {
+            this._update_renderer();
+        }
+    }).bind(this));
 }
 
 App.prototype._update_document = function(name, editor) {
