@@ -202,11 +202,21 @@ function Preprocessor(source, type, options) {
 Preprocessor.options_from_context = function(c) {
     var defines = {};
 
+    var nmap = {
+        'WEBGL_draw_buffers': 'GL_EXT_draw_buffers'
+    };
+
     if (c !== null) {
         var exts = c.getSupportedExtensions();
 
         for (var i = 0; i < exts.length; i++) {
-            defines[exts[i]] = '1';
+            var e = exts[i];
+
+            defines[e] = '1';
+
+            if (e in nmap) {
+                defines[nmap[e]] = '1';
+            }
         }
     }
 
