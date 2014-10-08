@@ -109,7 +109,7 @@ App.prototype._save_current_doc = function(cb) {
     });
 }
 
-App.prototype._save_current_doc_with_delay = function() {
+App.prototype._save_current_doc_with_delay = function(cb) {
     if (this._save_timeout !== 0) {
         clearTimeout(this._save_timeout);
         this._save_timeout = 0;
@@ -117,8 +117,13 @@ App.prototype._save_current_doc_with_delay = function() {
 
     this._save_timeout = setTimeout((function() {
         this._save_timeout = 0;
-        this._save_current_doc();
+        this._save_current_doc(cb);
     }).bind(this), 1000);
+}
+
+App.prototype._update_canvas_size = function() {
+    this.canvas.width = this.canvas.clientWidth;
+    this.canvas.height = this.canvas.clientHeight;
 }
 
 App.prototype._init_panels = function() {
@@ -153,6 +158,7 @@ App.prototype._init_panels = function() {
 
     this.panels['panel-js'].on('resized', (function() {
         this.js_editor.editor.refresh();
+        this._update_canvas_size();
     }).bind(this));
 }
 
@@ -202,7 +208,13 @@ App.prototype._init_canvas = function() {
         t.classList.remove('hidden');
     }).bind(this, t));
 
+    window.addEventListener('resize', (function(e) {
+        this._update_canvas_size();
+    }).bind(this));
+
     this.renderer = new Renderer(this.canvas);
+
+    this._update_canvas_size();
 }
 
 App.prototype._init_editors = function() {
