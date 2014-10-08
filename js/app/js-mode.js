@@ -97,7 +97,7 @@ function hint(editor, options) {
         replace = tok;
     }
 
-    while (tok.type === 'property' || (tok.type !== null && tok.type.indexOf('variable') === 0)) {
+    while (tok.type === 'property' || tok.type === 'keyword' || (tok.type !== null && tok.type.indexOf('variable') === 0)) {
         ctx.unshift(tok.string);
         tok = editor.getTokenAt(CodeMirror.Pos(cur.line, tok.start));
 
