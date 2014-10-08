@@ -37,6 +37,10 @@ function match(item, pattern) {
     var d = 0;
     var pos = [];
 
+    if (item.length > 0 && item[0] === '_') {
+        return false;
+    }
+
     while (i < item.length && ip != pattern.length) {
         if (item[i] == pattern[ip]) {
             if (pos.length === 0 || pos[pos.length - 1].end != i - 1) {
