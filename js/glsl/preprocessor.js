@@ -96,6 +96,7 @@ function Preprocessor(source, type, options) {
     this._pstack = [{skip: false}];
     this._errors = [];
     this._tokens = [];
+    this._extensions = [];
 
     var incomment = false;
 
@@ -168,6 +169,7 @@ function Preprocessor(source, type, options) {
             case Tokenizer.T_PRAGMA:
                 break;
             case Tokenizer.T_EXTENSION:
+                this._extensions.push(tokenizer.remainder().text.strip());
                 break;
             case Tokenizer.T_VERSION:
                 break;
@@ -216,6 +218,10 @@ Preprocessor.options_from_context = function(c) {
 Preprocessor.prototype.type = function() {
     return this._source.type();
 };
+
+Preprocessor.prototype.extensions = function() {
+    return this._extensions.slice(0);
+}
 
 Preprocessor.prototype._source_map = function(range) {
     return new glsl.source.Range(this._source_map_one(range.start, false),
