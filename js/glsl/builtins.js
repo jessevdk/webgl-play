@@ -389,13 +389,25 @@ Builtins.options_from_context = function(ctx) {
             'gl_MaxCombinedTextureImageUnits': 'MAX_COMBINED_TEXTURE_IMAGE_UNITS',
             'gl_MaxTextureImageUnits': 'MAX_TEXTURE_IMAGE_UNITS',
             'gl_MaxFragmentUniformVectors': 'MAX_FRAGMENT_UNIFORM_VECTORS',
-            'gl_MaxDrawBuffers': 'MAX_DRAW_BUFFERS'
+            'gl_MaxDrawBuffers': 1
         };
 
         for (var name in c) {
-            if (typeof ctx[c[name]] !== 'undefined') {
-                constants[name] = ctx.getParameter(ctx[c[name]]);
+            var cval = c[name];
+
+            if (typeof cval !== 'string') {
+                constants[name] = cval;
+            } else if (typeof ctx[cval] !== 'undefined') {
+                constants[name] = ctx.getParameter(ctx[cval]);
             }
+        }
+
+        var drawbuffers_ext = ctx.getExtension('WEBGL_draw_buffers');
+
+        if (drawbuffers_ext !== null) {
+            constants['gl_MaxDrawBuffers'] = ctx.getParameter(drawbuffers_ext.MAX_DRAW_BUFFERS_WEBGL);
+        } else {
+            constants['gl_MaxDrawBuffers'] = 1;
         }
     }
 
