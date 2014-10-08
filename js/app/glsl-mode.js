@@ -130,9 +130,9 @@ var mode = function(config, modeopts) {
             case t.T_IN:
             case t.T_OUT:
             case t.T_INOUT:
-            case t.T_HIGHP:
-            case t.T_MEDIUMP:
-            case t.T_LOWP:
+            case t.T_HIGH_PRECISION:
+            case t.T_MEDIUM_PRECISION:
+            case t.T_LOW_PRECISION:
                 return 'qualifier';
             case t.T_BOOL:
             case t.T_INT:
