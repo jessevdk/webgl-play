@@ -61,7 +61,7 @@ html, body, #main {
       padding-left: 16px;
       padding-right: 16px;
       transition: background-color ease 0.1s;
-      cursor: pointer;
+      cursor: default;
 
       &:hover {
         background-color: lighten($base01, 20%);
