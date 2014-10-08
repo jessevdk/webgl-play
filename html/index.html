@@ -24,25 +24,14 @@
         </ul>
       </div>
       <div id="content">
-        <div id="panel-main" class="panel horizontal">
+        <div id="panel-programs" class="panel horizontal">
           <div>
-            <div class="child-bin">
+            <div class="child-bin" id="programs-sidebar">
 
-              <div id="panel-program" class="panel vertical">
-                <div>
-                  <div class="child-bin">
-                    <div id="vertex-editor" class="editor"></div>
-                    <div class="editor-title">Vertex</div>
-                  </div>
-                </div>
-                <div class="separator"></div>
-                <div>
-                  <div class="child-bin">
-                    <div id="fragment-editor" class="editor"></div>
-                    <div class="editor-title">Fragment</div>
-                  </div>
-                </div>
-              </div>
+              <div class="title">Programs <div class="new-program">+</div></div>
+              <ul id="program-list">
+                <li class="selected">Default</li>
+              </ul>
 
             </div>
           </div>
@@ -50,18 +39,48 @@
           <div>
             <div class="child-bin">
 
-              <div id="panel-js" class="panel vertical">
+              <div id="panel-main" class="panel horizontal">
                 <div>
                   <div class="child-bin">
-                    <div id="js-editor" class="editor"></div>
-                    <div class="editor-title">Javascript</div>
+
+                    <div id="panel-program" class="panel vertical">
+                      <div>
+                        <div class="child-bin">
+                          <div id="vertex-editor" class="editor"></div>
+                          <div class="editor-title">Vertex</div>
+                        </div>
+                      </div>
+                      <div class="separator"></div>
+                      <div>
+                        <div class="child-bin">
+                          <div id="fragment-editor" class="editor"></div>
+                          <div class="editor-title">Fragment</div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
                 <div class="separator"></div>
                 <div>
                   <div class="child-bin">
-                    <canvas id="view" tabindex="4"></canvas>
-                    <div class="editor-title">View</div>
+
+                    <div id="panel-js" class="panel vertical">
+                      <div>
+                        <div class="child-bin">
+                          <div id="js-editor" class="editor"></div>
+                          <div class="editor-title">Javascript</div>
+                        </div>
+                      </div>
+                      <div class="separator"></div>
+                      <div>
+                        <div class="child-bin">
+                          <canvas id="view" tabindex="4"></canvas>
+                          <div class="editor-title">View</div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>

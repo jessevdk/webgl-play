@@ -96,4 +96,66 @@ html, body, #main {
   left: 0px;
 }
 
+#panel-programs {
+  > div:first-child {
+    flex-basis: 200px;
+  }
+}
+
+#programs-sidebar {
+  .title {
+    padding: 24px 6px 12px 12px;
+    font-weight: bold;
+    background-color: lighten($bg_color, 5%);
+    color: lighten($fg_color, 20%);
+    position: relative;
+
+    border-bottom: 1px solid lighten($borders_color, 20%);
+
+    .new-program {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+
+      padding: 0px 4px 1px 4px;
+      margin: 5px;
+      border: 1px solid $borders_color;
+      border-radius: 3px;
+      background-color: $bg_color;
+      background: linear-gradient(to bottom, lighten($bg_color, 5%), $bg_color);
+      cursor: default;
+
+      &:hover {
+        background-color: lighten($bg_color, 5%);
+        background: linear-gradient(to bottom, lighten($bg_color, 10%), lighten($bg_color, 5%));
+      }
+
+      &:active {
+        background-color: $bg_color;
+        background: linear-gradient(to bottom, $bg_color, lighten($bg_color, 5%));
+      }
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 8px 12px 8px 12px;
+
+      &:nth-child(odd) {
+        background-color: lighten($bg_color, 5%);
+      }
+
+      &.selected {
+        padding-left: 20px;
+        background-color: lighten($blue, 10%);
+        color: white;
+      }
+    }
+  }
+}
+
 /* vi:ts=2:et */

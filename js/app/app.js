@@ -122,10 +122,18 @@ App.prototype._init_panels = function() {
         this.panels[p.id] = new widgets.Panel(p);
     }
 
+    this.panels['panel-programs'].on('resized', (function() {
+        this.vertex_editor.editor.refresh();
+        this.fragment_editor.editor.refresh();
+        this.js_editor.editor.refresh();
+        this._update_canvas_size();
+    }).bind(this));
+
     this.panels['panel-main'].on('resized', (function() {
         this.vertex_editor.editor.refresh();
         this.fragment_editor.editor.refresh();
         this.js_editor.editor.refresh();
+        this._update_canvas_size();
     }).bind(this));
 
     this.panels['panel-program'].on('resized', (function() {
