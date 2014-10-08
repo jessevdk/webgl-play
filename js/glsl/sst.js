@@ -823,6 +823,15 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                     var val = [];
                     var mval = [];
 
+                    var numel = 0;
+                    var numex;
+
+                    if (tp.is_mat) {
+                        numex = tp.length * tp.length;
+                    } else {
+                        numex = tp.length;
+                    }
+
                     node.t.is_const_expression = true;
 
                     for (var i = 0; i < node.arguments.length; i++) {
@@ -833,53 +842,46 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                             return;
                         }
 
+                        if (!arg.t.type.is_primitive) {
+                            this._error(arg.location(), 'cannot use value of type ' + arg.t.type.name + ' to construct value of type ' + tp.name);
+                            return;
+                        }
+
+                        if (numel + arg.t.type.length > numex) {
+                            this._error(arg.location(), 'too many values to construct value of type ' + tp.name);
+                            return;
+                        }
+
+                        numel += arg.t.type.length;
+
                         if (arg.t.is_const_expression) {
                             var v = arg.t.const_value;
-
-                            if (!arg.t.type.is_primitive) {
-                                this._error(arg.location(), 'cannot use value of type ' + arg.t.type.name + ' to construct value of type ' + tp.name);
-                                return;
-                            }
 
                             if (arg.t.type.is_scalar) {
                                 v = [v];
                             }
 
                             for (var j = 0; j < v.length; j++) {
-                                if (val.length == tp.length) {
-                                    if (tp.is_mat) {
-                                        mval.push(val);
-                                        val = [];
-
-                                        if (mval.length == tp.length) {
-                                            this._error(arg.location(), 'too many values to construct value of type ' + tp.name);
-                                            return;
-                                        }
-                                    } else {
-                                        this._error(arg.location(), 'too many values to construct value of type ' + tp.name);
-                                        return;
-                                    }
+                                if (val.length == tp.length && tp.is_mat) {
+                                    mval.push(val);
+                                    val = [];
                                 }
 
                                 val.push(v[j]);
                             }
                         } else {
                             node.t.is_const_expression = false;
-                        }
-                    }
 
-                    if (val.length != tp.length) {
-                        this._error(node.location(), 'not enough values to fully construct type ' + tp.name);
-                        return;
+                        }
                     }
 
                     if (tp.is_mat) {
                         mval.push(val);
+                    }
 
-                        if (mval.length != tp.length) {
-                            this._error(node.location(), 'not enough values to fully construct type ' + tp.name);
-                            return;
-                        }
+                    if (numel != numex) {
+                        this._error(node.location(), 'not enough values to fully construct type ' + tp.name + ' (got ' + numel + ', but expected ' + numex + ' values)');
+                        return;
                     }
 
                     if (node.t.is_const_expression) {
