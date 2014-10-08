@@ -227,7 +227,8 @@ App.prototype._init_editors = function() {
     var opts = {
         theme: 'default webgl-play',
         indentUnit: 4,
-        lineNumbers: true
+        lineNumbers: true,
+        rulers: [78]
     };
 
     for (var k in elems) {
