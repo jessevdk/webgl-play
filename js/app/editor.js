@@ -5,6 +5,8 @@ function Editor(editor, ctx, type) {
     this.editor = editor;
     this.type = type;
 
+    this._completionContext = {};
+
     this.options = {
         check_timeout: 200
     };
@@ -101,26 +103,35 @@ function Editor(editor, ctx, type) {
         this._init_glsl();
     } else {
         if (type === 'javascript') {
-            keymap['.'] = function(cm) {
+            keymap['.'] = (function(cm) {
                 cm.replaceSelection('.');
-                cm.showHint({
-                    completeSingle: false,
-                    context: {'c': ctx}
-                });
-            };
 
-            keymap['Ctrl-Space'] = function(cm) {
                 cm.showHint({
                     completeSingle: false,
-                    context: {'c': ctx}
+                    context: this._completionContext
                 });
-            };
+            }).bind(this);
+
+            keymap['Ctrl-Space'] = (function(cm) {
+                cm.showHint({
+                    completeSingle: false,
+                    context: this._completionContext
+                });
+            }).bind(this);
         }
 
         this.editor.setOption('mode', type);
     }
 
     editor.addKeyMap(keymap);
+}
+
+Editor.prototype.completionContext = function(context) {
+    if (!context) {
+        return this._completionContext;
+    }
+
+    this._completionContext = context;
 }
 
 Editor.prototype._init_glsl = function() {
