@@ -27,24 +27,64 @@ Program.prototype._compile_shader = function(gl, type, source) {
     gl.shaderSource(ret, source);
     gl.compileShader(ret);
 
-    return ret;
+    var log = gl.getShaderInfoLog(ret);
+
+    if (log.length === 0) {
+        log = null;
+    } else {
+        gl.deleteShader(ret);
+        ret = 0;
+    }
+
+    return {
+        id: ret,
+        error: log
+    };
 }
 
 Program.prototype.compile = function(gl) {
     var v = this._compile_shader(gl, gl.VERTEX_SHADER, this.vertex.data);
     var f = this._compile_shader(gl, gl.FRAGMENT_SHADER, this.fragment.data);
+    var p = 0;
 
-    var p = gl.createProgram();
+    var attrs = {
+        'v_Position': 0,
+        'v_Normal': 1,
+        'v_TexCoord': 2
+    };
 
-    gl.attachShader(p, v);
-    gl.attachShader(p, f);
+    if (v.id === 0 || f.id === 0) {
+        if (v.id !== 0) {
+            gl.deleteShader(v.id);
+            v.id = 0;
+        }
 
-    gl.linkProgram(p);
+        if (f.id !== 0) {
+            gl.deleteShader(f.id);
+            f.id = 0;
+        }
+    } else {
+        p = gl.createProgram();
+
+        gl.attachShader(p, v.id);
+        gl.attachShader(p, f.id);
+
+        for (attr in attrs) {
+            gl.bindAttribLocation(p, attrs[attr], attr);
+        }
+
+        gl.linkProgram(p);
+
+        if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+            throw new Error('could not link program');
+        }
+    }
 
     return {
         vertex: v,
         fragment: f,
-        program: p
+        program: p,
+        attributes: attrs
     }
 }
 
