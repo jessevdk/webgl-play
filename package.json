@@ -7,6 +7,7 @@
     "chai": "1.9.x",
     "istanbul": "0.3.x",
     "browserify": "5.11.x",
+	"browserify-incremental": "0.1.x",
     "brfs": "1.2.x",
     "uglify-js": "2.4.x",
     "exorcist": "0.1.x",
