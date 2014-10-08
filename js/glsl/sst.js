@@ -622,7 +622,7 @@ Annotator.prototype._annotate_block = function(node) {
 Annotator.prototype._annotate_precision_stmt = function(node) {
     this._annotate_node(node.type);
 
-    if (node.type.t.type === null) {
+    if (node.type === null || node.type.t.type === null) {
         return;
     }
 
