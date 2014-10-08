@@ -46,14 +46,14 @@ App.prototype.load_document = function(doc) {
 App.prototype._load_doc = function(doc) {
     this._loading = true;
 
-    this.vertex_editor.value(doc.active_program.vertex);
-    this.vertex_editor.history(doc.active_program.vertex_history);
+    this.vertex_editor.value(doc.active_program.vertex.data);
+    this.vertex_editor.history(doc.active_program.vertex.history);
 
-    this.fragment_editor.value(doc.active_program.fragment);
-    this.fragment_editor.history(doc.active_program.fragment_history);
+    this.fragment_editor.value(doc.active_program.fragment.data);
+    this.fragment_editor.history(doc.active_program.fragment.history);
 
-    this.js_editor.value(doc.js);
-    this.js_editor.history(doc.js_history);
+    this.js_editor.value(doc.js.data);
+    this.js_editor.history(doc.js.history);
 
     this.document = doc;
 

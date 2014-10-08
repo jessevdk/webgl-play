@@ -6,8 +6,10 @@ function Document() {
 
     this.programs = [Program.default()];
 
-    this.js = fs.readFileSync(__dirname + '/default.js', 'utf-8').trimRight('\n');
-    this.js_history = { done: [], undone: [] };
+    this.js = {
+        data: fs.readFileSync(__dirname + '/default.js', 'utf-8').trimRight('\n'),
+        history: { done: [], undone: [] }
+    };
 
     this.title = 'Untitled';
     this.modification_time = new Date();
@@ -19,18 +21,24 @@ function Document() {
 
 Document.prototype.update = function(buffers) {
     if ('vertex' in buffers) {
-        this.active_program.vertex = buffers.vertex.data;
-        this.active_program.vertex_history = buffers.vertex.history;
+        this.active_program.vertex = {
+            data: buffers.vertex.data,
+            history: buffers.vertex.history
+        };
     }
 
     if ('fragment' in buffers) {
-        this.active_program.fragment = buffers.fragment;
-        this.active_program.fragment_history = buffers.fragment_history;
+        this.active_program.fragment = {
+            data: buffers.fragment.data,
+            history: buffers.fragment.history
+        };
     }
 
     if ('js' in buffers) {
-        this.js = buffers.js.data;
-        this.js_history = buffers.js.history;
+        this.js = {
+            data: buffers.js.data,
+            history: buffers.js.history
+        };
     }
 
     if ('title' in buffers) {
@@ -65,8 +73,10 @@ Document.prototype.serialize = function() {
         version: 1,
         programs: programs,
         active_program: this.active_program.name,
-        js: this.js,
-        js_history: this.js_history,
+        js: {
+            data: this.js.data,
+            history: this.js.history,
+        },
         title: this.title,
         modification_time: this.modification_time,
         creation_time: this.creation_time,
@@ -109,8 +119,10 @@ Document.deserialize = function(doc) {
 
     ret.active_editor = doc.active_editor;
 
-    ret.js = doc.js;
-    ret.js_history = doc.js_history;
+    ret.js = {
+        data: doc.js.data,
+        history: doc.js.history
+    };
 
     ret.title = doc.title;
     ret.modification_time = doc.modification_time;

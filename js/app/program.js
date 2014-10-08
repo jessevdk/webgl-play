@@ -1,11 +1,15 @@
 var fs = require('fs');
 
 function Program(name, v, f) {
-    this.vertex = v;
-    this.vertex_history = { done: [], undone: [] };
+    this.vertex = {
+        data: v,
+        history: { done: [], undone: [] }
+    };
 
-    this.fragment = f;
-    this.fragment_history = { done: [], undone: [] };
+    this.fragment = {
+        data: f,
+        history: { done: [], undone: [] }
+    };
 
     this.name = name;
 }
@@ -27,8 +31,8 @@ Program.prototype._compile_shader = function(gl, type, source) {
 }
 
 Program.prototype.compile = function(gl) {
-    var v = this._compile_shader(gl, gl.VERTEX_SHADER, this.vertex);
-    var f = this._compile_shader(gl, gl.FRAGMENT_SHADER, this.fragment);
+    var v = this._compile_shader(gl, gl.VERTEX_SHADER, this.vertex.data);
+    var f = this._compile_shader(gl, gl.FRAGMENT_SHADER, this.fragment.data);
 
     var p = gl.createProgram();
 
@@ -48,21 +52,29 @@ Program.prototype.serialize = function() {
     return {
         version: 1,
         name: this.name,
-        vertex: this.vertex,
-        vertex_history: this.vertex_history,
-        fragment: this.fragment,
-        fragment_history: this.fragment_history,
+        vertex: {
+            data: this.vertex.data,
+            history: this.vertex.history
+        },
+        fragment: {
+            data: this.fragment.data,
+            history: this.fragment.history
+        }
     };
 }
 
 Program.deserialize = function(program) {
     var ret = new Program();
 
-    ret.vertex = program.vertex;
-    ret.vertex_history = program.vertex_history;
+    ret.vertex = {
+        data: program.vertex.data,
+        history: program.vertex.history
+    };
 
-    ret.fragment = program.fragment;
-    ret.fragment_history = program.fragment_editor;
+    ret.fragment = {
+        data: program.fragment.data,
+        history: program.fragment.history
+    };
 
     ret.name = program.name;
 
