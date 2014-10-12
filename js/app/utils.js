@@ -18,6 +18,16 @@ function merge() {
     return ret;
 }
 
+var escapeDiv = document.createElement('div');
+var escapeElement = document.createTextNode('');
+escapeDiv.appendChild(escapeElement);
+
+function htmlEscape(s) {
+    escapeElement.data = s;
+    return escapeDiv.innerHTML;
+}
+
 exports.merge = merge;
+exports.htmlEscape = htmlEscape;
 
 // vi:ts=4:et

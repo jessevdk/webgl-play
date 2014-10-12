@@ -149,17 +149,70 @@
   white-space: pre;
   color: black;
   cursor: pointer;
+
+  .match {
+    color: darker($blue, 5%);
+  }
+
+  .icon {
+    display: inline-block;
+    padding: 0px 4px 0px 4px;
+    margin-right: 3px;
+    color: white;
+
+    &.function {
+      background-color: lighten($orange, 20%);
+    }
+
+    &.data {
+      background-color: lighten($blue, 20%);
+    }
+  }
 }
 
 li.CodeMirror-hint-active {
   background: $blue;
   color: white;
+
+  .match {
+    color: lighten($blue, 40%);
+  }
 }
 
-li.CodeMirror-hint-active .match {
-  color: lighten($blue, 40%);
+.CodeMirror-hints.showing-info {
+  border-radius: 3px 0px 3px 3px;
 }
 
-.CodeMirror-hint .match {
-  color: darker($blue, 5%);
+.hints-info {
+  border: 1px solid darken($base3, 30%);
+  background-color: $base3;
+  position: absolute;
+  padding: 3px 6px 3px 6px;
+  z-index: 200;
+  -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  border-left: 0;
+  font-size: 90%;
+
+  .title {
+    font-weight: bold;
+  }
+
+  .description {
+    margin-top: 6px;
+  }
+
+  .params {
+    margin: 12px;
+
+    td {
+      vertical-align: baseline;
+    }
+
+    td:first-child {
+      color: $blue;
+      padding-right: 6px;
+    }
+  }
 }

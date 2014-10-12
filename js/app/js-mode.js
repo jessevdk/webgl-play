@@ -1,3 +1,5 @@
+var utils = require('./utils');
+
 function render(element, self, data) {
     var t = data.text;
     var prev = 0;
@@ -67,6 +69,84 @@ function match(item, pattern) {
     };
 }
 
+function sanitizeDescription(s) {
+    var esc = utils.htmlEscape(s);
+
+    var r = /\{@link.*?([^\s]+)\}/;
+    return esc.replace(r, '<b>$1</b>');
+}
+
+function fillInfo(info, completion, doc) {
+    while (info.firstChild) {
+        info.removeChild(info.firstChild);
+    }
+
+    var description = sanitizeDescription(doc.description);
+
+    var title = document.createElement('div');
+    title.classList.add('title');
+
+    if (doc.kind === 'class' || doc.kind === 'function') {
+        var args = [];
+
+        if (typeof doc.params !== 'undefined') {
+            for (var i = 0; i < doc.params.length; i++) {
+                args.push(doc.params[i].name);
+            }
+        }
+
+        title.textContent = completion.text + '(' + args.join(', ') + ') - ';
+    }
+
+    var desc = description;
+    var dot = desc.indexOf('.');
+
+    if (dot !== -1) {
+        title.innerHTML += desc.slice(0, dot + 1);
+        desc = desc.slice(dot + 1).trimLeft().trimRight();
+
+        if (desc.length === 0) {
+            desc = null;
+        }
+    } else {
+        title.innerHTML += desc;
+        desc = null;
+    }
+
+    info.appendChild(title);
+
+    if (desc !== null) {
+        var d = document.createElement('div');
+        d.classList.add('description');
+        d.innerHTML = desc;
+
+        info.appendChild(d);
+    }
+
+    if (typeof doc.params !== 'undefined' && doc.params.length > 0) {
+        var table = document.createElement('table');
+        table.classList.add('params');
+
+        for (var i = 0; i < doc.params.length; i++) {
+            var p = doc.params[i];
+
+            var row = document.createElement('tr');
+            var name = document.createElement('td');
+            var description = document.createElement('td');
+
+            name.textContent = p.name;
+            description.textContent = p.description;
+
+            row.appendChild(name);
+            row.appendChild(description);
+
+            table.appendChild(row);
+        }
+
+        info.appendChild(table);
+    }
+}
+
 function hint(editor, options) {
     var cur = editor.getCursor();
     var tok = editor.getTokenAt(cur);
@@ -129,7 +209,7 @@ function hint(editor, options) {
         var m = match(k.toLowerCase(), f);
 
         if (m !== false) {
-            matches.push({text: k, d: m.distance, pos: m.pos});
+            matches.push({text: k, d: m.distance, pos: m.pos, obj: obj[k]});
         }
     }
 
@@ -155,15 +235,72 @@ function hint(editor, options) {
         completions.push({
             text: matches[i].text,
             render: render,
-            pos: matches[i].pos
+            pos: matches[i].pos,
+            obj: matches[i].obj
         });
     }
 
-    return {
+    var ret = {
         list: completions,
         from: CodeMirror.Pos(cur.line, replace.start),
         to: CodeMirror.Pos(cur.line, replace.end),
     };
+
+    var parent = Object.getPrototypeOf(obj).constructor;
+
+    CodeMirror.on(ret, 'select', function(completion, element) {
+        var obj = completion.obj;
+        var doc = null;
+
+        if (typeof obj.__doc__ !== 'undefined') {
+            doc = obj.__doc__;
+        } else if (typeof parent.__doc__ !== 'undefined' &&
+                   typeof parent.__doc__.members !== 'undefined' &&
+                   typeof parent.__doc__.members[completion.text] !== 'undefined') {
+            doc = {
+                description: parent.__doc__.members[completion.text]
+            };
+        }
+
+        var ul = element.parentNode;
+
+        var info = editor._infoPopup;
+
+        if (typeof info === 'undefined') {
+            info = null;
+        }
+
+        if (doc === null && info !== null) {
+            document.body.removeChild(info);
+            delete editor._infoPopup;
+
+            ul.classList.remove('showing-info');
+        } else if (doc !== null) {
+            if (info === null) {
+                info = document.createElement('div');
+                info.classList.add('hints-info');
+
+                document.body.appendChild(info);
+                editor._infoPopup = info;
+            }
+
+            fillInfo(info, completion, doc);
+
+            info.style.left = (ul.offsetLeft + ul.offsetWidth) + 'px';
+            info.style.top = ul.offsetTop + 'px';
+
+            ul.classList.add('showing-info');
+        }
+    });
+
+    CodeMirror.on(ret, 'close', function() {
+        if (editor._infoPopup) {
+            document.body.removeChild(editor._infoPopup);
+            delete editor._infoPopup;
+        }
+    });
+
+    return ret;
 }
 
 CodeMirror.registerHelper("hint", "javascript", hint);
