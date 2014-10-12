@@ -4,16 +4,26 @@ var widgets = require('../widgets/widgets');
 var glsl = require('../glsl/glsl');
 var Store = require('./store');
 var Renderer = require('./renderer');
+var Signals = require('../signals/signals');
 
 require('./js-mode');
 
 function App() {
+    Signals.call(this);
+
+    this.document = null;
+
+    this._on_document_changed = this.register_signal('notify::document');
+
     if (document.readyState === 'complete') {
         this._init();
     } else {
         document.addEventListener('DOMContentLoaded', this._init.bind(this));
     }
 }
+
+App.prototype = Object.create(Signals.prototype);
+App.prototype.constructor = App;
 
 App.prototype.find = function(elems) {
     var ret = {};
@@ -107,10 +117,23 @@ App.prototype._update_renderer = function() {
     }
 }
 
+App.prototype._on_document_active_program_changed = function() {
+
+}
+
+App.prototype._on_document_title_changed = function() {
+    if (this.title.value !== this.document.title) {
+        this.title.value = this.document.title;
+    }
 }
 
 App.prototype._load_doc = function(doc) {
     this._loading = true;
+
+    if (this.document !== null) {
+        this.document.off('notify::active-program', this._on_document_active_program_changed, this);
+        this.document.off('notify::title', this._on_document_title_changed, this);
+    }
 
     this.vertex_editor.value(doc.active_program.vertex.data);
     this.vertex_editor.history(doc.active_program.vertex.history);
@@ -150,6 +173,11 @@ App.prototype._load_doc = function(doc) {
 
     this._loading = false;
     this._update_renderer();
+
+    this.document.on('notify::active-program', this._on_document_active_program_changed, this);
+    this.document.on('notify::title', this._on_document_title_changed, this);
+
+    this._on_document_changed();
 }
 
 App.prototype._save_current_doc = function(cb) {

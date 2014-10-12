@@ -129,7 +129,7 @@ Renderer.prototype.update = function(doc) {
                 errors.programs = {};
             }
 
-            errors.programs[p.name] = {
+            errors.programs[p.name()] = {
                 vertex: prog.vertex.error,
                 fragment: prog.fragment.error
             };
@@ -137,7 +137,7 @@ Renderer.prototype.update = function(doc) {
             complete = false;
         }
 
-        programs[p.name] = prog;
+        programs[p.name()] = prog;
     }
 
     var obj = {};

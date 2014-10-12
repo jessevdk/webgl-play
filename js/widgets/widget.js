@@ -1,9 +1,13 @@
-function Widget(e) {
-    this.e = e;
+var Signals = require('../signals/signals');
 
-    this._events = {};
-    this._emitter = {};
+function Widget(e) {
+    Signals.call(this);
+
+    this.e = e;
 }
+
+Widget.prototype = Object.create(Signals.prototype);
+Widget.prototype.constructor = Widget;
 
 Widget.prototype.children = function(e) {
     if (typeof e === 'undefined') {
@@ -21,54 +25,6 @@ Widget.prototype.children = function(e) {
     }
 
     return ret;
-}
-
-Widget.prototype.register_signal = function(ev) {
-    if (!(ev in this._events)) {
-        this._events[ev] = [];
-    }
-
-    var cbs = this._events[ev];
-
-    this._emitter[ev] = function() {
-        for (var i = 0; i < cbs.length; i++) {
-            cbs[i].apply(this, arguments);
-        }
-    }
-
-    return this._emitter[ev];
-}
-
-Widget.prototype.on = function(ev, cb) {
-    if (!(ev in this._events)) {
-        this._events[ev] = [cb];
-    } else {
-        this._events[ev].push(cb);
-    }
-}
-
-Widget.prototype.emit = function(ev) {
-    if (ev in this._emitter) {
-        this._emitter[ev].apply(this, arguments.slice(1));
-     } else {
-        if (ev in this._events) {
-            var cbs = this._events[ev];
-
-            for (var i = 0; i < cbs.length; i++) {
-                cbs[i].apply(this, arguments.slice(1));
-            }
-        }
-    }
-}
-
-Widget.prototype.off = function(ev, cb) {
-    if (ev in this._events) {
-        var pos = this._events[ev].indexOf(cb);
-
-        if (pos != -1) {
-            this._events[ev].splice(pos, 1);
-        }
-    }
 }
 
 Widget.prototype.page_position = function(e) {

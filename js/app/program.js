@@ -1,6 +1,9 @@
 var fs = require('fs');
+var Signals = require('../signals/signals');
 
 function Program(name, v, f) {
+    Signals.call(this);
+
     this.vertex = {
         data: v,
         history: { done: [], undone: [] }
@@ -11,14 +14,31 @@ function Program(name, v, f) {
         history: { done: [], undone: [] }
     };
 
-    this.name = name;
+    this._name = name;
+    this._on_notify_name = this.register_signal('notify::name');
 }
+
+Program.prototype = Object.create(Signals.prototype);
+Program.prototype.constructor = Program;
 
 Program.default = function() {
     var v = fs.readFileSync(__dirname + '/default.glslv', 'utf-8').trimRight('\n');
     var f = fs.readFileSync(__dirname + '/default.glslf', 'utf-8').trimRight('\n');
 
     return new Program('default', v, f);
+}
+
+Program.prototype.name = function(name) {
+    if (typeof name === 'undefined') {
+        return this._name;
+    }
+
+    if (this._name !== name) {
+        var prev = this._name;
+
+        this._name = name;
+        this._on_notify_name(prev);
+    }
 }
 
 Program.prototype._compile_shader = function(gl, type, source) {
@@ -91,7 +111,7 @@ Program.prototype.compile = function(gl) {
 Program.prototype.serialize = function() {
     return {
         version: 1,
-        name: this.name,
+        name: this._name,
         vertex: {
             data: this.vertex.data,
             history: this.vertex.history
@@ -116,7 +136,7 @@ Program.deserialize = function(program) {
         history: program.fragment.history
     };
 
-    ret.name = program.name;
+    ret._name = program.name;
 
     return ret;
 }

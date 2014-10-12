@@ -1,7 +1,10 @@
 var fs = require('fs');
 var Program = require('./program');
+var Signals = require('../signals/signals');
 
 function Document() {
+    Signals.call(this);
+
     this.id = null;
 
     this.programs = [Program.default()];
@@ -17,7 +20,13 @@ function Document() {
     this.active_editor = null;
 
     this.active_program = this.programs[0];
+
+    this._on_notify_title = this.register_signal('notify::title');
+    this._on_notify_active_program = this.register_signal('notify::active-program');
 }
+
+Document.prototype = Object.create(Signals.prototype);
+Document.prototype.constructor = Document;
 
 Document.prototype.update = function(buffers) {
     if ('vertex' in buffers) {
@@ -43,12 +52,14 @@ Document.prototype.update = function(buffers) {
 
     if ('title' in buffers) {
         this.title = buffers.title;
+        this._on_notify_title();
     }
 
     if ('active_program' in buffers) {
         for (var i = 0; i < this.programs.length; i++) {
-            if (this.programs[i].name === buffers.active_program) {
+            if (this.programs[i].name() === buffers.active_program) {
                 this.active_program = this.programs[i];
+                this._on_notify_active_program();
                 break;
             }
         }
@@ -72,7 +83,7 @@ Document.prototype.serialize = function() {
     var ret = {
         version: 1,
         programs: programs,
-        active_program: this.active_program.name,
+        active_program: this.active_program.name(),
         js: {
             data: this.js.data,
             history: this.js.history,
@@ -104,7 +115,7 @@ Document.deserialize = function(doc) {
         var prg = Program.deserialize(doc.programs[i]);
         ret.programs.push(prg);
 
-        if (prg.name === doc.active_program) {
+        if (prg.name() === doc.active_program) {
             ret.active_program = prg;
         }
     }
