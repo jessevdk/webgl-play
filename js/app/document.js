@@ -19,25 +19,56 @@ function Document() {
     this.creation_time = new Date();
     this.active_editor = null;
 
-    this.active_program = this.programs[0];
+    this._active_program = this.programs[0];
 
     this._on_notify_title = this.register_signal('notify::title');
     this._on_notify_active_program = this.register_signal('notify::active-program');
+    this._on_program_added = this.register_signal('program-added');
+    this._on_program_removed = this.register_signal('program-removed');
 }
 
 Document.prototype = Object.create(Signals.prototype);
 Document.prototype.constructor = Document;
 
+Document.prototype.add_program = function(program) {
+    this.programs.push(program);
+    this._on_program_added(program);
+}
+
+Document.prototype.remove_program = function(program) {
+    var idx = this.programs.indexOf(program);
+
+    if (idx > 0) {
+        if (this._active_program === program) {
+            this.active_program(this.programs[idx - 1]);
+        }
+
+        this.programs.remove(idx);
+        this._on_program_removed(program);
+    }
+}
+
+Document.prototype.active_program = function(program) {
+    if (typeof program === 'undefined') {
+        return this._active_program;
+    }
+
+    if (program !== this._active_program) {
+        this._active_program = program;
+        this._on_notify_active_program();
+    }
+}
+
 Document.prototype.update = function(buffers) {
     if ('vertex' in buffers) {
-        this.active_program.vertex = {
+        this._active_program.vertex = {
             data: buffers.vertex.data,
             history: buffers.vertex.history
         };
     }
 
     if ('fragment' in buffers) {
-        this.active_program.fragment = {
+        this._active_program.fragment = {
             data: buffers.fragment.data,
             history: buffers.fragment.history
         };
@@ -58,8 +89,7 @@ Document.prototype.update = function(buffers) {
     if ('active_program' in buffers) {
         for (var i = 0; i < this.programs.length; i++) {
             if (this.programs[i].name() === buffers.active_program) {
-                this.active_program = this.programs[i];
-                this._on_notify_active_program();
+                this.active_program(this.programs[i]);
                 break;
             }
         }
@@ -83,7 +113,7 @@ Document.prototype.serialize = function() {
     var ret = {
         version: 1,
         programs: programs,
-        active_program: this.active_program.name(),
+        active_program: this._active_program.name(),
         js: {
             data: this.js.data,
             history: this.js.history,
@@ -105,7 +135,7 @@ Document.deserialize = function(doc) {
     var ret = new Document();
 
     ret.programs = [];
-    ret.active_program = null;
+    ret._active_program = null;
 
     if ('id' in doc) {
         ret.id = doc.id;
@@ -116,7 +146,7 @@ Document.deserialize = function(doc) {
         ret.programs.push(prg);
 
         if (prg.name() === doc.active_program) {
-            ret.active_program = prg;
+            ret._active_program = prg;
         }
     }
 
@@ -124,8 +154,8 @@ Document.deserialize = function(doc) {
         ret.programs.push(Program.default());
     }
 
-    if (ret.active_program === null) {
-        ret.active_program = ret.programs[0];
+    if (ret._active_program === null) {
+        ret._active_program = ret.programs[0];
     }
 
     ret.active_editor = doc.active_editor;

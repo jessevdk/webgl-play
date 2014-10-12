@@ -118,7 +118,18 @@ App.prototype._update_renderer = function() {
 }
 
 App.prototype._on_document_active_program_changed = function() {
+    var prg = this.document.active_program();
 
+    var loading = this._loading;
+    this._loading = true;
+
+    this.vertex_editor.value(prg.vertex.data);
+    this.vertex_editor.history(prg.vertex.history);
+
+    this.fragment_editor.value(prg.fragment.data);
+    this.fragment_editor.history(prg.fragment.history);
+
+    this._loading = loading;
 }
 
 App.prototype._on_document_title_changed = function() {
@@ -135,16 +146,12 @@ App.prototype._load_doc = function(doc) {
         this.document.off('notify::title', this._on_document_title_changed, this);
     }
 
-    this.vertex_editor.value(doc.active_program.vertex.data);
-    this.vertex_editor.history(doc.active_program.vertex.history);
+    this.document = doc;
 
-    this.fragment_editor.value(doc.active_program.fragment.data);
-    this.fragment_editor.history(doc.active_program.fragment.history);
+    this._on_document_active_program_changed();
 
     this.js_editor.value(doc.js.data);
     this.js_editor.history(doc.js.history);
-
-    this.document = doc;
 
     if (doc.active_editor !== null) {
         var editor = null;
