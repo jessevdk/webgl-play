@@ -82,6 +82,34 @@ function match(item, pattern) {
     };
 }
 
+function iterPrev(iter) {
+    while (true) {
+        var start;
+
+        if (iter.tok.start === 0) {
+            if (iter.line === 0) {
+                iter.tok = null;
+                return iter;
+            }
+
+            iter.line--;
+
+            var l = iter.editor.getLine(iter.line);
+            start = l.length;
+        } else {
+            start = iter.tok.start;
+        }
+
+        iter.tok = iter.editor.getTokenAt(CodeMirror.Pos(iter.line, start));
+
+        if (iter.tok.start !== 0 && !(iter.tok.type === null && iter.tok.string.match(/^\s*$/))) {
+            break;
+        }
+    }
+
+    return iter;
+}
+
 function sanitizeDescription(s) {
     var esc = utils.htmlEscape(s);
 
@@ -162,7 +190,6 @@ function fillInfo(info, completion, doc) {
 
 function hint(editor, options) {
     var cur = editor.getCursor();
-    var tok = editor.getTokenAt(cur);
 
     var context = {};
 
@@ -170,14 +197,20 @@ function hint(editor, options) {
         context = options.context;
     }
 
-    if (tok.type === 'string' || tok.type === 'comment') {
+    var iter = {
+        editor: editor,
+        line: cur.line,
+        tok: editor.getTokenAt(cur)
+    };
+
+    if (iter.tok.type === 'string' || iter.tok.type === 'comment') {
         return;
     }
 
     var ctx = [];
     var replace;
 
-    if (tok.string === '.') {
+    if (iter.tok.string === '.') {
         ctx.unshift('');
 
         replace = {
@@ -185,20 +218,29 @@ function hint(editor, options) {
             end: cur.ch
         };
 
-        tok = editor.getTokenAt(CodeMirror.Pos(cur.line, tok.start));
+        iterPrev(iter);
     } else {
-        replace = tok;
+        replace = iter.tok;
     }
 
-    while (tok.type === 'property' || tok.type === 'keyword' || (tok.type !== null && tok.type.indexOf('variable') === 0)) {
-        ctx.unshift(tok.string);
-        tok = editor.getTokenAt(CodeMirror.Pos(cur.line, tok.start));
-
-        if (tok.string !== '.') {
+    while (true) {
+        if (iter.tok === null) {
             break;
         }
 
-        tok = editor.getTokenAt(CodeMirror.Pos(cur.line, tok.start));
+        if (iter.tok.type === 'property' || iter.tok.type === 'keyword' || (iter.tok.type !== null && iter.tok.type.indexOf('variable') === 0)) {
+            ctx.unshift(iter.tok.string);
+
+            iterPrev(iter);
+
+            if (iter.tok === null || iter.tok.string !== '.') {
+                break;
+            }
+
+            iterPrev(iter);
+        } else {
+            break;
+        }
     }
 
     if (ctx.length === 0) {
