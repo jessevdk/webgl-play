@@ -4,14 +4,16 @@
   "author": "Jesse van den Kieboom <jessevdk@gmail.com>",
   "version": "0.0.1",
   "dependencies": {
-    "mocha": "1.21.x",
-    "chai": "1.9.x",
-    "istanbul": "0.3.x",
-    "browserify": "5.11.x",
-	"browserify-incremental": "0.1.x",
     "brfs": "1.2.x",
-    "uglify-js": "2.4.x",
+    "browserify": "5.11.x",
+    "browserify-incremental": "0.1.x",
+    "chai": "1.9.x",
     "exorcist": "0.1.x",
-    "jshint": "2.5.x"
+    "falafel": "^0.3.1",
+    "istanbul": "0.3.x",
+    "jshint": "2.5.x",
+    "mocha": "1.21.x",
+    "through": "^2.3.6",
+    "uglify-js": "2.4.x"
   }
 }
