@@ -11,10 +11,13 @@ html, body, #main {
   height: 100%;
 }
 
-#main {
-  background-color: lighten($bg_color, 20%);
+body {
   font-family: "Helvetica", "Arial", "FreeSans", "Verdana", "Tahoma", "Lucida Sans", "Lucida Sans Unicode", "Luxi Sans", sans-serif;
   font-size: 14px;
+}
+
+#main {
+  background-color: lighten($bg_color, 20%);
   color: $fg_color;
 }
 
