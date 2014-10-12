@@ -375,6 +375,10 @@ App.prototype._init_title = function() {
     this.title.addEventListener('input', this._on_doc_title_change.bind(this));
 }
 
+App.prototype._init_programs_bar = function() {
+    this.programs_bar = new widgets.ProgramsBar(document.getElementById('programs-sidebar'), this);
+}
+
 App.prototype._init_buttons = function() {
     var buttons = ['share', 'snapshot', 'new'];
 
@@ -428,6 +432,7 @@ App.prototype._init = function() {
         }).bind(this));
     }).bind(this));
 
+    this._init_programs_bar();
     this._init_canvas();
     this._init_editors();
     this._init_title();
