@@ -116,6 +116,7 @@ function Editor(editor, ctx, type) {
         if (type === 'javascript') {
             keymap['.'] = (function(cm) {
                 cm.replaceSelection('.');
+                cm.indentLine(cm.getCursor().line);
 
                 this._hint();
             }).bind(this);
