@@ -1,5 +1,27 @@
 var utils = require('./utils');
 
+/**
+ * A representation of a geometry. A geometry contains a number
+ * of vertex buffer objects and an index buffer object specifying
+ * a triangulated geometry to be rendered. The provided vertices and
+ * normals are a convenience and are simply provided to addAttribute
+ * respectively with the attribute names 'v_Position' and 'v_Normal'.
+ *
+ * Additional attributes can be added to a geometry after construction
+ * using addAttribute. Note that indices are mandatory, and geometries
+ * will use gl.drawElements. Also, the only type of geometry currently
+ * supported is gl.TRIANGLES.
+ *
+ * If a geometry needs to be updated (i.e. not simply adding an additional
+ * attribute), then use the .update method.
+ *
+ * @param ctx the context.
+ * @param vertices a Float32Array of vertices, or null.
+ * @param normals a Float32Array of normals, or null.
+ * @param indices an Uint16Array of indices.
+ * @param options optional options <binding:> (defaults to <binding: gl.STATIC_DRAW>).
+ * @constructor
+ */
 function Geometry(ctx, vertices, normals, indices) {
     this._ibo = null;
     this._lastAttrId = 0;
@@ -10,6 +32,15 @@ function Geometry(ctx, vertices, normals, indices) {
     this.update(ctx, vertices, normals, indices);
 }
 
+/**
+ * Update the geometry.
+ *
+ * @param ctx the context.
+ * @param vertices a Float32Array of vertices, or null.
+ * @param normals a Float32Array of normals, or null.
+ * @param indices an Uint16Array of indices.
+ * @param options optional options <binding:> (defaults to <binding: gl.STATIC_DRAW>).
+ */
 Geometry.prototype.update = function(ctx, vertices, normals, indices, options) {
     var gl = ctx.gl;
 
