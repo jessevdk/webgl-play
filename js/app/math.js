@@ -1,7 +1,19 @@
 var glMatrix = require('../vendor/gl-matrix');
 
+/**
+ * A general 3d transform. This class represents a transformation from one
+ * frame to another as a pair of a quaternion orientation and a vec3
+ * position.
+ *
+ * @constructor
+ * @param orientation the initial orientation.
+ * @param position the initial position.
+ */
 function transform(orientation, position) {
+    /** a quat representing the transforms orientation. */
     this.orientation = orientation;
+
+    /** a vec3 representing the transforms position. */
     this.position = position;
 }
 
@@ -13,6 +25,9 @@ transform.clone = function(a) {
     return a.clone();
 }
 
+/**
+ * Clone the transform.
+ */
 transform.prototype.clone = function() {
     return new transform(glMatrix.quat.clone(this.orientation),
                          glMatrix.vec3.clone(this.position));
@@ -40,16 +55,15 @@ transform.multiply = function(out, a, b) {
 
 transform.mul = transform.multiply;
 
-transform.prototype.$multiply = function(b) {
-    return transform.multiply(this, this, b);
+/**
+ * Multiply the transform by another transform. Note that this
+ * modifies the receiving transform.
+ *
+ * @param transform a transform to multiply with.
+ */
+transform.prototype.mul = function(transform) {
+    return transform.mul(this, this, transform);
 }
-
-transform.prototype.multiply = function(b) {
-    return transform.multiply(transform.create(), this, b);
-}
-
-transform.prototype.$mul = transform.prototype.$multiply;
-transform.prototype.mul = transform.prototype.multiply;
 
 transform.rotateX = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
@@ -58,12 +72,14 @@ transform.rotateX = function(out, a, rad) {
     return out;
 }
 
-transform.prototype.$rotateX = function(rad) {
-    return transform.rotateX(this, this, rad);
-}
-
+/**
+ * Rotate the transform around its local X axis. Note that this
+ * modifies the receiving transform.
+ *
+ * @param rad the angle by which to rotate in radians.
+ */
 transform.prototype.rotateX = function(rad) {
-    return transform.rotateX(transform.create(), this, rad);
+    return transform.rotateX(this, this, rad);
 }
 
 transform.rotateY = function(out, a, rad) {
@@ -73,12 +89,14 @@ transform.rotateY = function(out, a, rad) {
     return out;
 }
 
-transform.prototype.$rotateY = function(rad) {
-    return transform.rotateY(this, this, rad);
-}
-
+/**
+ * Rotate the transform around its local Y axis. Note that this
+ * modifies the receiving transform.
+ *
+ * @param rad the angle by which to rotate in radians.
+ */
 transform.prototype.rotateY = function(rad) {
-    return transform.rotateY(transform.create(), this, rad);
+    return transform.rotateY(this, this, rad);
 }
 
 transform.rotateZ = function(out, a, rad) {
@@ -88,12 +106,14 @@ transform.rotateZ = function(out, a, rad) {
     return out;
 }
 
-transform.prototype.$rotateZ = function(rad) {
-    return transform.rotateZ(this, this, rad);
-}
-
+/**
+ * Rotate the transform around its local Z axis. Note that this
+ * modifies the receiving transform.
+ *
+ * @param rad the angle by which to rotate in radians.
+ */
 transform.prototype.rotateZ = function(rad) {
-    return transform.rotateZ(transform.create(), this, rad);
+    return transform.rotateZ(this, this, rad);
 }
 
 transform.rotate = function(out, a, q) {
@@ -103,12 +123,14 @@ transform.rotate = function(out, a, q) {
     return out;
 }
 
-transform.prototype.$rotate = function(q) {
-    return transform.rotate(this, this, q);
-}
-
+/**
+ * Rotate the transform by the given quaternion. Note that this
+ * modifies the receiving transform.
+ *
+ * @param q the quaternion by which to rotate.
+ */
 transform.prototype.rotate = function(q) {
-    return transform.rotate(transform.create(), this, q);
+    return transform.rotate(this, this, q);
 }
 
 transform.translateX = function(out, a, v) {
@@ -119,12 +141,16 @@ transform.translateX = function(out, a, v) {
     return out;
 }
 
-transform.prototype.$translateX = function(v) {
-    return transform.translateX(this, this, v);
-}
-
+/**
+ * Translate on X in the parent frame. If you want to translate
+ * the transform in the local frame, use {@link module:math~transform#translateSide translateSide}.
+ * Note that this modifies the receiving transform.
+ *
+ * @param v a scalar to translate by.
+ * @see {@link module:math~transform#translateSide translateSide}.
+ */
 transform.prototype.translateX = function(v) {
-    return transform.translateX(transform.create(), this, v);
+    return transform.translateX(this, this, v);
 }
 
 transform.translateY = function(out, a, v) {
@@ -135,12 +161,16 @@ transform.translateY = function(out, a, v) {
     return out;
 }
 
-transform.prototype.$translateY = function(v) {
-    return transform.translateY(this, this, v);
-}
-
+/**
+ * Translate on Y in the parent frame. If you want to translate
+ * the transform in the local frame, use {@link translateUp}.
+ * Note that this modifies the receiving transform.
+ *
+ * @param v a scalar to translate by.
+ * @see {@link translateUp}.
+ */
 transform.prototype.translateY = function(v) {
-    return transform.translateY(transform.create(), this, v);
+    return transform.translateY(this, this, v);
 }
 
 transform.translateZ = function(out, a, v) {
@@ -151,12 +181,16 @@ transform.translateZ = function(out, a, v) {
     return out;
 }
 
-transform.prototype.$translateZ = function(v) {
-    return transform.translateZ(this, this, v);
-}
-
+/**
+ * Translate on Z in the parent frame. If you want to translate
+ * the transform in the local frame, use {@link translateForward}.
+ * Note that this modifies the receiving transform.
+ *
+ * @param v a scalar to translate by.
+ * @see {@link translateForward}.
+ */
 transform.prototype.translateZ = function(v) {
-    return transform.translateZ(transform.create(), this, v);
+    return transform.translateZ(this, this, v);
 }
 
 transform.translate = function(out, a, v) {
@@ -166,12 +200,149 @@ transform.translate = function(out, a, v) {
     return out;
 }
 
-transform.prototype.$translate = function(v) {
+/**
+ * Translate by the given vector. Note that this modifies the
+ * receiving transform.
+ *
+ * @param v a vec3 to translate by.
+ */
+transform.prototype.translate = function(v) {
     return transform.translate(this, this, v);
 }
 
-transform.prototype.translate = function(v) {
-    return transform.translate(transform.create(), this, v);
+transform.sideAxis = function(out, a) {
+    var o = a.orientation,
+        x = o[0], y = o[1], z = o[2], w = o[3],
+        x2 = x + x,
+        y2 = y + y,
+        z2 = z + z,
+        yy = y * y2,
+        zz = z * z2,
+        yx = y * x2,
+        wz = w * z2,
+        zx = z * x2,
+        wy = w * y2;
+
+    out[0] = 1 - yy - zz;
+    out[1] = yx + wz;
+    out[2] = zx - wy;
+
+    return out;
+}
+
+/**
+ * Obtain the local orientation's side axis. This is the same
+ * as the X column of the transform's orientation matrix.
+ */
+transform.prototype.sideAxis = function() {
+    return transform.sideAxis(glMatrix.vec3.create(), this);
+}
+
+transform.upAxis = function(out, a) {
+    var o = a.orientation,
+        x = o[0], y = o[1], z = o[2], w = o[3],
+        x2 = x + x,
+        y2 = y + y,
+        z2 = z + z,
+        yx = y * x2,
+        wz = w * z2,
+        xx = x * x2,
+        zz = z * z2,
+        zy = z * y2,
+        wx = w * x2;
+
+    out[0] = yx - wz;
+    out[1] = 1 - xx - zz;
+    out[2] = zy + wx;
+
+    return out;
+}
+
+/**
+ * Obtain the local orientation's up axis. This is the same
+ * as the Y column of the transform's orientation matrix.
+ */
+transform.prototype.upAxis = function() {
+    return transform.upAxis(glMatrix.vec3.create(), this);
+}
+
+transform.forwardAxis = function(out, a) {
+    var o = a.orientation,
+        x = o[0], y = o[1], z = o[2], w = o[3],
+        x2 = x + x,
+        y2 = y + y,
+        z2 = z + z,
+        zx = z * x2,
+        wy = w * y2,
+        zy = z * y2,
+        wx = w * x2,
+        xx = x * x2,
+        yy = y * y2;
+
+    out[0] = zx + wy;
+    out[1] = zy - wx;
+    out[2] = 1 - xx - yy;
+
+    return out;
+}
+
+/**
+ * Obtain the local orientation's forward axis. This is the same
+ * as the Z column of the transform's orientation matrix.
+ */
+transform.prototype.forwardAxis = function() {
+    return transform.forwardAxis(glMatrix.vec3.create(), this);
+}
+
+transform.translateSide = function(out, a, v) {
+    var axis = transform.sideAxis(glMatrix.vec3.create(), a);
+    glMatrix.vec3.scale(axis, axis, v);
+
+    return transform.translate(out, a, axis);
+}
+
+/**
+ * Translate the transform along its local orientation side axis.
+ * Note that this modifies the receiving transform.
+ *
+ * @param v a scalar to translate sideways by.
+ */
+transform.prototype.translateSide = function(v) {
+    return transform.translateSide(this, this, v);
+}
+
+transform.translateUp = function(out, a, v) {
+    var axis = transform.upAxis(glMatrix.vec3.create(), a);
+    glMatrix.vec3.scale(axis, axis, v);
+
+    return transform.translate(out, a, axis);
+}
+
+/**
+ * Translate the transform along its local orientation up axis.
+ * Note that this modifies the receiving transform.
+ *
+ * @param v a scalar to translate upwards by.
+ */
+transform.prototype.translateUp = function(v) {
+    return transform.translateUp(this, this, v);
+}
+
+transform.translateForward = function(out, a, v) {
+    var axis = transform.forwardAxis(glMatrix.vec3.create(), a);
+    glMatrix.vec3.scale(axis, axis, v);
+
+    return transform.translate(out, a, axis);
+}
+
+/**
+ * Translate the transform along its local orientation forward axis.
+ * Note that this modifies the receiving transform.
+ *
+ * @param v a scalar amount to translate forwards by
+ */
+transform.prototype.translateForward = function(v) {
+    return transform.translateForward(this, this, v);
 }
 
 transform.invert = function(out, a) {
@@ -183,12 +354,12 @@ transform.invert = function(out, a) {
     return out;
 }
 
-transform.prototype.$invert = function(v) {
-    return transform.invert(this, this);
-}
-
+/**
+ * Invert the transformation. Note that this modifies the receiving
+ * transform.
+ */
 transform.prototype.invert = function() {
-    return transform.invert(transform.create(), this);
+    return transform.invert(this, this);
 }
 
 transform.str = function(a) {
