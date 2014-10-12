@@ -20,7 +20,7 @@ Store.prototype.last = function(cb) {
     var req = idx.openCursor(null, 'prev');
 
     req.onsuccess = function(ev) {
-        if (ev.target.result !== null) {
+        if (ev.target.result) {
             cb(this, ev.target.result.value);
         } else {
             cb(this, null);
