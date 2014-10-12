@@ -93,6 +93,13 @@ function Editor(editor, ctx, type) {
         }
     };
 
+    var ios = /AppleWebKit/.test(navigator.userAgent) && /Mobile\/\w+/.test(navigator.userAgent);
+    var mac = ios || /Mac/.test(navigator.platform);
+
+    if (mac) {
+        keymap['Cmd-Left'] = 'goLineLeftSmart';
+    }
+
     if (type === glsl.source.VERTEX || type === glsl.source.FRAGMENT) {
         this._preprocessor_options = glsl.preprocessor.Preprocessor.options_from_context(ctx.gl);
 
