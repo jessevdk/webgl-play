@@ -2,18 +2,48 @@ var Material = require('./material');
 var Geometry = require('./geometry');
 var math = require('./math');
 
-function Model(ctx, opts) {
+/**
+ * Basic model. A model useful high-level representation
+ * of a transform, geometry and material which can be rendered.
+ * Models can be organized hierarchically (see add, remove).
+ *
+ * @param ctx the context.
+ * @param options options.
+ * @constructor
+ */
+function Model(ctx, options) {
+    /** The material (see Material). */
     this.material = new Material(ctx);
 
+    /**
+     * The parent (or null). Do not set this directly,
+     * use add/remove instead.
+     */
     this.parent = null;
+
+    /**
+     * The children. Do not set this directly, use add/remove instead.
+     */
     this.children = [];
 
+    /** The transform. */
     this.transform = math.transform.create();
+
+    /** The full transform (i.e. to world coordinates). This will
+     * be computed and cached as needed when rendering.
+     */
     this.fullTransform = math.transform.create();
 
+    /** The geometry (see Geometry). */
     this.geometry = null;
 }
 
+/**
+ * Render the model in the given context. Rendering will use the current view
+ * set in the context.
+ *
+ * @param ctx the context.
+ */
 Model.prototype.render = function(ctx) {
     if (this.material.visible === Material.INVISIBLE) {
         return;
@@ -44,7 +74,7 @@ Model.prototype.render = function(ctx) {
     };
 
     if (view) {
-        uniforms.view = math.mat4.fromTransform(math.mat4.create(), view.transform.invert());
+        uniforms.view = math.mat4.fromTransform(math.mat4.create(), view.transform.clone().invert());
         uniforms.modelView = math.mat4.mul(math.mat4.create(), uniforms.view, uniforms.model);
         uniforms.projection = view.projection();
         uniforms.modelViewProjection = math.mat4.mul(math.mat4.create(), uniforms.projection, uniforms.modelView);
@@ -91,6 +121,11 @@ Model.prototype.render = function(ctx) {
     this.geometry.render(ctx);
 }
 
+/**
+ * Remove a child model.
+ *
+ * @param child the model to remove.
+ */
 Model.prototype.remove = function(child) {
     if (child.parent === this) {
         child.parent = null;
@@ -103,6 +138,11 @@ Model.prototype.remove = function(child) {
     }
 }
 
+/**
+ * Add a child model.
+ *
+ * @param child the model to add.
+ */
 Model.prototype.add = function(child) {
     if (child.parent === this) {
         return;
@@ -116,19 +156,44 @@ Model.prototype.add = function(child) {
     this.children.push(child);
 }
 
-function View(ctx, projection, viewport, opts) {
-    Model.call(this, ctx, opts);
+/**
+ * A basic view. A View is a collection of transform (inherited from model),
+ * a projection matrix and a viewport. Note that you can use View.perspective
+ * and View.orthographic to create respectively a perspective projection
+ * view or a orthographic projection view. If viewport is not given (or null),
+ * then the viewport will automatically track the canvas dimensions.
+ *
+ * Additionally, a view specifies various gl states, such as whether to enable
+ * depth testing, blending and face culling (see the view's properties).
+ *
+ * @param ctx the context.
+ * @param projection the projection matrix (math.mat4).
+ * @param viewport the viewport (math.vec4).
+ * @param options optional options.
+ * @constructor
+ */
+function View(ctx, projection, viewport, options) {
+    Model.call(this, ctx, options);
 
     this._projection = projection;
     this._projection_set = false;
 
+    /** The viewport, or unset to track the canvas dimensions. */
     this.viewport = viewport;
+
+    /** The clear color, or null to disable clearing the color (defaults to null). */
     this.color = null;
 
+    /** The depth function, or false to disable depth testing (defaults to gl.LESS). */
     this.depth = ctx.gl.LESS;
+
+    /** The blend function ({sfactor:, dfactor:}), or false to disable blending (defaults to false). */
     this.blend = false;
+
+    /** Whether to enable the scissor test matching the viewport (defaults to true). */
     this.scissor = true;
 
+    /** Whether to cull faces ({face:, direction:}), or false to disable culling (defaults to {face: gl.BACK, direction: gl.CCW}). */
     this.cull = {
         face: ctx.gl.BACK,
         direction: ctx.gl.CCW
@@ -140,6 +205,13 @@ function View(ctx, projection, viewport, opts) {
 View.prototype = Object.create(Model.prototype);
 View.prototype.constructor = View;
 
+/**
+ * Update the viewport of the view. This is called automatically
+ * when the canvas dimensions change. When no explicit viewport is
+ * set, the viewport is automatically updated to cover the canvas.
+ *
+ * @param ctx the context.
+ */
 View.prototype.updateViewport = function(ctx) {
     if (!this.viewport) {
         this._viewport = [0, 0, ctx.gl.canvas.clientWidth, ctx.gl.canvas.clientHeight];
@@ -148,6 +220,11 @@ View.prototype.updateViewport = function(ctx) {
     }
 }
 
+/**
+ * Get/set the projection matrix.
+ *
+ * @param projection the projection matrix (math.mat4) to set.
+ */
 View.prototype.projection = function(projection) {
     if (typeof projection !== 'undefined') {
         this._projection = projection;
@@ -157,6 +234,14 @@ View.prototype.projection = function(projection) {
     }
 }
 
+/**
+ * Binds the view to the given context. This sets the various gl
+ * states corresponding to the view's settings. Note that this
+ * is normally automatically called by setting the view in the
+ * rendering context and should not be called by users.
+ *
+ * @param ctx the context.
+ */
 View.prototype.bind = function(ctx) {
     var c = this.color;
     var gl = ctx.gl;
@@ -209,6 +294,19 @@ View._make_perspective = function(fovy, aspect, near, far) {
     return math.mat4.perspective(math.mat4.create(), fovy / 180 * Math.PI, aspect, near, far);
 }
 
+/**
+ * Create a view with a perspective projection. By default the viewport will be
+ * set to track the canvas dimensions. The default viewport can be changed
+ * by setting the .viewport property after construction. If aspect is null,
+ * then the aspect ratio will be derived automatically from the canvas (and
+ * updated as the canvas is being resized).
+ *
+ * @param ctx the context.
+ * @param fovy the field of view (in degrees) in the Y direction.
+ * @param aspect the view's aspect ratio, or null to track the canvas aspect ratio.
+ * @param near the near clipping plane (> 0).
+ * @param far the far clipping plane (> 0).
+ */
 View.perspective = function(ctx, fovy, aspect, near, far) {
     var ap = aspect;
 
@@ -241,16 +339,36 @@ View.perspective = function(ctx, fovy, aspect, near, far) {
     return ret;
 }
 
-View.orthographic = function(ctx, b, near, far) {
-    if (!b) {
-        b = [0, 1, 0, 1];
+/**
+ * Create a view with an orthographic projection.
+ *
+ * @param ctx the context.
+ * @param bounds the [left, right, top, bottom] (math.vec4) clipping planes.
+ * @param near the near clipping plane.
+ * @param far the far clipping plane.
+ */
+View.orthographic = function(ctx, bounds, near, far) {
+    if (!bounds) {
+        bounds = [0, 1, 0, 1];
     }
 
+    var b = bounds;
     return new View(ctx, math.mat4.ortho(math.mat4.create(), b[0], b[1], b[2], b[3], near, far));
 }
 
-function Box(ctx, dx, dy, dz, opts) {
-    Model.call(this, ctx, opts);
+/**
+ * A simple box model. Creates a simple box geometry, centered around [0, 0, 0] for
+ * the given dimensions.
+ *
+ * @param ctx the context.
+ * @param dx the X size of the box.
+ * @param dy the Y size of the box.
+ * @param dz the Z size of the box.
+ * @param options optional options.
+ * @constructor
+ */
+function Box(ctx, dx, dy, dz, options) {
+    Model.call(this, ctx, options);
 
     dx /= 2;
     dy /= 2;
@@ -364,8 +482,19 @@ function Box(ctx, dx, dy, dz, opts) {
 Box.prototype = Object.create(Model.prototype);
 Box.prototype.constructor = Box;
 
-function Triangle(ctx, p1, p2, p3, opts) {
-    Model.call(this, ctx, opts);
+/**
+ * A simple triangle model. Creates a single triangle geometry for
+ * the given vertices.
+ *
+ * @param ctx the context.
+ * @param p1 the position of the first vertex (math.vec3).
+ * @param p2 the position of the second vertex (math.vec3).
+ * @param p3 the position of the third vertex (math.vec3).
+ * @param options optional options.
+ * @constructor
+ */
+function Triangle(ctx, p1, p2, p3, options) {
+    Model.call(this, ctx, options);
 
     var vertices = new Float32Array([
         p1[0], p1[1], p1[2],
