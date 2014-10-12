@@ -252,7 +252,7 @@ function hint(editor, options) {
     for (var i = 0; i < ctx.length - 1; i++) {
         obj = obj[ctx[i]];
 
-        if (obj === null) {
+        if (obj === null || typeof obj === 'undefined') {
             return;
         }
     }
