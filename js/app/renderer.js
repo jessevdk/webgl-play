@@ -1,11 +1,58 @@
+/**
+ * The javascript context.
+ *
+ * @constructor
+ */
 function JsContext(gl) {
+    /**
+     * The webgl context. This is the WebGLRenderingContext obtained
+     * from the canvas.
+     */
     this.gl = gl;
+
+    /**
+     * The models module. This module contains various high-level
+     * utilities for creating and working with object models.
+     */
     this.models = require('./models');
+
+    /**
+     * The math module. This module contains basic math types, including
+     * vectors, matrices, quaternions and transforms. Note that this
+     * module is provided by glMatrix, with a small number of additional
+     * types and functions (such as transform).
+     */
     this.math = require('./math');
+
+    /**
+     * The currently compiled and running js program. This evaluates to the same
+     * value as 'this'.
+     */
     this.program = {};
+
+    /**
+     * A map of program names to compiled GLSL programs.
+     */
+    this.programs = {};
+
+    /**
+     * A persistent state. You can use this to store and retrieve persistent state
+     * between recompilations of your program.
+     */
     this.state = {};
 }
 
+/**
+ * Get/set the current rendering view.
+ *
+ * When called without parameters, obtains the current rendering view,
+ * otherwise sets it. The view is a model with an associated projection
+ * and viewport. See {@link models.View} for more information on
+ * constructing a view. All model rendering after setting a view will
+ * use that views information to render.
+ *
+ * @param view the new view to set, or not provided to obtain the current view.
+ */
 JsContext.prototype.view = function(view) {
     if (typeof view === 'undefined') {
         return this._view;
@@ -17,6 +64,13 @@ JsContext.prototype.view = function(view) {
     view.bind(this);
 }
 
+/**
+ * Find a GLSL program by name. If the name is not given, or null, then
+ * the default program will be returned.
+ *
+ * @param name the program name.
+ * @returns a program object.
+ */
 JsContext.prototype.findProgram = function(name) {
     if (!name) {
         name = 'default';
