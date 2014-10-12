@@ -43,13 +43,70 @@ App.prototype.load_document = function(doc) {
     this._load_doc(doc);
 }
 
-App.prototype._update_renderer = function() {
-    this.renderer.update(this.document);
+App.prototype._extract_js_error_loc = function(e) {
+    var lines = e.stack.split('\n');
+    var ours = lines[1];
 
-    this.js_editor.completionContext({
-        c: this.renderer.context,
-        this: this.renderer.program
-    });
+    // Chrome
+    var anon = /, <anonymous>:([0-9]+):([0-9]+)\)$/;
+    var m = lines[1].match(anon);
+
+    if (m) {
+        return {
+            line: parseInt(m[1]) - 1,
+            column: parseInt(m[2])
+        }
+    }
+
+    // Firefox
+    var func = /> Function:([0-9]+):([0-9]+)$/
+    m = lines[0].match(func);
+
+    if (func) {
+        return {
+            line: parseInt(m[1]),
+            column: parseInt(m[2])
+        }
+    }
+
+    return null;
+}
+
+App.prototype._update_renderer = function() {
+    var ret = this.renderer.update(this.document);
+
+    if (typeof ret === 'undefined') {
+        var c = {
+            c: this.renderer.context,
+            Math: Math
+        };
+
+        if (this.renderer.program) {
+            c.this = this.renderer.program;
+        }
+
+        this.js_editor.completionContext(c);
+    } else {
+        var e = null;
+
+        if (ret.js.init !== null) {
+            e = ret.js.init;
+        } else if (ret.js.run !== null) {
+            e = ret.js.run;
+        }
+
+        if (e !== null) {
+            var message = e.message;
+            var loc = this._extract_js_error_loc(e);
+
+            this.js_editor.runtime_error({
+                message: message,
+                location: loc
+            });
+        }
+    }
+}
+
 }
 
 App.prototype._load_doc = function(doc) {

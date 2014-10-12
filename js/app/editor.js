@@ -1,5 +1,9 @@
 require('./glsl-mode');
+
 var glsl = require('../glsl/glsl');
+var esprima = require('../vendor/esprima');
+
+window.esprima = esprima;
 
 function Editor(editor, ctx, type) {
     this.editor = editor;
@@ -8,7 +12,7 @@ function Editor(editor, ctx, type) {
     this._completionContext = {};
 
     this.options = {
-        check_timeout: 200
+        check_timeout: 300
     };
 
     var keymap = {
@@ -99,31 +103,42 @@ function Editor(editor, ctx, type) {
         } else {
             this.editor.setOption('mode', 'glslf');
         }
-
-        this._init_glsl();
     } else {
+        this.editor.setOption('mode', type);
+
         if (type === 'javascript') {
             keymap['.'] = (function(cm) {
                 cm.replaceSelection('.');
 
-                cm.showHint({
-                    completeSingle: false,
-                    context: this._completionContext
-                });
+                this._hint();
             }).bind(this);
 
             keymap['Ctrl-Space'] = (function(cm) {
-                cm.showHint({
-                    completeSingle: false,
-                    context: this._completionContext
-                });
+                this._hint();
             }).bind(this);
-        }
 
-        this.editor.setOption('mode', type);
+
+
+
+        }
     }
 
+    this._change_timeout = 0;
+    this._error_markers = [];
+    this._errors = [];
+    this._error_message = null;
+
+    this.editor.on('change', this._on_change.bind(this));
+    this.editor.on('cursorActivity', this._on_cursor_activity.bind(this));
+
     editor.addKeyMap(keymap);
+}
+
+Editor.prototype._hint = function() {
+    this.editor.showHint({
+        completeSingle: false,
+        context: this._completionContext,
+    });
 }
 
 Editor.prototype.completionContext = function(context) {
@@ -132,16 +147,6 @@ Editor.prototype.completionContext = function(context) {
     }
 
     this._completionContext = context;
-}
-
-Editor.prototype._init_glsl = function() {
-    this._change_timeout = 0;
-    this._error_markers = [];
-    this._errors = [];
-    this._error_message = null;
-
-    this.editor.on('change', this._on_change.bind(this));
-    this.editor.on('cursorActivity', this._on_cursor_activity.bind(this));
 }
 
 Editor.prototype._on_cursor_activity = function() {
@@ -208,14 +213,12 @@ Editor.prototype.value = function(v) {
 
     this.editor.setValue(v);
 
-    if (this.type === glsl.source.VERTEX || this.type === glsl.source.FRAGMENT) {
-        if (this._change_timeout !== 0) {
-            clearTimeout(this._change_timeout);
-            this._change_timeout = 0;
-        }
-
-        this._on_change_timeout();
+    if (this._change_timeout !== 0) {
+        clearTimeout(this._change_timeout);
+        this._change_timeout = 0;
     }
+
+    this._on_change_timeout();
 }
 
 Editor.prototype.history = function(v) {
@@ -233,13 +236,67 @@ Editor.prototype._make_loc = function(l) {
 Editor.prototype._on_change_timeout = function() {
     this._change_timeout = 0;
 
+    if (this.type === glsl.source.VERTEX || this.type === glsl.source.FRAGMENT) {
+        this._on_change_timeout_glsl();
+    } else {
+        this._on_change_timeout_js();
+    }
+}
+
+Editor.prototype._on_change_timeout_js = function() {
+    try {
+        esprima.parse(this.value());
+    } catch (e) {
+        this.runtime_error({
+            message: e.description,
+            location: {
+                line: e.lineNumber,
+                column: e.column
+            }
+        });
+
+        return;
+    }
+
+    this._process_errors([]);
+}
+
+Editor.prototype._on_change_timeout_glsl = function() {
     var p = new glsl.ast.Parser(this.value(), this.type, {
         preprocessor: this._preprocessor_options
     });
 
     glsl.sst.Annotate(p);
+    this._process_errors(p.errors());
+}
 
-    this._errors = p.errors();
+Editor.prototype.runtime_error = function(error) {
+    var tok = this.editor.getTokenAt(CodeMirror.Pos(error.location.line - 1, error.location.column));
+
+    var err = {
+        location: {
+            start: {
+                line: error.location.line,
+                column: tok.start + 1
+            },
+            end: {
+                line: error.location.line,
+                column: tok.end + 1
+            }
+        },
+
+        message: error.message,
+
+        formatted_message: function() {
+            return error.location.line + '.' + (tok.start + 1) + '-' + error.location.line + '.' + (tok.end + 1) + ': ' + error.message;
+        }
+    };
+
+    this._process_errors([err]);
+}
+
+Editor.prototype._process_errors = function(errors) {
+    this._errors = errors;
 
     for (var i = 0; i < this._error_markers.length; i++) {
         this._error_markers[i].clear();
