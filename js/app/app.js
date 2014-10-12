@@ -410,6 +410,20 @@ App.prototype._on_button_new_click = function() {
 App.prototype._init = function() {
     this._store = new Store((function(store) {
         store.last((function(_, doc) {
+            var saved = localStorage.getItem('savedDocumentBeforeUnload');
+
+            if (saved !== null && doc !== null) {
+                saved = JSON.parse(saved);
+
+                if (typeof saved.id !== 'undefined' && saved.id === doc.id)
+                {
+                    this._load_doc(Document.deserialize(saved));
+                    this._save_current_doc_with_delay();
+                }
+
+                return;
+            }
+
             this.load_document(doc);
         }).bind(this));
     }).bind(this));
@@ -419,6 +433,10 @@ App.prototype._init = function() {
     this._init_title();
     this._init_buttons();
     this._init_panels();
+
+    window.onbeforeunload = (function(e) {
+        localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this.document.serialize()));
+    }).bind(this);
 };
 
 var app = new App();
