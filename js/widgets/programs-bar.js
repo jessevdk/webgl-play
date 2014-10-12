@@ -1,4 +1,5 @@
 var Widget = require('./widget');
+var Program = require('../app/program');
 
 function ProgramsBar(e, app) {
     Widget.call(this, e);
@@ -52,7 +53,7 @@ ProgramsBar.prototype.document = function(document) {
 
         for (var i = 0; i < this._document.programs.length; i++) {
             var p = this._document.programs[i];
-            this._on_program_added(p);
+            this._on_program_added(this._document, p);
         }
 
         this._on_active_program_changed();
@@ -64,6 +65,31 @@ ProgramsBar.prototype._on_new_program_ignore = function(e) {
 }
 
 ProgramsBar.prototype._on_new_program_click = function(e) {
+    var prg = Program.default();
+
+    var names = {};
+
+    for (var i = 0; i < this._document.programs.length; i++) {
+        names[this._document.programs[i].name()] = true;
+    }
+
+    var i = 1;
+    var name;
+
+    while (true) {
+        name = 'Untitled ' + i;
+
+        if (!(name in names)) {
+            break;
+        }
+
+        i++;
+    }
+
+    prg.name(name);
+    this._document.add_program(prg);
+    this._document.active_program(prg);
+
     e.preventDefault();
 }
 
@@ -103,7 +129,7 @@ ProgramsBar.prototype._on_active_program_changed = function() {
         sel.classList.remove('selected');
     }
 
-    var p = this._document.active_program;
+    var p = this._document.active_program();
     sel = this._find_by_name(p.name());
 
     if (sel) {
@@ -111,21 +137,29 @@ ProgramsBar.prototype._on_active_program_changed = function() {
     }
 }
 
-ProgramsBar.prototype._on_program_added = function(program) {
+ProgramsBar.prototype._on_program_click = function(program) {
+    this._document.active_program(program);
+}
+
+ProgramsBar.prototype._on_program_added = function(doc, program) {
     program.on('notify::name', this._on_program_name_changed, this);
 
     var li = document.createElement('li');
     li.setAttribute('data-program-name', program.name());
     li.textContent = program.name();
 
-    if (program === this._document.active_program) {
+    li.addEventListener('click', (function() {
+        this._on_program_click(program);
+    }).bind(this));
+
+    if (program === this._document.active_program()) {
         li.classList.add('selected');
     }
 
     this._insert_program_item(program, li);
 }
 
-ProgramsBar.prototype._on_program_removed = function(program) {
+ProgramsBar.prototype._on_program_removed = function(doc, program) {
     program.off('notify::name', this._on_program_name_changed, this);
 
     var item = this._find_by_name(program.name());
