@@ -175,7 +175,7 @@ App.prototype._save_current_doc_with_delay = function(cb) {
     this._save_timeout = setTimeout((function() {
         this._save_timeout = 0;
         this._save_current_doc(cb);
-    }).bind(this), 1000);
+    }).bind(this), 500);
 }
 
 App.prototype._update_canvas_size = function() {
