@@ -125,9 +125,18 @@ function Editor(editor, ctx, type) {
                 this._hint();
             }).bind(this);
 
+            var mode = this.editor.getMode();
+            var indentOrig = mode.indent;
 
+            mode.indent = function(state, textAfter) {
+                var ret = indentOrig.call(this, state, textAfter);
 
+                if (textAfter[0] === '.') {
+                    ret += editor.getOption('indentUnit');
+                }
 
+                return ret;
+            };
         }
     }
 
