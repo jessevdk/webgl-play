@@ -4,6 +4,19 @@ function render(element, self, data) {
     var t = data.text;
     var prev = 0;
 
+    var icon = document.createElement('span');
+    icon.classList.add('icon');
+
+    if (typeof data.obj === 'function') {
+        icon.textContent = 'm';
+        icon.classList.add('function');
+    } else {
+        icon.textContent = 'd';
+        icon.classList.add('data');
+    }
+
+    element.appendChild(icon);
+
     var span = document.createElement('span');
 
     for (var i = 0; i < data.pos.length; i++) {
