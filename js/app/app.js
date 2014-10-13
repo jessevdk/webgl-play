@@ -576,6 +576,9 @@ App.prototype._init = function() {
 
                 if (typeof saved.id !== 'undefined' && saved.id === doc.id)
                 {
+                    saved.modification_time = new Date(saved.modification_time);
+                    saved.creation_time = new Date(saved.creation_time);
+
                     this._load_doc(Document.deserialize(saved));
                     this._save_current_doc_with_delay();
                 }
