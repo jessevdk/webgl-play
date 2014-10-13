@@ -9,6 +9,7 @@ function ProgramsBar(e, app) {
     this._show_delete = null;
 
     this.document(app.document);
+
     app.on('notify::document', function() {
         this.document(app.document);
     }, this);
@@ -47,8 +48,7 @@ ProgramsBar.prototype.document = function(document) {
 
         for (var i = 0; i < this._document.programs.length; i++) {
             var p = this._document.programs[i];
-
-            p.off('notify::name', this._on_program_name_changed);
+            this._on_program_removed(this._document, p, true);
         }
     }
 
@@ -330,22 +330,30 @@ ProgramsBar.prototype._on_program_added = function(doc, program) {
     this._on_program_error_changed(program);
 }
 
-ProgramsBar.prototype._on_program_removed = function(doc, program) {
+ProgramsBar.prototype._on_program_removed = function(doc, program, changing_doc) {
     program.off('notify::name', this._on_program_name_changed, this);
     program.off('notify::error', this._on_program_error_changed, this);
 
     var item = this._find_by_name(program.name());
 
     if (item) {
-        item.classList.add('removed');
+        if (!changing_doc) {
+            item.classList.add('removed');
 
-        if (this._show_delete !== null && this._show_delete.element === item) {
-            this._on_program_toggle_delete(elem, program);
-        }
+            if (this._show_delete !== null && this._show_delete.element === item) {
+                this._on_program_toggle_delete(elem, program);
+            }
 
-        setTimeout((function() {
+            setTimeout((function() {
+                this._ul.removeChild(item);
+            }).bind(this), 300);
+        } else {
+            if (this._show_delete !== null && this._show_delete.element === item) {
+                this._show_delete = null;
+            }
+
             this._ul.removeChild(item);
-        }).bind(this), 300);
+        }
     }
 }
 
