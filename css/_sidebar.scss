@@ -1,0 +1,150 @@
+#programs-sidebar {
+  .title {
+    padding: 24px 6px 6px 12px;
+    font-weight: bold;
+    background-color: lighten($bg_color, 5%);
+    color: lighten($fg_color, 20%);
+    position: relative;
+
+    border-bottom: 1px solid lighten($borders_color, 20%);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    cursor: default;
+    position: relative;
+
+    li {
+      padding: 8px 12px 8px 12px;
+      position: relative;
+      left: 0px;
+
+      span.name {
+        transition: padding-left 100ms;
+      }
+
+      &.editing {
+        span.name {
+          display: none;
+        }
+
+        input {
+          margin: -2px 0px -2px 0px;
+          padding: 1px 3px 1px 3px;
+          width: 100%;
+          border: 1px solid lighten($blue, 30%);
+          background-color: lighten($blue, 5%);
+          color: white;
+          box-sizing: border-box;
+        }
+      }
+
+      &:nth-child(odd) {
+        background-color: lighten($bg_color, 5%);
+
+        &.error {
+          background-color: lighten($red, 30%);
+        }
+      }
+
+      &.selected {
+        background-color: lighten($blue, 10%);
+
+        span.name {
+          padding-left: 12px;
+          color: white;
+        }
+
+        &.error {
+          background-color: $red;
+        }
+      }
+
+      &.error {
+        background-color: lighten($red, 20%);
+        color: white;
+
+        span.name::before {
+          content: "! ";
+        }
+      }
+
+      transition: left 300ms, height 300ms;
+
+      &.removed {
+        left: 100%;
+      }
+
+      div.delete {
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        right: -40px;
+        width: 40px;
+
+        transition: right 300ms;
+
+        text-align: center;
+
+        background-color: $red;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+
+        border-radius: 8px 0px 0px 8px;
+        border: 2px solid darken($red, 10%);
+        border-right: 0;
+
+        &:hover {
+          background-color: lighten($red, 5%);
+          border-color: darken($red, 5%);
+        }
+
+        &:active {
+          background-color: lighten($red, 10%);
+        }
+
+        span {
+          position: absolute;
+          top: 50%;
+          right: 50%;
+          margin-top: -23%;
+          margin-right: -20%;
+
+          transition: transform 300ms;
+        }
+      }
+
+      div.delete.animate-in, &.removed div.delete {
+        right: 0px;
+
+        span {
+          transform: rotate(-720deg);
+        }
+      }
+
+      &.new-program {
+        margin-top: 12px;
+        border-top: 1px solid lighten($borders_color, 20%);
+      }
+
+      table#new-program-container {
+        border-collapse: collapse;
+        width: 100%;
+
+        td:first-child {
+          width: 100%;
+          padding-right: 6px;
+
+          input {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* vi:ts=2:et */

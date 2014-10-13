@@ -96,6 +96,11 @@ App.prototype._update_renderer = function() {
         }
 
         this.js_editor.completionContext(c);
+
+        for (var i = 0; i < this.document.programs.length; i++) {
+            var p = this.document.programs[i];
+            p.error(null);
+        }
     } else {
         var e = null;
 
@@ -114,7 +119,41 @@ App.prototype._update_renderer = function() {
                 location: loc
             });
         }
+
+        var progs = null;
+
+        for (var i = 0; i < this.document.programs.length; i++) {
+            var p = this.document.programs[i];
+            var name = p.name();
+
+            if (name in ret.programs) {
+                p.error(ret.programs[name]);
+            } else {
+                p.error(null);
+            }
+        }
     }
+}
+
+App.prototype._update_editors = function() {
+    var up = {};
+
+    var names = ['vertex', 'fragment', 'js'];
+
+    for (var i = 0; i < names.length; i++) {
+        var editor = this[names[i] + '_editor'];
+
+        up[names[i]] = {
+            data: editor.value(),
+            history: editor.history()
+        };
+    }
+
+    this._update_document_by(up);
+}
+
+App.prototype._on_document_before_active_program_changed = function() {
+    this._update_editors();
 }
 
 App.prototype._on_document_active_program_changed = function() {
@@ -130,6 +169,7 @@ App.prototype._on_document_active_program_changed = function() {
     this.fragment_editor.history(prg.fragment.history);
 
     this._loading = loading;
+    this._save_current_doc_with_delay();
 }
 
 App.prototype._on_document_title_changed = function() {
@@ -142,8 +182,11 @@ App.prototype._load_doc = function(doc) {
     this._loading = true;
 
     if (this.document !== null) {
+        this.document.off('notify-before::active-program', this._on_document_before_active_program_changed, this);
         this.document.off('notify::active-program', this._on_document_active_program_changed, this);
         this.document.off('notify::title', this._on_document_title_changed, this);
+
+        this.document.off('changed', this._on_document_changed, this);
     }
 
     this.document = doc;
@@ -181,10 +224,20 @@ App.prototype._load_doc = function(doc) {
     this._loading = false;
     this._update_renderer();
 
+    this.document.on('notify-before::active-program', this._on_document_before_active_program_changed, this);
     this.document.on('notify::active-program', this._on_document_active_program_changed, this);
     this.document.on('notify::title', this._on_document_title_changed, this);
+    this.document.on('changed', this._on_document_has_changed, this);
 
     this._on_document_changed();
+}
+
+App.prototype._on_document_has_changed = function(doc, opts) {
+    this._save_current_doc_with_delay((function() {
+        if ('vertex' in opts || 'fragment' in opts || 'js' in opts || 'programs' in opts) {
+            this._update_renderer();
+        }
+    }).bind(this));
 }
 
 App.prototype._save_current_doc = function(cb) {
@@ -260,11 +313,6 @@ App.prototype._update_document_by = function(opts) {
     }
 
     this.document.update(opts);
-    this._save_current_doc_with_delay((function() {
-        if ('vertex' in opts || 'fragment' in opts || 'js' in opts) {
-            this._update_renderer();
-        }
-    }).bind(this));
 }
 
 App.prototype._update_document = function(name, editor) {
@@ -447,6 +495,7 @@ App.prototype._init = function() {
     this._init_panels();
 
     window.onbeforeunload = (function(e) {
+        this._update_editors();
         localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this.document.serialize()));
     }).bind(this);
 };

@@ -16,6 +16,10 @@ function Program(name, v, f) {
 
     this._name = name;
     this._on_notify_name = this.register_signal('notify::name');
+    this._on_notify_error = this.register_signal('notify::error');
+
+    this._is_default = false;
+    this._error = null;
 }
 
 Program.prototype = Object.create(Signals.prototype);
@@ -25,7 +29,21 @@ Program.default = function() {
     var v = fs.readFileSync(__dirname + '/default.glslv', 'utf-8').trimRight('\n');
     var f = fs.readFileSync(__dirname + '/default.glslf', 'utf-8').trimRight('\n');
 
-    return new Program('default', v, f);
+    return new Program('Default', v, f);
+}
+
+Program.prototype.error = function(error) {
+    if (typeof error === 'undefined') {
+        return this._error;
+    }
+
+    this._error = error;
+    console.log('notify error', error);
+    this._on_notify_error();
+}
+
+Program.prototype.is_default = function() {
+    return this._is_default;
 }
 
 Program.prototype.name = function(name) {
@@ -104,8 +122,9 @@ Program.prototype.compile = function(gl) {
         vertex: v,
         fragment: f,
         program: p,
-        attributes: attrs
-    }
+        attributes: attrs,
+        is_default: this._is_default
+    };
 }
 
 Program.prototype.serialize = function() {
@@ -119,7 +138,8 @@ Program.prototype.serialize = function() {
         fragment: {
             data: this.fragment.data,
             history: this.fragment.history
-        }
+        },
+        is_default: this._is_default
     };
 }
 
@@ -137,6 +157,7 @@ Program.deserialize = function(program) {
     };
 
     ret._name = program.name;
+    ret._is_default = program.is_default;
 
     return ret;
 }

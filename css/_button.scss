@@ -1,0 +1,21 @@
+.button {
+  padding: 2px 6px 2px 6px;
+  border: 1px solid $borders_color;
+  border-radius: 3px;
+  background-color: $bg_color;
+  background: linear-gradient(to bottom, lighten($bg_color, 5%), $bg_color);
+  cursor: default;
+  display: inline-block;
+
+  &:hover {
+    background-color: lighten($bg_color, 5%);
+    background: linear-gradient(to bottom, lighten($bg_color, 10%), lighten($bg_color, 5%));
+  }
+
+  &:active {
+    background-color: $bg_color;
+    background: linear-gradient(to bottom, $bg_color, lighten($bg_color, 5%));
+  }
+}
+
+/* vi:ts=2:et */

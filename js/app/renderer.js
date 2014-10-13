@@ -34,6 +34,7 @@ function JsContext(gl) {
      * A map of program names to compiled GLSL programs.
      */
     this.programs = {};
+    this._default_program = null;
 
     /**
      * A persistent state. You can use this to store and retrieve persistent state
@@ -73,7 +74,7 @@ JsContext.prototype.view = function(view) {
  */
 JsContext.prototype.findProgram = function(name) {
     if (!name) {
-        name = 'default';
+        return this._default_program;
     }
 
     if (!(name in this.programs)) {
@@ -118,6 +119,7 @@ Renderer.prototype.update = function(doc) {
 
     // Compile all programs
     var programs = {};
+    var default_program = null;
 
     for (var i = 0; i < doc.programs.length; i++) {
         var p = doc.programs[i];
@@ -138,6 +140,10 @@ Renderer.prototype.update = function(doc) {
         }
 
         programs[p.name()] = prog;
+
+        if (prog.is_default) {
+            default_program = prog;
+        }
     }
 
     var obj = {};
@@ -174,6 +180,7 @@ Renderer.prototype.update = function(doc) {
 
     this.context = nctx;
     this.context.programs = programs;
+    this.context._default_program = default_program;
 
     this.program = ret;
     this.start();

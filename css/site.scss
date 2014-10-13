@@ -1,6 +1,8 @@
 @import 'solarized';
 @import 'widgets';
 @import 'editor';
+@import 'button';
+@import 'sidebar';
 
 $header_height: 30px;
 
@@ -11,9 +13,9 @@ html, body, #main {
   height: 100%;
 }
 
-body {
+body, input {
   font-family: "Helvetica", "Arial", "FreeSans", "Verdana", "Tahoma", "Lucida Sans", "Lucida Sans Unicode", "Luxi Sans", sans-serif;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 #main {
@@ -40,7 +42,6 @@ body {
     min-width: 300px;
     border: 0;
     background: none;
-    font-size: 14px;
     color: lighten($fg_color, 20%);
     outline: none;
   }
@@ -105,61 +106,10 @@ body {
   }
 }
 
-#programs-sidebar {
-  .title {
-    padding: 24px 6px 12px 12px;
-    font-weight: bold;
-    background-color: lighten($bg_color, 5%);
-    color: lighten($fg_color, 20%);
-    position: relative;
-
-    border-bottom: 1px solid lighten($borders_color, 20%);
-
-    #new-program {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-
-      padding: 0px 4px 1px 4px;
-      margin: 5px;
-      border: 1px solid $borders_color;
-      border-radius: 3px;
-      background-color: $bg_color;
-      background: linear-gradient(to bottom, lighten($bg_color, 5%), $bg_color);
-      cursor: default;
-
-      &:hover {
-        background-color: lighten($bg_color, 5%);
-        background: linear-gradient(to bottom, lighten($bg_color, 10%), lighten($bg_color, 5%));
-      }
-
-      &:active {
-        background-color: $bg_color;
-        background: linear-gradient(to bottom, $bg_color, lighten($bg_color, 5%));
-      }
-    }
-  }
-
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    cursor: default;
-
-    li {
-      padding: 8px 12px 8px 12px;
-
-      &:nth-child(odd) {
-        background-color: lighten($bg_color, 5%);
-      }
-
-      &.selected {
-        padding-left: 20px;
-        background-color: lighten($blue, 10%);
-        color: white;
-      }
-    }
-  }
+input[type="text"] {
+  border: 1px solid $borders_color;
+  background-color: white;
+  outline: none;
 }
 
 /* vi:ts=2:et */
