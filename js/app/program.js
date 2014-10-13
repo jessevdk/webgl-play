@@ -38,7 +38,6 @@ Program.prototype.error = function(error) {
     }
 
     this._error = error;
-    console.log('notify error', error);
     this._on_notify_error();
 }
 
