@@ -3,6 +3,7 @@
 @import 'editor';
 @import 'button';
 @import 'sidebar';
+@import 'popup';
 
 $header_height: 30px;
 
@@ -110,6 +111,68 @@ input[type="text"] {
   border: 1px solid $borders_color;
   background-color: white;
   outline: none;
+}
+
+.popup .documents {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: white;
+  border: 1px solid lighten($borders_color, 10%);
+
+  li {
+    padding: 6px;
+    cursor: default;
+    padding-right: 46px;
+    position: relative;
+
+    &:nth-child(even) {
+      background-color: darken(white, 5%);
+    }
+
+    .title {
+      font-weight: bold;
+    }
+
+    .modification-time {
+      font-size: 0.9em;
+      color: lighten($fg_color, 20%);
+    }
+
+    &:hover {
+      background-color: $base3;
+    }
+
+    &:active {
+      background-color: lighten($base3, 5%);
+    }
+
+    .delete {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+
+      width: 16px;
+      height: 16px;
+      box-sizing: border-box;
+
+      border-radius: 8px;
+      background-color: $orange;
+      color: white;
+      font-size: 10px;
+
+      text-align: center;
+      padding-top: 1px;
+
+      &:hover {
+        background-color: lighten($red, 10%);
+      }
+
+      &:active {
+        background-color: lighten($red, 20%);
+      }
+    }
+  }
 }
 
 /* vi:ts=2:et */

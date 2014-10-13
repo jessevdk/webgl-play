@@ -435,27 +435,127 @@ App.prototype._init_programs_bar = function() {
 }
 
 App.prototype._init_buttons = function() {
-    var buttons = ['share', 'snapshot', 'new'];
+    var buttons = ['open', 'new'];
 
     this.buttons = {};
 
     for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
 
-        var button = document.getElementById('button-' + b);
+        var button = new widgets.Button(document.getElementById('button-' + b), {
+            nostyle: true
+        });
 
-        button.addEventListener('click', this['_on_button_' + b + '_click'].bind(this));
-
+        button.on('click', this['_on_button_' + b + '_click'], this);
         this.buttons[b] = button;
     }
 }
 
-App.prototype._on_button_share_click = function() {
+App.prototype._rel_date = function(date) {
+    var now = new Date();
+    var t = (now - date) / 1000;
 
+    var MINUTE = 60;
+    var HOUR = MINUTE * 60;
+    var DAY = HOUR * 24;
+    var WEEK = DAY * 7;
+
+    if (t < 29.5 * MINUTE) {
+        var mins = Math.round(t / MINUTE);
+
+        if (mins === 0) {
+            return 'less than a minute ago';
+        } else if (mins === 1) {
+            return 'a minute ago';
+        } else {
+            return mins + ' minutes ago';
+        }
+    } else if (t < 45 * MINUTE) {
+        return 'half an hour ago';
+    } else if (t < 23.5 * HOUR) {
+        var hours = Math.round(t / HOUR);
+
+        if (hours === 1) {
+            return 'an hour ago';
+        } else {
+            return hours + ' hours ago';
+        }
+    } else if (t < 7 * DAY) {
+        var days = Math.round(t / DAY);
+
+        if (days === 1) {
+            return 'a day ago';
+        } else {
+            return days + ' days ago';
+        }
+    } else {
+        return 'on ' + date.toDateString();
+    }
 }
 
-App.prototype._on_button_snapshot_click = function() {
+App.prototype._on_button_open_click = function() {
+    this._store.all((function(store, ret) {
+        var content = document.createElement('ul');
+        content.classList.add('documents');
 
+        var popup;
+
+        for (var i = 0; i < ret.length; i++) {
+            var li = document.createElement('li');
+
+            var titlediv = document.createElement('div');
+            titlediv.classList.add('title');
+
+            titlediv.textContent = ret[i].title;
+            li.appendChild(titlediv);
+
+            var moddiv = document.createElement('div');
+            moddiv.classList.add('modification-time');
+            moddiv.textContent = 'Last modified ' + this._rel_date(ret[i].modification_time);
+
+            li.appendChild(moddiv);
+
+            li.addEventListener('click', (function(doc) {
+                this._load_doc(Document.deserialize(doc));
+                popup.destroy();
+            }).bind(this, ret[i]));
+
+            var del = document.createElement('div');
+            del.classList.add('delete');
+            del.textContent = '✖';
+            del.setAttribute('title', 'Delete Document');
+
+            del.addEventListener('mousedown', (function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }).bind(this));
+
+            del.addEventListener('click', (function(doc, li, e) {
+                if (content.querySelectorAll('li').length > 1) {
+                    this._store.delete(doc, (function(store, doc) {
+                        if (doc) {
+                            content.removeChild(li);
+
+                            console.log(this.document.id, doc.id);
+
+                            if (this.document.id === doc.id) {
+                                this.document.id = null;
+                            }
+                        }
+                    }).bind(this));
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+            }).bind(this, ret[i], li));
+
+            li.appendChild(del);
+
+            content.appendChild(li);
+        }
+
+        popup = new widgets.Popup(content, this.buttons.open.e);
+    }).bind(this));
 }
 
 App.prototype._on_button_new_click = function() {

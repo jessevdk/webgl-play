@@ -12,6 +12,26 @@ function Store(ready) {
     req.onupgradeneeded = this._onupgradeneeded.bind(this);
 }
 
+Store.prototype.delete = function(doc, cb) {
+    if (!('id' in doc)) {
+        cb(this, null);
+    }
+
+    var tr = this._db.transaction('documents', 'readwrite');
+    var store = tr.objectStore('documents');
+
+    var req = store.delete(doc.id);
+
+    req.onsuccess = (function(ev) {
+        cb(this, doc);
+    }).bind(this);
+
+    req.onerror = (function(ev) {
+        console.log('database error', ev);
+        cb(this, null);
+    }).bind(this);
+}
+
 Store.prototype.last = function(cb) {
     var tr = this._db.transaction('documents');
     var store = tr.objectStore('documents');
@@ -19,18 +39,44 @@ Store.prototype.last = function(cb) {
 
     var req = idx.openCursor(null, 'prev');
 
-    req.onsuccess = function(ev) {
+    req.onsuccess = (function(ev) {
         if (ev.target.result) {
             cb(this, ev.target.result.value);
         } else {
             cb(this, null);
         }
-    }
+    }).bind(this);
 
-    req.onerror = function(ev) {
+    req.onerror = (function(ev) {
         console.log('database error', ev);
         cb(this, null);
-    }
+    }).bind(this)
+}
+
+Store.prototype.all = function(cb) {
+    var tr = this._db.transaction('documents');
+    var store = tr.objectStore('documents');
+    var idx = store.index('modification_time');
+
+    var req = idx.openCursor(null, 'prev');
+
+    var ret = [];
+
+    req.onsuccess = (function(ev) {
+        var res = ev.target.result;
+
+        if (res) {
+            ret.push(res.value);
+            res.continue();
+        } else {
+            cb(this, ret);
+        }
+    }).bind(this);
+
+    req.onerror = (function(ev) {
+        console.log('database error', ev);
+        cb(this, ret);
+    }).bind(this);
 }
 
 Store.prototype.save = function(doc, cb) {

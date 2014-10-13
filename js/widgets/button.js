@@ -1,9 +1,11 @@
 var Widget = require('./widget');
 
-function Button(e) {
+function Button(e, opts) {
     Widget.call(this, e);
 
-    e.classList.add('button');
+    if (!opts || !opts.nostyle) {
+        e.classList.add('button');
+    }
 
     e.addEventListener('click', this._on_click.bind(this));
     e.addEventListener('dblclick', this._on_dblclick.bind(this));

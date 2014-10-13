@@ -1,0 +1,84 @@
+.popup {
+  $popup_bg_color: $bg_color;
+  $popup_borders_color: $borders_color;
+  $arrow_size: 12px;
+  $border_size: 2px;
+
+  background-color: $popup_bg_color;
+
+  position: absolute;
+
+  border-radius: 6px;
+
+  z-index: 999;
+
+  border: $border_size solid $popup_borders_color;
+
+  .content {
+    padding: 12px;
+  }
+
+  .arrow {
+    width: 0px;
+    height: 0px;
+    left: 50%;
+
+    position: absolute;
+
+    &:after, &:before {
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    &.right:after, &.right:before {
+      left: 80%;
+    }
+
+    &.left:after, &.left:before {
+      left: 20%;
+    }
+
+    &.up:after, &.up:before {
+      bottom: 100%;
+    }
+
+    &.down:after, &.down:before {
+      top: 100%;
+    }
+
+    &:after {
+      border-color: rgba($bg_color, 0);
+      border-width: $arrow_size;
+      margin-left: -$arrow_size;
+    }
+
+    &.up:after {
+      border-bottom-color: $bg_color;
+    }
+
+    &.down:after {
+      border-top-color: $bg_color;
+    }
+
+    &:before {
+      border-color: rgba($popup_borders_color, 0);
+      border-width: $arrow_size + $border_size + 1px;
+      margin-left: -($arrow_size + $border_size + 1px);
+    }
+
+    &.up:before {
+      border-bottom-color: $popup_borders_color;
+    }
+
+    &.down:before {
+      border-top-color: $popup_borders_color;
+    }
+  }
+}
+
+/* vi:ts=2:et */
