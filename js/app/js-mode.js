@@ -1,4 +1,4 @@
-var utils = require('./utils');
+var utils = require('../utils/utils');
 
 function render(element, self, data) {
     var t = data.text;

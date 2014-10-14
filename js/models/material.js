@@ -1,4 +1,4 @@
-var math = require('./math');
+var math = require('../math/math');
 
 /**
  * A basic material. A material contains a specification of the material

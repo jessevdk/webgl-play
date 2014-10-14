@@ -1,4 +1,4 @@
-var utils = require('./utils');
+var utils = require('../utils/utils');
 
 /**
  * A representation of a geometry. A geometry contains a number

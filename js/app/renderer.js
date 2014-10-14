@@ -14,7 +14,7 @@ function JsContext(gl) {
      * The models module. This module contains various high-level
      * utilities for creating and working with object models.
      */
-    this.models = require('./models');
+    this.models = require('../models/models');
 
     /**
      * The math module. This module contains basic math types, including
@@ -22,7 +22,7 @@ function JsContext(gl) {
      * module is provided by glMatrix, with a small number of additional
      * types and functions (such as transform).
      */
-    this.math = require('./math');
+    this.math = require('../math/math');
 
     /**
      * The currently compiled and running js program. This evaluates to the same
