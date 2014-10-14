@@ -126,7 +126,7 @@ App.prototype._update_renderer = function() {
             var p = this.document.programs[i];
             var name = p.name();
 
-            if (name in ret.programs) {
+            if (ret.programs !== null && name in ret.programs) {
                 p.error(ret.programs[name]);
             } else {
                 p.error(null);
