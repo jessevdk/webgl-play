@@ -39,6 +39,8 @@ $(eval $(call install-bin-npm-module,exorcist,exorcist))
 $(eval $(call install-bin-npm-module,uglifyjs,uglify-js))
 $(eval $(call install-npm-module,node_modules/uglifyify,uglifyify))
 
+MODELS = $(foreach i,$(wildcard models/*.obj models/*.mtl),site/models/$(notdir $(i)))
+
 SITE_EXTERNAL_DEPS =		\
 	js/app/default.glslv	\
 	js/app/default.glslf	\
@@ -93,7 +95,12 @@ site/css/site.css: $(SASS) $(wildcard css/*.scss)
 	mkdir -p $(dir $@); \
 	$(GP) $(SASS) css/site.scss $@
 
-site: site/js/vendor.min.js site/js/site.min.js site/index.html site/css/vendor.css site/css/site.css
+site/models/%: models/%
+	@printf "[\033[1mCP\033[0m] $@\n"; \
+	mkdir -p $(dir $@); \
+	cp $^ $@
+
+site: site/js/vendor.min.js site/js/site.min.js site/index.html site/css/vendor.css site/css/site.css $(MODELS)
 	@printf "[\033[1m$(shell date)\033[0m] ... [\033[32mdone\033[0m]\n\n"
 
 watch:
