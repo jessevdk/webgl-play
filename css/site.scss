@@ -131,6 +131,7 @@ input[type="text"] {
     }
 
     .title {
+      display: inline-block;
       font-weight: bold;
     }
 
@@ -145,6 +146,11 @@ input[type="text"] {
 
     &:active {
       background-color: lighten($base3, 5%);
+    }
+
+    .screenshot {
+      width: 64px;
+      vertical-align: middle;
     }
 
     .delete {

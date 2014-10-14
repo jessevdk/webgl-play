@@ -1,3 +1,5 @@
+var Signals = require('../signals/signals');
+
 /**
  * The javascript context.
  *
@@ -85,12 +87,20 @@ JsContext.prototype.findProgram = function(name) {
 }
 
 function Renderer(canvas) {
+    Signals.call(this);
+
     this.canvas = canvas;
     this.context = this._create_context();
+    this._first_frame = false;
+
+    this._on_notify_first_frame = this.register_signal('notify::first-frame');
 }
 
+Renderer.prototype = Object.create(Signals.prototype);
+Renderer.prototype.constructor = Renderer;
+
 Renderer.prototype._create_context = function() {
-    return new JsContext(this.canvas.getContext('webgl'));
+    return new JsContext(this.canvas.getContext('webgl', {preserveDrawingBuffer: true}));
 }
 
 Renderer.prototype.update = function(doc) {
@@ -183,6 +193,8 @@ Renderer.prototype.update = function(doc) {
     this.context._default_program = default_program;
 
     this.program = ret;
+
+    this._first_frame = true;
     this.start();
 }
 
@@ -197,6 +209,14 @@ Renderer.prototype.do_render = function(t) {
         } catch (e) {
             console.error(e.stack);
             this.pause();
+            return;
+        }
+
+        if (this._first_frame) {
+            var dataurl = this.canvas.toDataURL();
+            this._first_frame = false;
+
+            this._on_notify_first_frame(dataurl);
         }
     }
 }

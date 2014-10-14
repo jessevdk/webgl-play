@@ -353,6 +353,11 @@ App.prototype._init_canvas = function() {
     }).bind(this));
 
     this.renderer = new Renderer(this.canvas);
+    this.renderer.on('notify::first-frame', (function(r, frame) {
+        this.document.update({
+            screenshot: frame
+        });
+    }).bind(this));
 
     this._update_canvas_size();
 }
@@ -502,6 +507,15 @@ App.prototype._on_button_open_click = function() {
 
         for (var i = 0; i < ret.length; i++) {
             var li = document.createElement('li');
+
+            var img = document.createElement('img');
+            img.classList.add('screenshot');
+
+            if (ret[i].screenshot) {
+                img.setAttribute('src', ret[i].screenshot);
+            }
+
+            li.appendChild(img);
 
             var titlediv = document.createElement('div');
             titlediv.classList.add('title');

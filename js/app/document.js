@@ -18,6 +18,7 @@ function Document() {
     this.modification_time = new Date();
     this.creation_time = new Date();
     this.active_editor = null;
+    this.screenshot = null;
 
     this._active_program = this.programs[0];
     this._active_program._is_default = true;
@@ -142,6 +143,10 @@ Document.prototype.update = function(changes) {
         }
     }
 
+    if ('screenshot' in changes) {
+        this.screenshot = changes.screenshot;
+    }
+
     this._changed(changes);
 }
 
@@ -165,6 +170,10 @@ Document.prototype.serialize = function() {
         modification_time: this.modification_time,
         creation_time: this.creation_time,
         active_editor: this.active_editor
+    }
+
+    if (this.screenshot) {
+        ret.screenshot = this.screenshot;
     }
 
     if (this.id !== null) {
@@ -203,6 +212,10 @@ Document.deserialize = function(doc) {
 
     if (ret._active_program === null) {
         ret._active_program = ret.programs[0];
+    }
+
+    if ('screenshot' in doc) {
+        ret.screenshot = doc.screenshot;
     }
 
     ret.active_editor = doc.active_editor;
