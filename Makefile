@@ -111,4 +111,7 @@ unwatch:
 	@watchman -- trigger-del $(CURRENT_DIR) remake >/dev/null && \
 	watchman watch-del $(CURRENT_DIR) >/dev/null
 
+serve: site
+	(cd site && python -m SimpleHTTPServer)
+
 .PHONY: all site watch
