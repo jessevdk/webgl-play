@@ -100,7 +100,7 @@ Renderer.prototype = Object.create(Signals.prototype);
 Renderer.prototype.constructor = Renderer;
 
 Renderer.prototype._create_context = function() {
-    return new JsContext(this.canvas.getContext('webgl', {preserveDrawingBuffer: true}));
+    return new JsContext(this.canvas.getContext('webgl'));
 }
 
 Renderer.prototype.update = function(doc) {
