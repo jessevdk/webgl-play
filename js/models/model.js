@@ -55,7 +55,7 @@ Model.prototype.render = function(ctx) {
     var view = ctx.view();
 
     if (this.parent !== null) {
-        this.fullTransform = math.transform.mul(this.parent.fullTransform, this.transform);
+        this.fullTransform = this.parent.fullTransform.clone().mul(this.transform);
     } else {
         this.fullTransform = math.transform.clone(this.transform);
     }
