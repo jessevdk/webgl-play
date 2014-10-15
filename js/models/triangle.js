@@ -31,7 +31,7 @@ function Triangle(ctx, p1, p2, p3, options) {
          0,  1,  2
     ]);
 
-    this.geometry = new Geometry(ctx, vertices, normals, indices);
+    this.geometry = new RenderGroup(ctx, new Geometry(ctx, vertices, normals), indices);
 }
 
 Triangle.prototype = Object.create(Model.prototype);

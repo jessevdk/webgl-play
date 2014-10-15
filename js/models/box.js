@@ -1,5 +1,6 @@
 var Model = require('./model');
 var Geometry = require('./geometry');
+var RenderGroup = require('./rendergroup');
 
 /**
  * A simple box model. Creates a simple box geometry, centered around [0, 0, 0] for
@@ -121,7 +122,7 @@ function Box(ctx, dx, dy, dz, options) {
         20, 22, 23,
     ]);
 
-    this.geometry = new Geometry(ctx, vertices, normals, indices);
+    this.geometry = new RenderGroup(ctx, new Geometry(ctx, vertices, normals), indices);
 }
 
 Box.prototype = Object.create(Model.prototype);

@@ -2,46 +2,47 @@ var utils = require('../utils/utils');
 
 /**
  * A representation of a geometry. A geometry contains a number
- * of vertex buffer objects and an index buffer object specifying
- * a triangulated geometry to be rendered. The provided vertices and
- * normals are a convenience and are simply provided to addAttribute
+ * of vertex buffer objects specifying attributes such as vertices,
+ * normals, etc. The vertices and normals provided to the constructor
+ * are a convenience equivalent to calling addAttribute manually
  * respectively with the attribute names 'v_Position' and 'v_Normal'.
  *
  * Additional attributes can be added to a geometry after construction
- * using addAttribute. Note that indices are mandatory, and geometries
- * will use gl.drawElements. Also, the only type of geometry currently
- * supported is gl.TRIANGLES.
+ * using addAttribute. As a convenience, update can be used to update
+ * vertices and normals instead of calling addAttribute manually.
  *
- * If a geometry needs to be updated (i.e. not simply adding an additional
- * attribute), then use the .update method.
+ * Note that a Geometry only consists of a number of attribute
+ * buffers, but does not specify how to render objects contained
+ * within these buffers (e.g. a single buffer may contain multiple
+ * objects). See RenderGroup and RenderGroups for information on
+ * how to index a Geometry for rendering.
  *
  * @param ctx the context.
  * @param vertices a Float32Array of vertices, or null.
  * @param normals a Float32Array of normals, or null.
- * @param indices an Uint16Array of indices.
  * @param options optional options <binding:> (defaults to <binding: gl.STATIC_DRAW>).
  * @constructor
  */
-function Geometry(ctx, vertices, normals, indices) {
-    this._ibo = null;
+function Geometry(ctx, vertices, normals) {
     this._lastAttrId = 0;
 
     this.attributes = {};
     this._attribute_ids = {};
 
-    this.update(ctx, vertices, normals, indices);
+    this.update(ctx, vertices, normals);
 }
 
 /**
- * Update the geometry.
+ * Update the geometry. This is a convenience around calling
+ * addAttribute manually with respectively the names
+ * 'v_Position' (for the vertices) and 'v_Normal' (for the normals).
  *
  * @param ctx the context.
  * @param vertices a Float32Array of vertices, or null.
  * @param normals a Float32Array of normals, or null.
- * @param indices an Uint16Array of indices.
  * @param options optional options <binding:> (defaults to <binding: gl.STATIC_DRAW>).
  */
-Geometry.prototype.update = function(ctx, vertices, normals, indices, options) {
+Geometry.prototype.update = function(ctx, vertices, normals, options) {
     var gl = ctx.gl;
 
     var opts = utils.merge({
@@ -55,19 +56,13 @@ Geometry.prototype.update = function(ctx, vertices, normals, indices, options) {
     if (normals) {
         this.addAttribute(ctx, 'v_Normal', normals, options);
     }
-
-    if (this._ibo) {
-        gl.deleteBuffer(this._ibo);
-    }
-
-    this._ibo = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._ibo);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, opts.binding);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-
-    this.length = indices.length;
 }
 
+/**
+ * Remove an attribute buffer.
+ *
+ * @param name the name of the attribute to remove.
+ */
 Geometry.prototype.removeAttribute = function(ctx, name) {
     var gl = ctx.gl;
 
@@ -108,12 +103,15 @@ Geometry.prototype.addAttribute = function(ctx, name, data, options) {
         data: data,
         id: i,
         vbo: gl.createBuffer(),
+        size: opts.size,
+        type: opts.type,
+        normalized: opts.normalized,
+        stride: opts.stride,
         enabled: true
     };
 
     gl.bindBuffer(gl.ARRAY_BUFFER, attr.vbo);
     gl.bufferData(gl.ARRAY_BUFFER, data, opts.binding);
-    gl.vertexAttribPointer(attr.id, opts.size, opts.type, opts.normalized, opts.stride, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
     this.attributes[name] = attr;
@@ -123,23 +121,18 @@ Geometry.prototype.addAttribute = function(ctx, name, data, options) {
 Geometry.prototype.bind = function(ctx) {
     var gl = ctx.gl;
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._ibo);
-
     for (var k in this.attributes) {
         var attr = this.attributes[k];
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, attr.vbo);
+        gl.vertexAttribPointer(attr.id, attr.size, attr.type, attr.normalized, attr.stride, 0);
 
         if (attr.enabled) {
             gl.enableVertexAttribArray(attr.id);
         }
     }
-}
 
-Geometry.prototype.render = function(ctx) {
-    var gl = ctx.gl;
-
-    this.bind(ctx);
-    gl.drawElements(gl.TRIANGLES, this.length, gl.UNSIGNED_SHORT, 0);
-    this.unbind(ctx);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
 
 Geometry.prototype.unbind = function(ctx) {
@@ -152,8 +145,6 @@ Geometry.prototype.unbind = function(ctx) {
             gl.disableVertexAttribArray(attr.id);
         }
     }
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 }
 
 module.exports = Geometry;
