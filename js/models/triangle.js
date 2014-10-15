@@ -13,7 +13,7 @@ var Geometry = require('./geometry');
  * @constructor
  */
 function Triangle(ctx, p1, p2, p3, options) {
-    Model.call(this, ctx, options);
+    Model.call(this, ctx, 'triangle', options);
 
     var vertices = new Float32Array([
         p1[0], p1[1], p1[2],

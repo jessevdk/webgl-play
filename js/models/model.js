@@ -7,10 +7,14 @@ var math = require('../math/math');
  * Models can be organized hierarchically (see add, remove).
  *
  * @param ctx the context.
+ * @param name the name of the model.
  * @param options options.
  * @constructor
  */
-function Model(ctx, options) {
+function Model(ctx, name, options) {
+    /** The name. */
+    this.name = name;
+
     /** The material (see Material). */
     this.material = new Material(ctx);
 

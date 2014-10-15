@@ -14,7 +14,7 @@ var RenderGroup = require('./rendergroup');
  * @constructor
  */
 function Box(ctx, dx, dy, dz, options) {
-    Model.call(this, ctx, options);
+    Model.call(this, ctx, 'box', options);
 
     dx /= 2;
     dy /= 2;
