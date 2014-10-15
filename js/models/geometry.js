@@ -78,6 +78,16 @@ Geometry.prototype.removeAttribute = function(ctx, name) {
     delete this.attributes[name];
 }
 
+/**
+ * Add an attribute buffer. If an attribute buffer with the given
+ * name already exists, then this existing buffer is first removed.
+ *
+ * @param name the name of the attribute to remove.
+ * @param data the attribute data.
+ * @param options attribute options. Valid options map to
+ * parameters required for gl.bufferData and gl.vertexAttribPointer
+ * and include binding, size, type, normalized and stride.
+ */
 Geometry.prototype.addAttribute = function(ctx, name, data, options) {
     var gl = ctx.gl;
 
@@ -118,6 +128,11 @@ Geometry.prototype.addAttribute = function(ctx, name, data, options) {
     this._attribute_ids[attr.id] = true;
 }
 
+/**
+ * Bind the geometry in the current context.
+ *
+ * @param ctx the context.
+ */
 Geometry.prototype.bind = function(ctx) {
     var gl = ctx.gl;
 
@@ -135,6 +150,11 @@ Geometry.prototype.bind = function(ctx) {
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
 
+/**
+ * Unbind the geometry from the current context.
+ *
+ * @param ctx the context.
+ */
 Geometry.prototype.unbind = function(ctx) {
     var gl = ctx.gl;
 
