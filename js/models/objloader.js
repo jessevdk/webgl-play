@@ -1,4 +1,9 @@
 var utils = require('../utils/utils');
+var math = require('../math/math');
+var Model = require('./model');
+var Geometry = require('./geometry');
+var RenderGroup = require('./rendergroup');
+var RenderGroups = require('./rendergroups');
 
 function ensureObject(state, name) {
     if (state.object === null || typeof name !== 'undefined') {
@@ -8,6 +13,7 @@ function ensureObject(state, name) {
             normals: [],
             texcoords: [],
             shared_vertices: {},
+            groups: {},
 
             attributes: {
                 vertices: [],
@@ -16,7 +22,7 @@ function ensureObject(state, name) {
             }
         };
 
-        state.objects[name] = state.object;
+        state.objects[state.object.name] = state.object;
     }
 }
 
@@ -30,7 +36,7 @@ function ensureGroup(state, name) {
             indices: []
         };
 
-        state.object[state.group.name] = state.group;
+        state.object.groups[state.group.name] = state.group;
     }
 }
 
@@ -56,22 +62,10 @@ function faceNormal(p1, p2, p3) {
         w[i] = p3[i] - p1[i];
     }
 
-    // note: cross product
-    n[0] = v[1] * w[2] - v[2] * w[1];
-    n[1] = v[2] * w[0] - v[0] * w[2];
-    n[2] = v[0] * w[1] - v[1] * w[0];
-
-    // normalize
-    var l = 1 / Math.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
-
-    n[0] *= l;
-    n[1] *= l;
-    n[2] *= l;
-
-    return n;
+    return math.vec3.normalize(math.vec3.cross(n, v, w), n);
 }
 
-function parseObj(s) {
+function parseObj(ctx, ret, s) {
     var i = 0;
 
     var lineno = 1;
@@ -125,9 +119,9 @@ function parseObj(s) {
             ensureObject(state);
 
             if (parts.length === 4) {
-                state.object.vertices.push(parseFloat(parts[1]));
-                state.object.vertices.push(parseFloat(parts[2]));
-                state.object.vertices.push(parseFloat(parts[3]));
+                state.object.vertices.push(parseFloat(parts[1]),
+                                           parseFloat(parts[2]),
+                                           parseFloat(parts[3]));
             } else {
                 throw new Error('l' + lineno + ': Only 3 coordinates per vertex are currently supported');
             }
@@ -136,8 +130,8 @@ function parseObj(s) {
             ensureObject(state);
 
             if (parts.length === 3) {
-                state.object.texcoords.push(parseFloat(parts[1]));
-                state.object.texcoords.push(parseFloat(parts[2]));
+                state.object.texcoords.push(parseFloat(parts[1]),
+                                            parseFloat(parts[2]));
             } else {
                 throw new Error('l' + lineno + ': Only 2 coordinates per texture coordinate are currently supported');
             }
@@ -146,9 +140,9 @@ function parseObj(s) {
             ensureObject(state);
 
             if (parts.length === 4) {
-                state.object.normals.push(parseFloat(parts[1]));
-                state.object.normals.push(parseFloat(parts[2]));
-                state.object.normals.push(parseFloat(parts[3]));
+                state.object.normals.push(parseFloat(parts[1]),
+                                          parseFloat(parts[2]),
+                                          parseFloat(parts[3]));
             } else {
                 throw new Error('l' + lineno + ': Normals must have 3 coordinates');
             }
@@ -156,9 +150,9 @@ function parseObj(s) {
         case 'f':
             ensureGroup(state);
 
-            var gv = state.group.attributes.vertices;
-            var gn = state.group.attributes.normals;
-            var gi = state.group.attributes.indices;
+            var gv = state.object.attributes.vertices;
+            var gn = state.object.attributes.normals;
+            var gi = state.group.indices;
 
             if (parts.length === 4) {
                 var p = [parts[1].split('/'), parts[2].split('/'), parts[3].split('/')];
@@ -177,55 +171,70 @@ function parseObj(s) {
                     var ii = gv.length / 3;
                     var verts = [null, null, null];
 
+                    var hasT = (l > 1 && p[k][1].length > 0);
+                    var hasN = (l > 2 && p[k][2].length !== 0);
+
                     for (var k = 0; k < 3; k++) {
                         var h = parts[k];
-                        var seen = state.object.shared_vertices[h];
 
-                        // Reuse vertices for smooth surfaces
-                        if (state.group.smooth || p[0].length > 2) {
+                        // Reuse vertices for smooth surfaces, or those
+                        // with normals defined
+                        if (state.group.smooth || hasN) {
+                            var seen = state.object.shared_vertices[h];
+
                             if (typeof seen !== 'undefined') {
-                                gi.push(seen);
+                                gi.push(seen.index);
                                 continue;
                             } else {
-                                state.object.shared_vertices[h] = ii;
+                                state.object.shared_vertices[h] = {
+                                    index: ii
+                                };
                             }
                         }
 
-                        gi.push(ii++);
+                        gi.push(ii);
 
-                        var vi = parseInt(p[k][0]) * 3;
+                        var vi = (parseInt(p[k][0]) - 1) * 3;
 
                         // Keep verts to calculate face normal if necessary
                         verts[k] = [v[vi], v[vi + 1], v[vi + 2]];
 
-                        gv.push(verts[k][0]);
-                        gv.push(verts[k][1]);
-                        gv.push(verts[k][2]);
+                        gv.push(verts[k][0], verts[k][1], verts[k][2]);
 
-                        if (l > 1 && p[k][1].length > 0) {
+                        if (hasT) {
                             var ti = parseInt(p[k][1]) * 3;
-
-                            gt.push(t[ti]);
-                            gt.push(t[ti + 1]);
-                            gt.push(t[ti + 2]);
+                            gt.push(t[ti], t[ti + 1], t[ti + 2]);
                         }
 
-                        if (l > 2 && p[k][2].length > 0) {
+                        if (hasN) {
                             var ni = parseInt(p[k][2]) * 3;
-
-                            gn.push(n[ni]);
-                            gn.push(n[ni + 1]);
-                            gn.push(n[ni + 2]);
+                            gn.push(n[ni], n[ni + 1], n[ni + 2]);
+                        } else if (state.group.smooth) {
+                            gn.push(0, 0, 0);
                         }
+
+                        ii++;
                     }
 
-                    if (!state.group.smooth) {
+                    // Generate normal for non-smooth surfaces without
+                    // defined normals
+                    if (!hasN) {
                         var n = faceNormal(verts[0], verts[1], verts[2]);
 
-                        for (var k = 0; k < 3; k++) {
-                            gn.push(n[0]);
-                            gn.push(n[1]);
-                            gn.push(n[2]);
+                        // Use face normal for each vertex
+                        if (state.group.smooth) {
+                            for (var k = 0; k < 3; k++) {
+                                var h = parts[k];
+                                var idx = state.object.shared_vertices[h] * 3;
+
+                                gn[idx + 0] += n[0];
+                                gn[idx + 1] += n[1];
+                                gn[idx + 2] += n[2];
+                            }
+                        } else {
+                            for (var k = 0; k < 3; k++) {
+                                gn.push(n[0], n[1], n[2]);
+                            }
                         }
                     }
                 }
@@ -284,9 +293,62 @@ function parseObj(s) {
 
         lineno++;
     }
+
+    for (var o in state.objects) {
+        o = state.objects[o];
+
+        for (var i = 0; i < o.normals.length; i += 3) {
+            var nn = [0, 0, 0];
+
+            math.vec3.normalize(nn, o.normals.slice(i, i + 3));
+
+            o.normals[i + 0] = nn[0];
+            o.normals[i + 1] = nn[1];
+            o.normals[i + 2] = nn[2];
+        }
+    }
+
+    for (var o in state.objects) {
+        o = state.objects[o];
+
+        var m = new Model(ctx, o.name);
+        var geom = new Geometry(ctx,
+                                new Float32Array(o.attributes.vertices),
+                                new Float32Array(o.attributes.normals));
+
+        var groups = new RenderGroups();
+
+        for (var g in o.groups) {
+            g = o.groups[g];
+            groups.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices)));
+        }
+
+        m.geometry = groups;
+        ret.add(m);
+    }
+
+    return ret;
 }
 
-exports.load = function(filename, options) {
+/**
+ * Load a Wavefront OBJ from file. This asynchronously loads
+ * the given file and constructs a model from its definition.
+ * This function returns an initially empty model which will
+ * be filled in with child models representing all the objects
+ * from the loaded file when the file is loaded. It is valid
+ * to render the returned model immediately, but it will be
+ * empty until the file finishes loading.
+ *
+ * To be notified of the model being finished loading, you can
+ * specify a 'success(model)' callback in the options parameter.
+ * If an error occurred during loading, the 'error(request, message)'
+ * callback will be called instead.
+ *
+ * @param ctx the context.
+ * @param filename the filename.
+ * @param options optional options.
+ */
+exports.load = function(ctx, filename, options) {
     var req = new XMLHttpRequest();
 
     options = utils.merge({
@@ -294,13 +356,16 @@ exports.load = function(filename, options) {
         success: function() {}
     }, options);
 
+    var ret = new Model(ctx, filename);
+
     req.onload = function(ev) {
         var req = ev.target;
         var body = req.responseText;
 
         try {
-            options.success(parseObj());
+            options.success(parseObj(ctx, ret, body));
         } catch (e) {
+            console.error(e.stack);
             options.error(req, e.message);
         }
     }
@@ -310,7 +375,14 @@ exports.load = function(filename, options) {
     }
 
     req.open('get', filename, true);
-    req.send();
+
+    try {
+        req.send();
+    } catch (e) {
+        console.error(e.stack);
+    }
+
+    return ret;
 };
 
 // vi:ts=4:et
