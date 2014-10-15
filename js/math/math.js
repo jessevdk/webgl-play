@@ -59,10 +59,10 @@ transform.mul = transform.multiply;
  * Multiply the transform by another transform. Note that this
  * modifies the receiving transform.
  *
- * @param transform a transform to multiply with.
+ * @param other a transform to multiply with.
  */
-transform.prototype.mul = function(transform) {
-    return transform.mul(this, this, transform);
+transform.prototype.mul = function(other) {
+    return transform.mul(this, this, other);
 }
 
 transform.rotateX = function(out, a, rad) {
