@@ -81,12 +81,17 @@ RenderGroup.prototype.unbind = function(ctx) {
 RenderGroup.prototype.render = function(ctx, nobind) {
     var gl = ctx.gl;
 
+    if (this.length === 0) {
+        return;
+    }
+
     if (!nobind) {
         this.geometry.bind(ctx);
     }
 
     this.bind(ctx);
 
+    ctx._renderedSomething = true;
     gl.drawElements(this.type, this.length, gl.UNSIGNED_SHORT, 0);
 
     this.unbind(ctx);

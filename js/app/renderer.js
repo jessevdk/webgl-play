@@ -204,6 +204,8 @@ Renderer.prototype.do_render = function(t) {
     var gl = this.context.gl;
 
     if (this.program.render) {
+        this.context._renderedSomething = false;
+
         try {
             this.program.render.call(this.program, this.context);
         } catch (e) {
@@ -212,7 +214,7 @@ Renderer.prototype.do_render = function(t) {
             return;
         }
 
-        if (this._first_frame) {
+        if (this._first_frame && this.context._renderedSomething) {
             var dataurl = this.canvas.toDataURL();
             this._first_frame = false;
 
