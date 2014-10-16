@@ -112,7 +112,7 @@ function parseObj(ctx, ret, s) {
         }
 
         var line = s.slice(st, nl);
-        var parts = line.split(' ');
+        var parts = line.trim().split(/ +/);
 
         switch (parts[0]) {
         case 'v':
