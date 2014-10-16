@@ -191,6 +191,17 @@ function parseObj(ctx, ret, s) {
                     for (var k = 0; k < 3; k++) {
                         var h = parts[k];
 
+                        var vi = parseInt(p[k][0]);
+
+                        if (vi < 0) {
+                            vi = v.length - 1 + 3 * vi;
+                        } else {
+                            vi = (vi - 1) * 3;
+                        }
+
+                        // Keep verts to calculate face normal if necessary
+                        verts[k] = [v[vi], v[vi + 1], v[vi + 2]];
+
                         // Reuse vertices for smooth surfaces, or those
                         // with normals defined
                         if (state.group.smooth || hasN) {
@@ -207,12 +218,6 @@ function parseObj(ctx, ret, s) {
                         }
 
                         gi.push(ii);
-
-                        var vi = (parseInt(p[k][0]) - 1) * 3;
-
-                        // Keep verts to calculate face normal if necessary
-                        verts[k] = [v[vi], v[vi + 1], v[vi + 2]];
-
                         gv.push(verts[k][0], verts[k][1], verts[k][2]);
 
                         if (hasT) {
