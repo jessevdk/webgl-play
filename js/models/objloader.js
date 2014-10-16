@@ -273,13 +273,7 @@ function parseObj(ctx, ret, s) {
             }
 
             name = uniqueName(state.objects);
-
-            state.object = {
-                name: name
-            };
-
-            state.objects[name] = state.object;
-            state.group = null;
+            ensureObject(state, name);
             break;
         case 'g':
             if (parts.length === 1) {
