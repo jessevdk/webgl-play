@@ -221,12 +221,12 @@ function parseObj(ctx, ret, s) {
                         gv.push(verts[k][0], verts[k][1], verts[k][2]);
 
                         if (hasT) {
-                            var ti = parseInt(p[k][1]) * 3;
+                            var ti = (parseInt(p[k][1]) - 1) * 3;
                             gt.push(t[ti], t[ti + 1], t[ti + 2]);
                         }
 
                         if (hasN) {
-                            var ni = parseInt(p[k][2]) * 3;
+                            var ni = (parseInt(p[k][2]) - 1) * 3;
                             gn.push(n[ni], n[ni + 1], n[ni + 2]);
                         } else if (state.group.smooth) {
                             gn.push(0, 0, 0);
