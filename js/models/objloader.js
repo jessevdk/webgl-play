@@ -311,14 +311,16 @@ function parseObj(ctx, ret, s) {
     for (var o in state.objects) {
         o = state.objects[o];
 
-        for (var i = 0; i < o.normals.length; i += 3) {
+        var n = o.attributes.normals;
+
+        for (var i = 0; i < n.length; i += 3) {
             var nn = [0, 0, 0];
 
-            math.vec3.normalize(nn, o.normals.slice(i, i + 3));
+            math.vec3.normalize(nn, n.slice(i, i + 3));
 
-            o.normals[i + 0] = nn[0];
-            o.normals[i + 1] = nn[1];
-            o.normals[i + 2] = nn[2];
+            n[i + 0] = nn[0];
+            n[i + 1] = nn[1];
+            n[i + 2] = nn[2];
         }
     }
 
