@@ -302,6 +302,7 @@ function parseObj(ctx, ret, s) {
                     state.group.smooth = false;
                 }
             }
+            break;
         }
 
         lineno++;
