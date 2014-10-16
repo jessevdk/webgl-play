@@ -287,7 +287,7 @@ function parseObj(ctx, ret, s) {
             }
 
             if (state.object !== null) {
-                name = uniqueName(state.object, name);
+                name = uniqueName(state.object.groups, name);
             }
 
             ensureGroup(state, name);
