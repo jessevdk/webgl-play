@@ -258,7 +258,7 @@ function parseObj(ctx, ret, s) {
                     }
                 }
             } else {
-                throw new Error('l' + lineno + ': Only triangular faces are currently supported');
+                throw new Error('l' + lineno + ': Only triangular faces are currently supported (got ' + (parts.length - 1) + ' face vertices)');
             }
             break;
         case 'o':
