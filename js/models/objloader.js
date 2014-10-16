@@ -23,15 +23,16 @@ function ensureObject(state, name) {
         };
 
         state.objects.push(state.object);
+        state.group = null;
     }
 }
 
-function ensureGroup(state, name) {
+function ensureGroup(state, autosmooth, name) {
     ensureObject(state);
 
     if (state.group === null || typeof name !== 'undefined') {
         state.group = {
-            smooth: false,
+            smooth: autosmooth ? true : false,
             name: name || 'Default',
             indices: []
         };
@@ -65,7 +66,95 @@ function faceNormal(p1, p2, p3) {
     return math.vec3.normalize(math.vec3.cross(n, v, w), n);
 }
 
-function parseObj(ctx, ret, s) {
+function parseIndex(idx, l) {
+    if (idx < 0) {
+        return l - 1 + 3 * idx;
+    } else {
+        return (idx - 1) * 3;
+    }
+}
+
+function makeIndex(buffer, index, original, mapping) {
+    var i = mapping[index];
+
+    if (typeof i !== 'undefined') {
+        return i;
+    }
+
+    i = buffer.vertices.length / 3;
+    mapping[index] = i;
+
+    buffer.vertices.push(original.vertices[index], original.vertices[index + 1], original.vertices[index + 2]);
+    buffer.texcoords.push(original.texcoords[index], original.texcoords[index + 1]);
+    buffer.normals.push(original.normals[index], original.normals[index + 1], original.normals[index + 2]);
+
+    return i;
+}
+function splitObj(o) {
+    if (o.attributes.vertices.length / 3 <= (1 << 16)) {
+        return {
+            buffers: [o]
+        };
+    }
+
+    var ret = {
+        buffers: []
+    };
+
+    // Iterate over groups, keep appending to the current buffer,
+    // as long as its smaller than the maximum size. This might split
+    // groups as well, but can't be avoided anyway.
+    function makeBuffer() {
+        return {
+            attributes: {
+                vertices: [],
+                texcoords: [],
+                normals: []
+            },
+
+            groups: []
+        };
+    }
+
+    var buffer = makeBuffer();
+    ret.buffers.push(buffer);
+
+    var group = null;
+    var indexMap = {};
+
+    var l = 0;
+
+    for (var gi = 0; gi < o.groups.length; gi++) {
+        var g = o.groups[gi];
+        group = null;
+
+        for (var i = 0; i < g.indices; i += 3) {
+            if (l + 3 > (1 << 16)) {
+                buffer = makeBuffer();
+                ret.buffers.push(buffer);
+
+                l = 0;
+                group = null;
+                indexMap = {};
+            }
+
+            if (group === null) {
+                group = {
+                    name: g.name,
+                    indices: []
+                };
+
+                buffer.groups.push(group);
+            }
+
+            group.indices.push(makeIndex(buffer, g.indices[i + 0], o.attributes, indexMap),
+                               makeIndex(buffer, g.indices[i + 1], o.attributes, indexMap),
+                               makeIndex(buffer, g.indices[i + 2], o.attributes, indexMap));
+        }
+    }
+}
+
+function parseObj(ctx, ret, s, options) {
     var i = 0;
 
     var lineno = 1;
@@ -148,21 +237,7 @@ function parseObj(ctx, ret, s) {
             }
             break;
         case 'f':
-            // Check for maximum number of vertices per buffer
-            if (state.object !== null && (state.object.attributes.vertices.length + (parts.length - 1)) > (1 << 16)) {
-                // Create new object with the same name to hold the new vertices
-                var curobj = state.object;
-
-                ensureObject(state, state.object.name);
-
-                state.object.vertices = curobj.vertices;
-                state.object.texcoords = curobj.texcoords;
-                state.object.normals = curobj.normals;
-
-                state.group = null;
-            }
-
-            ensureGroup(state);
+            ensureGroup(state, options.autosmooth);
 
             var gv = state.object.attributes.vertices;
             var gn = state.object.attributes.normals;
@@ -174,7 +249,7 @@ function parseObj(ctx, ret, s) {
                 if (p[0].length !== p[1].length || p[0].length !== p[2].length) {
                     throw new Error('l' + lineno + ': Face must have same attributes for each vertex');
                 } else if (p[0].length > 3) {
-                    throw new Eerror('l' + lineno + ': Too many attributes');
+                    throw new Error('l' + lineno + ': Too many attributes');
                 } else {
                     var v = state.object.vertices;
                     var t = state.object.texcoords;
@@ -189,15 +264,9 @@ function parseObj(ctx, ret, s) {
                     var hasN = (l > 2 && p[k][2].length !== 0);
 
                     for (var k = 0; k < 3; k++) {
-                        var h = parts[k];
+                        var h = parts[k + 1];
 
-                        var vi = parseInt(p[k][0]);
-
-                        if (vi < 0) {
-                            vi = v.length - 1 + 3 * vi;
-                        } else {
-                            vi = (vi - 1) * 3;
-                        }
+                        var vi = parseIndex(parseInt(p[k][0]), v.length);
 
                         // Keep verts to calculate face normal if necessary
                         verts[k] = [v[vi], v[vi + 1], v[vi + 2]];
@@ -208,12 +277,10 @@ function parseObj(ctx, ret, s) {
                             var seen = state.object.shared_vertices[h];
 
                             if (typeof seen !== 'undefined') {
-                                gi.push(seen.index);
+                                gi.push(seen);
                                 continue;
                             } else {
-                                state.object.shared_vertices[h] = {
-                                    index: ii
-                                };
+                                state.object.shared_vertices[h] = ii;
                             }
                         }
 
@@ -221,12 +288,12 @@ function parseObj(ctx, ret, s) {
                         gv.push(verts[k][0], verts[k][1], verts[k][2]);
 
                         if (hasT) {
-                            var ti = (parseInt(p[k][1]) - 1) * 3;
+                            var ti = parseIndex(parseInt(p[k][1]), t.length);
                             gt.push(t[ti], t[ti + 1], t[ti + 2]);
                         }
 
                         if (hasN) {
-                            var ni = (parseInt(p[k][2]) - 1) * 3;
+                            var ni = parseIndex(parseInt(p[k][2]), n.length);
                             gn.push(n[ni], n[ni + 1], n[ni + 2]);
                         } else if (state.group.smooth) {
                             gn.push(0, 0, 0);
@@ -243,7 +310,7 @@ function parseObj(ctx, ret, s) {
                         // Use face normal for each vertex
                         if (state.group.smooth) {
                             for (var k = 0; k < 3; k++) {
-                                var h = parts[k];
+                                var h = parts[k + 1];
                                 var idx = state.object.shared_vertices[h] * 3;
 
                                 gn[idx + 0] += n[0];
@@ -290,10 +357,10 @@ function parseObj(ctx, ret, s) {
                 name = uniqueName(state.object.groups, name);
             }
 
-            ensureGroup(state, name);
+            ensureGroup(state, options.autosmooth, name);
             break;
         case 's':
-            ensureGroup(state);
+            ensureGroup(state, options.autosmooth);
 
             if (parts.length === 2) {
                 if (parts[1] === '1' || parts[1] === 'on') {
@@ -324,29 +391,25 @@ function parseObj(ctx, ret, s) {
         }
     }
 
-    var namemap = {};
-
     for (var i = 0; i < state.objects.length; i++) {
         var o = state.objects[i];
 
-        var m;
+        var m = new Model(ctx, o.name);
+        var so = splitObj(o);
 
-        if (o.name in namemap) {
-            m = namemap[o.name];
-        } else {
-            m = new Model(ctx, o.name);
-            m.geometry = new RenderGroups();
+        m.geometry = new RenderGroups();
 
-            namemap[o.name] = m;
-        }
+        for (var k = 0; k < so.buffers.length; k++) {
+            var buffer = so.buffers[k];
 
-        var geom = new Geometry(ctx,
-                                new Float32Array(o.attributes.vertices),
-                                new Float32Array(o.attributes.normals));
+            var geom = new Geometry(ctx,
+                                    new Float32Array(buffer.attributes.vertices),
+                                    new Float32Array(buffer.attributes.normals));
 
-        for (var gi = 0; gi < o.groups.length; gi++) {
-            var g = o.groups[gi];
-            m.geometry.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices)));
+            for (var gi = 0; gi < buffer.groups.length; gi++) {
+                var g = buffer.groups[gi];
+                m.geometry.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices)));
+            }
         }
 
         ret.add(m);
@@ -378,7 +441,8 @@ exports.load = function(ctx, filename, options) {
 
     options = utils.merge({
         error: function() {},
-        success: function() {}
+        success: function() {},
+        autosmooth: false
     }, options);
 
     var ret = new Model(ctx, filename);
@@ -388,7 +452,7 @@ exports.load = function(ctx, filename, options) {
         var body = req.responseText;
 
         try {
-            options.success(parseObj(ctx, ret, body));
+            options.success(parseObj(ctx, ret, body, options));
         } catch (e) {
             console.error(e.stack);
             options.error(req, e.message);
