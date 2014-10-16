@@ -13,7 +13,7 @@ function ensureObject(state, name) {
             normals: [],
             texcoords: [],
             shared_vertices: {},
-            groups: {},
+            groups: [],
 
             attributes: {
                 vertices: [],
@@ -22,7 +22,7 @@ function ensureObject(state, name) {
             }
         };
 
-        state.objects[state.object.name] = state.object;
+        state.objects.push(state.object);
     }
 }
 
@@ -36,7 +36,7 @@ function ensureGroup(state, name) {
             indices: []
         };
 
-        state.object.groups[state.group.name] = state.group;
+        state.object.groups.push(state.group);
     }
 }
 
@@ -44,7 +44,7 @@ function uniqueName(col, name) {
     var i = 1;
     var uname = name;
 
-    while (uname in col) {
+    while (col.indexOf(uname) !== -1) {
         uname = name + ' ' + i;
         i++;
     }
@@ -72,7 +72,7 @@ function parseObj(ctx, ret, s) {
     var faces = [];
 
     var state = {
-        objects: {},
+        objects: [],
         object: null,
         group: null
     };
@@ -148,6 +148,20 @@ function parseObj(ctx, ret, s) {
             }
             break;
         case 'f':
+            // Check for maximum number of vertices per buffer
+            if (state.object !== null && (state.object.attributes.vertices.length + (parts.length - 1)) > (1 << 16)) {
+                // Create new object with the same name to hold the new vertices
+                var curobj = state.object;
+
+                ensureObject(state, state.object.name);
+
+                state.object.vertices = curobj.vertices;
+                state.object.texcoords = curobj.texcoords;
+                state.object.normals = curobj.normals;
+
+                state.group = null;
+            }
+
             ensureGroup(state);
 
             var gv = state.object.attributes.vertices;
@@ -308,22 +322,31 @@ function parseObj(ctx, ret, s) {
         }
     }
 
-    for (var o in state.objects) {
-        o = state.objects[o];
+    var namemap = {};
 
-        var m = new Model(ctx, o.name);
+    for (var i = 0; i < state.objects.length; i++) {
+        var o = state.objects[i];
+
+        var m;
+
+        if (o.name in namemap) {
+            m = namemap[o.name];
+        } else {
+            m = new Model(ctx, o.name);
+            m.geometry = new RenderGroups();
+
+            namemap[o.name] = m;
+        }
+
         var geom = new Geometry(ctx,
                                 new Float32Array(o.attributes.vertices),
                                 new Float32Array(o.attributes.normals));
 
-        var groups = new RenderGroups();
-
-        for (var g in o.groups) {
-            g = o.groups[g];
-            groups.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices)));
+        for (var gi = 0; gi < o.groups.length; gi++) {
+            var g = o.groups[gi];
+            m.geometry.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices)));
         }
 
-        m.geometry = groups;
         ret.add(m);
     }
 
