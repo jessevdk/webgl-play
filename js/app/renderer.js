@@ -27,8 +27,7 @@ function JsContext(gl) {
     this.math = require('../math/math');
 
     /**
-     * The currently compiled and running js program. This evaluates to the same
-     * value as 'this'.
+     * The shared program.
      */
     this.program = {};
 
