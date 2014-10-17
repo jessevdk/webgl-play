@@ -82,6 +82,16 @@ App.prototype._extract_js_error_loc = function(e) {
     return null;
 }
 
+App.prototype._handle_js_error = function(e) {
+    var message = e.message;
+    var loc = this._extract_js_error_loc(e);
+
+    this.js_editor.runtime_error({
+        message: message,
+        location: loc
+    });
+}
+
 App.prototype._update_renderer = function() {
     var ret = this.renderer.update(this.document);
 
@@ -111,13 +121,7 @@ App.prototype._update_renderer = function() {
         }
 
         if (e !== null) {
-            var message = e.message;
-            var loc = this._extract_js_error_loc(e);
-
-            this.js_editor.runtime_error({
-                message: message,
-                location: loc
-            });
+            this._handle_js_error(e);
         }
 
         var progs = null;
@@ -353,10 +357,15 @@ App.prototype._init_canvas = function() {
     }).bind(this));
 
     this.renderer = new Renderer(this.canvas);
+
     this.renderer.on('notify::first-frame', (function(r, frame) {
         this.document.update({
             screenshot: frame
         });
+    }).bind(this));
+
+    this.renderer.on('error', (function(r, e) {
+        this._handle_js_error(e);
     }).bind(this));
 
     this._update_canvas_size();

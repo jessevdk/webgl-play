@@ -94,6 +94,7 @@ function Renderer(canvas) {
     this._first_frame = false;
 
     this._on_notify_first_frame = this.register_signal('notify::first-frame');
+    this._on_error = this.register_signal('error');
 }
 
 Renderer.prototype = Object.create(Signals.prototype);
@@ -209,6 +210,7 @@ Renderer.prototype.do_render = function(t) {
         try {
             this.program.render.call(this.program, this.context);
         } catch (e) {
+            this._on_error(e);
             console.error(e.stack);
             this.pause();
             return;
