@@ -120,7 +120,7 @@ Renderer.prototype.update = function(doc) {
 
     // Compile javascript
     try {
-        func = new Function(doc.js.data + '\n\nreturn {init: init, render: render};');
+        func = new Function(doc.js.data + '\n\nreturn {init: init, render: render, save: save};');
     } catch (e) {
         console.error(e.stack);
 
@@ -160,6 +160,16 @@ Renderer.prototype.update = function(doc) {
     var obj = {};
     var ret = null;
 
+    var state = {};
+
+    if (this.program && this.program.save) {
+        try {
+            state = this.program.save.call(this.program, this.context);
+        } catch (e) {
+            console.error(e.stack);
+        }
+    }
+
     if (func !== null) {
         try {
             ret = func.call(obj);
@@ -172,7 +182,7 @@ Renderer.prototype.update = function(doc) {
     }
 
     var nctx = this._create_context();
-    nctx.state = this.context.state;
+    nctx.state = state;
 
     if (ret !== null && ret.init) {
         try {
