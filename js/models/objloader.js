@@ -4,6 +4,9 @@ var Model = require('./model');
 var Geometry = require('./geometry');
 var RenderGroup = require('./rendergroup');
 var RenderGroups = require('./rendergroups');
+var Store = require('../app/store');
+
+var objectCache = {};
 
 function ensureObject(state, name) {
     if (state.object === null || typeof name !== 'undefined') {
@@ -98,6 +101,7 @@ function splitObj(o) {
     }
 
     var ret = {
+        name: o.name,
         buffers: []
     };
 
@@ -154,7 +158,7 @@ function splitObj(o) {
     }
 }
 
-function parseObj(ctx, ret, s, options) {
+function parseObj(s, options) {
     var i = 0;
 
     var lineno = 1;
@@ -375,8 +379,10 @@ function parseObj(ctx, ret, s, options) {
         lineno++;
     }
 
-    for (var o in state.objects) {
-        o = state.objects[o];
+    var ret = [];
+
+    for (var i = 0; i < state.objects.length; i++) {
+        var o = state.objects[i];
 
         var n = o.attributes.normals;
 
@@ -389,18 +395,22 @@ function parseObj(ctx, ret, s, options) {
             n[i + 1] = nn[1];
             n[i + 2] = nn[2];
         }
+
+        ret.push(splitObj(o));
     }
 
-    for (var i = 0; i < state.objects.length; i++) {
-        var o = state.objects[i];
+    return ret;
+}
 
+function createModel(ctx, ret, objects) {
+    for (var i = 0; i < objects.length; i++) {
+        var o = objects[i];
         var m = new Model(ctx, o.name);
-        var so = splitObj(o);
 
         m.geometry = new RenderGroups();
 
-        for (var k = 0; k < so.buffers.length; k++) {
-            var buffer = so.buffers[k];
+        for (var k = 0; k < o.buffers.length; k++) {
+            var buffer = o.buffers[k];
 
             var geom = new Geometry(ctx,
                                     new Float32Array(buffer.attributes.vertices),
@@ -414,6 +424,47 @@ function parseObj(ctx, ret, s, options) {
 
         ret.add(m);
     }
+
+    return ret;
+}
+
+function parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options) {
+    var key = filename;
+    var date = new Date(req.getResponseHeader('Date'));
+
+    // Try local/session cache first
+    var cached = objectCache[key];
+
+    if (cached && cached.date.getTime() === date.getTime()) {
+        // Already loaded from cache
+        options.success(ret);
+        return ret;
+    }
+
+    // Try storage cache
+    new Store(function(store) {
+        store.object_from_cache(key, date, function(store, objects) {
+            if (!objects) {
+                objects = parseObj(body, options);
+                store.object_to_cache(key, date, objects);
+            }
+
+            objectCache[key] = {
+                date: date,
+                objects: objects
+            };
+
+            // Remove models loaded from the cache
+            if (fromCache !== null) {
+                for (var i = 0; i < fromCache.length; i++) {
+                    ret.remove(fromCache[i]);
+                }
+            }
+
+            createModel(ctx, ret, objects);
+            options.success(ret);
+        });
+    });
 
     return ret;
 }
@@ -447,12 +498,21 @@ exports.load = function(ctx, filename, options) {
 
     var ret = new Model(ctx, filename);
 
+    // Load previous from cache if possible.
+    var cached = objectCache[filename];
+    var fromCache = null;
+
+    if (cached) {
+        createModel(ctx, ret, cached.objects);
+        fromCache = ret.children.slice(0);
+    }
+
     req.onload = function(ev) {
         var req = ev.target;
         var body = req.responseText;
 
         try {
-            options.success(parseObj(ctx, ret, body, options));
+            parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options);
         } catch (e) {
             console.error(e.stack);
             options.error(req, e.message);
