@@ -92,6 +92,7 @@ function Renderer(canvas) {
     this.canvas = canvas;
     this.context = this._create_context();
     this._first_frame = false;
+    this.program = null;
 
     this._on_notify_first_frame = this.register_signal('notify::first-frame');
     this._on_error = this.register_signal('error');
