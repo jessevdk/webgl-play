@@ -92,13 +92,53 @@ function Renderer(canvas) {
     this.context = this._create_context();
     this._first_frame = false;
     this.program = null;
+    this._mouse_pressed = false;
 
     this._on_notify_first_frame = this.register_signal('notify::first-frame');
     this._on_error = this.register_signal('error');
+
+    canvas.addEventListener('mousedown', this._on_mousedown.bind(this));
+    canvas.addEventListener('mouseup', this._on_mouseup.bind(this));
+    canvas.addEventListener('mousemove', this._on_mousemove.bind(this));
+    canvas.addEventListener('keydown', this._on_pass_event.bind(this));
+    canvas.addEventListener('keyup', this._on_pass_event.bind(this));
+    canvas.addEventListener('keypress', this._on_pass_event.bind(this));
+    canvas.addEventListener('scroll', this._on_pass_event.bind(this));
 }
 
 Renderer.prototype = Object.create(Signals.prototype);
 Renderer.prototype.constructor = Renderer;
+
+Renderer.prototype._on_mousedown = function(e) {
+    this._mouse_pressed = true;
+    this._event(e);
+}
+
+Renderer.prototype._on_mouseup = function(e) {
+    this._mouse_pressed = false;
+    this._event(e);
+}
+
+Renderer.prototype._on_mousemove = function(e) {
+    if (this._mouse_pressed) {
+        this._event(e);
+    }
+}
+
+Renderer.prototype._on_pass_event = function(e) {
+    this._event(e);
+}
+
+Renderer.prototype._event = function(e) {
+    if (this.program && this.program.event) {
+        try {
+            this.program.event.call(this.program, this.context, e);
+        } catch (e) {
+            this._on_error(e);
+            this.pause();
+        }
+    }
+}
 
 Renderer.prototype._create_context = function() {
     return new JsContext(this.canvas.getContext('webgl'));
@@ -120,7 +160,7 @@ Renderer.prototype.update = function(doc) {
 
     // Compile javascript
     try {
-        func = new Function(doc.js.data + '\n\nreturn {init: init, render: render, save: save};');
+        func = new Function(doc.js.data + '\n\nreturn {init: init, render: render, save: save, event: event};');
     } catch (e) {
         console.error(e.stack);
 
