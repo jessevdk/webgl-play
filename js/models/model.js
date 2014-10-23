@@ -62,7 +62,7 @@ function Model(ctx, name, options) {
  *
  * @param ctx the context.
  */
-Model.prototype.render = function(ctx) {
+Model.prototype.render = function(ctx, options) {
     if (this.material.visible === Material.INVISIBLE) {
         return;
     }
@@ -72,7 +72,7 @@ Model.prototype.render = function(ctx) {
     var fullTransform = this.fullTransform();
 
     for (var i = 0; i < this.children.length; i++) {
-        this.children[i].render(ctx);
+        this.children[i].render(ctx, options);
     }
 
     if (this.material.visible === Material.ONLY_CHILDREN || this.renderer === null) {
