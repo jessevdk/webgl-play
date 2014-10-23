@@ -132,6 +132,7 @@ Program.prototype.compile = function(gl) {
         attributes: attrs,
         is_default: this._is_default,
         error: error,
+        name: this._name
     };
 }
 
