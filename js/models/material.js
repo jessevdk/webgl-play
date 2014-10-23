@@ -69,6 +69,19 @@ Material._ignoreUniforms['material.specular.color'] = true;
 Material._ignoreUniforms['material.specular.intensity'] = true;
 Material._ignoreUniforms['material.specular.hardness'] = true;
 
+Material.prototype._mixColor = function(mecol, color, prop) {
+    mecol[prop] = math.vec4(mecol.color[0] * mecol.intensity * color[0],
+                            mecol.color[1] * mecol.intensity * color[1],
+                            mecol.color[2] * mecol.intensity * color[2],
+                            mecol.color[3] * color[3]);
+}
+
+Material.prototype.mixColors = function(color, prop) {
+    this._mixColor(this.uniforms.ambient, color, prop);
+    this._mixColor(this.uniforms.diffuse, color, prop);
+    this._mixColor(this.uniforms.specular, color, prop);
+}
+
 Material.prototype._setUniform = function(ctx, u, v, name) {
     if (typeof v === 'number') {
         ctx.gl.uniform1f(u, v);
