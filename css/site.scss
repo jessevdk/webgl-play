@@ -28,24 +28,12 @@ body, input {
   line-height: $header_height;
   color: lighten($fg_color, 20%);
 
-  #title {
-    padding-left: 12px;
-    font-weight: bold;
+  #document-title {
+    font-size: 0.6 * $header_height;
+    text-align: center;
     text-shadow: 1px 1px white;
-  }
-
-  #doc-title {
-    margin-left: 30px;
-    padding: 3px;
-    min-width: 300px;
-    border: 0;
-    background: none;
-    color: lighten($fg_color, 20%);
-    outline: none;
-  }
-
-  #doc-title:outline {
-    border: 0;
+    cursor: default;
+    font-weight: bold;
   }
 
   #buttons {

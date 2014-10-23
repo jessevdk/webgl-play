@@ -186,9 +186,7 @@ App.prototype._on_document_active_program_changed = function() {
 }
 
 App.prototype._on_document_title_changed = function() {
-    if (this.title.value !== this.document.title) {
-        this.title.value = this.document.title;
-    }
+    this.title.textContent = this.document.title;
 }
 
 App.prototype._load_doc = function(doc) {
@@ -232,7 +230,7 @@ App.prototype._load_doc = function(doc) {
         this.canvas.focus();
     }
 
-    this.title.value = doc.title;
+    this.title.textContent = doc.title;
 
     this._loading = false;
     this._update_renderer();
@@ -343,10 +341,6 @@ App.prototype._update_document = function(name, editor) {
     this._update_document_by(up);
 }
 
-App.prototype._on_doc_title_change = function() {
-    this._update_document_by({title: this.title.value});
-}
-
 App.prototype._init_canvas = function() {
     this.canvas = document.getElementById('view');
 
@@ -454,8 +448,6 @@ App.prototype._init_editors = function() {
     this.fragment_editor.on('notify::parsed', this._on_editor_parsed, this);
 }
 
-App.prototype._init_title = function() {
-    this.title = document.getElementById('doc-title');
 App.prototype._on_editor_parsed = function() {
     if (this._parsed_timeout !== 0) {
         clearTimeout(this._parsed_timeout);
@@ -464,8 +456,6 @@ App.prototype._on_editor_parsed = function() {
     this._parsed_timeout = setTimeout((function() {
         this._parsed_timeout = 0;
 
-    this.title.addEventListener('change', this._on_doc_title_change.bind(this));
-    this.title.addEventListener('input', this._on_doc_title_change.bind(this));
         if (this.vertex_editor.parsed !== null && this.fragment_editor.parsed !== null) {
             var linker = new glsl.linker.Linker(this.vertex_editor.parsed, this.fragment_editor.parsed);
             var errors = linker.link();
@@ -621,6 +611,144 @@ App.prototype._on_button_new_click = function() {
     }).bind(this));
 }
 
+App.prototype._on_title_mousedown = function(e) {
+    if (!this._info_popup) {
+        var f;
+
+        f = (function(e) {
+            this.title.removeEventListener('mouseup', f);
+            this._show_info_popup();
+        }).bind(this);
+
+        this.title.addEventListener('mouseup', f);
+    }
+}
+
+App.prototype._show_info_popup = function() {
+    var content = document.createElement('div');
+    content.classList.add('info-popup');
+
+    var title = document.createElement('input');
+    title.setAttribute('type', 'text');
+
+    title.classList.add('title');
+    title.value = this.document.title;
+    content.appendChild(title);
+
+    var f = (function() {
+        this._update_document_by({
+            title: title.value
+        });
+
+        this._save_current_doc_with_delay();
+    }).bind(this);
+
+    title.addEventListener('input', f);
+    title.addEventListener('change', f);
+
+    var description = document.createElement('div');
+    description.classList.add('description');
+
+    var desc = (function() {
+        if (this.document.description) {
+            description.classList.remove('empty');
+            return this.document.description;
+        } else {
+            description.classList.add('empty');
+            return 'Description not set. Double-click to start editing.';
+        }
+    }).bind(this);
+
+    description.innerHTML = marked(desc());
+    content.appendChild(description);
+
+    var close = new ui.Button(document.createElement('div'));
+
+    close.e.classList.add('close');
+    close.e.textContent = 'Close Editor';
+
+    content.appendChild(close.e);
+
+    var editor = document.createElement('textarea');
+
+    var saveEditor = (function() {
+        this._update_document_by({
+            description: editor.value
+        });
+
+        this._save_current_doc_with_delay();
+    }).bind(this);
+
+    editor.addEventListener('keydown', (function(e) {
+        if (e.keyCode === 27) {
+            saveEditor();
+
+            content.classList.remove('editing');
+            close.e.classList.remove('animate');
+
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }).bind(this));
+
+    editor.addEventListener('blur', (function(e) {
+        if (content.classList.contains('editing')) {
+            saveEditor();
+        }
+    }).bind(this));
+
+    content.appendChild(editor);
+
+    close.on('click', function() {
+        saveEditor();
+        description.innerHTML = marked(desc());
+
+        content.classList.remove('editing');
+        close.e.classList.remove('animate');
+    }, this);
+
+    description.addEventListener('dblclick', (function() {
+        editor.value = this.document.description || '';
+
+        content.classList.add('editing');
+        close.e.offsetWidth;
+        close.e.classList.add('animate');
+
+        editor.focus();
+
+        editor.selectionStart = 0;
+        editor.selectionEnd = 0;
+    }).bind(this));
+
+    var overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+
+    document.body.appendChild(overlay);
+    overlay.offsetWidth;
+    overlay.classList.add('animate');
+
+    this._info_popup = new ui.Popup(content, this.title);
+
+    this._info_popup.on('destroy', function() {
+        if (content.classList.contains('editing')) {
+            saveEditor();
+        }
+
+        this._info_popup = null;
+        document.body.removeChild(overlay);
+
+        if (this._lastFocus) {
+            this._lastFocus.focus();
+        }
+    }, this);
+}
+
+App.prototype._init_title = function() {
+    this.title = document.getElementById('document-title');
+
+    this.title.addEventListener('mousedown', this._on_title_mousedown.bind(this));
+}
+
 App.prototype._init = function() {
     this._store = new Store((function(store) {
         store.last((function(_, doc) {
@@ -648,9 +776,9 @@ App.prototype._init = function() {
     this._init_programs_bar();
     this._init_canvas();
     this._init_editors();
-    this._init_title();
     this._init_buttons();
     this._init_panels();
+    this._init_title();
 
     window.onbeforeunload = (function(e) {
         this._update_editors();

@@ -15,6 +15,8 @@ function Document() {
     };
 
     this.title = 'Untitled';
+    this.description = '';
+
     this.modification_time = new Date();
     this.creation_time = new Date();
     this.active_editor = null;
@@ -26,6 +28,7 @@ function Document() {
     this._default_program = this._active_program;
 
     this._on_notify_title = this.register_signal('notify::title');
+    this._on_notify_description = this.register_signal('notify::description');
     this._on_notify_before_active_program = this.register_signal('notify-before::active-program');
     this._on_notify_active_program = this.register_signal('notify::active-program');
     this._on_program_added = this.register_signal('program-added');
@@ -130,6 +133,11 @@ Document.prototype.update = function(changes) {
         this._on_notify_title();
     }
 
+    if ('description' in changes) {
+        this.description = changes.description;
+        this._on_notify_description();
+    }
+
     if ('active_editor' in changes) {
         this.active_editor = changes.active_editor;
     }
@@ -167,6 +175,7 @@ Document.prototype.serialize = function() {
             history: this.js.history,
         },
         title: this.title,
+        description: this.description,
         modification_time: this.modification_time,
         creation_time: this.creation_time,
         active_editor: this.active_editor
@@ -226,6 +235,7 @@ Document.deserialize = function(doc) {
     };
 
     ret.title = doc.title;
+    ret.description = doc.description;
     ret.modification_time = doc.modification_time;
     ret.creation_time = doc.creation_time;
 
