@@ -60,6 +60,10 @@ JsContext.prototype.view = function(view) {
         return this._view;
     }
 
+    if (this._view !== null) {
+        this._view.unbind(this);
+    }
+
     this._view = view;
     view.updateViewport(this);
 

@@ -1,5 +1,7 @@
 var Model = require('./model');
 var math = require('../math/math');
+var utils = require('../utils/utils');
+var Texture = require('./texture');
 
 /**
  * A basic view. A View is a collection of transform (inherited from model),
@@ -23,26 +25,38 @@ function View(ctx, projection, viewport, options) {
     this._projection = projection;
     this._projection_set = false;
 
+    this.options = utils.merge({
+        color: null,
+        depth: ctx.gl.LESS,
+        blend: false,
+        scissor: true,
+        cull: {
+            face: ctx.gl.BACK,
+            direction: ctx.gl.CCW
+        },
+        interactive: true,
+        buffer: null
+    }, options);
+
     /** The viewport, or unset to track the canvas dimensions. */
     this.viewport = viewport;
 
     /** The clear color, or null to disable clearing the color (defaults to null). */
-    this.color = null;
+    this.color = this.options.color;
 
     /** The depth function, or false to disable depth testing (defaults to gl.LESS). */
-    this.depth = ctx.gl.LESS;
+    this.depth = this.options.depth;
 
     /** The blend function ({sfactor:, dfactor:}), or false to disable blending (defaults to false). */
-    this.blend = false;
+    this.blend = this.options.blend;
 
     /** Whether to enable the scissor test matching the viewport (defaults to true). */
-    this.scissor = true;
+    this.scissor = this.options.scissor;
 
     /** Whether to cull faces ({face:, direction:}), or false to disable culling (defaults to {face: gl.BACK, direction: gl.CCW}). */
-    this.cull = {
-        face: ctx.gl.BACK,
-        direction: ctx.gl.CCW
-    }
+    this.cull = this.options.cull;
+
+    this._buffer = null;
 
     this._interactive = false;
     this.interactive(ctx, this.options.interactive);
@@ -233,6 +247,69 @@ View.prototype._on_event = function(ctx, e) {
         break;
     }
 }
+
+/**
+ * Get the currently used viewport. If the viewport property is set, then
+ * this function returns that. If not, then this function returns the automatically
+ * computed viewport from the canvas.
+ */
+View.prototype.currentViewport = function() {
+    if (this.viewport) {
+        return this.viewport;
+    } else {
+        return this._viewport;
+    }
+}
+
+View.prototype.bufferTextures = function(name) {
+    return this._buffer.buffers[name];
+}
+
+View.prototype.activeBufferTexture = function(name) {
+    var buf = this.bufferTextures(name);
+
+    return buf.textures[buf.active];
+}
+
+View.prototype.cycleBufferTextures = function(ctx, names) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this._buffer.fbo);
+
+    for (var i = 0; i < names.length; i++) {
+        var buffer = this._buffer.buffers[name];
+
+        if (buffer.textures.length === 1) {
+            continue;
+        }
+
+        buffer.active++;
+
+        if (buffer.active >= buffer.textures.length) {
+            buffer.active = 0;
+        }
+
+        gl.framebufferTexture2D(gl.FRAMEBUFFER,
+                                buffer.attachment,
+                                buffer.textureTarget,
+                                buffer.textures[buffer.active].id, 0);
+    }
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+}
+
+View.prototype._viewportChanged = function(vp) {
+    if (!this._viewport) {
+        return true;
+    }
+
+    for (var i = 0; i < 4; i++) {
+        if (this._viewport[i] != vp[i]) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 /**
  * Update the viewport of the view. This is called automatically
  * when the canvas dimensions change. When no explicit viewport is
@@ -241,10 +318,134 @@ View.prototype._on_event = function(ctx, e) {
  * @param ctx the context.
  */
 View.prototype.updateViewport = function(ctx) {
+    var gl = ctx.gl;
+    var vp;
+
     if (!this.viewport) {
-        this._viewport = [0, 0, ctx.gl.canvas.clientWidth, ctx.gl.canvas.clientHeight];
+        vp = [0, 0, gl.canvas.clientWidth, gl.canvas.clientHeight];
     } else {
-        this._viewport = this.viewport;
+        vp = this.viewport;
+    }
+
+    if (!this._viewportChanged(vp)) {
+        return;
+    }
+
+    this._viewport = vp
+
+    if (this.options.buffer !== null) {
+        if (this._buffer !== null) {
+            for (var k in this._buffer.buffers) {
+                var buffer = this._buffer.buffers[k];
+
+                for (var i = 0; i < buffer.textures.length; i++) {
+                    var texture = buffer.textures[i];
+
+                    if (texture.target !== gl.TEXTURE_CUBE) {
+                        gl.deleteTexture(texture.id);
+                    }
+                }
+            }
+
+            for (var i = 0; i < this._buffer.cubes.length; i++) {
+                gl.deleteTexture(this._buffer.cubes[i].id);
+            }
+
+            gl.deleteFramebuffer(this._buffer.fbo);
+        }
+
+        this._buffer = {
+            fbo: gl.createFramebuffer(),
+            buffers: {},
+            cubes: []
+        };
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this._buffer.fbo);
+
+        var hasDepth = false;
+
+        for (var k in this.options.buffer) {
+            var n = this.options.buffer[k];
+
+            var textureTarget = n.textureTarget || gl.TEXTURE_2D;
+            var attachment = n.attachment || gl.COLOR_ATTACHMENT0;
+            var internalFormat = n.internalFormat || gl.RGBA;
+            var format = n.format || gl.RGBA;
+
+            var textures = [];
+
+            if (attachment === gl.DEPTH_ATTACHMENT || attachment === gl.DEPTH_STENCIL_ATTACHMENT) {
+                hasDepth = true;
+            }
+
+            for (var i = 0; i < (n.n || 1); i++) {
+                var texture;
+
+                if (textureTarget !== gl.TEXTURE_2D) {
+                    if (i >= this._buffer.cubes.length) {
+
+                        texture = new Texture(ctx, gl.TEXTURE_CUBE);
+                        this._buffer.cubes.push(texture);
+                    } else {
+                        texture = this._buffer.cubes[i];
+                    }
+                } else {
+                    texture = new Texture(ctx);
+                }
+
+                texture.bind(ctx);
+
+                gl.texImage2D(textureTarget,
+                              0,
+                              internalFormat,
+                              gl.canvas.clientWidth,
+                              gl.canvas.clientHeight,
+                              0,
+                              format,
+                              n.type,
+                              null);
+
+                if (i === 0) {
+                    gl.framebufferTexture2D(gl.FRAMEBUFFER, attachment, textureTarget, texture.id, 0);
+                }
+
+                texture.unbind(ctx);
+                textures.push(texture);
+            }
+
+            this._buffer.buffers[k] = {
+                textures: textures,
+                attachment: attachment,
+                internalFormat: internalFormat,
+                format: format,
+                type: n.type,
+                textureTarget: textureTarget,
+                active: 0
+            };
+        }
+
+        if (!hasDepth) {
+            var rb = gl.createRenderbuffer();
+
+            gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, gl.canvas.clientWidth, gl.canvas.clientHeight);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rb);
+        }
+
+        var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+
+        if (status !== gl.FRAMEBUFFER_COMPLETE) {
+            var msgs = {};
+
+            msgs[gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT] = 'not all attachment points are complete';
+            msgs[gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS] = 'not all attached images have the same dimensions';
+            msgs[gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT] = 'no images are attached to the framebuffer';
+            msgs[gl.FRAMEBUFFER_UNSUPPORTED] = 'combination of internal formats of attached images violates restrictions';
+
+            throw new Error('Framebuffer not complete: ' + status + '(' + msgs[status] + ')');
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 }
 
@@ -262,6 +463,24 @@ View.prototype.projection = function(projection) {
     }
 }
 
+View.prototype.unbind = function(ctx) {
+    var gl = ctx.gl;
+
+    if (this._buffer) {
+        for (var k in this._buffer.buffers) {
+            var buffer = this._buffer.buffers[k];
+
+            gl.framebufferTexture2D(gl.FRAMEBUFFER,
+                                    buffer.attachment,
+                                    buffer.textureTarget,
+                                    null,
+                                    0);
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    }
+}
+
 /**
  * Binds the view to the given context. This sets the various gl
  * states corresponding to the view's settings. Note that this
@@ -273,6 +492,20 @@ View.prototype.projection = function(projection) {
 View.prototype.bind = function(ctx) {
     var c = this.color;
     var gl = ctx.gl;
+
+    if (this._buffer) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this._buffer.fbo);
+
+        for (var k in this._buffer.buffers) {
+            var buffer = this._buffer.buffers[k];
+
+            gl.framebufferTexture2D(gl.FRAMEBUFFER,
+                                    buffer.attachment,
+                                    buffer.textureTarget,
+                                    buffer.textures[buffer.active].id,
+                                    0);
+        }
+    }
 
     var vp = this._viewport;
     gl.viewport(vp[0], vp[1], vp[2], vp[3]);
