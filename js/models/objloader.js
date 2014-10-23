@@ -1,3 +1,5 @@
+'use strict';
+
 var utils = require('../utils/utils');
 var math = require('../math/math');
 var Model = require('./model');
@@ -87,15 +89,36 @@ function makeIndex(buffer, index, original, mapping) {
     i = buffer.vertices.length / 3;
     mapping[index] = i;
 
-    buffer.vertices.push(original.vertices[index], original.vertices[index + 1], original.vertices[index + 2]);
-    buffer.texcoords.push(original.texcoords[index], original.texcoords[index + 1]);
-    buffer.normals.push(original.normals[index], original.normals[index + 1], original.normals[index + 2]);
+    var i3 = index * 3;
+    var i2 = index * 2;
+
+    if (original.vertices.length > 0) {
+        buffer.vertices.push(original.vertices[i3 + 0],
+                             original.vertices[i3 + 1],
+                             original.vertices[i3 + 2]);
+    }
+
+    if (original.texcoords.length > 0) {
+        buffer.texcoords.push(original.texcoords[i2 + 0],
+                              original.texcoords[i2 + 1]);
+    }
+
+    if (original.normals.length > 0) {
+        buffer.normals.push(original.normals[i3 + 0],
+                            original.normals[i3 + 1],
+                            original.normals[i3 + 2]);
+    }
 
     return i;
 }
+
 function splitObj(o) {
-    if (o.attributes.vertices.length / 3 <= (1 << 16)) {
+    // Indices are uint16, and are thus limited to what they can actually index
+    var indexLimit = (1 << 16) / 2;
+
+    if (o.attributes.vertices.length / 3 <= indexLimit) {
         return {
+            name: o.name,
             buffers: [o]
         };
     }
@@ -126,18 +149,15 @@ function splitObj(o) {
     var group = null;
     var indexMap = {};
 
-    var l = 0;
-
     for (var gi = 0; gi < o.groups.length; gi++) {
         var g = o.groups[gi];
         group = null;
 
-        for (var i = 0; i < g.indices; i += 3) {
-            if (l + 3 > (1 << 16)) {
+        for (var i = 0; i < g.indices.length; i += 3) {
+            if ((buffer.attributes.vertices.length / 3) + 3 > indexLimit) {
                 buffer = makeBuffer();
                 ret.buffers.push(buffer);
 
-                l = 0;
                 group = null;
                 indexMap = {};
             }
@@ -151,11 +171,13 @@ function splitObj(o) {
                 buffer.groups.push(group);
             }
 
-            group.indices.push(makeIndex(buffer, g.indices[i + 0], o.attributes, indexMap),
-                               makeIndex(buffer, g.indices[i + 1], o.attributes, indexMap),
-                               makeIndex(buffer, g.indices[i + 2], o.attributes, indexMap));
+            group.indices.push(makeIndex(buffer.attributes, g.indices[i + 0], o.attributes, indexMap),
+                               makeIndex(buffer.attributes, g.indices[i + 1], o.attributes, indexMap),
+                               makeIndex(buffer.attributes, g.indices[i + 2], o.attributes, indexMap));
         }
     }
+
+    return ret;
 }
 
 function parseObj(s, options) {
@@ -275,16 +297,31 @@ function parseObj(s, options) {
                         // Keep verts to calculate face normal if necessary
                         verts[k] = [v[vi], v[vi + 1], v[vi + 2]];
 
+                        var ninit = math.vec3.create();
+
                         // Reuse vertices for smooth surfaces, or those
                         // with normals defined
                         if (state.group.smooth || hasN) {
-                            var seen = state.object.shared_vertices[h];
+                            if (options.shareVertices) {
+                                var seen = state.object.shared_vertices[h];
 
-                            if (typeof seen !== 'undefined') {
-                                gi.push(seen);
-                                continue;
+                                if (typeof seen !== 'undefined') {
+                                    gi.push(seen);
+                                    continue;
+                                } else {
+                                    state.object.shared_vertices[h] = ii;
+                                }
                             } else {
-                                state.object.shared_vertices[h] = ii;
+                                var sh = state.object.shared_vertices[h];
+
+                                if (!sh) {
+                                    state.object.shared_vertices[h] = [ii];
+                                } else {
+                                    var ni = sh[0] * 3;
+
+                                    ninit = gn.slice(ni, ni + 3);
+                                    state.object.shared_vertices[h].push(ii);
+                                }
                             }
                         }
 
@@ -300,7 +337,7 @@ function parseObj(s, options) {
                             var ni = parseIndex(parseInt(p[k][2]), n.length);
                             gn.push(n[ni], n[ni + 1], n[ni + 2]);
                         } else if (state.group.smooth) {
-                            gn.push(0, 0, 0);
+                            gn.push(ninit[0], ninit[1], ninit[2]);
                         }
 
                         ii++;
@@ -315,11 +352,21 @@ function parseObj(s, options) {
                         if (state.group.smooth) {
                             for (var k = 0; k < 3; k++) {
                                 var h = parts[k + 1];
-                                var idx = state.object.shared_vertices[h] * 3;
+                                var sh;
 
-                                gn[idx + 0] += n[0];
-                                gn[idx + 1] += n[1];
-                                gn[idx + 2] += n[2];
+                                if (options.shareVertices) {
+                                    sh = [state.object.shared_vertices[h]];
+                                } else {
+                                    sh = state.object.shared_vertices[h];
+                                }
+
+                                for (var si = 0; si < sh.length; si++) {
+                                    var idx = sh[si] * 3;
+
+                                    gn[idx + 0] += n[0];
+                                    gn[idx + 1] += n[1];
+                                    gn[idx + 2] += n[2];
+                                }
                             }
                         } else {
                             for (var k = 0; k < 3; k++) {
@@ -402,12 +449,12 @@ function parseObj(s, options) {
     return ret;
 }
 
-function createModel(ctx, ret, objects) {
+function createModel(ctx, ret, objects, options) {
     for (var i = 0; i < objects.length; i++) {
         var o = objects[i];
-        var m = new Model(ctx, o.name);
+        var m = new Model(ctx, o.name, options);
 
-        m.geometry = new RenderGroups();
+        m.renderer = new RenderGroups();
 
         for (var k = 0; k < o.buffers.length; k++) {
             var buffer = o.buffers[k];
@@ -418,8 +465,12 @@ function createModel(ctx, ret, objects) {
 
             for (var gi = 0; gi < buffer.groups.length; gi++) {
                 var g = buffer.groups[gi];
-                m.geometry.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices)));
+                m.renderer.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices)));
             }
+        }
+
+        if (m.renderer.groups.length === 1) {
+            m.renderer = m.renderer.groups[0];
         }
 
         ret.add(m);
@@ -428,8 +479,15 @@ function createModel(ctx, ret, objects) {
     return ret;
 }
 
+function cacheKey(filename, options) {
+    return filename + '::' + JSON.stringify({
+        autosmooth: options.autosmooth,
+        shareVertices: options.shareVertices
+    });
+}
+
 function parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options) {
-    var key = filename;
+    var key = cacheKey(filename, options);
     var date = new Date(req.getResponseHeader('Date'));
 
     // Try local/session cache first
@@ -461,7 +519,9 @@ function parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options) {
                 }
             }
 
-            createModel(ctx, ret, objects);
+            createModel(ctx, ret, objects, options);
+
+            options.complete(ret);
             options.success(ret);
         });
     });
@@ -493,17 +553,21 @@ exports.load = function(ctx, filename, options) {
     options = utils.merge({
         error: function() {},
         success: function() {},
-        autosmooth: false
+        complete: function() {},
+        autosmooth: false,
+        shareVertices: true
     }, options);
 
-    var ret = new Model(ctx, filename);
+    var ret = new Model(ctx, filename, options);
 
     // Load previous from cache if possible.
-    var cached = objectCache[filename];
+    var cached = objectCache[cacheKey(filename, options)];
     var fromCache = null;
 
     if (cached) {
-        createModel(ctx, ret, cached.objects);
+        createModel(ctx, ret, cached.objects, options);
+        options.complete(ret);
+
         fromCache = ret.children.slice(0);
     }
 
