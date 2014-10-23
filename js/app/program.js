@@ -90,6 +90,8 @@ Program.prototype.compile = function(gl) {
         'v_TexCoord': 2
     };
 
+    var error = null;
+
     if (v.id === 0 || f.id === 0) {
         if (v.id !== 0) {
             gl.deleteShader(v.id);
@@ -113,7 +115,13 @@ Program.prototype.compile = function(gl) {
         gl.linkProgram(p);
 
         if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-            throw new Error('could not link program');
+            error = 'linking: ' + gl.getProgramInfoLog(p);
+        } else {
+            gl.validateProgram(p);
+
+            if (!gl.getProgramParameter(p, gl.VALIDATE_STATUS)) {
+                error = 'validation: ' + gl.getProgramInfoLog(p);
+            }
         }
     }
 
@@ -122,7 +130,8 @@ Program.prototype.compile = function(gl) {
         fragment: f,
         program: p,
         attributes: attrs,
-        is_default: this._is_default
+        is_default: this._is_default,
+        error: error,
     };
 }
 
