@@ -1,3 +1,5 @@
+'use strict';
+
 var Signals = require('../signals/signals');
 var utils = require('../utils/utils');
 
@@ -135,7 +137,7 @@ JsContext.prototype.findProgram = function(name) {
     return this.programs[name];
 }
 
-function Renderer(canvas) {
+function Renderer(canvas, fullscreenParent, options) {
     Signals.call(this);
 
     this.options = utils.merge({
@@ -143,12 +145,18 @@ function Renderer(canvas) {
     }, options);
 
     this.canvas = canvas;
+    this._canvasParent = canvas.parentElement;
+    this._fullscreenParent = fullscreenParent;
+    this._isFullscreen = false;
+
     this.context = this._create_context();
     this.program = null;
     this._mouse_pressed = false;
     this._frameCounter = 0;
 
     this._on_notify_first_frame = this.register_signal('notify::first-frame');
+    this._on_notify_fullscreen = this.register_signal('notify::fullscreen');
+
     this._on_error = this.register_signal('error');
 
     var events = ['mousedown', 'mouseup', 'mousemove', 'keyup', 'keypress', 'wheel'];
@@ -165,11 +173,25 @@ Renderer.prototype.constructor = Renderer;
 
 Renderer.prototype._on_keydown = function(e) {
     this._event(e);
-}
 
-Renderer.prototype._on_mousemove = function(e) {
-    if (this._mouse_pressed) {
-        this._event(e);
+    if (!e.defaultPrevented) {
+        switch (e.keyCode) {
+        case 70: // f
+            this.toggleFullscreen();
+            break;
+        case 27: // escape
+            if (this._isFullscreen) {
+                this.toggleFullscreen();
+            }
+            break;
+        case 32: // Space
+            if (this._anim === 0) {
+                this.start();
+            } else {
+                this.pause();
+            }
+            break;
+        }
     }
 }
 
@@ -435,6 +457,27 @@ Renderer.prototype.pause = function() {
         cancelAnimationFrame(this._anim);
         this._anim = 0;
     }
+}
+
+Renderer.prototype.toggleFullscreen = function() {
+    var hasFocus = document.activeElement === this.canvas;
+
+    this.canvas.parentElement.removeChild(this.canvas);
+
+    if (this._isFullscreen) {
+        this._canvasParent.appendChild(this.canvas);
+        this.canvas.classList.remove('fullscreen');
+    } else {
+        this._fullscreenParent.appendChild(this.canvas);
+        this.canvas.classList.add('fullscreen');
+    }
+
+    if (hasFocus) {
+        this.canvas.focus();
+    }
+
+    this._isFullscreen = !this._isFullscreen;
+    this._on_notify_fullscreen();
 }
 
 module.exports = Renderer;

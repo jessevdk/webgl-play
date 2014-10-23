@@ -363,12 +363,16 @@ App.prototype._init_canvas = function() {
         this._update_canvas_size();
     }).bind(this));
 
-    this.renderer = new Renderer(this.canvas);
+    this.renderer = new Renderer(this.canvas, document.getElementById('content'));
 
     this.renderer.on('notify::first-frame', (function(r, frame) {
         this.document.update({
             screenshot: frame
         });
+    }).bind(this));
+
+    this.renderer.on('notify::fullscreen', (function() {
+        this._update_canvas_size();
     }).bind(this));
 
     this.renderer.on('error', (function(r, e) {
