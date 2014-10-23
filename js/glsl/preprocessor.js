@@ -422,11 +422,17 @@ Preprocessor.prototype._undef = function(tok, tokenizer) {
     }
 };
 
+Preprocessor.prototype._makeExpressionTokenizer = function(tok, s) {
+    var source = new glsl.source.Source(s);
+    source.offset(tok.location.end);
+
+    return new ExpressionTokenizer(source);
+}
+
 Preprocessor.prototype._if = function(tok, tokenizer) {
     var rest = tokenizer.remainder();
 
-    var exprtok = new ExpressionTokenizer(new glsl.source.Source(rest.text));
-
+    var exprtok = this._makeExpressionTokenizer(tok, rest.text);
     var expr = this._parse_expression(exprtok, -1);
 
     if (expr === null) {
@@ -496,7 +502,7 @@ Preprocessor.prototype._elif = function(tok, tokenizer) {
 
     var rest = tokenizer.remainder();
     var s = this._expand(this._strip_comments(rest.text));
-    var exprtok = new ExpressionTokenizer(new glsl.source.Source(s));
+    var exprtok = this._makeExpressionTokenizer(tok, s);
 
     var expr = this._parse_expression(exprtok, -1);
 
