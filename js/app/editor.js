@@ -2,10 +2,13 @@ require('./glsl-mode');
 
 var glsl = require('../glsl/glsl');
 var esprima = require('../vendor/esprima');
+var Signals = require('../signals/signals');
 
 window.esprima = esprima;
 
 function Editor(editor, ctx, type) {
+    Signals.call(this);
+
     this.editor = editor;
     this.type = type;
 
@@ -158,7 +161,13 @@ function Editor(editor, ctx, type) {
     this.editor.on('cursorActivity', this._on_cursor_activity.bind(this));
 
     editor.addKeyMap(keymap);
+
+    this.parsed = null;
+    this._on_notify_parsed = this.register_signal('notify::parsed');
 }
+
+Editor.prototype = Object.create(Signals.prototype);
+Editor.prototype.constructor = Editor;
 
 Editor.prototype._hint = function() {
     this.editor.showHint({
@@ -288,12 +297,13 @@ Editor.prototype._on_change_timeout_js = function() {
 }
 
 Editor.prototype._on_change_timeout_glsl = function() {
-    var p = new glsl.ast.Parser(this.value(), this.type, {
+    this.parsed = new glsl.ast.Parser(this.value(), this.type, {
         preprocessor: this._preprocessor_options
     });
 
     glsl.sst.Annotate(p);
     this._process_errors(this._internal_errors, this.parsed.errors());
+    this._on_notify_parsed();
 }
 
 Editor.prototype.runtime_error = function(error) {
