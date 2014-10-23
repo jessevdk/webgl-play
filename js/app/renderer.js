@@ -277,14 +277,27 @@ Renderer.prototype.update = function(doc) {
 
         var prog = p.compile(this.context.gl);
 
-        if (prog.vertex.error !== null || prog.fragment.error !== null) {
+        if (prog.vertex.error !== null || prog.fragment.error !== null || prog.error !== null) {
             if (errors.programs === null) {
                 errors.programs = {};
             }
 
+            if (prog.vertex.error !== null) {
+                console.error(p.name() + '(vertex): ' + prog.vertex.error);
+            }
+
+            if (prog.fragment.error !== null) {
+                console.error(p.name() + '(fragment): ' + prog.fragment.error);
+            }
+
+            if (prog.error !== null) {
+                console.error(p.name() + '(program): ' + prog.error);
+            }
+
             errors.programs[p.name()] = {
                 vertex: prog.vertex.error,
-                fragment: prog.fragment.error
+                fragment: prog.fragment.error,
+                program: prog.error
             };
 
             complete = false;
