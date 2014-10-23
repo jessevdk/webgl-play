@@ -260,11 +260,33 @@ function hint(editor, options) {
     var f = ctx[ctx.length - 1].toLowerCase();
     var matches = [];
 
+    var names = Object.getOwnPropertyNames(obj);
+    var seen = {};
+
+    for (var i = 0; i < names.length; i++) {
+        var k = names[i];
+        var m = match(k.toLowerCase(), f);
+
+        seen[k] = true;
+
+        if (m !== false) {
+            try {
+                matches.push({text: k, d: m.distance, pos: m.pos, obj: obj[k]});
+            } catch (e) {}
+        }
+    }
+
     for (var k in obj) {
+        if (k in seen) {
+            continue;
+        }
+
         var m = match(k.toLowerCase(), f);
 
         if (m !== false) {
-            matches.push({text: k, d: m.distance, pos: m.pos, obj: obj[k]});
+            try {
+                matches.push({text: k, d: m.distance, pos: m.pos, obj: obj[k]});
+            } catch (e) {}
         }
     }
 
@@ -307,7 +329,7 @@ function hint(editor, options) {
         var obj = completion.obj;
         var doc = null;
 
-        if (typeof obj.__doc__ !== 'undefined') {
+        if (obj !== null && typeof obj.__doc__ !== 'undefined') {
             doc = obj.__doc__;
         } else if (typeof parent.__doc__ !== 'undefined' &&
                    typeof parent.__doc__.members !== 'undefined' &&
@@ -318,7 +340,6 @@ function hint(editor, options) {
         }
 
         var ul = element.parentNode;
-
         var info = editor._infoPopup;
 
         if (typeof info === 'undefined') {
