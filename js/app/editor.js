@@ -15,7 +15,8 @@ function Editor(editor, ctx, type) {
     this._completionContext = {};
 
     this.options = {
-        check_timeout: 300
+        check_timeout: 300,
+        history_size: 100
     };
 
     var keymap = {
@@ -258,7 +259,31 @@ Editor.prototype.value = function(v) {
 
 Editor.prototype.history = function(v) {
     if (typeof v === 'undefined') {
-        return this.editor.getHistory();
+        var hist = this.editor.getHistory();
+
+        var ret = {
+            done: [],
+            undone: []
+        };
+
+        if (hist.undone.length > this.options.history_size) {
+            ret.undone = hist.undone.slice(0, this.options.history_size);
+        } else {
+            ret.undone = hist.undone;
+        }
+
+        if (ret.undone.length < this.options.history_size) {
+            var rem = this.options.history_size - ret.undone.length;
+
+            if (hist.done.length > rem) {
+                ret.done = hist.done.slice(0, rem);
+            } else {
+                ret.done = hist.done;
+            }
+        }
+
+
+        return ret;
     }
 
     this.editor.setHistory(v);
