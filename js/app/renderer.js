@@ -132,11 +132,15 @@ JsContext.prototype.findProgram = function(name) {
 function Renderer(canvas) {
     Signals.call(this);
 
+    this.options = utils.merge({
+        thumbnail_width: 80
+    }, options);
+
     this.canvas = canvas;
     this.context = this._create_context();
-    this._first_frame = false;
     this.program = null;
     this._mouse_pressed = false;
+    this._frameCounter = 0;
 
     this._on_notify_first_frame = this.register_signal('notify::first-frame');
     this._on_error = this.register_signal('error');
@@ -289,8 +293,66 @@ Renderer.prototype.update = function(doc) {
 
     this.program = ret;
 
-    this._first_frame = true;
+    this._frameCounter = 0;
     this.start();
+}
+
+Renderer.prototype._grab_image = function() {
+    var canvas = document.createElement('canvas');
+
+    var r = this.canvas.height / this.canvas.width;
+
+    // Half down sample N times until we reach thumbnail_width
+    var pw = this.canvas.width;
+    var ph = this.canvas.height;
+
+    var step = 1.8;
+
+    var w = Math.floor(pw / step);
+    var h = Math.floor(ph / step);
+
+    // Keep aspect ratio
+    canvas.width = Math.max(w, this.options.thumbnail_width);
+    canvas.height = Math.floor(canvas.width * r);
+
+    var ctx = canvas.getContext('2d');
+
+    var source = this.canvas;
+    ctx.globalCompositeOperation = 'copy';
+
+    // Iteratively scale down the original image size by a factor of 2
+    // until we reach the desired size. Doing it in one step gives poor
+    // results due to the standard (and non-controllable) 2x2 bilinear
+    // filter that most browsers use.
+    while (true) {
+        if (w < this.options.thumbnail_width) {
+            w = this.options.thumbnail_width;
+        }
+
+        h = Math.floor(w * r);
+        ph = Math.floor(pw * r);
+
+        ctx.drawImage(source, 0, 0, pw, ph, 0, 0, w, h);
+        source = canvas;
+
+        if (w === this.options.thumbnail_width) {
+            break;
+        }
+
+        pw = w;
+        w = Math.floor(w / step);
+    }
+
+    // Set canvas to the correct final size so we can get the data url from it.
+    // Note that doing this blanks the canvas, so we first get the image data,
+    // then resize the canvas and put back the image data. Finally we can get
+    // the correctly sized data URL.
+    var img = ctx.getImageData(0, 0, w, Math.floor(w * r));
+    canvas.width = w;
+    canvas.height = Math.floor(w * r);
+    ctx.putImageData(img, 0, 0);
+
+    return canvas.toDataURL();
 }
 
 Renderer.prototype.do_render = function(t) {
@@ -310,11 +372,13 @@ Renderer.prototype.do_render = function(t) {
             return;
         }
 
-        if (this._first_frame && this.context._renderedSomething) {
-            var dataurl = this.canvas.toDataURL();
-            this._first_frame = false;
+        if (this.context._renderedSomething) {
+            this._frameCounter++;
 
-            this._on_notify_first_frame(dataurl);
+            if (this._frameCounter === 1) {
+                var dataurl = this._grab_image();
+                this._on_notify_first_frame(dataurl);
+            }
         }
     }
 }
