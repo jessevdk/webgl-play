@@ -774,10 +774,10 @@ Builtins.prototype._define_builtin_function_gen = function(gentypes, rettype, na
         }
 
         this._define_builtin_function(rettype !== null ? rettype : g,
-                                name,
-                                sp,
-                                elemfunc,
-                                func);
+                                      name,
+                                      sp,
+                                      elemfunc,
+                                      func);
     }
 };
 
