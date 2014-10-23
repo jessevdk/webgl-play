@@ -166,4 +166,75 @@ input[type="text"] {
   }
 }
 
+$description_height: 400px;
+
+.popup .info-popup {
+  width: 600px;
+  position: relative;
+
+  .title {
+    font-weight: bold;
+    font-size: 1.4em;
+    background: transparent;
+    border: 0;
+    outline: none;
+    margin-bottom: 6px;
+    width: 100%;
+  }
+
+  .description, textarea {
+    background-color: white;
+    border: 1px solid $borders_color;
+    padding: 6px;
+    height: $description_height;
+    box-sizing: border-box;
+  }
+
+  .description {
+    overflow: auto;
+
+    &.empty {
+      color: lighten($fg_color, 25%);
+      font-style: italic;
+    }
+
+    p:first-child {
+      margin-top: 0;
+    }
+  }
+
+  textarea {
+    display: none;
+    width: 100%;
+    outline: none;
+  }
+
+  div.button.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
+    opacity: 0;
+    transition: opacity ease 500ms;
+  }
+
+  &.editing {
+    .description {
+      display: none;
+    }
+
+    textarea {
+      display: block;
+    }
+
+    div.button.close {
+      display: block;
+    }
+
+    div.button.close.animate {
+        opacity: 1;
+    }
+  }
+}
+
 /* vi:ts=2:et */
