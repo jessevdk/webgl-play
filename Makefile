@@ -49,30 +49,37 @@ SITE_EXTERNAL_DEPS =		\
 -include .gen/js/site.min.js.deps
 
 site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_EXTERNAL_DEPS)
-	@mkdir -p $(dir $@); \
-	full=no; \
-	for f in $(SITE_EXTERNAL_DEPS); do \
-		if [ $$f -nt $@ ]; then \
-			full=yes; \
-			break; \
-		fi; \
-	done; \
-	if [ "$$full" = "yes" ]; then \
-		printf "[\033[1mGEN\033[0m] $@ (\033[31mfull\033[0m)\n"; \
-		rm -f .gen/js/.cache; \
-		rm -f .gen/js/.dev-cache; \
-	else \
-		printf "[\033[1mGEN\033[0m] $@\n"; \
-	fi; \
-	if [ "$(ENV)" = "development" ]; then \
-		($(BROWSERIFYINC) -d -t brfs -t ./scripts/docify -o $@.tmp --cachefile .gen/js/.dev-cache js/site.js && $(EXORCIST) $@.map > $@ < $@.tmp && rm -f $@.tmp) || exit 1; \
-	else \
-		$(BROWSERIFYINC) -t brfs -t uglifyify -o $@ --cachefile .gen/js/.cache js/site.js || exit 1; \
-	fi; \
-	printf "[\033[1mGEN\033[0m] [deps]\n"; \
-	mkdir -p .gen/js; \
-	printf "site/js/site.min.js: " > .gen/js/site.min.js.deps; \
-	$(BROWSERIFY) --list js/site.js 2>/dev/null | tr "\\n" " " >> .gen/js/site.min.js.deps; \
+	@mkdir -p $(dir $@); 															\
+	full=no; 																		\
+	for f in $(SITE_EXTERNAL_DEPS); do 												\
+		if [ $$f -nt $@ ]; then 													\
+			full=yes; 																\
+			break; 																	\
+		fi; 																		\
+	done; 																			\
+	if [ "$$full" = "yes" ]; then 													\
+		printf "[\033[1mGEN\033[0m] $@ (\033[31mfull\033[0m)\n"; 					\
+		rm -f .gen/js/.cache; 														\
+		rm -f .gen/js/.dev-cache; 													\
+	else 																			\
+		printf "[\033[1mGEN\033[0m] $@\n"; 											\
+	fi; 																			\
+	if [ "$(ENV)" = "development" ]; then 											\
+		($(BROWSERIFYINC) -d 														\
+		 	-t brfs 																\
+		 	-t ./scripts/docify 													\
+		 	-o $@.tmp --cachefile .gen/js/.dev-cache js/site.js && 					\
+		 $(EXORCIST) $@.map > $@ < $@.tmp && rm -f $@.tmp) || exit 1; 				\
+	else 																			\
+		$(BROWSERIFYINC) 															\
+			-t brfs 																\
+			-t uglifyify -o $@ --cachefile .gen/js/.cache js/site.js || exit 1; 	\
+	fi; 																			\
+	printf "[\033[1mGEN\033[0m] [deps]\n"; 											\
+	mkdir -p .gen/js; 																\
+	printf "site/js/site.min.js: " > .gen/js/site.min.js.deps; 						\
+	$(BROWSERIFY) --list js/site.js 2>/dev/null 									\
+		| tr "\\n" " " >> .gen/js/site.min.js.deps; 								\
 	echo "" >> $@
 
 site/js/vendor.min.js: $(VENDORJS)
