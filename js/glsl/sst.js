@@ -930,6 +930,16 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                         }
                     }
                 } else {
+                    var numex = 1;
+
+                    if (tp.is_mat) {
+                        numex = tp.length * tp.length;
+                    } else if (tp.is_vec) {
+                        numex = tp.length;
+                    }
+
+                    this._error(node.location(), 'not enough values to fully construct type ' + tp.name + ' (got 0, but expected ' + numex + ')');
+
                     node.t.is_const_expression = true;
                     node.t.const_value = node.t.type.zero;
                 }
