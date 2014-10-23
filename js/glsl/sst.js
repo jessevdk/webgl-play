@@ -137,7 +137,7 @@ Annotator.prototype._pop_scope = function() {
 };
 
 Annotator.prototype._annotate_node = function(node) {
-    if (node === null) {
+    if (!node) {
         return;
     }
 
