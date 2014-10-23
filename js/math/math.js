@@ -464,6 +464,10 @@ transform.str = function(a) {
     return '{' + glMatrix.quat.str(a.orientation) + ', ' + glMatrix.vec3.str(a.position) + '}';
 }
 
+transform.prototype.str = function() {
+    return transform.str(this);
+}
+
 glMatrix.mat4.fromTransform = function(out, t) {
     return glMatrix.mat4.fromRotationTranslation(glMatrix.mat4.create(), t.orientation, t.position);
 }
