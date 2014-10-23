@@ -15,6 +15,7 @@ function App() {
     this.document = null;
 
     this._on_document_changed = this.register_signal('notify::document');
+    this._lastFocus = null;
 
     if (document.readyState === 'complete') {
         this._init();
@@ -350,6 +351,8 @@ App.prototype._init_canvas = function() {
     this.canvas.addEventListener('focus', (function(title) {
         t.classList.add('hidden');
         this._update_document_by({active_editor: null});
+
+        this._lastFocus = this.canvas;
     }).bind(this, t));
 
     this.canvas.addEventListener('blur', (function(title) {
@@ -410,6 +413,8 @@ App.prototype._init_editors = function() {
                     cursor: this[k].cursor()
                 }
             });
+
+            this._lastFocus = elems[k];
         }).bind(this, t, k));
 
         this[k].on('blur', (function(title) {
@@ -612,6 +617,12 @@ App.prototype._on_button_open_click = function() {
         }
 
         popup = new ui.Popup(content, this.buttons.open.e);
+
+        popup.on('destroy', (function() {
+            if (this._lastFocus) {
+                this._lastFocus.focus();
+            }
+        }).bind(this));
     }).bind(this));
 }
 
