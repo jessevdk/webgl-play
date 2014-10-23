@@ -41,7 +41,8 @@ body, input {
     margin: 0;
     padding: 0;
     list-style: none;
-    float: right;
+    position: absolute;
+    right: 0;
     margin-right: 12px;
 
     li {
