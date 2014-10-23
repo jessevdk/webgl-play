@@ -35,10 +35,17 @@ function Model(ctx, name, options) {
     /** The full transform (i.e. to world coordinates). This will
      * be computed and cached as needed when rendering.
      */
-    this.fullTransform = math.transform.create();
+    this.fullTransform = (function() {
+        return this.transform;
+    }).bind(this);
 
-    /** The geometry (see Geometry). */
-    this.geometry = null;
+    /** The geometry to render. This is usually a RenderGroup or
+      * RenderGroups, but may be anything with a .renderParts()
+      * function, returning an array of elements containing:
+      * 1) a .geometry field containing a Geometry.
+      * 2) a .render(ctx) function.
+      */
+    this.renderer = null;
 }
 
 /**
@@ -54,11 +61,7 @@ Model.prototype.render = function(ctx) {
 
     var view = ctx.view();
 
-    if (this.parent !== null) {
-        this.fullTransform = this.parent.fullTransform.clone().mul(this.transform);
-    } else {
-        this.fullTransform = math.transform.clone(this.transform);
-    }
+    var fullTransform = this.fullTransform();
 
     for (var i = 0; i < this.children.length; i++) {
         this.children[i].render(ctx);
@@ -69,7 +72,7 @@ Model.prototype.render = function(ctx) {
     }
 
     var uniforms = {
-        model: math.mat4.fromTransform(math.mat4.create(), this.fullTransform),
+        model: math.mat4.fromTransform(math.mat4.create(), fullTransform),
         view: null,
         modelView: null,
         projection: null,
@@ -151,6 +154,10 @@ Model.prototype.render = function(ctx) {
 Model.prototype.remove = function(child) {
     if (child.parent === this) {
         child.parent = null;
+
+        child.fullTransform = (function() {
+            return this.transform;
+        }).bind(child);
     }
 
     var i = this.children.indexOf(child);
@@ -176,6 +183,10 @@ Model.prototype.add = function(child) {
 
     child.parent = this;
     this.children.push(child);
+
+    child.fullTransform = math.transform.track(math.transform.create(), this, 'fullTransform', function(out, tr) {
+        return child.transform.preMul(tr());
+    });
 }
 
 module.exports = Model;
