@@ -1,23 +1,40 @@
 var math = require('../math/math');
+var utils = require('../utils/utils');
 
 /**
  * A basic material. A material contains a specification of the material
  * properties used to render a model. These material properties are transfered
  * to a glsl program as uniforms.
  *
- * @param ctx the context.
+ * @param uniforms initial material uniforms.
+ *
  * @constructor
  */
-function Material(ctx) {
+function Material(uniforms) {
     /**
      * A map of uniform names to values. Any values set in this map,
      * with a corresponding uniform in the material program, are
-     * automatically bound when the material is used. Use the
-     * various math.vec/mat types to map to the glsl types.
+     * automatically bound to the 'material' uniform when the material
+     * is used. Use the various math.vec/mat types to map to the glsl
+     * types.
      */
-    this.uniforms = {
-        color: math.vec4.fromValues(1, 0, 1, 0)
-    };
+    this.uniforms = utils.merge({
+        ambient: {
+            color: math.vec4(1.0, 1.0, 1.0, 1.0),
+            intensity: 0.1
+        },
+
+        diffuse: {
+            color: math.vec4(0.8, 0.8, 0.8, 1.0),
+            intensity: 0.8
+        },
+
+        specular: {
+            color: math.vec4(1.0, 1.0, 1.0, 1.0),
+            intensity: 0.5,
+            hardness: 50.0
+        }
+    }, uniforms);
 
     /**
      * Sets the visibility of the material. The value should be one of
@@ -36,7 +53,33 @@ function Material(ctx) {
     this.program = null;
 }
 
-Material.prototype._setUniform = function(ctx, u, v) {
+Material._ignoreUniforms = {
+    model: true,
+    view: true,
+    modelView: true,
+    projection: true,
+    modelViewProjection: true
+};
+
+Material._ignoreUniforms['material.ambient.color'] = true;
+Material._ignoreUniforms['material.ambient.intensity'] = true;
+Material._ignoreUniforms['material.diffuse.color'] = true;
+Material._ignoreUniforms['material.diffuse.intensity'] = true;
+Material._ignoreUniforms['material.specular.color'] = true;
+Material._ignoreUniforms['material.specular.intensity'] = true;
+Material._ignoreUniforms['material.specular.hardness'] = true;
+
+Material.prototype._setUniform = function(ctx, u, v, name) {
+    if (typeof v === 'number') {
+        ctx.gl.uniform1f(u, v);
+        return;
+    }
+
+    if (typeof v === 'boolean') {
+        ctx.gl.uniform1i(u, v);
+        return;
+    }
+
     switch (Object.getPrototypeOf(v)) {
     case Float32Array.prototype:
         switch (v.length) {
@@ -89,20 +132,64 @@ Material.prototype._setUniform = function(ctx, u, v) {
     }
 }
 
-Material.prototype._setUniforms = function(ctx, p, uniforms) {
+Material.prototype._setUniforms = function(ctx, p, uniforms, prefix, depth, seen) {
+    if (!seen) {
+        seen = [];
+    }
+
+    if (!depth) {
+        depth = 0;
+    }
+
+    if (depth > 4) {
+        throw new Error('maximum nested levels of uniforms exceeded (maximum is ' + depth + ')');
+    }
+
     if (!p.uniforms) {
         p.uniforms = {};
     }
 
     for (var k in uniforms) {
-        if (!(k in p.uniforms)) {
-            p.uniforms[k] = ctx.gl.getUniformLocation(p.program, k);
+        if (!uniforms.hasOwnProperty(k)) {
+            continue;
         }
 
-        var u = p.uniforms[k];
+        var fname;
+
+        if (prefix) {
+            fname = prefix + '.' + k;
+        } else {
+            fname = k;
+        }
+
+        var v = uniforms[k];
+
+        if (typeof v === 'object') {
+            if (v === null || seen.indexOf(v) !== -1) {
+                continue;
+            }
+
+            var proto = Object.getPrototypeOf(v);
+            seen.push(v);
+
+            if (proto !== Float32Array.prototype && proto !== Int32Array.prototype && proto !== Texture.prototype) {
+                this._setUniforms(ctx, p, v, fname, depth + 1, seen);
+                continue;
+            }
+        }
+
+        if (!(fname in p.uniforms)) {
+            p.uniforms[fname] = ctx.gl.getUniformLocation(p.program, fname);
+
+            if (p.uniforms[fname] === null && !Material._ignoreUniforms[fname]) {
+                console.error('could not find uniform location for ' + p.name + '.' + fname);
+            }
+        }
+
+        var u = p.uniforms[fname];
 
         if (u !== null) {
-            this._setUniform(ctx, u, uniforms[k]);
+            this._setUniform(ctx, u, v, fname);
         }
     }
 }
@@ -131,7 +218,7 @@ Material.prototype.bind = function(ctx, uniforms) {
         ctx.program = p;
     }
 
-    this._setUniforms(ctx, p, this.uniforms);
+    this._setUniforms(ctx, p, this.uniforms, 'material');
     this._setUniforms(ctx, p, uniforms);
 }
 
