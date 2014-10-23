@@ -1,5 +1,6 @@
 var Model = require('./model');
 var Geometry = require('./geometry');
+var RenderGroup = require('./rendergroup');
 
 /**
  * A simple triangle model. Creates a single triangle geometry for
@@ -31,7 +32,7 @@ function Triangle(ctx, p1, p2, p3, options) {
          0,  1,  2
     ]);
 
-    this.geometry = new RenderGroup(ctx, new Geometry(ctx, vertices, normals), indices);
+    this.renderer = new RenderGroup(ctx, new Geometry(ctx, vertices, normals), indices);
 }
 
 Triangle.prototype = Object.create(Model.prototype);

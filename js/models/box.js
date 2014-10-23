@@ -122,7 +122,7 @@ function Box(ctx, dx, dy, dz, options) {
         20, 22, 23,
     ]);
 
-    this.geometry = new RenderGroup(ctx, new Geometry(ctx, vertices, normals), indices);
+    this.renderer = new RenderGroup(ctx, new Geometry(ctx, vertices, normals), indices);
 }
 
 Box.prototype = Object.create(Model.prototype);

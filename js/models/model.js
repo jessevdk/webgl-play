@@ -64,7 +64,7 @@ Model.prototype.render = function(ctx) {
         this.children[i].render(ctx);
     }
 
-    if (this.material.visible === Material.ONLY_CHILDREN || this.geometry === null) {
+    if (this.material.visible === Material.ONLY_CHILDREN || this.renderer === null) {
         return;
     }
 
@@ -89,39 +89,58 @@ Model.prototype.render = function(ctx) {
     }
 
     var p = ctx.findProgram(this.material.program);
+    var parts = this.renderer.renderParts();
 
-    if (p !== null) {
+    var prevGeometry = null;
+
+    for (var i = 0; i < parts.length; i++) {
+        var part = parts[i];
+        var geometry = part.geometry;
         var needsRebind = false;
 
-        // Reconcile geometry attributes with program attributes
-        for (var attrname in this.geometry.attributes) {
-            var attr = this.geometry.attributes[attrname];
+        if (p !== null) {
+            // Reconcile geometry attributes with program attributes
+            for (var attrname in geometry.attributes) {
+                var attr = geometry.attributes[attrname];
 
-            if (!(attrname in p.attributes) || p.attributes[attrname] !== attr.id) {
-                needsRebind = true;
-                break;
+                if (!(attrname in p.attributes) || p.attributes[attrname] !== attr.id) {
+                    needsRebind = true;
+                    break;
+                }
+            }
+
+            if (needsRebind) {
+                var gl = ctx.gl;
+
+                p.attributes = {};
+                p.uniforms = {};
+
+                for (var attrname in geometry.attributes) {
+                    var attr = geometry.attributes[attrname];
+                    gl.bindAttribLocation(p.program, attr.id, attrname);
+
+                    p.attributes[attrname] = attr.id;
+                }
+
+                gl.linkProgram(p.program);
             }
         }
 
-        if (needsRebind) {
-            var gl = ctx.gl;
-
-            p.attributes = {};
-            p.uniforms = {};
-
-            for (var attrname in this.geometry.attributes) {
-                var attr = this.geometry.attributes[attrname];
-                gl.bindAttribLocation(p.program, attr.id, attrname);
-
-                p.attributes[attrname] = attr.id;
-            }
-
-            gl.linkProgram(p.program);
+        if (geometry !== prevGeometry) {
+            geometry.bind(ctx);
+            prevGeometry = geometry;
         }
+
+        if (needsRebind || i === 0) {
+            this.material.bind(ctx, uniforms);
+        }
+
+        part.render(ctx);
     }
 
-    this.material.bind(ctx, uniforms);
-    this.geometry.render(ctx);
+    if (prevGeometry !== null) {
+        prevGeometry.unbind(ctx);
+    }
 }
 
 /**

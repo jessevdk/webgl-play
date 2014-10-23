@@ -51,6 +51,18 @@ RenderGroup.prototype.update = function(ctx, geometry, indices, options) {
 }
 
 /**
+ * Get all render parts of the render group. Note that this just returns
+ * an array with a single element, this.
+ */
+RenderGroup.prototype.renderParts = function() {
+    if (this.length === 0) {
+        return [];
+    }
+
+    return [this];
+}
+
+/**
  * Bind the render group in the given context.
  *
  * @param ctx the context.
@@ -76,18 +88,9 @@ RenderGroup.prototype.unbind = function(ctx) {
  * Render the render group.
  *
  * @param ctx the context.
- * @param nobind (optional) disable binding the geometry.
  */
-RenderGroup.prototype.render = function(ctx, nobind) {
+RenderGroup.prototype.render = function(ctx) {
     var gl = ctx.gl;
-
-    if (this.length === 0) {
-        return;
-    }
-
-    if (!nobind) {
-        this.geometry.bind(ctx);
-    }
 
     this.bind(ctx);
 
@@ -95,10 +98,6 @@ RenderGroup.prototype.render = function(ctx, nobind) {
     gl.drawElements(this.type, this.length, gl.UNSIGNED_SHORT, 0);
 
     this.unbind(ctx);
-
-    if (!nobind) {
-        this.geometry.unbind(ctx);
-    }
 }
 
 module.exports = RenderGroup;

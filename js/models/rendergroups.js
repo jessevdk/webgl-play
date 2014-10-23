@@ -28,32 +28,10 @@ RenderGroups.prototype.remove = function(group) {
 }
 
 /**
- * Render all the render groups.
- *
- * @ctx the context.
+ * Get all render parts of the group.
  */
-RenderGroups.prototype.render = function(ctx) {
-    var geom = null;
-
-    for (var i = 0; i < this.groups.length; i++) {
-        var group = this.groups[i];
-
-        if (group.geometry !== geom) {
-            if (geom !== null) {
-                geom.unbind(ctx);
-            }
-
-            group.geometry.bind(ctx);
-        }
-
-        group.render(ctx, true);
-
-        geom = group.geometry;
-    }
-
-    if (geom !== null) {
-        geom.unbind(ctx);
-    }
+RenderGroups.prototype.renderParts = function() {
+    return this.groups;
 }
 
 module.exports = RenderGroups;
