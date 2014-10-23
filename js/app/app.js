@@ -5,6 +5,7 @@ var glsl = require('../glsl/glsl');
 var Store = require('./store');
 var Renderer = require('./renderer');
 var Signals = require('../signals/signals');
+var marked = require('../vendor/marked');
 
 require('./js-mode');
 
