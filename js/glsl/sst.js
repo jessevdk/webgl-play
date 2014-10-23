@@ -110,11 +110,16 @@ Annotator.prototype._push_scope = function(node) {
 
     node.types = [];
     node.type_map = {};
+    node.scopes = [];
 
     node.symbols = {};
 
     node.precisions = [];
     node.precision_map = {};
+
+    if (this._scope !== null) {
+        this._scope.scopes.push(node);
+    }
 
     node.parent_scope = this._scope;
 
