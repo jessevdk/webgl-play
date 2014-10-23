@@ -1,4 +1,5 @@
 var math = require('../math/math');
+var Texture = require('./texture');
 var utils = require('../utils/utils');
 
 /**
@@ -35,6 +36,9 @@ function Material(uniforms) {
             hardness: 50.0
         }
     }, uniforms);
+
+    this._texunit = 0;
+    this._textures = {};
 
     /**
      * Sets the visibility of the material. The value should be one of
@@ -140,6 +144,11 @@ Material.prototype._setUniform = function(ctx, u, v, name) {
             throw new Error('cannot set uniform ' + v);
         }
         break;
+    case Texture.prototype:
+        var unit = this._texunit++;
+        v.bind(ctx, unit);
+        ctx.gl.uniform1i(u, unit);
+        break;
     default:
         throw new Error('cannot set uniform ' + v);
     }
@@ -230,6 +239,9 @@ Material.prototype.bind = function(ctx, uniforms) {
         ctx.gl.useProgram(p.program);
         ctx.program = p;
     }
+
+    this._texunit = 0;
+    this._textures = {};
 
     this._setUniforms(ctx, p, this.uniforms, 'material');
     this._setUniforms(ctx, p, uniforms);
