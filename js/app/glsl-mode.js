@@ -80,30 +80,30 @@ var mode = function(config, modeopts) {
         startState: function(baseColumn) {
             return {
                 context: new Context((baseColumn || 0) - config.indentUnit, 0, '', false, null),
-                indented: 0
+                indented: 0,
+                startOfLine: true
             };
         },
 
         token: function(stream, state) {
             wsource._stream = stream;
 
-            var issol = stream.sol();
-
-            if (issol) {
+            if (stream.sol()) {
                 if (state.context.align === null) {
                     state.context.align = false;
                 }
 
                 state.indented = stream.indentation();
-
-                if (stream.peek() == '#') {
-                    stream.skipToEnd();
-                    return 'meta';
-                }
+                state.startOfLine = true;
             }
 
             if (stream.eatSpace()) {
                 return null;
+            }
+
+            if (state.startOfLine && stream.peek() == '#') {
+                stream.skipToEnd();
+                return 'meta';
             }
 
             if (state.context.align === null) {
@@ -111,6 +111,8 @@ var mode = function(config, modeopts) {
             }
 
             var tok = t.next();
+
+            state.startOfLine = false;
 
             switch (tok.id) {
             case t.T_IDENTIFIER:
