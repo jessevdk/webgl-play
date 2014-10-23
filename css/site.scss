@@ -125,11 +125,13 @@ input[type="text"] {
     .title {
       display: inline-block;
       font-weight: bold;
+      margin-left: 6px;
     }
 
     .modification-time {
       font-size: 0.9em;
       color: lighten($fg_color, 20%);
+      margin-top: 3px;
     }
 
     &:hover {
