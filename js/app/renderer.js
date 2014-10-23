@@ -1,4 +1,5 @@
 var Signals = require('../signals/signals');
+var utils = require('../utils/utils');
 
 /**
  * The javascript context.
