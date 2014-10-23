@@ -294,7 +294,12 @@ View.prototype.bind = function(ctx) {
     if (this.depth !== false) {
         cbit |= gl.DEPTH_BUFFER_BIT;
         gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(this.depth);
+
+        if (this.depth !== true) {
+            gl.depthFunc(this.depth);
+        } else {
+            gl.depthFunc(gl.LESS);
+        }
     } else {
         gl.disable(gl.DEPTH_TEST);
     }
