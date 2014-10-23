@@ -301,6 +301,7 @@ View.prototype.bind = function(ctx) {
 
     if (this.blend) {
         gl.enable(gl.BLEND);
+        gl.blendFunc(this.blend.sfactor, this.blend.dfactor);
     } else {
         gl.disable(gl.BLEND);
     }
