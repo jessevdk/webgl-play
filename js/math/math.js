@@ -15,10 +15,64 @@ function transform(orientation, position) {
 
     /** a vec3 representing the transforms position. */
     this.position = position;
+
+    this._dirty = 1;
 }
 
+/**
+ * Create a new identity transform. Note that this is equivalent to calling
+ * new transform(math.quat.create(), math.vec3.create())
+ */
 transform.create = function() {
     return new transform(glMatrix.quat.create(), glMatrix.vec3.create());
+}
+
+/**
+ * Track changes in one transform to derive a value whenever the transform
+ * changes. This can be used to lazily update transformations that depend
+ * on another transformation (for example the full transforms of models),
+ * only when it is needed. The return value is a function which can be
+ * called to obtain the transformed value. The provided function which
+ * should perform the transformation receives the @out parameter as its
+ * first value, and the original transform (i.e. @value[@property]) as its
+ * second. It should return the newly computed value, which may be just @out
+ * if the computation is done in-place.
+ *
+ * Note that the returned function also implements the tracking contract and
+ * can be used as a value transform to track, effectively allowing chained
+ * tracking of multiple tracked transforms.
+ *
+ * @param out the output value to be provided to the function.
+ * @param value the container object of the transform property.
+ * @param property the name of the property in @value which contains the transform to track.
+ * @param func a function (out = func(out, transform)) to call to perform the transformation when needed.
+ */
+transform.track = function(out, value, property, func) {
+    var prev;
+
+    var ret = function() {
+        var tr = value[property];
+
+        if (tr.orientation !== prev.orientation ||
+            tr.position !== prev.position ||
+            tr._dirty !== prev._dirty) {
+
+            out = func(out, tr);
+
+            prev.orientation = tr.orientation;
+            prev.position = tr.position;
+            prev._dirty = tr._dirty;
+        }
+
+        return out;
+    };
+
+    ret.orientation = null;
+    ret.position = null;
+    ret._dirty = 0;
+
+    prev = ret;
+    return ret;
 }
 
 transform.clone = function(a) {
@@ -37,6 +91,8 @@ transform.copy = function(out, a) {
     glMatrix.quat.copy(out.orientation, a.orientation);
     glMatrix.vec3.copy(out.position, a.position);
 
+    out._dirty++;
+
     return out;
 }
 
@@ -49,6 +105,8 @@ transform.multiply = function(out, a, b) {
 
     glMatrix.vec3.add(out.position, apos, glMatrix.vec3.transformQuat(out.position, bpos, aori));
     glMatrix.quat.mul(out.orientation, aori, bori);
+
+    out._dirty++;
 
     return out;
 }
@@ -69,6 +127,8 @@ transform.rotateX = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
     glMatrix.quat.rotateX(out.orientation, a.orientation, rad);
 
+    out._dirty++;
+
     return out;
 }
 
@@ -85,6 +145,8 @@ transform.prototype.rotateX = function(rad) {
 transform.rotateY = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
     glMatrix.quat.rotateY(out.orientation, a.orientation, rad);
+
+    out._dirty++;
 
     return out;
 }
@@ -103,6 +165,8 @@ transform.rotateZ = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
     glMatrix.quat.rotateZ(out.orientation, a.orientation, rad);
 
+    out._dirty++;
+
     return out;
 }
 
@@ -119,6 +183,8 @@ transform.prototype.rotateZ = function(rad) {
 transform.rotate = function(out, a, q) {
     glMatrix.vec3.copy(out.position, a.position);
     glMatrix.quat.mul(out.orientation, a.orientation, q);
+
+    out._dirty++;
 
     return out;
 }
@@ -138,6 +204,9 @@ transform.translateX = function(out, a, v) {
     glMatrix.vec3.copy(out.position, a.position);
 
     out.position[0] += v;
+
+    out._dirty++;
+
     return out;
 }
 
@@ -158,6 +227,9 @@ transform.translateY = function(out, a, v) {
     glMatrix.vec3.copy(out.position, a.position);
 
     out.position[1] += v;
+
+    out._dirty++;
+
     return out;
 }
 
@@ -178,6 +250,9 @@ transform.translateZ = function(out, a, v) {
     glMatrix.vec3.copy(out.position, a.position);
 
     out.position[2] += v;
+
+    out._dirty++;
+
     return out;
 }
 
@@ -196,6 +271,8 @@ transform.prototype.translateZ = function(v) {
 transform.translate = function(out, a, v) {
     glMatrix.quat.copy(out.orientation, a.orientation);
     glMatrix.vec3.add(out.position, a.position, v);
+
+    out._dirty++;
 
     return out;
 }
@@ -298,6 +375,8 @@ transform.translateSide = function(out, a, v) {
     var axis = transform.sideAxis(glMatrix.vec3.create(), a);
     glMatrix.vec3.scale(axis, axis, v);
 
+    out._dirty++;
+
     return transform.translate(out, a, axis);
 }
 
@@ -315,6 +394,8 @@ transform.translateUp = function(out, a, v) {
     var axis = transform.upAxis(glMatrix.vec3.create(), a);
     glMatrix.vec3.scale(axis, axis, v);
 
+    out._dirty++;
+
     return transform.translate(out, a, axis);
 }
 
@@ -331,6 +412,8 @@ transform.prototype.translateUp = function(v) {
 transform.translateForward = function(out, a, v) {
     var axis = transform.forwardAxis(glMatrix.vec3.create(), a);
     glMatrix.vec3.scale(axis, axis, v);
+
+    out._dirty++;
 
     return transform.translate(out, a, axis);
 }
@@ -350,6 +433,8 @@ transform.invert = function(out, a) {
     glMatrix.vec3.negate(out.position, a.position);
 
     glMatrix.vec3.transformQuat(out.position, out.position, out.orientation);
+
+    out._dirty++;
 
     return out;
 }
