@@ -335,7 +335,7 @@ View._make_perspective = function(fovy, aspect, near, far) {
  * @param near the near clipping plane (> 0).
  * @param far the far clipping plane (> 0).
  */
-View.perspective = function(ctx, fovy, aspect, near, far) {
+View.perspective = function(ctx, fovy, aspect, near, far, options) {
     var ap = aspect;
 
     if (!aspect) {
@@ -345,7 +345,7 @@ View.perspective = function(ctx, fovy, aspect, near, far) {
         ap = w / h;
     }
 
-    var ret = new View(ctx, View._make_perspective(fovy, ap, near, far));
+    var ret = new View(ctx, View._make_perspective(fovy, ap, near, far), null, options);
 
     if (!aspect) {
         ret.updateViewport = function(ctx) {
@@ -375,13 +375,13 @@ View.perspective = function(ctx, fovy, aspect, near, far) {
  * @param near the near clipping plane.
  * @param far the far clipping plane.
  */
-View.orthographic = function(ctx, bounds, near, far) {
+View.orthographic = function(ctx, bounds, near, far, options) {
     if (!bounds) {
         bounds = [0, 1, 0, 1];
     }
 
     var b = bounds;
-    return new View(ctx, math.mat4.ortho(math.mat4.create(), b[0], b[1], b[2], b[3], near, far));
+    return new View(ctx, math.mat4.ortho(math.mat4.create(), b[0], b[1], b[2], b[3], near, far), null, options);
 }
 
 module.exports = View;
