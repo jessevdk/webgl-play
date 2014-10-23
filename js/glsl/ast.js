@@ -1787,7 +1787,10 @@ Parser.prototype._parse_struct_specifier = function(tok) {
 
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
         var decl = this._parse_rule(this._parse_field_declaration, tok);
-        sdl.fields.push(decl);
+
+        if (!NoMatch.prototype.isPrototypeOf(decl)) {
+            sdl.fields.push(decl);
+        }
 
         if (decl.incomplete) {
             return sdl;
