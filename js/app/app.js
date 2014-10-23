@@ -471,7 +471,7 @@ App.prototype._init_programs_bar = function() {
 }
 
 App.prototype._init_buttons = function() {
-    var buttons = ['open', 'new'];
+    var buttons = ['open', 'new', 'copy'];
 
     this.buttons = {};
 
@@ -485,6 +485,17 @@ App.prototype._init_buttons = function() {
         button.on('click', this['_on_button_' + b + '_click'], this);
         this.buttons[b] = button;
     }
+}
+
+App.prototype._on_button_copy_click = function() {
+    var title = 'Copy of ' + this.document.title;
+
+    var doc = Document.deserialize(this.document.serialize());
+
+    doc.id = null;
+    doc.title = title;
+
+    this._load_doc(doc);
 }
 
 App.prototype._rel_date = function(date) {
