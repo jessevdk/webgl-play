@@ -506,6 +506,7 @@ Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize
 
     n.t = {
         type: n.type.t.type,
+        users: []
     };
 
     var Int = this.type_map[Tn.T_INT].type.t.type;

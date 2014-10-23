@@ -318,6 +318,8 @@ Annotator.prototype._annotate_named = function(node) {
 Annotator.prototype._annotate_param_decl = function(node) {
     this._annotate_node(node.type);
 
+    node.t.users = [];
+
     if (!node.is_array) {
         node.t.type = node.type.t.type;
     } else {
@@ -332,6 +334,7 @@ Annotator.prototype._annotate_variable_decl = function(node) {
         var name = node.names[i];
 
         this._annotate_node(name);
+        name.t.users = [];
 
         // Check if variable with the same name is already declared in this
         // scope
@@ -972,6 +975,8 @@ Annotator.prototype._annotate_variable_expr = function(node) {
                glsl.ast.ParamDecl.prototype.isPrototypeOf(sym)) {
         node.t.decl = sym;
         node.t.type = sym.t.type;
+
+        sym.t.users.push(node);
 
         if (glsl.ast.Named.prototype.isPrototypeOf(sym) && sym.t.is_const_expression) {
             node.t.is_const_expression = true;
