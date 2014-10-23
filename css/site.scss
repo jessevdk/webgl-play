@@ -79,6 +79,10 @@ body, input {
   width: 100%;
   outline: none;
   cursor: default;
+
+  &.fullscreen {
+    z-index: 400;
+  }
 }
 
 #content {
