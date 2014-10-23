@@ -180,4 +180,7 @@ Model.prototype.add = function(child) {
 
 module.exports = Model;
 
+var objloader = require('./objloader');
+Model.load = objloader.load;
+
 // vi:ts=4:et

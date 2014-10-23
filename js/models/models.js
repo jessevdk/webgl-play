@@ -7,8 +7,7 @@ module.exports = {
     Model: require('./model'),
     Quad: require('./quad'),
     Triangle: require('./triangle'),
-    View: require('./view'),
-    load: require('./objloader').load
+    View: require('./view')
 };
 
 // vi:ts=4:et
