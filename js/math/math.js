@@ -103,7 +103,10 @@ transform.multiply = function(out, a, b) {
     var bpos = b.position;
     var bori = b.orientation;
 
-    glMatrix.vec3.add(out.position, apos, glMatrix.vec3.transformQuat(out.position, bpos, aori));
+    var oribpos = glMatrix.vec3.create();
+    glMatrix.vec3.transformQuat(oribpos, bpos, aori)
+
+    glMatrix.vec3.add(out.position, apos, oribpos);
     glMatrix.quat.mul(out.orientation, aori, bori);
 
     out._dirty++;
