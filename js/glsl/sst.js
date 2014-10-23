@@ -432,14 +432,16 @@ Annotator.prototype._annotate_struct_decl = function(node) {
 
             this._annotate_node(name);
 
-            var f = node.t.type.declare_field(name.name.text, name.type.t.type);
-            f.decl = name;
+            if (name.type.t.type) {
+                var f = node.t.type.declare_field(name.name.text, name.type.t.type);
+                f.decl = name;
 
-            if (name.name.text in field_map) {
-                this._error(name.location(), 'a field named ' + name.name.text + ' already exists, previous declaration was at ' + field_map[name.name.text].location().inspect());
+                if (name.name.text in field_map) {
+                    this._error(name.location(), 'a field named ' + name.name.text + ' already exists, previous declaration was at ' + field_map[name.name.text].location().inspect());
+                }
+
+                field_map[name.name.text] = field;
             }
-
-            field_map[name] = field;
         }
     }
 
