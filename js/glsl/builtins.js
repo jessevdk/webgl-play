@@ -415,9 +415,17 @@ Builtins.options_from_context = function(ctx) {
         }
     }
 
-    return {
+    var ret = {
         constants: constants
     };
+
+    var exts = ctx.getSupportedExtensions();
+
+    if (exts.indexOf('OES_standard_derivatives') !== -1) {
+        ret.derivatives = true;
+    }
+
+    return ret;
 };
 
 Builtins.prototype._define_types = function() {
@@ -1233,6 +1241,13 @@ Builtins.prototype._define_functions = function() {
     if (this.type === glsl.source.VERTEX) {
         this._define_builtin_function(Tn.T_VEC4, 'textureCubeLod',
                                       [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
+    }
+
+    // Derivative functions
+    if (this._options.derivatives && this.type === glsl.source.FRAGMENT) {
+        this._define_builtin_gentype_function(null, 'dFdx', [null, 'x']);
+        this._define_builtin_gentype_function(null, 'dFdy', [null, 'x']);
+        this._define_builtin_gentype_function(null, 'fwidth', [null, 'x']);
     }
 };
 
