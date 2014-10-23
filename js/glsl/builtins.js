@@ -364,11 +364,15 @@ function Builtins(type, options) {
     this.operators = [];
     this.operator_map = {};
 
+    this.precisions = [];
+    this.precision_map = {};
+
     this._define_types();
     this._define_constants();
     this._define_variables();
     this._define_functions();
     this._define_operators();
+    this._define_precisions();
 }
 
 exports.Builtins = Builtins;
@@ -593,6 +597,44 @@ Builtins.prototype._define_variables = function() {
         break;
     }
 };
+
+Builtins.prototype._declare_precision = function(precision, typeid) {
+    var bloc = new glsl.source.BuiltinRange();
+    var type = this.type_map[typeid];
+
+    var prec = new glsl.ast.PrecisionStmt(dtn.create_token(Tn.T_PRECISION, dtn.token_name(Tn.T_PRECISION), bloc));
+
+    prec.qualifier = dtn.create_token(precision, dtn.token_name(precision), bloc);
+
+    var tp = new glsl.ast.TypeRef(dtn.create_token(typeid, dtn.token_name(typeid), bloc));
+    tp.complete();
+
+    tp.t = {
+        type: type.type.t.type
+    };
+
+    prec.type = tp;
+    prec.semi = dtn.create_token(Tn.T_SEMICOLON, ';', bloc);
+
+    this.precisions.push(prec);
+    this.precision_map[type.name] = prec;
+}
+
+Builtins.prototype._define_precisions = function() {
+    switch (this.type) {
+    case glsl.source.VERTEX:
+        this._declare_precision(Tn.T_HIGHP, Tn.T_FLOAT);
+        this._declare_precision(Tn.T_HIGHP, Tn.T_INT);
+        this._declare_precision(Tn.T_LOWP, Tn.T_SAMPLER2D);
+        this._declare_precision(Tn.T_LOWP, Tn.T_SAMPLERCUBE);
+        break;
+    case glsl.source.FRAGMENT:
+        this._declare_precision(Tn.T_MEDIUMP, Tn.T_INT);
+        this._declare_precision(Tn.T_LOWP, Tn.T_SAMPLER2D);
+        this._declare_precision(Tn.T_LOWP, Tn.T_SAMPLERCUBE);
+        break;
+    }
+}
 
 Builtins.prototype._elem_evaluator = function() {
     var l = 0;
