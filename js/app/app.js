@@ -121,7 +121,9 @@ App.prototype._update_renderer = function() {
     } else {
         var e = null;
 
-        if (ret.js.init !== null) {
+        if (ret.js.extensions !== null) {
+            e = ret.js.extensions;
+        } else if (ret.js.init !== null) {
             e = ret.js.init;
         } else if (ret.js.run !== null) {
             e = ret.js.run;
