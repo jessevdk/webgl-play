@@ -24,6 +24,10 @@
 
 .CodeMirror {
   background-color: lighten($bg_color, 5%);
+
+  pre {
+    line-height: 1.2em;
+  }
 }
 
 .CodeMirror-focused {
