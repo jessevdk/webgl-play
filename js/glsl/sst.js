@@ -1392,9 +1392,9 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
 
                 if (node.expression.t.is_const_expression) {
                     if (node.t.type.is_vec) {
-                        node.const_value[i] = node.expression.t.const_value[j];
+                        node.t.const_value[i] = node.expression.t.const_value[j];
                     } else {
-                        node.const_value = node.expression.t.const_value[j];
+                        node.t.const_value = node.expression.t.const_value[j];
                     }
                 }
             }
