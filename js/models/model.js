@@ -88,7 +88,7 @@ Model.prototype.render = function(ctx, options) {
     };
 
     if (view) {
-        uniforms.view = math.mat4.fromTransform(math.mat4.create(), view.transform.clone().invert());
+        uniforms.view = math.mat4.fromTransform(math.mat4.create(), view.originTransform());
         uniforms.modelView = math.mat4.mul(math.mat4.create(), uniforms.view, uniforms.model);
         uniforms.projection = view.projection();
         uniforms.modelViewProjection = math.mat4.mul(math.mat4.create(), uniforms.projection, uniforms.modelView);
