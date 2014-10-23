@@ -99,6 +99,14 @@ Model.prototype.render = function(ctx, options) {
         uniforms.modelViewProjection = uniforms.model;
     }
 
+    if (options && options.uniforms) {
+        for (var k in options.uniforms) {
+            if (options.uniforms.hasOwnProperty(k)) {
+                uniforms[k] = options.uniforms[k];
+            }
+        }
+    }
+
     var p = ctx.findProgram(this.material.program);
     var parts = this.renderer.renderParts();
 
