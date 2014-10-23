@@ -44,12 +44,195 @@ function View(ctx, projection, viewport, options) {
         direction: ctx.gl.CCW
     }
 
+    this._interactive = false;
+    this.interactive(ctx, this.options.interactive);
+
+    this.originTransform = math.transform.track(math.transform.create(), this, 'transform', function(out, tr) {
+        return math.transform.invert(out, tr);
+    });
+
     this.updateViewport(ctx);
 }
 
 View.prototype = Object.create(Model.prototype);
 View.prototype.constructor = View;
 
+View.prototype.interactive = function(ctx, v) {
+    if (typeof v === 'undefined') {
+        return this._interactive;
+    }
+
+    if (this._interactive) {
+        ctx._signals.off('event', this._on_event, this);
+    }
+
+    if (v === false) {
+        this._interactive = false;
+        return;
+    }
+
+    this._interactive = utils.merge({
+        origin: math.vec3.create(),
+
+        rotate: {
+            scroll_sensitivity: 0.01,
+            mouse_sensitivity: 0.01,
+        },
+
+        translate: {
+            mouse_sensitivity: 1,
+            scroll_sensitivity: 0.1
+        },
+
+        zoom: {
+            mouse_sensitivity: 0.1,
+            scroll_sensitivity: 0.1,
+            sensitivity: 0.1
+        }
+    }, v === true ? {} : v);
+
+    this._interactive._mouse_pressed = false;
+
+    ctx._signals.on('event', this._on_event, this);
+
+    ctx.gl.canvas.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+}
+
+View.prototype._rotate_dx_dy = function(dx, dy, s, origTransform) {
+    if (typeof origTransform !== 'undefined') {
+        math.transform.copy(this.transform, origTransform);
+    }
+
+    var lrotX = math.quat.setAxisAngle(math.quat.create(), this.transform.sideAxis(), -dy * s);
+
+    var rot = math.quat.mul(math.quat.create(),
+                            math.quat.setAxisAngle(math.quat.create(),
+                                                   [0, 1, 0],
+                                                   -dx * s),
+                            lrotX);
+
+    rot = math.quat.mul(rot, rot, this.transform.orientation);
+
+    var v = math.vec3.subtract(math.vec3.create(), this.transform.position, this._interactive.origin);
+    var otr = math.vec3.transformQuat(math.vec3.create(), v, math.quat.invert(math.quat.create(), this.transform.orientation));
+
+    var tr = math.vec3.transformQuat(math.vec3.create(), otr, rot);
+    math.transform.copy(this.transform, new math.transform(rot, math.vec3.add(tr, tr, this._interactive.origin)));
+
+    //var tr = math.transform.create().rotate(rot);
+
+    // Rotate with deltas, around origin
+    //this.transform.preMul(tr);
+}
+
+View.prototype._translate_dx_dy = function(dx, dy, sx, sy, origTransform) {
+    if (typeof origTransform !== 'undefined') {
+        math.transform.copy(this.transform, origTransform);
+    }
+
+    this.transform.translateSide(dx * sx).translateUp(dy * sy);
+}
+
+View.prototype._zoom_dx_dy = function(dx, dy, s, origTransform) {
+    if (typeof origTransform !== 'undefined') {
+        math.transform.copy(this.transform, origTransform);
+    }
+
+    this.transform.translateForward((dx + dy) * s);
+}
+
+View.prototype._on_event = function(ctx, e) {
+    switch (e.type) {
+    case 'wheel':
+        if (e.shiftKey) {
+            // Translate
+            this._translate_dx_dy(e.deltaX,
+                                  e.deltaY,
+                                  this._interactive.translate.scroll_sensitivity,
+                                  this._interactive.translate.scroll_sensitivity);
+        } else if (e.ctrlKey) {
+            // Zoom
+            this._zoom_dx_dy(e.deltaX, e.deltaY, this._interactive.zoom.scroll_sensitivity);
+        } else {
+            // Rotate
+            this._rotate_dx_dy(e.deltaX, e.deltaY, this._interactive.rotate.scroll_sensitivity);
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+    case 'mousedown':
+        this._interactive._mouse_pressed = {
+            x: e.offsetX,
+            y: e.offsetY,
+            button: e.button,
+            transform: this.transform.clone(),
+            translation: null
+        };
+        break;
+    case 'mousemove':
+        var mp = this._interactive._mouse_pressed;
+
+        if (mp !== null && mp.button === 0) {
+            if (e.shiftKey) {
+                // Translate
+                var l = math.vec3.len(math.vec3.subtract(math.vec3.create(),
+                                                         mp.transform.position,
+                                                         this._interactive.origin));
+
+                var proj = this.projection();
+                var vp = this.currentViewport();
+
+                var sensitivity = this._interactive.translate.mouse_sensitivity;
+
+                var scale = {
+                    x: (2 * l) / (proj[0] * vp[2]) * sensitivity,
+                    y: (2 * l) / (proj[5] * vp[3]) * sensitivity
+                };
+
+                var d = {
+                    x: mp.x - e.offsetX,
+                    y: e.offsetY - mp.y
+                }
+
+                this._translate_dx_dy(d.x,
+                                      d.y,
+                                      scale.x,
+                                      scale.y,
+                                      mp.transform);
+
+                this._interactive._mouse_pressed.translation = [d.x * scale.x, d.y * scale.y, 0];
+            } else if (e.ctrlKey) {
+                // Zoom
+                this._zoom_dx_dy(e.offsetX - mp.x,
+                                 e.offsetY - mp.y,
+                                 this._interactive.zoom.mouse_sensitivity,
+                                 mp.transform);
+            } else {
+                // Rotate
+                this._rotate_dx_dy(e.offsetX - mp.x,
+                                   e.offsetY - mp.y,
+                                   this._interactive.rotate.mouse_sensitivity,
+                                   mp.transform);
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        break;
+    case 'mouseup':
+        var mp = this._interactive._mouse_pressed;
+
+        if (mp !== null && mp.translation !== null) {
+            math.vec3.add(this._interactive.origin, this._interactive.origin, mp.translation);
+        }
+
+        this._interactive._mouse_pressed = null;
+        break;
+    }
+}
 /**
  * Update the viewport of the view. This is called automatically
  * when the canvas dimensions change. When no explicit viewport is
