@@ -81,6 +81,14 @@ function Annotator(ast, opts) {
         this._declare_variable(v.names[0]);
     }
 
+    // Push builtin precision into the scope
+    for (var i = 0; i < this._builtins.precisions.length; i++) {
+        var p = this._builtins.precisions[i];
+
+        this._scope.precisions.push(p);
+        this._scope.precision_map[p.type.t.type.name] = p;
+    }
+
     this._push_scope(ast);
     this._errors = [];
 }
@@ -104,6 +112,9 @@ Annotator.prototype._push_scope = function(node) {
     node.type_map = {};
 
     node.symbols = {};
+
+    node.precisions = [];
+    node.precision_map = {};
 
     node.parent_scope = this._scope;
 
@@ -655,6 +666,9 @@ Annotator.prototype._annotate_precision_stmt = function(node) {
     if (allowed.indexOf(tp) == -1) {
         this._error(node.location(), 'precision can only be set for int, float and sampler types');
     }
+
+    this._scope.precisions.push(node);
+    this._scope.precision_map[tp.name] = node;
 };
 
 Annotator.prototype._error_symbol_type_name = function(node) {
