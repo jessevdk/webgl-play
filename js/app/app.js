@@ -55,27 +55,30 @@ App.prototype.load_document = function(doc) {
 
 App.prototype._extract_js_error_loc = function(e) {
     var lines = e.stack.split('\n');
-    var ours = lines[1];
 
-    // Chrome
-    var anon = /, <anonymous>:([0-9]+):([0-9]+)\)$/;
-    var m = lines[1].match(anon);
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
 
-    if (m) {
-        return {
-            line: parseInt(m[1]) - 1,
-            column: parseInt(m[2])
+        // Chrome
+        var anon = /, <anonymous>:([0-9]+):([0-9]+)\)$/;
+        var m = line.match(anon);
+
+        if (m) {
+            return {
+                line: parseInt(m[1]) - 1,
+                column: parseInt(m[2])
+            }
         }
-    }
 
-    // Firefox
-    var func = /> Function:([0-9]+):([0-9]+)$/
-    m = lines[0].match(func);
+        // Firefox
+        var func = /> Function:([0-9]+):([0-9]+)$/
+        m = line.match(func);
 
-    if (func) {
-        return {
-            line: parseInt(m[1]),
-            column: parseInt(m[2])
+        if (m) {
+            return {
+                line: parseInt(m[1]),
+                column: parseInt(m[2])
+            }
         }
     }
 
@@ -86,10 +89,14 @@ App.prototype._handle_js_error = function(e) {
     var message = e.message;
     var loc = this._extract_js_error_loc(e);
 
-    this.js_editor.runtime_error({
-        message: message,
-        location: loc
-    });
+    if (loc) {
+        this.js_editor.runtime_error({
+            message: message,
+            location: loc
+        });
+    } else {
+        console.error(e.stack);
+    }
 }
 
 App.prototype._update_renderer = function() {
