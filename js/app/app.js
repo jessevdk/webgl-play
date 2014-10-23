@@ -598,8 +598,6 @@ App.prototype._on_button_open_click = function() {
                         if (doc) {
                             content.removeChild(li);
 
-                            console.log(this.document.id, doc.id);
-
                             if (this.document.id === doc.id) {
                                 this.document.id = null;
                             }
