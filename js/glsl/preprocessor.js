@@ -169,7 +169,7 @@ function Preprocessor(source, type, options) {
             case Tokenizer.T_PRAGMA:
                 break;
             case Tokenizer.T_EXTENSION:
-                this._extensions.push(tokenizer.remainder().text.strip());
+                this._extensions.push(tokenizer.remainder().text.trim());
                 break;
             case Tokenizer.T_VERSION:
                 break;
