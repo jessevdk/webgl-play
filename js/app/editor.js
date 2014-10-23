@@ -301,7 +301,10 @@ Editor.prototype._on_change_timeout_glsl = function() {
         preprocessor: this._preprocessor_options
     });
 
-    glsl.sst.Annotate(p);
+    glsl.sst.Annotate(this.parsed, {
+        builtins: this.builtins
+    });
+
     this._process_errors(this._internal_errors, this.parsed.errors());
     this._on_notify_parsed();
 }
