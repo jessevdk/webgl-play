@@ -126,6 +126,16 @@ transform.prototype.mul = function(other) {
     return transform.mul(this, this, other);
 }
 
+/**
+ * Pre-multiply the transform by another transform. Note that this
+ * modifies the receiving transform.
+ *
+ * @param other a transform to pre-multiply with.
+ */
+transform.prototype.preMul = function(other) {
+    return transform.mul(this, other, this);
+}
+
 transform.rotateX = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
     glMatrix.quat.rotateX(out.orientation, a.orientation, rad);
