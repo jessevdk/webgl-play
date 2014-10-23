@@ -203,7 +203,8 @@ Preprocessor.options_from_context = function(c) {
     var defines = {};
 
     var nmap = {
-        'WEBGL_draw_buffers': 'GL_EXT_draw_buffers'
+        'WEBGL_draw_buffers': 'GL_EXT_draw_buffers',
+        'OES_standard_derivatives': 'GL_OES_standard_derivatives'
     };
 
     if (c !== null) {
