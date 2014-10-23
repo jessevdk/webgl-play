@@ -720,7 +720,7 @@ Preprocessor.prototype._parse_expression = function(tokenizer, p) {
     var lhs = this._parse_expression_primary(tokenizer);
 
     if (lhs === null) {
-        return;
+        return null;
     }
 
     while (true) {
