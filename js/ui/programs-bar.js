@@ -277,10 +277,29 @@ ProgramsBar.prototype._on_program_error_changed = function(program) {
     var elem = this._find_by_name(program.name());
 
     if (elem) {
-        if (program.error()) {
+        var e = program.error();
+
+        if (e) {
             elem.classList.add('error');
+
+            var errors = [];
+
+            if (e.vertex !== null) {
+                errors.push(e.vertex);
+            }
+
+            if (e.fragment !== null) {
+                errors.push(e.fragment);
+            }
+
+            if (e.program !== null) {
+                errors.push(e.program);
+            }
+
+            elem.setAttribute('title', errors.join('\n'));
         } else {
             elem.classList.remove('error');
+            elem.setAttribute('title', '');
         }
     }
 }

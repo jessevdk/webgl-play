@@ -8,11 +8,11 @@ function Popup(child, on) {
     Widget.call(this, this._outer);
 
     this._on_window_mousedown = (function(e) {
-        if (e.target !== this._outer) {
+        var ppos = this.page_position(this._outer);
+
+        if (e.clientX < ppos.x || e.clientX > ppos.x + this._outer.offsetWidth ||
+            e.clientY < ppos.y || e.clientY > ppos.y + this._outer.offsetHeight) {
             this.destroy();
-        } else {
-            e.preventDefault();
-            e.stopPropagation();
         }
     }).bind(this);
 
@@ -24,6 +24,8 @@ function Popup(child, on) {
 
     window.addEventListener('mousedown', this._on_window_mousedown);
     window.addEventListener('keydown', this._on_window_keydown);
+
+    this._on_destroy = this.register_signal('destroy');
 }
 
 Popup.prototype = Object.create(Widget.prototype);
@@ -34,6 +36,8 @@ Popup.prototype.destroy = function() {
 
     window.removeEventListener('mousedown', this._on_window_mousedown);
     window.removeEventListener('keydown', this._on_window_keydown);
+
+    this._on_destroy();
 }
 
 Popup.prototype._build = function() {
@@ -97,11 +101,6 @@ Popup.prototype._build = function() {
     outer.style.top = pos.y + 'px';
 
     this._outer = outer;
-
-    this._outer.addEventListener('mousedown', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    });
 }
 
 module.exports = Popup;

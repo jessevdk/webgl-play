@@ -1,6 +1,6 @@
 var Editor = require('./editor');
 var Document = require('./document');
-var widgets = require('../widgets/widgets');
+var ui = require('../ui/ui');
 var glsl = require('../glsl/glsl');
 var Store = require('./store');
 var Renderer = require('./renderer');
@@ -283,7 +283,7 @@ App.prototype._init_panels = function() {
     for (var i = 0; i < panels.length; i++) {
         var p = panels[i];
 
-        this.panels[p.id] = new widgets.Panel(p);
+        this.panels[p.id] = new ui.Panel(p);
     }
 
     this.panels['panel-programs'].on('resized', (function() {
@@ -445,7 +445,7 @@ App.prototype._init_title = function() {
 }
 
 App.prototype._init_programs_bar = function() {
-    this.programs_bar = new widgets.ProgramsBar(document.getElementById('programs-sidebar'), this);
+    this.programs_bar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
 }
 
 App.prototype._init_buttons = function() {
@@ -456,7 +456,7 @@ App.prototype._init_buttons = function() {
     for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
 
-        var button = new widgets.Button(document.getElementById('button-' + b), {
+        var button = new ui.Button(document.getElementById('button-' + b), {
             nostyle: true
         });
 
@@ -577,7 +577,7 @@ App.prototype._on_button_open_click = function() {
             content.appendChild(li);
         }
 
-        popup = new widgets.Popup(content, this.buttons.open.e);
+        popup = new ui.Popup(content, this.buttons.open.e);
     }).bind(this));
 }
 

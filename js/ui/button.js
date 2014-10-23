@@ -1,9 +1,18 @@
 var Widget = require('./widget');
+var utils = require('../utils/utils');
 
 function Button(e, opts) {
+    if (!e) {
+        e = document.createElement('div');
+    }
+
+    opts = utils.merge({
+        nostyle: false
+    }, opts);
+
     Widget.call(this, e);
 
-    if (!opts || !opts.nostyle) {
+    if (!opts.nostyle) {
         e.classList.add('button');
     }
 
