@@ -70,6 +70,46 @@ JsContext.prototype.view = function(view) {
     view.bind(this);
 }
 
+JsContext.prototype.requireExtension = function(ext) {
+    var e = this.gl.getExtension(ext);
+
+    if (!e) {
+        throw new Error('Missing required extension ' + ext);
+    }
+
+    return e;
+}
+
+JsContext.prototype.requireExtensions = function(exts) {
+    var ret = {};
+
+    for (var i = 0; i < exts.length; i++) {
+        var e = this.requireExtension(exts[i]);
+
+        ret[exts[i]] = e;
+    }
+
+    return ret;
+}
+
+JsContext.prototype.getExtension = function(ext) {
+    return this.gl.getExtension(ext);
+}
+
+JsContext.prototype.getExtensions = function(exts) {
+    var ret = {};
+
+    for (var i = 0; i < exts.length; i++) {
+        var e = this.gl.getExtension(exts[i]);
+
+        if (e) {
+            ret[exts[i]] = e;
+        }
+    }
+
+    return ret;
+}
+
 /**
  * Find a GLSL program by name. If the name is not given, or null, then
  * the default program will be returned.
