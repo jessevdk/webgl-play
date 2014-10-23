@@ -43,6 +43,11 @@ function JsContext(gl) {
      * between recompilations of your program.
      */
     this.state = {};
+
+    this._signals = new Signals();
+    this._signals.on_event = this._signals.register_signal('event');
+
+    this._view = null;
 }
 
 /**
@@ -146,25 +151,19 @@ function Renderer(canvas) {
     this._on_notify_first_frame = this.register_signal('notify::first-frame');
     this._on_error = this.register_signal('error');
 
-    canvas.addEventListener('mousedown', this._on_mousedown.bind(this));
-    canvas.addEventListener('mouseup', this._on_mouseup.bind(this));
-    canvas.addEventListener('mousemove', this._on_mousemove.bind(this));
-    canvas.addEventListener('keydown', this._on_pass_event.bind(this));
-    canvas.addEventListener('keyup', this._on_pass_event.bind(this));
-    canvas.addEventListener('keypress', this._on_pass_event.bind(this));
-    canvas.addEventListener('scroll', this._on_pass_event.bind(this));
+    var events = ['mousedown', 'mouseup', 'mousemove', 'keyup', 'keypress', 'wheel'];
+
+    for (var i = 0; i < events.length; i++) {
+        canvas.addEventListener(events[i], this._on_pass_event.bind(this));
+    }
+
+    canvas.addEventListener('keydown', this._on_keydown.bind(this));
 }
 
 Renderer.prototype = Object.create(Signals.prototype);
 Renderer.prototype.constructor = Renderer;
 
-Renderer.prototype._on_mousedown = function(e) {
-    this._mouse_pressed = true;
-    this._event(e);
-}
-
-Renderer.prototype._on_mouseup = function(e) {
-    this._mouse_pressed = false;
+Renderer.prototype._on_keydown = function(e) {
     this._event(e);
 }
 
@@ -179,13 +178,17 @@ Renderer.prototype._on_pass_event = function(e) {
 }
 
 Renderer.prototype._event = function(e) {
-    if (this.program && this.program.event) {
+    if (this.program && typeof this.program.event === 'function') {
         try {
             this.program.event.call(this.program, this.context, e);
         } catch (e) {
             this._on_error(e);
             this.pause();
         }
+    }
+
+    if (!e.defaultPrevented) {
+        this.context._signals.on_event(e);
     }
 }
 
