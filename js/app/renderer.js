@@ -203,7 +203,8 @@ Renderer.prototype.update = function(doc) {
         js: {
             parse: null,
             run: null,
-            init: null
+            init: null,
+            extensions: null
         },
         programs: null
     };
@@ -212,12 +213,59 @@ Renderer.prototype.update = function(doc) {
 
     // Compile javascript
     try {
-        func = new Function(doc.js.data + '\n\nreturn {init: init, render: render, save: save, event: event};');
+        func = new Function(doc.js.data
+                            + '\n\nreturn {init: typeof init !== "undefined" ? init : null'
+                            + ', render: typeof render !== "undefined" ? render : null'
+                            + ', save: typeof save !== "undefined" ? save : null'
+                            + ', event: typeof event !== "undefined" ? event : null'
+                            + ', extensions: typeof extensions !== "undefined" ? extensions : null};');
     } catch (e) {
         console.error(e.stack);
 
         errors.js.parse = e;
         complete = false;
+    }
+
+    var state = {};
+
+    if (this.program && this.program.save) {
+        try {
+            var nstate = this.program.save.call(this.program, this.context);
+
+            if (typeof nstate !== 'undefined') {
+                state = nstate;
+            }
+        } catch (e) {
+            console.error(e.stack);
+        }
+    }
+
+    var nctx = this._create_context();
+    nctx.state = state;
+
+    var obj = {};
+    var ret = null;
+
+    if (func !== null) {
+        try {
+            ret = func.call(obj);
+        } catch (e) {
+            console.error(e.stack);
+
+            errors.js.run = e;
+            complete = false;
+        }
+    }
+
+    if (ret !== null && complete && ret.extensions) {
+        try {
+            ret.extensions.call(ret, nctx);
+        } catch (e) {
+            console.error(e.stack);
+
+            errors.js.extensions = e;
+            complete = false;
+        }
     }
 
     // Compile all programs
@@ -249,34 +297,7 @@ Renderer.prototype.update = function(doc) {
         }
     }
 
-    var obj = {};
-    var ret = null;
-
-    var state = {};
-
-    if (this.program && this.program.save) {
-        try {
-            state = this.program.save.call(this.program, this.context);
-        } catch (e) {
-            console.error(e.stack);
-        }
-    }
-
-    if (func !== null) {
-        try {
-            ret = func.call(obj);
-        } catch (e) {
-            console.error(e.stack);
-
-            errors.js.run = e;
-            complete = false;
-        }
-    }
-
-    var nctx = this._create_context();
-    nctx.state = state;
-
-    if (ret !== null && ret.init) {
+    if (ret !== null && complete && ret.init) {
         try {
             ret.init.call(ret, nctx);
         } catch (e) {
