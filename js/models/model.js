@@ -15,8 +15,16 @@ function Model(ctx, name, options) {
     /** The name. */
     this.name = name;
 
+    var mat;
+
+    if (options && options.material) {
+        mat = options.material;
+    } else {
+        mat = new Material();
+    }
+
     /** The material (see Material). */
-    this.material = new Material(ctx);
+    this.material = mat;
 
     /**
      * The parent (or null). Do not set this directly,
