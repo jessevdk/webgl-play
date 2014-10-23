@@ -1,3 +1,15 @@
+var passObjects = [
+    Int8Array.prototype,
+    Uint8Array.prototype,
+    Int16Array.prototype,
+    Uint16Array.prototype,
+    Int32Array.prototype,
+    Uint32Array.prototype,
+    Float32Array.prototype,
+    Float64Array.prototype,
+    Array.prototype
+];
+
 function merge() {
     var ret = {};
 
@@ -10,7 +22,11 @@ function merge() {
 
         for (var k in arg) {
             if (arg.hasOwnProperty(k)) {
-                ret[k] = arg[k];
+                if (typeof ret[k] === 'object' && typeof arg[k] === 'object' && passObjects.indexOf(Object.getPrototypeOf(arg[k])) === -1) {
+                    ret[k] = merge(ret[k], arg[k]);
+                } else {
+                    ret[k] = arg[k];
+                }
             }
         }
     }
