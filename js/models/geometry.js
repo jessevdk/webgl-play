@@ -109,6 +109,10 @@ Geometry.prototype.addAttribute = function(ctx, name, data, options) {
         i++;
     }
 
+    if (opts.type === gl.FLOAT && data !== null && (typeof data !== 'object' || Object.getPrototypeOf(data) !== Float32Array.prototype)) {
+        data = new Float32Array(data);
+    }
+
     var attr = {
         data: data,
         id: i,
