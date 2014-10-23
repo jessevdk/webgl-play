@@ -1230,7 +1230,7 @@ Builtins.prototype._define_functions = function() {
     this._define_builtin_function(Tn.T_VEC4, 'textureCube',
                                   [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'bias']);
 
-    if (this.type == glsl.source.VERTEX) {
+    if (this.type === glsl.source.VERTEX) {
         this._define_builtin_function(Tn.T_VEC4, 'textureCubeLod',
                                       [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
     }
