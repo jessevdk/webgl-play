@@ -448,13 +448,32 @@ App.prototype._init_editors = function() {
             });
         }).bind(this, n));
     }
+
+    this._parsed_timeout = 0;
+    this.vertex_editor.on('notify::parsed', this._on_editor_parsed, this);
+    this.fragment_editor.on('notify::parsed', this._on_editor_parsed, this);
 }
 
 App.prototype._init_title = function() {
     this.title = document.getElementById('doc-title');
+App.prototype._on_editor_parsed = function() {
+    if (this._parsed_timeout !== 0) {
+        clearTimeout(this._parsed_timeout);
+    }
+
+    this._parsed_timeout = setTimeout((function() {
+        this._parsed_timeout = 0;
 
     this.title.addEventListener('change', this._on_doc_title_change.bind(this));
     this.title.addEventListener('input', this._on_doc_title_change.bind(this));
+        if (this.vertex_editor.parsed !== null && this.fragment_editor.parsed !== null) {
+            var linker = new glsl.linker.Linker(this.vertex_editor.parsed, this.fragment_editor.parsed);
+            var errors = linker.link();
+
+            this.vertex_editor.external_errors(errors.vertex);
+            this.fragment_editor.external_errors(errors.fragment);
+        }
+    }).bind(this), 50);
 }
 
 App.prototype._init_programs_bar = function() {
