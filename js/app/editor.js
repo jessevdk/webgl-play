@@ -141,8 +141,17 @@ function Editor(editor, ctx, type) {
     }
 
     this._change_timeout = 0;
-    this._error_markers = [];
-    this._errors = [];
+
+    this._internal_errors = {
+        markers: [],
+        errors: []
+    };
+
+    this._external_errors = {
+        markers: [],
+        errors: []
+    };
+
     this._error_message = null;
 
     this.editor.on('change', this._on_change.bind(this));
@@ -275,7 +284,7 @@ Editor.prototype._on_change_timeout_js = function() {
         return;
     }
 
-    this._process_errors([]);
+    this._process_errors(this._internal_errors, []);
 }
 
 Editor.prototype._on_change_timeout_glsl = function() {
@@ -284,7 +293,7 @@ Editor.prototype._on_change_timeout_glsl = function() {
     });
 
     glsl.sst.Annotate(p);
-    this._process_errors(p.errors());
+    this._process_errors(this._internal_errors, this.parsed.errors());
 }
 
 Editor.prototype.runtime_error = function(error) {
@@ -309,32 +318,32 @@ Editor.prototype.runtime_error = function(error) {
         }
     };
 
-    this._process_errors([err]);
+    this._process_errors(this._internal_errors, [err]);
 }
 
-Editor.prototype._process_errors = function(errors) {
-    this._errors = errors;
+Editor.prototype.external_errors = function(errors) {
+    this._process_errors(this._external_errors, errors);
+}
 
-    for (var i = 0; i < this._error_markers.length; i++) {
-        this._error_markers[i].clear();
-    }
-
+Editor.prototype._process_errors = function(ctx, errors) {
     var doc = this.editor.getDoc();
 
-    for (var i = 0; i < doc.lineCount(); i++) {
-        doc.removeLineClass(i, 'wrap', 'line-error');
+    ctx.errors = errors.slice(0);
+
+    for (var i = 0; i < ctx.markers.length; i++) {
+        ctx.markers[i].clear();
     }
 
-    this._error_markers = [];
+    ctx.markers = [];
 
-    if (this._errors.length == 0) {
+    if (this._internal_errors.errors.length === 0 && this._external_errors.errors.length === 0) {
         this.editor.display.wrapper.classList.remove('error');
     } else {
         this.editor.display.wrapper.classList.add('error');
     }
 
-    for (var i = 0; i < this._errors.length; i++) {
-        var e = this._errors[i];
+    for (var i = 0; i < errors.length; i++) {
+        var e = errors[i];
         var l = e.location.start.line - 1;
 
         var m = doc.markText(this._make_loc(e.location.start),
@@ -346,9 +355,7 @@ Editor.prototype._process_errors = function(errors) {
                              });
 
         m.error = e;
-        doc.addLineClass(l, 'wrap', 'line-error');
-
-        this._error_markers.push(m);
+        ctx.markers.push(m);
     }
 
     this._on_cursor_activity();
