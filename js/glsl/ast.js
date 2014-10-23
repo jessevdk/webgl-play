@@ -1895,6 +1895,7 @@ match_one_of(Parser.prototype._parse_type_specifier, [
 ]);
 
 Parser.prototype._parse_field_declaration.match = Parser.prototype._parse_type_specifier.match;
+Parser.prototype._parse_field_declaration.expected = Parser.prototype._parse_type_specifier.expected;
 
 Parser.prototype._parse_type_qualifier = function(tok) {
     var node;
