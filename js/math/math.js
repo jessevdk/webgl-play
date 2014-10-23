@@ -509,9 +509,11 @@ for (var k in glMatrix) {
     if (glMatrix.hasOwnProperty(k)) {
         var v = glMatrix[k];
 
-        var f = function() {
-            return glMatrix[k].fromValues.apply(this, arguments);
-        };
+        var f = (function(obj) {
+            return function() {
+                return obj.fromValues.apply(this, arguments);
+            };
+        })(v);
 
         for (var j in v) {
             if (v.hasOwnProperty(j)) {
