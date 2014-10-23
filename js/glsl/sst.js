@@ -41,6 +41,12 @@ function Annotator(ast, opts) {
     this._ast.functions = [];
     this._ast.function_map = {};
 
+    this._ast.uniforms = [];
+    this._ast.uniform_map = {};
+
+    this._ast.varyings = [];
+    this._ast.varying_map = {};
+
     this._scope = null;
     this._scopes = [];
 
@@ -188,6 +194,14 @@ Annotator.prototype._declare_type = function(type) {
 Annotator.prototype._declare_variable = function(node) {
     this._scope.variable_map[node.name.text] = node;
     this._scope.variables.push(node);
+
+    if (node.type.is_uniform() && this._is_toplevel_scope()) {
+        this._scope.uniforms.push(node);
+        this._scope.uniform_map[node.name.text] = node;
+    } else if (node.type.is_varying()) {
+        this._scope.varyings.push(node);
+        this._scope.varying_map[node.name.text] = node;
+    }
 
     this._scope.symbols[node.name.text] = node;
 };
