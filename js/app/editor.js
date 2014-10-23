@@ -243,11 +243,13 @@ Editor.prototype.cursor = function(v) {
 }
 
 Editor.prototype.value = function(v) {
+    var stripper = /[ \t]+$/gm;
+
     if (typeof v === 'undefined') {
-        return this.editor.getValue();
+        return this.editor.getValue().replace(stripper, '');
     }
 
-    this.editor.setValue(v);
+    this.editor.setValue(v.replace(stripper, ''));
 
     if (this._change_timeout !== 0) {
         clearTimeout(this._change_timeout);
