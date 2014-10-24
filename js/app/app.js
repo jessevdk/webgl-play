@@ -511,9 +511,7 @@ App.prototype._init_buttons = function() {
     for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
 
-        var button = new ui.Button(document.getElementById('button-' + b), {
-            nostyle: true
-        });
+        var button = new ui.Button({ wrap: document.getElementById('button-' + b) });
 
         button.on('click', this['_on_button_' + b + '_click'], this);
         this.buttons[b] = button;
@@ -710,7 +708,7 @@ App.prototype._show_info_popup = function() {
     description.innerHTML = marked(desc());
     content.appendChild(description);
 
-    var close = new ui.Button(document.createElement('div'));
+    var close = new ui.Button();
 
     close.e.classList.add('close');
     close.e.textContent = 'Close Editor';

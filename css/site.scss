@@ -72,25 +72,15 @@ body, input {
     list-style: none;
     position: absolute;
     right: 0;
-    margin-right: 12px;
 
-    li {
+    li.ui-button {
       float: right;
-      background-color: lighten($base01, 10%);
-      color: $bg_color;
-      text-shadow: 1px 1px $base02;
+      text-shadow: 1px 1px 3px darken($blue, 20%);
+      padding: 0;
       padding-left: 16px;
       padding-right: 16px;
-      transition: background-color ease 0.1s;
-      cursor: default;
-
-      &:hover {
-        background-color: lighten($base01, 20%);
-      }
-
-      &:active {
-        background-color: lighten($base01, 25%);
-      }
+      border: 0;
+      border-radius: 0;
     }
   }
 }
