@@ -85,22 +85,37 @@ body, input {
   }
 }
 
-#view {
+#view-container, #view {
   position: absolute;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#view {
   background-color: $bg_color;
   border: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
   outline: none;
   cursor: default;
+}
+
+#view-container {
+  font-size: 1.1em;
+
+  > .ui-widget {
+    position: absolute;
+  }
 
   &.fullscreen {
     z-index: 400;
+  }
+
+  &.hide-ui > .ui-widget {
+    display: none;
   }
 }
 

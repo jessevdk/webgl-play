@@ -58,6 +58,8 @@ function JsContext(gl) {
      */
     this.math = require('../math/math');
 
+    this.ui = require('./ui');
+
     /**
      * The shared program.
      */
@@ -77,6 +79,11 @@ function JsContext(gl) {
 
     this._signals = new Signals();
     this._signals.on_event = this._signals.register_signal('event');
+    this._signals.on_ui = this._signals.register_signal('ui');
+
+    this.ui.add = (function(ui, placement) {
+        this._signals.on_ui(ui, placement);
+    }).bind(this);
 
     this._view = null;
 }
@@ -174,9 +181,13 @@ function Renderer(canvas, fullscreenParent, options) {
     }, options);
 
     this.canvas = canvas;
-    this._canvasParent = canvas.parentElement;
+    this._canvasContainer = canvas.parentElement;
+    this._canvasParent = this._canvasContainer.parentElement;
+
     this._fullscreenParent = fullscreenParent;
     this._isFullscreen = false;
+
+    this._hideUi = false;
 
     this.context = this._create_context();
     this.program = null;
@@ -195,6 +206,8 @@ function Renderer(canvas, fullscreenParent, options) {
     }
 
     canvas.addEventListener('keydown', this._on_keydown.bind(this));
+
+    this._ui = [];
 }
 
 Renderer.prototype = Object.create(Signals.prototype);
@@ -207,6 +220,9 @@ Renderer.prototype._on_keydown = function(e) {
         switch (e.keyCode) {
         case 70: // f
             this.toggleFullscreen();
+            break;
+        case 85: // u
+            this.toggleUi();
             break;
         case 27: // escape
             if (this._isFullscreen) {
@@ -244,7 +260,16 @@ Renderer.prototype._event = function(e) {
 }
 
 Renderer.prototype._create_context = function() {
-    return new JsContext(this.canvas.getContext('webgl'));
+    var ret = new JsContext(this.canvas.getContext('webgl'));
+
+    ret._signals.on('ui', this._on_ui, this);
+    return ret;
+}
+
+Renderer.prototype._removeUi = function(ui) {
+    for (var i = 0; i < ui.length; i++) {
+        ui[i].e.parentElement.removeChild(ui[i].e);
+    }
 }
 
 Renderer.prototype.update = function(doc) {
@@ -361,6 +386,9 @@ Renderer.prototype.update = function(doc) {
         }
     }
 
+    var prevUi = this._ui;
+    this._ui = [];
+
     if (ret !== null && complete && ret.init) {
         try {
             ret.init.call(ret, nctx);
@@ -373,8 +401,12 @@ Renderer.prototype.update = function(doc) {
     }
 
     if (!complete) {
+        this._removeUi(this._ui);
+        this._ui = prevUi;
         return errors;
     }
+
+    this._removeUi(prevUi);
 
     this.context = nctx;
     this.context.programs = programs;
@@ -384,6 +416,23 @@ Renderer.prototype.update = function(doc) {
 
     this._frameCounter = 0;
     this.start();
+}
+
+Renderer.prototype._on_ui = function(_, ui, placement) {
+    this._canvasContainer.appendChild(ui.e);
+    this._ui.push(ui);
+
+    if (placement) {
+        for (var p in placement) {
+            var v = placement[p];
+
+            if (typeof v === 'number') {
+                v += 'px';
+            }
+
+            ui.e.style[p] = v;
+        }
+    }
 }
 
 Renderer.prototype._grab_image = function() {
@@ -488,17 +537,27 @@ Renderer.prototype.pause = function() {
     }
 }
 
-Renderer.prototype.toggleFullscreen = function() {
-    var hasFocus = document.activeElement === this.canvas;
+Renderer.prototype.toggleUi = function() {
+    if (this._hideUi) {
+        this._canvasContainer.classList.remove('hide-ui');
+    } else {
+        this._canvasContainer.classList.add('hide-ui');
+    }
 
-    this.canvas.parentElement.removeChild(this.canvas);
+    this._hideUi = !this._hideUi;
+}
+
+Renderer.prototype.toggleFullscreen = function() {
+    var hasFocus = (document.activeElement === this.canvas);
+
+    this._canvasContainer.parentElement.removeChild(this._canvasContainer);
 
     if (this._isFullscreen) {
-        this._canvasParent.appendChild(this.canvas);
-        this.canvas.classList.remove('fullscreen');
+        this._canvasParent.appendChild(this._canvasContainer);
+        this._canvasContainer.classList.remove('fullscreen');
     } else {
-        this._fullscreenParent.appendChild(this.canvas);
-        this.canvas.classList.add('fullscreen');
+        this._fullscreenParent.appendChild(this._canvasContainer);
+        this._canvasContainer.classList.add('fullscreen');
     }
 
     if (hasFocus) {
