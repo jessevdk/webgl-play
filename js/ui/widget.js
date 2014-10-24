@@ -29,10 +29,24 @@
 
 var Signals = require('../signals/signals');
 
-function Widget(e) {
+function Widget(clsname, e, settings) {
     Signals.call(this);
 
-    this.e = e;
+    if (settings.wrap) {
+        this.e = settings.wrap;
+    } else {
+        this.e = e;
+    }
+
+    this.e.classList.add('ui-widget');
+
+    if (clsname) {
+        this.e.classList.add('ui-' + clsname);
+    }
+
+    this._settings = settings;
+
+    this.children = [];
 }
 
 Widget.prototype = Object.create(Signals.prototype);
@@ -40,6 +54,10 @@ Widget.prototype.constructor = Widget;
 
 Widget.prototype.create = function(name, attributes) {
     var ret = document.createElement(name);
+
+    if (!attributes) {
+        attributes = {};
+    }
 
     for (var a in attributes) {
         var v = attributes[a];
@@ -70,7 +88,7 @@ Widget.prototype.create = function(name, attributes) {
     return ret;
 }
 
-Widget.prototype.children = function(e) {
+Widget.prototype.childElements = function(e) {
     if (typeof e === 'undefined') {
         e = this.e;
     }

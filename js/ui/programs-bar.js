@@ -32,7 +32,7 @@ var Button = require('./button');
 var Program = require('../app/program');
 
 function ProgramsBar(e, app) {
-    Widget.call(this, e);
+    Widget.call(this, 'programs-bar', null, { wrap: e });
 
     this._document = null;
     this._show_delete = null;
@@ -45,7 +45,7 @@ function ProgramsBar(e, app) {
 
     this._ul = e.querySelector('ul');
 
-    this._new_program = new Button(e.querySelector('#new-program'));
+    this._new_program = new Button({ wrap: e.querySelector('#new-program') });
     this._new_program.on('click', this._on_new_program_click, this);
 
     this._new_program_name = e.querySelector('#new-program-name');

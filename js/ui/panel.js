@@ -30,7 +30,7 @@
 var Widget = require('./widget');
 
 function Panel(p) {
-    Widget.call(this, p);
+    Widget.call(this, 'panel', null, { wrap: p });
 
     if (this.e.classList.contains('vertical')) {
         this._orientation = Panel.Orientation.VERTICAL;
@@ -38,7 +38,7 @@ function Panel(p) {
         this._orientation = Panel.Orientation.HORIZONTAL;
     }
 
-    var children = this.children();
+    var children = this.childElements();
 
     this.child1 = children[0];
     this.sep = children[1];

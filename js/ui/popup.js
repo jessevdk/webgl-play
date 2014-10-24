@@ -34,7 +34,7 @@ function Popup(child, on) {
     this._on = on;
     this._build();
 
-    Widget.call(this, this._outer);
+    Widget.call(this, 'popup', null, { wrap: this._outer });
 
     this._on_window_mousedown = (function(e) {
         var ppos = this.page_position(this._outer);
