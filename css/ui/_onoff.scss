@@ -1,0 +1,49 @@
+.ui-on-off {
+	border: 1px solid $borders_color;
+	background-color: white;
+
+	td {
+		padding: 3px 6px 3px 6px;
+	}
+
+	.on, .off {
+		transition: opacity ease 300ms;
+	}
+
+	.off {
+		opacity: 0;
+		background-color: $bg_color;
+
+		&:hover {
+			background-color: lighten($bg_color, 5%);
+		}
+
+		&:active {
+			background-color: $bg_color;
+		}
+	}
+
+	.on {
+		opacity: 1;
+		background-color: $ui_active_bg;
+		color: white;
+
+		&:hover {
+			background-color: lighten($ui_active_bg, 5%);
+		}
+
+		&:active {
+			background-color: $ui_active_bg;
+		}
+	}
+
+	&.active {
+		.on {
+			opacity: 0;
+		}
+
+		.off {
+			opacity: 1;
+		}
+	}
+}

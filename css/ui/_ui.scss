@@ -1,0 +1,11 @@
+$ui_active_bg: lighten($blue, 10%);
+
+@import 'panel';
+@import 'button';
+@import 'sidebar';
+@import 'popup';
+@import 'onoff';
+
+.ui-widget {
+	cursor: default;
+}

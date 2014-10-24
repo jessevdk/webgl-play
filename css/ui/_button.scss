@@ -1,0 +1,24 @@
+$button_bg: $ui_active_bg;
+
+.ui-button {
+  padding: 3px 6px 3px 6px;
+  border: 1px solid darken($button_bg, 10%);
+  border-radius: 3px;
+  background-color: $button_bg;
+  background: linear-gradient(to bottom, lighten($button_bg, 5%), $button_bg);
+  display: inline-block;
+  color: white;
+  transition: background-color ease 0.1s;
+
+  &:hover {
+    background-color: lighten($button_bg, 5%);
+    background: linear-gradient(to bottom, lighten($button_bg, 10%), lighten($button_bg, 5%));
+  }
+
+  &:active {
+    background-color: $button_bg;
+    background: linear-gradient(to bottom, $button_bg, lighten($button_bg, 5%));
+  }
+}
+
+/* vi:ts=2:et */
