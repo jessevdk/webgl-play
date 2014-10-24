@@ -74,7 +74,9 @@ site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_E
 	else 																			\
 		$(BROWSERIFYINC) 															\
 			-t brfs 																\
-			-t uglifyify -o $@ --cachefile .gen/js/.cache js/site.js || exit 1; 	\
+			-t ./scripts/docify 													\
+			-t uglifyify 															\
+			-o $@ --cachefile .gen/js/.cache js/site.js || exit 1; 					\
 	fi; 																			\
 	printf "[\033[1mGEN\033[0m] [deps]\n"; 											\
 	mkdir -p .gen/js; 																\
