@@ -65,7 +65,8 @@ site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_E
 		printf "[\033[1mGEN\033[0m] $@\n"; 											\
 	fi; 																			\
 	if [ "$(ENV)" = "development" ]; then 											\
-		($(BROWSERIFYINC) -d 														\
+		($(BROWSERIFYINC)															\
+		 	-d 																		\
 		 	-t brfs 																\
 		 	-t ./scripts/docify 													\
 		 	-o $@.tmp --cachefile .gen/js/.dev-cache js/site.js && 					\
