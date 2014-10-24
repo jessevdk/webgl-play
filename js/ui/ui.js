@@ -28,6 +28,9 @@
  */
 
 module.exports = {
+	Label: require('./label'),
+	OnOff: require('./onoff'),
+	Grid: require('./grid'),
     Panel: require('./panel'),
     ProgramsBar: require('./programs-bar'),
     Button: require('./button'),
