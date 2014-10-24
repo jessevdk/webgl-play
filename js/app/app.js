@@ -407,8 +407,6 @@ App.prototype._init_canvas = function() {
     this.renderer.on('error', (function(r, e) {
         this._handle_js_error(e);
     }).bind(this));
-
-    this._update_canvas_size();
 }
 
 App.prototype._init_editors = function() {
@@ -829,6 +827,8 @@ App.prototype._init = function() {
     this._init_buttons();
     this._init_panels();
     this._init_title();
+
+    this._update_canvas_size();
 
     window.onbeforeunload = (function(e) {
         this._update_editors();
