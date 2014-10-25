@@ -31,21 +31,21 @@ var Widget = require('./widget');
 var utils = require('../utils/utils');
 
 function Label(settings) {
-	settings = utils.merge({
-		text: ''
-	}, settings);
-
-    Widget.call(this, 'label', this.create('span', {
-        textContent: settings.text
-    }), settings);
-
-    if (settings.markup) {
-    	this.e.innerHTML = settings.markup;
-    }
+    Widget.call(this, 'label', this.create('span'), utils.merge({}, settings));
 }
 
 Label.prototype = Object.create(Widget.prototype);
 Label.prototype.constructor = Label;
+
+Label.prototype._valueUpdated = function() {
+    if (typeof this._value === 'string') {
+        this.e.textContent = this._value;
+    } else if (typeof this._value.text !== 'undefined') {
+        this.e.textContent = this._value.text;
+    } else if (typeof this._value.markup !== 'undefined') {
+        this.e.innerHTML = this._value.markup;
+    }
+}
 
 module.exports = Label;
 

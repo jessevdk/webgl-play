@@ -47,10 +47,67 @@ function Widget(clsname, e, settings) {
     this._settings = settings;
 
     this.children = [];
+
+    var notify = this.register_signal('notify::value');
+
+    this._on_notify_value = (function() {
+        notify(this._value);
+    }).bind(this);
+
+    if (this._settings.bind) {
+        var binding;
+
+        if (typeof this._settings.bind === 'function') {
+            binding = this._settings.bind;
+        } else {
+            var f = function(obj, prop, sender, value) {
+                if (typeof value === 'undefined') {
+                    return obj[prop];
+                }
+
+                obj[prop] = value;
+            };
+
+            if (Array.prototype.isPrototypeOf(this._settings.bind)) {
+                binding = f.bind(this, this._settings.bind[0], this._settings.bind[1]);
+            } else {
+                binding = f.bind(this, this._settings.bind.object, this._settings.bind.property);
+            }
+        }
+
+        this.on('notify::value', binding);
+        this.value(binding());
+    }
+
+    if (typeof this._settings.value !== 'undefined') {
+        this.value(this._settings.value);
+    }
 }
 
 Widget.prototype = Object.create(Signals.prototype);
 Widget.prototype.constructor = Widget;
+
+Widget.prototype._valueTransform = function(v) {
+    return v;
+}
+
+Widget.prototype._valueUpdated = function() {
+}
+
+Widget.prototype.value = function(value) {
+    if (typeof value === 'undefined') {
+        return this._value;
+    }
+
+    value = this._valueTransform(value);
+
+    if (this._value !== value) {
+        this._value = value;
+
+        this._valueUpdated();
+        this._on_notify_value();
+    }
+}
 
 Widget.prototype.create = function(name, attributes) {
     var ret = document.createElement(name);

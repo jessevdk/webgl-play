@@ -31,6 +31,8 @@ var Widget = require('./widget');
 var utils = require('../utils/utils');
 
 function OnOff(settings) {
+    this._value = false;
+
     Widget.call(this, 'on-off', this.create('table', {
         children: [
             this.create('colgroup', {
@@ -59,79 +61,36 @@ function OnOff(settings) {
         ]
     }), utils.merge({}, settings));
 
-    this._active = false;
-    this._bind = null;
-
     this._on = this.e.querySelector('.on');
     this._off = this.e.querySelector('.off');
 
     this._on.addEventListener('click', (function(e) {
-        this.active(true);
+        this.value(true);
 
         e.preventDefault();
         e.stopPropagation();
     }).bind(this));
 
     this._off.addEventListener('click', (function(e) {
-        this.active(false);
+        this.value(false);
 
         e.preventDefault();
         e.stopPropagation();
     }).bind(this));
-
-    this._on_notify_active = this.register_signal('notify::active');
-
-    if (this._settings.bind) {
-        if (typeof this._settings.bind === 'function') {
-            this._bind = this._settings.bind;
-        } else {
-            var f = function(obj, prop, active) {
-                if (typeof active === 'undefined') {
-                    return obj[prop];
-                }
-
-                obj[prop] = active;
-            };
-
-            if (Array.prototype.isPrototypeOf(this._settings.bind)) {
-                this._bind = f.bind(this, this._settings.bind[0], this._settings.bind[1]);
-            } else {
-                this._bind = f.bind(this, this._settings.bind.object, this._settings.bind.property);
-            }
-        }
-
-        this.active(this._bind());
-    }
-
-    if (typeof this._settings.active !== 'undefined') {
-        this.active(this._settings.active);
-    }
 }
 
 OnOff.prototype = Object.create(Widget.prototype);
 OnOff.prototype.constructor = OnOff;
 
-OnOff.prototype.active = function(value) {
-    if (typeof value === 'undefined') {
-        return this._active;
-    }
+OnOff.prototype._valueTransform = function(v) {
+    return !!v;
+}
 
-    value = !!value;
-
-    if (this._active !== value) {
-        this._active = value;
-
-        if (value) {
-            this.e.classList.add('active');
-        } else {
-            this.e.classList.remove('active');
-        }
-
-        this._on_notify_active();
-
-        if (this._bind) {
-            this._bind(value);
-        }
+OnOff.prototype._valueUpdated = function() {
+    if (this._value) {
+        this.e.classList.add('active');
+    } else {
+        this.e.classList.remove('active');
     }
 }
 

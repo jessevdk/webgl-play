@@ -30,21 +30,21 @@
 var ui = require('../ui/ui');
 
 function grid(props) {
-	return new ui.Grid(props);
+    return new ui.Grid(props);
 }
 
 function label(props) {
-	if (typeof props === 'string') {
-		props = {
-			text: props
-		};
-	}
+    if (typeof props === 'string') {
+        props = {
+            value: props
+        };
+    }
 
-	return new ui.Label(props);
+    return new ui.Label(props);
 }
 
 function onoff(props) {
-	return new ui.OnOff(props);
+    return new ui.OnOff(props);
 }
 
 exports.grid = grid;
