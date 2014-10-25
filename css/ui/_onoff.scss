@@ -30,6 +30,7 @@
 .ui-on-off {
 	border: 1px solid $borders_color;
 	background-color: white;
+	border-radius: 3px;
 
 	td {
 		padding: 3px 6px 3px 6px;
@@ -42,6 +43,7 @@
 	.off {
 		opacity: 0;
 		background-color: $bg_color;
+		border-radius: 3px 0px 0px 3px;
 
 		&:hover {
 			background-color: lighten($bg_color, 5%);
@@ -56,6 +58,7 @@
 		opacity: 1;
 		background-color: $ui_active_bg;
 		color: white;
+		border-radius: 0px 3px 3px 0px;
 
 		&:hover {
 			background-color: lighten($ui_active_bg, 5%);
