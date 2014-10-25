@@ -100,7 +100,7 @@ site/css/vendor.css: $(wildcard css/*.css)
 	mkdir -p $(dir $@); \
 	cat $^ > $@
 
-site/css/site.css: $(SASS) $(wildcard css/*.scss)
+site/css/site.css: $(SASS) $(shell find css -name '*.scss')
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	$(GP) $(SASS) css/site.scss $@
