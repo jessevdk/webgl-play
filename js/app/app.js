@@ -263,6 +263,15 @@ App.prototype._load_doc = function(doc) {
 
     this.title.textContent = doc.title;
 
+    if (doc.state && doc.state.panels) {
+        for (var k in doc.state.panels) {
+            var p = doc.state.panels[k];
+            this.panels[k].position(p.position);
+        }
+
+        this._update_canvas_size();
+    }
+
     this._loading = false;
     this._update_renderer();
 
@@ -282,10 +291,26 @@ App.prototype._on_document_has_changed = function(doc, opts) {
     }).bind(this));
 }
 
+App.prototype._serialize_document = function(doc) {
+    var ret = doc.serialize();
+
+    ret.state = {
+        panels: {}
+    };
+
+    for (var k in this.panels) {
+        ret.state.panels[k] = {
+            position: this.panels[k].position()
+        };
+    }
+
+    return ret;
+}
+
 App.prototype._save_current_doc = function(cb) {
     var doc = this.document;
 
-    this._store.save(doc.serialize(), function(store, retdoc) {
+    this._store.save(this._serialize_document(doc), function(store, retdoc) {
         if (retdoc !== null) {
             doc.id = retdoc.id;
         }
@@ -521,7 +546,7 @@ App.prototype._init_buttons = function() {
 App.prototype._on_button_copy_click = function() {
     var title = 'Copy of ' + this.document.title;
 
-    var doc = Document.deserialize(this.document.serialize());
+    var doc = Document.deserialize(this._serialize_document(this.document));
 
     doc.id = null;
     doc.title = title;
@@ -830,7 +855,7 @@ App.prototype._init = function() {
 
     window.onbeforeunload = (function(e) {
         this._update_editors();
-        localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this.document.serialize()));
+        localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this._serialize_document(this.document)));
     }).bind(this);
 };
 

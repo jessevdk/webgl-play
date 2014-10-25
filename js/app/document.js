@@ -50,6 +50,7 @@ function Document() {
     this.creation_time = new Date();
     this.active_editor = null;
     this.screenshot = null;
+    this.state = {};
 
     this._active_program = this.programs[0];
     this._active_program._is_default = true;
@@ -267,6 +268,12 @@ Document.deserialize = function(doc) {
     ret.description = doc.description;
     ret.modification_time = doc.modification_time;
     ret.creation_time = doc.creation_time;
+
+    ret.state = doc.state;
+
+    if (typeof ret.state === 'undefined') {
+        ret.state = {};
+    }
 
     return ret;
 }

@@ -61,6 +61,20 @@ Panel.Orientation = {
     VERTICAL: 1
 };
 
+Panel.prototype.position = function(value) {
+    if (typeof value === 'undefined') {
+        if (this.child1.style.flexBasis) {
+            return parseInt(this.child1.style.flexBasis);
+        } else {
+            return null;
+        }
+    }
+
+    if (value !== null) {
+        this.child1.style.flexBasis = value + 'px'
+    }
+}
+
 Panel.prototype._on_mousedown_real = function(e) {
     window.addEventListener('mousemove', this._on_mousemove);
     window.addEventListener('mouseup', this._on_mouseup);
