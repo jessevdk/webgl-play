@@ -413,6 +413,24 @@ Renderer.prototype.update = function(doc) {
     this.start();
 }
 
+Renderer.prototype._extract_ui_ids = function(ui, prefix, ret) {
+    if (typeof ui._settings.id !== 'undefined') {
+        if (prefix) {
+            prefix += '.' + ui._settings.id;
+        } else {
+            prefix = ui._settings.id;
+        }
+
+        ret[prefix] = ui;
+    }
+
+    for (var i = 0; i < ui.children.length; i++) {
+        this._extract_ui_ids(ui.children[i], prefix, ret);
+    }
+
+    return ret;
+}
+
 Renderer.prototype._ui_add = function(ui, placement) {
     this._canvasContainer.appendChild(ui.e);
     this._ui.push(ui);
@@ -428,6 +446,8 @@ Renderer.prototype._ui_add = function(ui, placement) {
             ui.e.style[p] = v;
         }
     }
+
+    return this._extract_ui_ids(ui, '', {});
 }
 
 Renderer.prototype._grab_image = function() {
