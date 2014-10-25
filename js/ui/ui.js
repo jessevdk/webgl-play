@@ -34,7 +34,8 @@ module.exports = {
     Panel: require('./panel'),
     ProgramsBar: require('./programs-bar'),
     Button: require('./button'),
-    Popup: require('./popup')
+    Popup: require('./popup'),
+    Slider: require('./slider')
 };
 
 // vi:ts=4:et

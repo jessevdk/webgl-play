@@ -47,6 +47,11 @@ function onoff(props) {
     return new ui.OnOff(props);
 }
 
+function slider(props) {
+    return new ui.Slider(props);
+}
+
 exports.grid = grid;
 exports.label = label;
 exports.onoff = onoff;
+exports.slider = slider;

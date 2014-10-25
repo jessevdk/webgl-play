@@ -27,15 +27,46 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-$ui_active_bg: lighten($blue, 10%);
+.ui-slider {
+  $trough_size: 4px;
+  $bob_size: 12px;
 
-@import 'panel';
-@import 'button';
-@import 'sidebar';
-@import 'popup';
-@import 'onoff';
-@import 'slider';
+  min-width: 100px;
+  display: inline-block;
+  vertical-align: middle;
 
-.ui-widget {
-	cursor: default;
+  .trough {
+    position: relative;
+    display: block;
+    height: $trough_size;
+    border-radius: 3px;
+    background-color: white;
+    border: 1px solid $borders_color;
+    margin: ($bob_size / 2) + 2;
+    transition: background-color ease 100ms;
+
+    &:hover {
+      background-color: darken(white, 2%);
+    }
+  }
+
+  .bob {
+    position: absolute;
+    width: $bob_size;
+    height: $bob_size;
+    border-radius: $bob_size / 2;
+    background-color: $ui_active_bg;
+    margin-top: -($bob_size - $trough_size) / 2;
+    box-shadow: 1px 1px 1px darken($ui_active_bg, 20%);
+    top: 0;
+    left: 50%;
+    margin-left: -$bob_size / 2;
+    transition: background-color ease 100ms;
+
+    &:hover {
+      background-color: lighten($ui_active_bg, 5%);
+    }
+  }
 }
+
+/* vi:ts=2:et */
