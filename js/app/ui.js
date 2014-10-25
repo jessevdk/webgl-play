@@ -55,3 +55,5 @@ exports.grid = grid;
 exports.label = label;
 exports.onoff = onoff;
 exports.slider = slider;
+
+// vi:ts=4:et
