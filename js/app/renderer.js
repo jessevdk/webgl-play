@@ -79,11 +79,6 @@ function JsContext(gl) {
 
     this._signals = new Signals();
     this._signals.on_event = this._signals.register_signal('event');
-    this._signals.on_ui = this._signals.register_signal('ui');
-
-    this.ui.add = (function(ui, placement) {
-        this._signals.on_ui(ui, placement);
-    }).bind(this);
 
     this._view = null;
 }
@@ -262,7 +257,7 @@ Renderer.prototype._event = function(e) {
 Renderer.prototype._create_context = function() {
     var ret = new JsContext(this.canvas.getContext('webgl'));
 
-    ret._signals.on('ui', this._on_ui, this);
+    ret.ui.add = this._ui_add.bind(this)
     return ret;
 }
 
@@ -418,7 +413,7 @@ Renderer.prototype.update = function(doc) {
     this.start();
 }
 
-Renderer.prototype._on_ui = function(_, ui, placement) {
+Renderer.prototype._ui_add = function(ui, placement) {
     this._canvasContainer.appendChild(ui.e);
     this._ui.push(ui);
 
