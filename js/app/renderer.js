@@ -236,7 +236,31 @@ Renderer.prototype._on_keydown = function(e) {
 }
 
 Renderer.prototype._on_pass_event = function(e) {
-    this._event(e);
+    if (e.type === 'mousedown') {
+        this._mouse_pressed = true;
+
+        this._on_mousemove = (function(e) {
+            this._event(e);
+
+            e.preventDefault();
+            e.stopPropagation();
+        }).bind(this);
+
+        this._on_mouseup = (function(e) {
+            this._event(e);
+            this._mouse_pressed = false;
+
+            window.removeEventListener('mousemove', this._on_mousemove);
+            window.removeEventListener('mouseup', this._on_mouseup);
+        }).bind(this);
+
+        window.addEventListener('mousemove', this._on_mousemove);
+        window.addEventListener('mouseup', this._on_mouseup);
+    }
+
+    if ((e.type !== 'mousemove' && e.type !== 'mouseup') || !this._mouse_pressed) {
+        this._event(e);
+    }
 }
 
 Renderer.prototype._event = function(e) {

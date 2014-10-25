@@ -208,8 +208,8 @@ View.prototype._on_event = function(ctx, e) {
         break;
     case 'mousedown':
         this._interactive._mouse_pressed = {
-            x: e.offsetX,
-            y: e.offsetY,
+            x: e.pageX,
+            y: e.pageY,
             button: e.button,
             transform: this.transform.clone(),
             translation: null
@@ -236,8 +236,8 @@ View.prototype._on_event = function(ctx, e) {
                 };
 
                 var d = {
-                    x: mp.x - e.offsetX,
-                    y: e.offsetY - mp.y
+                    x: mp.x - e.pageX,
+                    y: e.pageY - mp.y
                 }
 
                 this._translate_dx_dy(d.x,
@@ -249,14 +249,14 @@ View.prototype._on_event = function(ctx, e) {
                 this._interactive._mouse_pressed.translation = [d.x * scale.x, d.y * scale.y, 0];
             } else if (e.ctrlKey) {
                 // Zoom
-                this._zoom_dx_dy(e.offsetX - mp.x,
-                                 e.offsetY - mp.y,
+                this._zoom_dx_dy(e.pageX - mp.x,
+                                 e.pageY - mp.y,
                                  this._interactive.zoom.mouse_sensitivity,
                                  mp.transform);
             } else {
                 // Rotate
-                this._rotate_dx_dy(e.offsetX - mp.x,
-                                   e.offsetY - mp.y,
+                this._rotate_dx_dy(e.pageX - mp.x,
+                                   e.pageY - mp.y,
                                    this._interactive.rotate.mouse_sensitivity,
                                    mp.transform);
             }
