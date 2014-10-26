@@ -38,6 +38,7 @@ $button_bg: $ui_active_bg;
   display: inline-block;
   color: white;
   transition: background-color ease 0.1s;
+  text-shadow: 0px 0px 2px darken($button_bg, 20%);
 
   &:hover {
     background-color: lighten($button_bg, 5%);
