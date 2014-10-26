@@ -756,8 +756,9 @@ App.prototype._show_info_popup = function() {
     }).bind(this);
 
     editor.addEventListener('keydown', (function(e) {
-        if (e.keyCode === 27) {
+        if (e.keyCode === 27) { // escape
             saveEditor();
+            description.innerHTML = marked(desc());
 
             content.classList.remove('editing');
             close.e.classList.remove('animate');
