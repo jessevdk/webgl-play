@@ -496,16 +496,6 @@ View.prototype.unbind = function(ctx) {
     var gl = ctx.gl;
 
     if (this._buffer) {
-        for (var k in this._buffer.buffers) {
-            var buffer = this._buffer.buffers[k];
-
-            gl.framebufferTexture2D(gl.FRAMEBUFFER,
-                                    buffer.attachment,
-                                    buffer.textureTarget,
-                                    null,
-                                    0);
-        }
-
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 }
