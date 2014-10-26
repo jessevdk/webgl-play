@@ -29,7 +29,7 @@
 
 .ui-slider {
   $trough_size: 4px;
-  $bob_size: 12px;
+  $bob_size: 10px;
 
   min-width: 100px;
   display: inline-block;
@@ -54,10 +54,10 @@
     position: absolute;
     width: $bob_size;
     height: $bob_size;
-    border-radius: $bob_size / 2;
+    border-radius: $bob_size;
     background-color: $ui_active_bg;
     margin-top: -($bob_size - $trough_size) / 2;
-    box-shadow: 1px 1px 1px darken($ui_active_bg, 20%);
+    border: 1px solid darken($ui_active_bg, 10%);
     top: 0;
     left: 50%;
     margin-left: -$bob_size / 2;
