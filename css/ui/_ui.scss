@@ -36,6 +36,7 @@ $ui_active_bg: lighten($blue, 10%);
 @import 'onoff';
 @import 'slider';
 @import 'colorpicker';
+@import 'grid';
 
 .ui-widget {
 	cursor: default;
