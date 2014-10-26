@@ -172,7 +172,8 @@ function Renderer(canvas, fullscreenParent, options) {
     Signals.call(this);
 
     this.options = utils.merge({
-        thumbnail_width: 80
+        thumbnail_width: 80,
+        thumbnail_height: 45
     }, options);
 
     this.canvas = canvas;
@@ -488,8 +489,21 @@ Renderer.prototype._grab_image = function() {
     var w = Math.floor(pw / step);
     var h = Math.floor(ph / step);
 
+    var thumbnail = {
+        width: this.options.thumbnail_width,
+        height: this.options.thumbnail_height
+    };
+
     // Keep aspect ratio
-    canvas.width = Math.max(w, this.options.thumbnail_width);
+    if (pw > this.options.thumbnail_width / this.options.thumbnail_height * ph) {
+        thumbnail.height = (this.options.thumbnail_width / pw) * ph;
+    } else {
+        thumbnail.width = (this.options.thumbnail_height / ph) * pw;
+    }
+
+    console.log(thumbnail);
+
+    canvas.width = Math.max(w, thumbnail.width);
     canvas.height = Math.floor(canvas.width * r);
 
     var ctx = canvas.getContext('2d');
@@ -502,8 +516,8 @@ Renderer.prototype._grab_image = function() {
     // results due to the standard (and non-controllable) 2x2 bilinear
     // filter that most browsers use.
     while (true) {
-        if (w < this.options.thumbnail_width) {
-            w = this.options.thumbnail_width;
+        if (w < thumbnail.width) {
+            w = thumbnail.width;
         }
 
         h = Math.floor(w * r);
@@ -512,7 +526,7 @@ Renderer.prototype._grab_image = function() {
         ctx.drawImage(source, 0, 0, pw, ph, 0, 0, w, h);
         source = canvas;
 
-        if (w === this.options.thumbnail_width) {
+        if (w === thumbnail.width) {
             break;
         }
 

@@ -606,6 +606,11 @@ App.prototype._on_button_open_click = function() {
         for (var i = 0; i < ret.length; i++) {
             var li = document.createElement('li');
 
+            var imgc = document.createElement('div');
+            imgc.classList.add('screenshot-container');
+
+            li.appendChild(imgc);
+
             var img = document.createElement('img');
             img.classList.add('screenshot');
 
@@ -613,7 +618,7 @@ App.prototype._on_button_open_click = function() {
                 img.setAttribute('src', ret[i].screenshot);
             }
 
-            li.appendChild(img);
+            imgc.appendChild(img);
 
             var titlediv = document.createElement('div');
             titlediv.classList.add('title');

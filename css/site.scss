@@ -176,6 +176,14 @@ input[type="text"] {
       background-color: lighten($base3, 5%);
     }
 
+    .screenshot-container {
+      vertical-align: middle;
+      width: 80px;
+      height: 45px;
+      display: inline-block;
+      text-align: center;
+    }
+
     .screenshot {
       vertical-align: middle;
     }
