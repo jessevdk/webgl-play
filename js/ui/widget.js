@@ -170,12 +170,22 @@ Widget.prototype.page_position = function(e) {
 
     var ret = {x: 0, y: 0};
 
-    do {
-        ret.x += e.offsetLeft;
-        ret.y += e.offsetTop;
+    if (typeof e.getBoundingClientRect === 'function') {
+        var rect = e.getBoundingClientRect();
 
-        e = e.offsetParent;
-    } while (e !== null);
+        return {
+            x: rect.left + document.body.scrollLeft,
+            y: rect.top + document.body.scrollTop
+        };
+    } else {
+
+        do {
+            ret.x += e.offsetLeft;
+            ret.y += e.offsetTop;
+
+            e = e.offsetParent;
+        } while (e !== null);
+    }
 
     return ret;
 }
