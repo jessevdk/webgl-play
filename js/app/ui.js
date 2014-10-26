@@ -51,9 +51,14 @@ function slider(props) {
     return new ui.Slider(props);
 }
 
+function colorPicker(props) {
+    return new ui.ColorPicker(props);
+}
+
 exports.grid = grid;
 exports.label = label;
 exports.onoff = onoff;
 exports.slider = slider;
+exports.colorPicker = colorPicker;
 
 // vi:ts=4:et

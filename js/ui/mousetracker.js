@@ -27,16 +27,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module.exports = {
-	Label: require('./label'),
-	OnOff: require('./onoff'),
-	Grid: require('./grid'),
-    Panel: require('./panel'),
-    ProgramsBar: require('./programs-bar'),
-    Button: require('./button'),
-    Popup: require('./popup'),
-    Slider: require('./slider'),
-    ColorPicker: require('./colorpicker'),
-};
+var Signals = require('../signals/signals');
+
+function MouseTracker(e) {
+    Signals.call(this);
+
+    e.addEventListener('mousedown', this._onMouseDown.bind(this));
+
+    this._emitMouseDown = this.register_signal('mousedown');
+    this._emitMouseUp = this.register_signal('mouseup');
+    this._emitMouseMove = this.register_signal('mousemove');
+}
+
+MouseTracker.prototype = Object.create(Signals.prototype);
+MouseTracker.prototype.constructor = MouseTracker;
+
+MouseTracker.prototype._onMouseDown = function(e) {
+    this._onMouseMove = (function(e) {
+        this._emitMouseMove(e);
+
+        e.preventDefault();
+        e.stopPropagation();
+    }).bind(this);
+
+    this._onMouseUp = (function(e) {
+        window.removeEventListener('mousemove', this._onMouseMove);
+        window.removeEventListener('mouseup', this._onMouseUp);
+
+        this._emitMouseUp(e);
+
+        e.preventDefault();
+        e.stopPropagation();
+    }).bind(this);
+
+    window.addEventListener('mousemove', this._onMouseMove);
+    window.addEventListener('mouseup', this._onMouseUp);
+
+    this._emitMouseDown(e);
+
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+module.exports = MouseTracker;
 
 // vi:ts=4:et

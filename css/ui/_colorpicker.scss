@@ -1,0 +1,188 @@
+/*
+ * Copyright (c) 2014 Jesse van den Kieboom. All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *    * Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *    * Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following disclaimer
+ *      in the documentation and/or other materials provided with the
+ *      distribution.
+ *    * Neither the name of Google Inc. nor the names of its
+ *      contributors may be used to endorse or promote products derived from
+ *      this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+@mixin checker-pattern($color, $size) {
+  background-image: -moz-linear-gradient(45deg, $color 25%, transparent 25%,
+                                         transparent 75%, $color 75%, $color),
+                    -moz-linear-gradient(45deg, $color 25%, transparent 25%,
+                                         transparent 75%, $color 75%, $color);
+
+  background-image: -webkit-linear-gradient(45deg, $color 25%, transparent 25%,
+                                            transparent 75%, $color 75%, $color),
+                    -webkit-linear-gradient(45deg, $color 25%, transparent 25%,
+                                            transparent 75%, $color 75%, $color);
+
+  background-image: linear-gradient(45deg, $color 25%, transparent 25%,
+                                    transparent 75%, $color 75%, $color),
+                    linear-gradient(45deg, $color 25%, transparent 25%,
+                                    transparent 75%, $color 75%, $color);
+
+  background-position: 0 0, $size $size;
+  background-size: ($size * 2) ($size * 2);
+
+  -webkit-background-size: ($size * 2) + 1 ($size * 2) + 1;
+}
+
+.ui-color-picker {
+  padding: 3px 3px 3px 3px;
+  border: 1px solid $borders_color;
+  border-radius: 3px;
+  background-color: white;
+  display: inline-block;
+
+  .color-background {
+    position: relative;
+    border-radius: 2px;
+
+    @include checker-pattern(darken($bg_color, 10%), 5px);
+  }
+
+  .highlight {
+    background-color: white;
+    border-radius: 2px;
+    opacity: 0;
+    width: 2em;
+    height: 1em;
+    padding: 3px;
+
+    &:hover {
+      opacity: 0.1;
+    }
+
+    &:active {
+      opacity: 0;
+    }
+  }
+}
+
+@mixin background-linear-gradient($dir1, $dir2, $args...) {
+  background: -moz-linear-gradient($dir1, $args);
+  background: -webkit-linear-gradient($dir1, $args);
+  background: -ms-linear-gradient($dir1, $args);
+  background: -o-linear-gradient($dir1, $args);
+  background: linear-gradient($dir2, $args);
+}
+
+@mixin background-linear-gradient-top($args...) {
+  @include background-linear-gradient(top, to bottom, $args);
+}
+
+@mixin background-linear-gradient-left($args...) {
+  @include background-linear-gradient(left, to right, $args);
+}
+
+.ui-color-picker-popup {
+  .area {
+    $bottom: #000 0%, rgba(0, 0, 0, 0) 100%;
+    $left: #FFF 0%, rgba(255, 255, 255, 0) 100%;
+
+    background: -moz-linear-gradient(bottom, $bottom), -moz-linear-gradient(left, $left);
+    background: -webkit-linear-gradient(bottom, $bottom), -webkit-linear-gradient(left, $left);
+    background: -ms-linear-gradient(bottom, $bottom), -webkit-linear-gradient(left, $left);
+    background: -o-linear-gradient(bottom, $bottom), -o-linear-gradient(left, $left);
+    background: linear-gradient(to top, $bottom), linear-gradient(to right, $left);
+
+    background-color: #F00;
+
+    height: 200px;
+    width: 200px;
+    margin-right: 2em;
+    position: relative;
+    border: 1px solid $borders_color;
+
+    .pick {
+      border: 1px solid white;
+      border-radius: 5px;
+      width: 5px;
+      height: 5px;
+      box-shadow: 0px 0px 1px black;
+      position: absolute;
+      left: 100%;
+      margin-left: -4px;
+      top: 100%;
+      margin-top: -4px;
+    }
+  }
+
+  .hue {
+    @include background-linear-gradient-top(#F00 0%, #FF0 16.66%, #0F0 33.33%, #0FF 50%,
+      #00F 66.66%, #F0F 83.33%, #F00 100%);
+
+    border: 1px solid $borders_color;
+
+    width: 1.5em;
+    height: 200px;
+    float: right;
+
+    position: relative;
+
+    .pick {
+      border: 1px solid white;
+      box-shadow: 0px 0px 1px black;
+      left: 0;
+      right: 0;
+      position: absolute;
+      height: 2px;
+      top: 50%;
+      margin-top: -1px;
+    }
+  }
+
+  .alpha {
+    display: inline-block;
+    border: 1px solid $borders_color;
+
+    @include checker-pattern(darken($bg_color, 10%), 5px);
+
+    &.hidden {
+      display: none;
+    }
+
+    .fg {
+      width: 200px;
+      height: 1.5em;
+      position: relative;
+
+      @include background-linear-gradient-left(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+
+      .pick {
+        border: 1px solid white;
+        box-shadow: 0px 0px 1px black;
+        top: 0;
+        bottom: 0;
+        position: absolute;
+        width: 2px;
+        left: 100%;
+        margin-left: -1px;
+      }
+    }
+  }
+}
+
+/* vi:ts=2:et */
