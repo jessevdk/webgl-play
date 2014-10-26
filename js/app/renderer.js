@@ -501,8 +501,6 @@ Renderer.prototype._grab_image = function() {
         thumbnail.width = (this.options.thumbnail_height / ph) * pw;
     }
 
-    console.log(thumbnail);
-
     canvas.width = Math.max(w, thumbnail.width);
     canvas.height = Math.floor(canvas.width * r);
 
