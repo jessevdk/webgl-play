@@ -75,7 +75,6 @@ body, input {
 
     li.ui-button {
       float: right;
-      text-shadow: 1px 1px 3px darken($blue, 20%);
       padding: 0;
       padding-left: 16px;
       padding-right: 16px;
@@ -259,7 +258,7 @@ $description_height: 400px;
     outline: none;
   }
 
-  div.button.close {
+  div.ui-button.close {
     position: absolute;
     top: 0;
     right: 0;
@@ -277,11 +276,11 @@ $description_height: 400px;
       display: block;
     }
 
-    div.button.close {
+    div.ui-button.close {
       display: block;
     }
 
-    div.button.close.animate {
+    div.ui-button.close.animate {
         opacity: 1;
     }
   }
