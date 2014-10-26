@@ -42,7 +42,7 @@
     border-radius: 3px;
     background-color: white;
     border: 1px solid $borders_color;
-    margin: ($bob_size / 2) + 2;
+    margin: ($bob_size / 2);
     transition: background-color ease 100ms;
 
     &:hover {
