@@ -134,7 +134,7 @@ View.prototype.interactive = function(ctx, v) {
         }
     }, v === true ? {} : v);
 
-    this._interactive._mouse_pressed = false;
+    this._interactive._mouse_pressed = null;
 
     ctx._signals.on('event', this._on_event, this);
 
