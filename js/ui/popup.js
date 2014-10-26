@@ -71,7 +71,7 @@ Popup.prototype.destroy = function() {
 
 Popup.prototype._build = function() {
     var outer = document.createElement('div');
-    outer.classList.add('popup');
+    outer.classList.add('ui-popup');
 
     document.body.appendChild(outer);
 
