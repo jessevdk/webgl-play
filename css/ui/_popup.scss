@@ -77,6 +77,10 @@
       bottom: 100%;
     }
 
+    &.down {
+      top: 100%;
+    }
+
     &.down:after, &.down:before {
       top: 100%;
     }
