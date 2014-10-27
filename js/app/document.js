@@ -51,6 +51,7 @@ function Document() {
     this.active_editor = null;
     this.screenshot = null;
     this.state = {};
+    this.share = null;
 
     this._active_program = this.programs[0];
     this._active_program._is_default = true;
@@ -185,7 +186,70 @@ Document.prototype.update = function(changes) {
         this.screenshot = changes.screenshot;
     }
 
+    if ('share' in changes) {
+        this.share = changes.share;
+    }
+
     this._changed(changes);
+}
+
+Document.fromRemote = function(share, doc) {
+    var ret = new Document();
+
+    ret.share = share;
+    ret.programs = [];
+    ret._default_program = null;
+
+    for (var i = 0; i < doc.programs.length; i++) {
+        var prg = Program.fromRemote(doc.programs[i]);
+        ret.programs.push(prg);
+
+        if (prg.is_default()) {
+            ret._default_program = prg;
+        }
+    }
+
+    if (ret.programs.length === 0) {
+        ret.programs.push(Program.default());
+    }
+
+    ret._active_program = ret.programs[0];
+
+    if (!ret._default_program) {
+        ret._default_program = ret.programs[0];
+        ret.programs[0]._is_default = true;
+    }
+
+    ret.js = {
+        data: doc.javascript,
+        history: {done: [], undone: []}
+    };
+
+    ret.title = doc.title;
+    ret.description = doc.description;
+    ret.modification_time = new Date();
+    ret.creation_time = new Date(doc.creationTime);
+
+    ret.state = {};
+
+    return ret;
+}
+
+Document.prototype.remote = function() {
+    var programs = [];
+
+    for (var i = 0; i < this.programs.length; i++) {
+        programs.push(this.programs[i].remote());
+    }
+
+    return {
+        version: 1,
+        title: this.title,
+        description: this.description,
+        programs: programs,
+        javascript: this.js.data,
+        creationTime: this.creation_time
+    };
 }
 
 Document.prototype.serialize = function() {
@@ -213,6 +277,10 @@ Document.prototype.serialize = function() {
 
     if (this.screenshot) {
         ret.screenshot = this.screenshot;
+    }
+
+    if (this.share) {
+        ret.share = this.share;
     }
 
     if (this.id !== null) {
@@ -249,12 +317,21 @@ Document.deserialize = function(doc) {
         ret.programs.push(Program.default());
     }
 
+    if (!ret._default_program) {
+        ret._default_program = ret.programs[0];
+        ret.programs[0]._is_default = true;
+    }
+
     if (ret._active_program === null) {
         ret._active_program = ret.programs[0];
     }
 
     if ('screenshot' in doc) {
         ret.screenshot = doc.screenshot;
+    }
+
+    if ('share' in doc) {
+        ret.share = doc.share;
     }
 
     ret.active_editor = doc.active_editor;

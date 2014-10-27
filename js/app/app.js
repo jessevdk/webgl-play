@@ -588,6 +588,57 @@ App.prototype.message = function(type, m) {
     window.addEventListener('mousedown', this._messageMousedown);
 }
 
+App.prototype._on_button_share_click = function() {
+    var req = new XMLHttpRequest();
+    var doc = this.document;
+
+    req.onload = (function(ev) {
+        var req = ev.target;
+
+        if (req.status === 200) {
+            var ret = JSON.parse(req.responseText);
+
+            if (this.document === doc) {
+                this._update_document_by({
+                    share: ret.hash
+                });
+
+                var l = document.location;
+                var url = l.protocol + '//' + l.host + '/d/' + ret.hash;
+
+                window.history.replaceState({}, '', url);
+
+                var e = document.createElement('div');
+
+                var s = document.createElement('span');
+                s.textContent = 'Shared document at ';
+                e.appendChild(s);
+
+                s = document.createElement('span');
+                s.textContent = url;
+                e.appendChild(s);
+
+                this.message('ok', e);
+
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents(s);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        } else {
+            this.message('error', 'Failed to upload document: ' + req.responseText);
+        }
+    }).bind(this);
+
+    req.onerror = (function(ev) {
+        this.message('error', 'Failed to upload document');
+    }).bind(this);
+
+    req.open('post', '/d/new', true);
+    req.send(JSON.stringify(this.document.remote()));
+}
+
 App.prototype._init_programs_bar = function() {
     this.programs_bar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
 }
@@ -767,6 +818,17 @@ App.prototype._on_title_mousedown = function(e) {
     }
 }
 
+App.prototype._addOverlay = function() {
+    var overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+
+    document.body.appendChild(overlay);
+    overlay.offsetWidth;
+    overlay.classList.add('animate');
+
+    return overlay;
+}
+
 App.prototype._show_info_popup = function() {
     var content = document.createElement('div');
     content.classList.add('info-popup');
@@ -864,13 +926,7 @@ App.prototype._show_info_popup = function() {
         editor.selectionEnd = 0;
     }).bind(this));
 
-    var overlay = document.createElement('div');
-    overlay.classList.add('overlay');
-
-    document.body.appendChild(overlay);
-    overlay.offsetWidth;
-    overlay.classList.add('animate');
-
+    var overlay = this._addOverlay();
     this._info_popup = new ui.Popup(content, this.title);
 
     this._info_popup.on('destroy', function() {
@@ -895,7 +951,9 @@ App.prototype._init_title = function() {
 
 App.prototype._init = function() {
     this._store = new Store((function(store) {
-        store.last((function(_, doc) {
+        var m = document.location.pathname.match(/d\/([A-Za-z0-9]+)/);
+
+        var f = (function(doc) {
             var saved = localStorage.getItem('savedDocumentBeforeUnload');
 
             if (saved !== null && doc !== null) {
@@ -908,14 +966,64 @@ App.prototype._init = function() {
 
                     this._load_doc(Document.deserialize(saved));
                     this._save_current_doc_with_delay();
-                }
 
-                return;
+                    localStorage.setItem('savedDocumentBeforeUnload', null);
+
+                    return;
+                }
             }
 
-            this.load_document(doc);
-        }).bind(this));
+            if (doc === null) {
+                this.load_document(null);
+            } else {
+                this._load_doc(doc);
+            }
+        }).bind(this);
+
+        if (m) {
+            store.byShare(m[1], (function(_, doc) {
+                if (doc !== null) {
+                    f(doc);
+                } else {
+                    // We don't have it, request it remotely
+                    var req = new XMLHttpRequest();
+
+                    req.onload = (function(e) {
+                        var req = e.target;
+
+                        if (req.status === 200) {
+                            var jdoc;
+
+                            try {
+                                jdoc = JSON.parse(req.responseText);
+                            } catch (e) {
+                                this._message('error', 'Failed parse document: ' + e.message);
+                                return;
+                            }
+
+                            f(Document.fromRemote(m[1], jdoc));
+                        } else {
+                            this._message('error', 'Failed to load document: ' + req.textContent);
+                        }
+
+                    }).bind(this);
+
+                    req.onerror = (function(e) {
+                        this._message('error', 'Failed to load document ' + m[1]);
+                    }).bind(this);
+
+                    req.open('get', '/d/' + m[1] + '.json');
+                    req.send();
+                }
+            }).bind(this));
+        } else {
+            store.last((function(_, doc) {
+                f(doc);
+            }).bind(this));
+        }
     }).bind(this));
+
+    this.content = document.getElementById('content');
 
     this._init_programs_bar();
     this._init_canvas();

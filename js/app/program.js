@@ -165,6 +165,35 @@ Program.prototype.compile = function(gl) {
     };
 }
 
+Program.fromRemote = function(p) {
+    var ret = new Program();
+
+    ret.vertex = {
+        data: p.vertex,
+        history: {done: [], undone: []}
+    };
+
+    ret.fragment = {
+        data: p.fragment,
+        history: {done: [], undone: []}
+    };
+
+    ret._name = p.name;
+    ret._is_default = p.isDefault || false;
+
+    return ret;
+}
+
+Program.prototype.remote = function() {
+    return {
+        version: 1,
+        name: this._name,
+        vertex: this.vertex.data,
+        fragment: this.fragment.data,
+        isDefault: this._is_default
+    };
+}
+
 Program.prototype.serialize = function() {
     return {
         version: 1,

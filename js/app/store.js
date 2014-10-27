@@ -31,7 +31,7 @@ function Store(ready) {
     this._db = null;
     this._ready = ready;
 
-    var version = 2;
+    var version = 3;
 
     //indexedDB.deleteDatabase('webgl-play');
     var req = indexedDB.open('webgl-play', version);
@@ -100,6 +100,27 @@ Store.prototype.delete = function(doc, cb) {
 
     req.onsuccess = (function(ev) {
         cb(this, doc);
+    }).bind(this);
+
+    req.onerror = (function(ev) {
+        console.log('database error', ev);
+        cb(this, null);
+    }).bind(this);
+}
+
+Store.prototype.byShare = function(share, cb) {
+    var tr = this._db.transaction('documents');
+    var store = tr.objectStore('documents');
+    var idx = store.index('share');
+
+    var req = idx.get(share);
+
+    req.onsuccess = (function(ev) {
+        if (ev.target.result) {
+            cb(this, ev.target.result);
+        } else {
+            cb(this, null);
+        }
     }).bind(this);
 
     req.onerror = (function(ev) {
@@ -213,6 +234,12 @@ Store.prototype._onupgradeneeded = function(e) {
     // Add object cache
     if (e.oldVersion <= 1) {
         db.createObjectStore('object-cache');
+    }
+
+    // Add object cache
+    if (e.oldVersion <= 2) {
+        var store = e.currentTarget.transaction.objectStore('documents');
+        store.createIndex('share', 'share', { unique: false });
     }
 }
 
