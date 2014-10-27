@@ -295,6 +295,7 @@ Document.deserialize = function(doc) {
 
     ret.programs = [];
     ret._active_program = null;
+    ret._default_program = null;
 
     if ('id' in doc) {
         ret.id = doc.id;
