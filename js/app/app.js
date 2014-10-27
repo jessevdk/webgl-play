@@ -529,17 +529,20 @@ App.prototype._init_programs_bar = function() {
 }
 
 App.prototype._init_buttons = function() {
-    var buttons = ['open', 'new', 'copy'];
+    var buttons = ['new', 'copy', 'export', 'open', 'help', 'share', 'publish'];
 
     this.buttons = {};
 
     for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
+        var elem = document.getElementById('button-' + b);
 
-        var button = new ui.Button({ wrap: document.getElementById('button-' + b) });
+        if (elem) {
+            var button = new ui.Button({ wrap: elem });
 
-        button.on('click', this['_on_button_' + b + '_click'], this);
-        this.buttons[b] = button;
+            button.on('click', this['_on_button_' + b + '_click'], this);
+            this.buttons[b] = button;
+        }
     }
 }
 

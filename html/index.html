@@ -43,10 +43,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <body>
     <div id="main">
       <div id="header">
-        <ul id="buttons">
-          <li id="button-open">Open ▼</li>
-          <li id="button-copy">Copy</li>
-          <li id="button-new">New</li>
+        <ul id="buttons-local">
+          <li id="button-help" title="Open the help">Help</li>
+          <li id="button-open" title="Open an existing local document">Open ▼</li>
+          <li id="button-export" title="Export the current document to a file">Export</li>
+          <li id="button-copy" title="Copy the current document to a new document">Copy</li>
+          <li id="button-new" title="Open a new empty document">New</li>
+        </ul>
+        <ul id="buttons-remote">
+          <li id="button-share" title="Share the current document through the online service">Share</li>
+          <li id="button-publish" title="Publish the current document in the online gallery">Publish</li>
         </ul>
         <div id="document-title"></div>
       </div>

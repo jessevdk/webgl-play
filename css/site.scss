@@ -66,20 +66,36 @@ body, input {
     font-weight: bold;
   }
 
-  #buttons {
+  #buttons-local, #buttons-remote {
     margin: 0;
     padding: 0;
     list-style: none;
-    position: absolute;
-    right: 0;
 
-    li.ui-button {
-      float: right;
+    li {
       padding: 0;
       padding-left: 16px;
       padding-right: 16px;
       border: 0;
       border-radius: 0;
+    }
+  }
+
+  #buttons-local {
+    position: absolute;
+    right: 0;
+
+    li {
+      float: right;
+    }
+  }
+
+  #buttons-remote {
+    position: absolute;
+    left: 0;
+    display: none;
+
+    li {
+      float: left;
     }
   }
 }
