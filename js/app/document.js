@@ -310,7 +310,7 @@ Document.deserialize = function(doc) {
         }
 
         if (prg.is_default()) {
-            this._default_program = prg;
+            ret._default_program = prg;
         }
     }
 
