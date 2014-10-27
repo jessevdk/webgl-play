@@ -296,6 +296,8 @@ App.prototype._load_doc = function(doc) {
     this.document.on('changed', this._on_document_has_changed, this);
 
     this._on_document_changed();
+
+    this.content.classList.add('loaded');
 }
 
 App.prototype._on_document_has_changed = function(doc, opts) {

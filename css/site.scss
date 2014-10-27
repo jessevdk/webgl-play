@@ -140,6 +140,12 @@ body, input {
   bottom: 0px;
   right: 0px;
   left: 0px;
+  opacity: 0;
+  transition: opacity ease 1s;
+
+  &.loaded {
+    opacity: 1;
+  }
 }
 
 #panel-programs {
