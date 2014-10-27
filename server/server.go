@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jessevdk/go-flags"
 )
@@ -37,8 +38,8 @@ func main() {
 	dataRoot = absPath(options.Data)
 	siteRoot = absPath(options.SiteData)
 
-	router.PathPrefix("/assets/").Handler(http.FileServer(http.Dir(siteRoot)))
-	router.PathPrefix("/").Handler(NewRestishHandler(SiteHandler{}))
+	router.PathPrefix("/assets/").Handler(handlers.CompressHandler(http.FileServer(http.Dir(siteRoot))))
+	router.PathPrefix("/").Handler(handlers.CompressHandler(NewRestishHandler(SiteHandler{})))
 
 	if err := http.ListenAndServe(options.Listen, router); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while listening: %s\n", err)

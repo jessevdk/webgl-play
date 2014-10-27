@@ -7,6 +7,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -36,6 +37,7 @@ func (d *ModelHandler) Get(writer http.ResponseWriter, req *http.Request) {
 		}
 
 		// Load from local file
+		writer.Header().Set("Content-Type", "text/plain")
 		http.ServeFile(writer, req, filename)
 	} else {
 		d.proxy.ServeHTTP(writer, req)
@@ -48,9 +50,9 @@ func redirectModelRequest(r *http.Request) {
 }
 
 func init() {
-	router.Handle("/m/{url:.*}", NewRestishHandler(&ModelHandler{
+	router.Handle("/m/{url:.*}", handlers.CompressHandler(NewRestishHandler(&ModelHandler{
 		proxy: &httputil.ReverseProxy{
 			Director: redirectModelRequest,
 		},
-	}))
+	})))
 }
