@@ -541,6 +541,53 @@ App.prototype._on_editor_parsed = function() {
     }).bind(this), 50);
 }
 
+App.prototype.message = function(type, m) {
+    var div = document.createElement('div');
+    this._message = div;
+
+    div.classList.add('message');
+    div.classList.add(type);
+
+    if (typeof m === 'string') {
+        div.textContent = m;
+    } else {
+        div.appendChild(m);
+    }
+
+    var overlay = this._addOverlay();
+    document.body.appendChild(div);
+
+    var w = div.offsetWidth;
+    var h = div.offsetHeight;
+
+    div.style.left = ((document.body.offsetWidth - w) / 2) + 'px';
+    div.style.top = ((document.body.offsetHeight - h) / 2) + 'px';
+
+    var remover = (function() {
+        window.removeEventListener('keydown', this._messageKeydown);
+        window.removeEventListener('mousedown', this._messageMousedown);
+
+        document.body.removeChild(overlay);
+        document.body.removeChild(div);
+    }).bind(this);
+
+    this._messageKeydown = (function(e) {
+        if (e.keyCode === 27) {
+            remover();
+        }
+    }).bind(this);
+
+    this._messageMousedown = (function(e) {
+        if (e.pageX < div.offsetLeft || e.pageX > div.offsetLeft + div.offsetWidth ||
+            e.pageY < div.offsetTop || e.pageY > div.offsetTop + div.offsetHeight) {
+            remover();
+        }
+    }).bind(this);
+
+    window.addEventListener('keydown', this._messageKeydown);
+    window.addEventListener('mousedown', this._messageMousedown);
+}
+
 App.prototype._init_programs_bar = function() {
     this.programs_bar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
 }
