@@ -639,6 +639,13 @@ App.prototype._on_button_share_click = function() {
     req.send(JSON.stringify(this.document.remote()));
 }
 
+App.prototype._on_button_export_click = function() {
+    var saveas = require('../vendor/FileSaver');
+
+    var blob = new Blob([JSON.stringify(this.document.remote(), undefined, 2)], {type: 'application/json;charset=utf-8'});
+    saveas(blob, this.document.title + '.json');
+}
+
 App.prototype._init_programs_bar = function() {
     this.programs_bar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
 }
