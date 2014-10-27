@@ -517,7 +517,7 @@ function cacheKey(filename, options) {
 
 function parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options) {
     var key = cacheKey(filename, options);
-    var date = new Date(req.getResponseHeader('Date'));
+    var date = new Date(req.getResponseHeader('Last-Modified'));
 
     // Try local/session cache first
     var cached = objectCache[key];

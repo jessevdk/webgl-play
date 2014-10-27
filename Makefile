@@ -39,7 +39,7 @@ $(eval $(call install-bin-npm-module,exorcist,exorcist))
 $(eval $(call install-bin-npm-module,uglifyjs,uglify-js))
 $(eval $(call install-npm-module,node_modules/uglifyify,uglifyify))
 
-MODELS = $(foreach i,$(wildcard models/*.obj models/*.mtl),site/models/$(notdir $(i)))
+MODELS = $(foreach i,$(wildcard models/*.obj models/*.mtl),site/assets/models/$(notdir $(i)))
 
 SITE_EXTERNAL_DEPS =		\
 	js/app/default.glslv	\
@@ -48,7 +48,7 @@ SITE_EXTERNAL_DEPS =		\
 
 -include .gen/js/site.min.js.deps
 
-site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_EXTERNAL_DEPS)
+site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_EXTERNAL_DEPS)
 	@mkdir -p $(dir $@); 															\
 	full=no; 																		\
 	for f in $(SITE_EXTERNAL_DEPS); do 												\
@@ -80,12 +80,12 @@ site/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_E
 	fi; 																			\
 	printf "[\033[1mGEN\033[0m] [deps]\n"; 											\
 	mkdir -p .gen/js; 																\
-	printf "site/js/site.min.js: " > .gen/js/site.min.js.deps; 						\
+	printf "site/assets/js/site.min.js: " > .gen/js/site.min.js.deps; 					\
 	$(BROWSERIFY) --list js/site.js 2>/dev/null 									\
 		| tr "\\n" " " >> .gen/js/site.min.js.deps; 								\
 	echo "" >> $@
 
-site/js/vendor.min.js: $(VENDORJS)
+site/assets/js/vendor.min.js: $(VENDORJS)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	cat $(VENDORJS) > $@
@@ -95,7 +95,7 @@ site/index.html: html/index.html
 	mkdir -p $(dir $@); \
 	cp html/index.html site/index.html
 
-site/css/vendor.css: $(wildcard css/*.css)
+site/assets/css/vendor.css: $(wildcard css/*.css)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	cat $^ > $@
@@ -105,12 +105,11 @@ site/css/site.css: $(SASS) $(shell find css -name '*.scss')
 	mkdir -p $(dir $@); \
 	$(GP) $(SASS) css/site.scss $@
 
-site/models/%: models/%
+site/assets/models/%: models/%
 	@printf "[\033[1mCP\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	cp $^ $@
 
-site: site/js/vendor.min.js site/js/site.min.js site/index.html site/css/vendor.css site/css/site.css $(MODELS)
 	@printf "[\033[1m$(shell date)\033[0m] ... [\033[32mdone\033[0m]\n\n"
 
 watch:
