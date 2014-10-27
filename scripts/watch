@@ -23,7 +23,9 @@ watchman -j <<-EOT >/dev/null || exit 1
 	        ["match", "css/**.css", "wholename"],
 	        ["match", "html/**.html", "wholename"],
 	        ["match", "js/**.glslv", "wholename"],
-	        ["match", "js/**.glslf", "wholename"]
+	        ["match", "js/**.glslf", "wholename"],
+	        ["match", "server/*.go", "wholename"],
+	        ["match", "server/remote.css", "wholename"]
 	    ],
 	    "command": ["$MAKE", "-s", "site", "ENV=$ENV"]
 	}]

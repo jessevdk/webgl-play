@@ -93,14 +93,14 @@ site/assets/js/vendor.min.js: $(VENDORJS)
 site/index.html: html/index.html
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
-	cp html/index.html site/index.html
+	cp $^ $@
 
 site/assets/css/vendor.css: $(wildcard css/*.css)
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	cat $^ > $@
 
-site/css/site.css: $(SASS) $(shell find css -name '*.scss')
+site/assets/css/site.css: $(SASS) $(shell find css -name '*.scss')
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	$(GP) $(SASS) css/site.scss $@
@@ -110,6 +110,31 @@ site/assets/models/%: models/%
 	mkdir -p $(dir $@); \
 	cp $^ $@
 
+server/site/index.html: html/index.html
+	@printf "[\033[1mGEN\033[0m] $@\n"; \
+	mkdir -p $(dir $@); \
+	sed 's|"assets/|"/assets/|g' < html/index.html > $@
+
+local-site: site/assets/js/vendor.min.js site/assets/js/site.min.js site/index.html site/assets/css/vendor.css site/assets/css/site.css $(MODELS) server/site/index.html
+
+server/server: $(wildcard server/*.go)
+	@printf "[\033[1mGO\033[0m] $@\n"; \
+	(cd server && go build)
+
+server-site: local-site
+	@printf "[\033[1mGEN\033[0m] remote assets\n"; \
+	rm -rf server/site/assets; \
+	mkdir -p server/site/assets; \
+	cp -r site/assets/* server/site/assets/
+
+server/site/assets/css/remote.css: server-site server/remote.css
+	@printf "[\033[1mGEN\033[0m] $@\n"; \
+	mkdir -p server/site/assets/css; \
+	cp server/remote.css server/site/assets/css/
+
+server:	server-site server/site/assets/css/remote.css server/server
+
+site: server
 	@printf "[\033[1m$(shell date)\033[0m] ... [\033[32mdone\033[0m]\n\n"
 
 watch:
@@ -120,7 +145,7 @@ unwatch:
 	@watchman -- trigger-del $(CURRENT_DIR) remake >/dev/null && \
 	watchman watch-del $(CURRENT_DIR) >/dev/null
 
-serve: site
-	(cd site && python -m SimpleHTTPServer)
+serve: server
+	(cd server && ./server)
 
-.PHONY: all site watch
+.PHONY: all site local-site server-site server watch unwatch serve
