@@ -46,6 +46,18 @@ function App() {
     this._on_document_changed = this.register_signal('notify::document');
     this._lastFocus = null;
 
+    window.addEventListener('error', (function(e) {
+        var error = e.error;
+
+        if (error.originalStack) {
+            this._handle_js_error(error);
+
+            e.preventDefault();
+            e.stopPropagation();
+            return true;
+        }
+    }).bind(this));
+
     if (document.readyState === 'complete') {
         this._init();
     } else {
@@ -85,7 +97,10 @@ App.prototype.load_document = function(doc) {
 }
 
 App.prototype._extract_js_error_loc = function(e) {
-    var lines = e.stack.split('\n');
+    var stack;
+
+    stack = e.originalStack || e.stack;
+    var lines = stack.split('\n');
 
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];

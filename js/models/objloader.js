@@ -577,10 +577,14 @@ function parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options) {
  * @param options optional options.
  */
 exports.load = function(ctx, filename, options) {
+    if (document.location.protocol.indexOf('file') === 0) {
+        throw new Error('Cannot load external models in local mode');
+    }
+
     var req = new XMLHttpRequest();
 
     options = utils.merge({
-        error: function() {},
+        error: null,
         success: function() {},
         complete: function() {},
         autosmooth: false,
@@ -600,28 +604,48 @@ exports.load = function(ctx, filename, options) {
         fromCache = ret.children.slice(0);
     }
 
+    var makeError = (function(stack) {
+        return function(message) {
+            var e = new Error(message);
+            e.originalStack = stack;
+
+            return e;
+        };
+    })((new Error()).stack);
+
     req.onload = function(ev) {
         var req = ev.target;
-        var body = req.responseText;
 
-        try {
-            parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options);
-        } catch (e) {
-            console.error(e.stack);
-            options.error(req, e.message);
+        if (req.status === 200) {
+            var body = req.responseText;
+
+            try {
+                parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options);
+            } catch (e) {
+                console.error(e.stack);
+                options.error(req, e.message);
+            }
+        } else {
+            throw makeError(req.responseText);
         }
     }
 
     req.onerror = function(ev) {
-        options.error(ev.target, ev.target.responseText);
+        if (options.error) {
+            options.error(ev.target, ev.target.responseText);
+        } else {
+            var req = ev.target;
+            throw makeError(req.responseText);
+        }
     }
 
-    req.open('get', filename, true);
+    req.open('get', '/m/' + encodeURIComponent(filename), true);
 
     try {
         req.send();
     } catch (e) {
         console.error(e.stack);
+        throw new Error(e.message);
     }
 
     return ret;
