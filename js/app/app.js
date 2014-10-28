@@ -830,19 +830,6 @@ App.prototype._on_button_new_click = function() {
     }).bind(this));
 }
 
-App.prototype._on_title_mousedown = function(e) {
-    if (!this._info_popup) {
-        var f;
-
-        f = (function(e) {
-            this.title.removeEventListener('mouseup', f);
-            this._show_info_popup();
-        }).bind(this);
-
-        this.title.addEventListener('mouseup', f);
-    }
-}
-
 App.prototype._addOverlay = function() {
     var overlay = document.createElement('div');
     overlay.classList.add('overlay');
@@ -970,8 +957,7 @@ App.prototype._show_info_popup = function() {
 
 App.prototype._init_title = function() {
     this.title = document.getElementById('document-title');
-
-    this.title.addEventListener('mousedown', this._on_title_mousedown.bind(this));
+    ui.Popup.on(this.title, this._show_info_popup.bind(this));
 }
 
 App.prototype._init = function() {
