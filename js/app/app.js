@@ -998,11 +998,7 @@ App.prototype._init = function() {
                 }
             }
 
-            if (doc === null) {
-                this.load_document(null);
-            } else {
-                this._load_doc(doc);
-            }
+            this.load_document(doc);
         }).bind(this);
 
         if (m) {
