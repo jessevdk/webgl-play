@@ -43,6 +43,16 @@ function Button(settings) {
 Button.prototype = Object.create(Widget.prototype);
 Button.prototype.constructor = Button;
 
+Button.prototype._valueUpdated = function() {
+    if (typeof this._value === 'string') {
+        this.e.textContent = this._value;
+    } else if (typeof this._value.text !== 'undefined') {
+        this.e.textContent = this._value.text;
+    } else if (typeof this._value.markup !== 'undefined') {
+        this.e.innerHTML = this._value.markup;
+    }
+}
+
 Button.prototype._on_click = function(e) {
     this._on_click_event(e);
 
