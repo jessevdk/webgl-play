@@ -38,6 +38,7 @@ $ui_active_bg: lighten($blue, 10%);
 @import 'colorpicker';
 @import 'grid';
 @import 'spinner';
+@import 'progress';
 
 .ui-widget {
 	cursor: default;

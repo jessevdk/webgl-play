@@ -27,18 +27,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module.exports = {
-	Label: require('./label'),
-	OnOff: require('./onoff'),
-	Grid: require('./grid'),
-    Panel: require('./panel'),
-    ProgramsBar: require('./programs-bar'),
-    Button: require('./button'),
-    Popup: require('./popup'),
-    Slider: require('./slider'),
-    ColorPicker: require('./colorpicker'),
-    Spinner: require('./spinner'),
-    Progress: require('./progress'),
-};
+var Widget = require('./widget');
+var utils = require('../utils/utils');
+
+function Progress(settings) {
+	var e = this.create('div', {
+		children: this.create('div', {
+			classes: 'container',
+			children: this.create('div', {
+				classes: 'indicator'
+			})
+		})
+	});
+
+	this._indicator = e.querySelector('.indicator');
+	this._value = 0;
+
+    Widget.call(this, 'progress', e, utils.merge({}, settings));
+}
+
+Progress.prototype = Object.create(Widget.prototype);
+Progress.prototype.constructor = Progress;
+
+Progress.prototype._valueUpdated = function() {
+	this._indicator.style.width = (this._value * 100) + '%';
+}
+
+module.exports = Progress;
 
 // vi:ts=4:et
