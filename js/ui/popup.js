@@ -96,8 +96,8 @@ Popup.prototype._build = function() {
     };
 
     var pagedim = {
-        width: document.body.offsetWidth - 12,
-        height: document.body.offsetHeight - 12
+        width: document.body.offsetWidth,
+        height: document.body.offsetHeight
     };
 
     var pos = {
@@ -105,8 +105,8 @@ Popup.prototype._build = function() {
         y: epos.y + epos.height + 14
     };
 
-    if (pos.x + medim.width > pagedim.width) {
-        pos.x = pagedim.width - medim.width;
+    if (pos.x + medim.width > pagedim.width - 12) {
+        pos.x = pagedim.width - medim.width - 12;
     }
 
     var apos = epos.x + epos.width / 2 - pos.x;
@@ -117,16 +117,16 @@ Popup.prototype._build = function() {
         apos = medim.width - 24;
     }
 
-    arrow.style.left = apos + 'px';
+    arrow.style.right = (medim.width - apos) + 'px';
 
-    if (pos.y + medim.height > pagedim.height) {
+    if (pos.y + medim.height > pagedim.height && epos.y - medim.height - 14 >= 0) {
         pos.y = epos.y - medim.height - 14;
         arrow.classList.add('down');
     } else {
         arrow.classList.add('up');
     }
 
-    outer.style.left = pos.x + 'px';
+    outer.style.right = (pagedim.width - (pos.x + medim.width)) + 'px';
     outer.style.top = pos.y + 'px';
 
     this._outer = outer;
