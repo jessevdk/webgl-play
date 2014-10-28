@@ -37,6 +37,7 @@ module.exports = {
     Popup: require('./popup'),
     Slider: require('./slider'),
     ColorPicker: require('./colorpicker'),
+    Spinner: require('./spinner'),
 };
 
 // vi:ts=4:et
