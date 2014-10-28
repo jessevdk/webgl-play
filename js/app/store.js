@@ -91,6 +91,7 @@ Store.prototype.object_from_cache = function(url, date, cb) {
 Store.prototype.delete = function(doc, cb) {
     if (!('id' in doc)) {
         cb(this, null);
+        return;
     }
 
     var tr = this._db.transaction('documents', 'readwrite');
