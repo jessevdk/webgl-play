@@ -340,9 +340,7 @@ App.prototype._serialize_document = function(doc) {
     return ret;
 }
 
-App.prototype._save_current_doc = function(cb) {
-    var doc = this.document;
-
+App.prototype._save_doc = function(doc, cb) {
     this._store.save(this._serialize_document(doc), function(store, retdoc) {
         if (retdoc !== null) {
             doc.id = retdoc.id;
@@ -352,6 +350,10 @@ App.prototype._save_current_doc = function(cb) {
             cb(retdoc !== null);
         }
     });
+}
+
+App.prototype._save_current_doc = function(cb) {
+    this._save_doc(this.document, cb);
 }
 
 App.prototype._save_current_doc_with_delay = function(cb) {
