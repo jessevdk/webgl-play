@@ -91,7 +91,9 @@ App.prototype.load_document = function(doc) {
         return;
     }
 
-    doc = Document.deserialize(doc);
+    if (!Document.prototype.isPrototypeOf(doc)) {
+        doc = Document.deserialize(doc);
+    }
 
     this._load_doc(doc);
 }
@@ -235,9 +237,7 @@ App.prototype._on_document_title_changed = function() {
     this.title.textContent = this.document.title;
 }
 
-App.prototype._load_doc = function(doc) {
-    this._loading = true;
-
+App.prototype._load_doc_real = function(doc) {
     if (this.document !== null) {
         this.document.off('notify-before::active-program', this._on_document_before_active_program_changed, this);
         this.document.off('notify::active-program', this._on_document_active_program_changed, this);
@@ -298,6 +298,22 @@ App.prototype._load_doc = function(doc) {
     this._on_document_changed();
 
     this.content.classList.add('loaded');
+    this.content.classList.remove('loading');
+}
+
+App.prototype._load_doc = function(doc) {
+    this._loading = true;
+
+    if (this.document !== null) {
+        this.content.classList.remove('loaded');
+        this.content.classList.add('loading');
+
+        setTimeout((function() {
+            this._load_doc_real(doc);
+        }).bind(this), 200);
+    } else {
+        this._load_doc_real(doc);
+    }
 }
 
 App.prototype._on_document_has_changed = function(doc, opts) {

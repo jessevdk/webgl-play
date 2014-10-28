@@ -146,6 +146,11 @@ body, input {
   &.loaded {
     opacity: 1;
   }
+
+  &.loading {
+    transition: opacity ease 200ms;
+    opacity: 0;
+  }
 }
 
 #panel-programs {
