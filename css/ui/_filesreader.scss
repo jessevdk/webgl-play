@@ -27,19 +27,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module.exports = {
-	Label: require('./label'),
-	OnOff: require('./onoff'),
-	Grid: require('./grid'),
-    Panel: require('./panel'),
-    ProgramsBar: require('./programs-bar'),
-    Button: require('./button'),
-    Popup: require('./popup'),
-    Slider: require('./slider'),
-    ColorPicker: require('./colorpicker'),
-    Spinner: require('./spinner'),
-    Progress: require('./progress'),
-    FilesReader: require('./filesreader'),
-};
+.ui-files-reader {
+  border-spacing: 6px;
 
-// vi:ts=4:et
+  td.file, td.percentage {
+    text-align: right;
+  }
+
+  tr.error {
+    .percentage {
+      color: $red;
+    }
+
+    .ui-progress {
+      border-color: darken($red, 10%);
+
+      .container .indicator {
+        background-color: $red;
+      }
+    }
+  }
+
+  tr.ok {
+    color: $green;
+
+    .ui-progress {
+      border: 1px solid darken($green, 10%);
+
+      .container .indicator {
+        background-color: $green;
+      }
+    }
+  }
+}
+
+/* vi:ts=2:et */

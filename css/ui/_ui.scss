@@ -39,6 +39,7 @@ $ui_active_bg: lighten($blue, 10%);
 @import 'grid';
 @import 'spinner';
 @import 'progress';
+@import 'filesreader';
 
 .ui-widget {
 	cursor: default;
