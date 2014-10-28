@@ -165,7 +165,7 @@ input[type="text"] {
   outline: none;
 }
 
-.ui-popup .documents {
+.ui-popup .documents, .ui-popup .models {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -182,10 +182,11 @@ input[type="text"] {
       background-color: darken(white, 5%);
     }
 
-    .title {
+    .title, .filename {
       display: inline-block;
       font-weight: bold;
       margin-left: 6px;
+      white-space: nowrap;
     }
 
     .modification-time {
@@ -224,12 +225,11 @@ input[type="text"] {
       box-sizing: border-box;
 
       border-radius: 8px;
-      background-color: $orange;
+      background-color: rgba(black, 0.2);
       color: white;
-      font-size: 10px;
+      font-size: 12px;
 
       text-align: center;
-      padding-top: 1px;
 
       &:hover {
         background-color: lighten($red, 10%);
@@ -238,7 +238,37 @@ input[type="text"] {
       &:active {
         background-color: lighten($red, 20%);
       }
+
+      &.spinning, &.spinning:hover, &.spinning:active {
+        background-color: transparent;
+        pointer-events: none;
+      }
     }
+
+    &.import {
+      padding: 12px;
+      border-bottom: 1px solid lighten($borders_color, 10%);
+      font-weight: bold;
+      text-align: center;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.ui-popup .models li:not(:first-child) {
+  &:hover {
+    background-color: inherit;
+  }
+
+  &:active {
+    background-color: inherit;
+  }
+
+  &:nth-child(even):hover, &:nth-child(even):active {
+    background-color: darken(white, 5%);
   }
 }
 
@@ -327,6 +357,18 @@ $description_height: 400px;
     color: white;
     border: 1px solid darken($red, 20%);
     box-shadow: 0px 0px 5px darken($red, 20%);
+  }
+
+  .files {
+    .title {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .actions {
+      text-align: right;
+      margin-top: 12px;
+    }
   }
 }
 

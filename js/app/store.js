@@ -31,7 +31,7 @@ function Store(ready) {
     this._db = null;
     this._ready = ready;
 
-    var version = 3;
+    var version = 4;
 
     //indexedDB.deleteDatabase('webgl-play');
     var req = indexedDB.open('webgl-play', version);
@@ -176,6 +176,99 @@ Store.prototype.all = function(cb) {
     }).bind(this);
 }
 
+Store.prototype.addModel = function(model, data, cb) {
+    if (!('filename' in model)) {
+        cb(this, null);
+        return;
+    }
+
+    var tr = this._db.transaction(['models', 'model-data'], 'readwrite');
+    var models = tr.objectStore('models');
+    var modelData = tr.objectStore('model-data');
+
+    models.put(model);
+    modelData.put({
+        filename: model.filename,
+        data: data
+    });
+
+    tr.oncomplete = (function(ev) {
+        cb(this, model);
+    }).bind(this);
+
+    tr.onerror = (function(ev) {
+        console.log('database error', ev);
+        cb(this, null);
+    }).bind(this);
+}
+
+Store.prototype.modelData = function(filename, cb) {
+    var tr = this._db.transaction('model-data');
+    var store = tr.objectStore('model-data');
+
+    var req = store.get(filename);
+
+    req.onsuccess = (function(e) {
+        if (ev.target.result) {
+            cb(this, ev.target.result.data);
+        } else {
+            cb(this, null);
+        }
+    }).bind(this);
+
+    req.onerror = (function(e) {
+        console.log('database error', e);
+        cb(this, null);
+    }).bind(this);
+}
+
+Store.prototype.deleteModel = function(model, cb) {
+    if (!('filename' in model)) {
+        cb(this, null);
+        return;
+    }
+
+    var tr = this._db.transaction(['models', 'model-data'], 'readwrite');
+    var models = tr.objectStore('models');
+    var modelData = tr.objectStore('model-data');
+
+    models.delete(model.filename);
+    modelData.delete(model.filename);
+
+    tr.oncomplete = (function(ev) {
+        cb(this, model);
+    }).bind(this);
+
+    tr.onerror = (function(ev) {
+        console.log('database error', ev);
+        cb(this, null);
+    }).bind(this);
+}
+
+Store.prototype.models = function(cb) {
+    var tr = this._db.transaction('models');
+    var store = tr.objectStore('models');
+    var req = store.openCursor();
+
+    var ret = [];
+
+    req.onsuccess = (function(ev) {
+        var res = ev.target.result;
+
+        if (res) {
+            ret.push(res.value);
+            res.continue();
+        } else {
+            cb(this, ret);
+        }
+    }).bind(this);
+
+    req.onerror = (function(ev) {
+        console.log('database error', ev);
+        cb(this, ret);
+    }).bind(this);
+}
+
 Store.prototype.save = function(doc, cb) {
     var tr = this._db.transaction('documents', 'readwrite');
     var store = tr.objectStore('documents');
@@ -240,6 +333,12 @@ Store.prototype._onupgradeneeded = function(e) {
     if (e.oldVersion <= 2) {
         var store = e.currentTarget.transaction.objectStore('documents');
         store.createIndex('share', 'share', { unique: false });
+    }
+
+    // Add stores for local models
+    if (e.oldVersion <= 3) {
+        db.createObjectStore('models', { keyPath: 'filename' });
+        db.createObjectStore('model-data', { keyPath: 'filename' });
     }
 }
 

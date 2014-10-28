@@ -604,6 +604,8 @@ App.prototype.message = function(type, m) {
 
     window.addEventListener('keydown', this._messageKeydown);
     window.addEventListener('mousedown', this._messageMousedown);
+
+    return remover;
 }
 
 App.prototype._on_button_share_click = function() {
@@ -669,7 +671,7 @@ App.prototype._init_programs_bar = function() {
 }
 
 App.prototype._init_buttons = function() {
-    var buttons = ['new', 'copy', 'export', 'open', 'help', 'share', 'publish'];
+    var buttons = ['new', 'copy', 'export', 'open', 'models', 'help', 'share', 'publish'];
 
     this.buttons = {};
 
@@ -680,10 +682,18 @@ App.prototype._init_buttons = function() {
         if (elem) {
             var button = new ui.Button({ wrap: elem });
 
-            button.on('click', this['_on_button_' + b + '_click'], this);
+            var eh = '_on_button_' + b + '_click';
+
+            if (eh in this) {
+                button.on('click', this[eh], this);
+            }
+
             this.buttons[b] = button;
         }
     }
+
+    ui.Popup.on(this.buttons.open.e, this._show_open_popup.bind(this));
+    ui.Popup.on(this.buttons.models.e, this._show_models_popup.bind(this));
 }
 
 App.prototype._on_button_copy_click = function() {
@@ -739,75 +749,268 @@ App.prototype._rel_date = function(date) {
     }
 }
 
-App.prototype._on_button_open_click = function() {
-    this._store.all((function(store, ret) {
-        var content = document.createElement('ul');
-        content.classList.add('documents');
+App.prototype._show_models_popup = function(cb) {
+    var popup;
+
+    this._store.models((function(store, ret) {
+        var W = ui.Widget.createUi;
+        var content = W('div', { classes: 'models' });
+
+        var li = W('li', {
+            classes: 'import',
+            innerHTML: 'Import&nbsp;from&nbsp;file',
+            title: 'Import a model from a local file'
+        });
+
+        li.addEventListener('click', (function() {
+            var inp = W('input', { type: 'file', multiple: 'multiple' });
+
+            inp.onchange = (function() {
+                var reader = new ui.FilesReader(inp.files);
+                var msg;
+
+                if (inp.files.length === 1) {
+                    msg = 'Importing 1 model from file';
+                } else {
+                    msg = 'Importing ' + inp.files.length + ' models from files';
+                }
+
+                var but = new ui.Button({
+                    value: 'Close'
+                });
+
+                var remover = this.message('files', W('div', {
+                    classes: 'files',
+                    children: [
+                        W('div', {
+                            classes: 'title',
+                            textContent: msg
+                        }),
+
+                        reader.e,
+
+                        W('div', {
+                            classes: 'actions',
+                            children: but.e
+                        })
+                    ]
+                }));
+
+                but.on('click', (function() {
+                    remover();
+                }).bind(this));
+
+                reader.on('loaded', (function(r, f, data) {
+                    if (data !== null) {
+                        this._store.addModel({
+                            filename: f.name,
+                            modification_time: f.lastModifiedDate,
+                            creation_time: new Date()
+                        }, data, (function(store, model) {
+                            reader.finished(f, model !== null);
+                        }).bind(this));
+                    }
+                }).bind(this));
+
+                popup.destroy();
+            }).bind(this);
+
+            inp.click();
+        }).bind(this));
+
+        content.appendChild(li);
 
         var popup;
 
         for (var i = 0; i < ret.length; i++) {
-            var li = document.createElement('li');
-
-            var imgc = document.createElement('div');
-            imgc.classList.add('screenshot-container');
-
-            li.appendChild(imgc);
-
-            var img = document.createElement('img');
-            img.classList.add('screenshot');
+            var sc = {
+                classes: 'screenshot'
+            };
 
             if (ret[i].screenshot) {
-                img.setAttribute('src', ret[i].screenshot);
+                sc.src = ret[i].screenshot;
             }
 
-            imgc.appendChild(img);
+            var li = W('li', {
+                children: [
+                    W('div', {
+                        classes: 'screenshot-container',
+                        children: W('img', sc)
+                    }),
 
-            var titlediv = document.createElement('div');
-            titlediv.classList.add('title');
+                    W('div', {
+                        classes: 'filename',
+                        textContent: ret[i].filename
+                    }),
 
-            titlediv.textContent = ret[i].title;
-            li.appendChild(titlediv);
+                    W('div', {
+                        classes: 'modification-time',
+                        textContent: 'Added ' + this._rel_date(ret[i].creation_time)
+                    }),
 
-            var moddiv = document.createElement('div');
-            moddiv.classList.add('modification-time');
-            moddiv.textContent = 'Last modified ' + this._rel_date(ret[i].modification_time);
+                    W('div', {
+                        classes: 'delete',
+                        textContent: '×',
+                        title: 'Delete model'
+                    })
+                ]
+            });
 
-            li.appendChild(moddiv);
+            var del = li.querySelector('.delete');
+
+            del.addEventListener('click', (function(model, li, del, e) {
+                var spinner = new ui.Spinner();
+
+                del.textContent = '';
+                del.classList.add('spinning');
+
+                del.appendChild(spinner.e);
+                spinner.start();
+
+                this._store.deleteModel(model, (function(store, deleted) {
+                    spinner.cancel();
+                    del.removeChild(spinner.e);
+                    del.classList.remove('spinning');
+
+                    if (deleted) {
+                        content.removeChild(li);
+                    } else {
+                        del.textContent = '×';
+                    }
+                }).bind(this));
+
+                e.preventDefault();
+                e.stopPropagation();
+            }).bind(this, ret[i], li, del));
+
+            content.appendChild(li);
+        }
+
+        popup = new ui.Popup(content, this.buttons.models.e);
+
+        popup.on('destroy', (function() {
+            if (this._lastFocus) {
+                this._lastFocus.focus();
+            }
+        }).bind(this));
+
+        cb(popup);
+    }).bind(this));
+}
+
+App.prototype._show_open_popup = function(cb) {
+    var popup;
+
+    this._store.all((function(store, ret) {
+        var W = ui.Widget.createUi;
+        var content = W('ul', { classes: 'documents' });
+
+        var li = W('li', {
+            classes: 'import',
+            innerHTML: 'Import&nbsp;from&nbsp;file',
+            title: 'Import a previously exported document'
+        });
+
+        li.addEventListener('click', (function() {
+            var inp = W('input', { type: 'file', multiple: 'multiple' });
+
+            inp.onchange = (function() {
+                var n = inp.files.length;
+
+                for (var i = 0; i < n; i++) {
+                    var f = inp.files[i];
+                    var reader = new FileReader();
+
+                    reader.onloadend = (function(f, isLast) {
+                        return (function(e) {
+                            var res = e.target.result;
+                            var doc = Document.fromRemote(null, JSON.parse(res));
+
+                            if (isLast) {
+                                this.load_document(doc);
+                            } else {
+                                this._save_doc(doc);
+                            }
+                        }).bind(this);
+                    }).call(this, f, i === n - 1);
+
+                    reader.readAsText(f, 'utf-8');
+                }
+
+                popup.destroy();
+            }).bind(this);
+
+            inp.click();
+        }).bind(this));
+
+        content.appendChild(li);
+
+        for (var i = 0; i < ret.length; i++) {
+            var li = W('li', {
+                children: [
+                    W('div', {
+                        classes: 'screenshot-container',
+                        children: W('img', {
+                            classes: 'screenshot',
+                            src: ret[i].screenshot
+                        })
+                    }),
+
+                    W('div', {
+                        classes: 'title',
+                        textContent: ret[i].title
+                    }),
+
+                    W('div', {
+                        classes: 'modification-time',
+                        textContent: 'Last modified ' + this._rel_date(ret[i].modification_time)
+                    }),
+
+                    W('div', {
+                        classes: 'delete',
+                        textContent: '×',
+                        title: 'Delete document'
+                    })
+                ]
+            });
 
             li.addEventListener('click', (function(doc) {
                 this._load_doc(Document.deserialize(doc));
                 popup.destroy();
             }).bind(this, ret[i]));
 
-            var del = document.createElement('div');
-            del.classList.add('delete');
-            del.textContent = '✖';
-            del.setAttribute('title', 'Delete Document');
+            var del = li.querySelector('.delete');
 
-            del.addEventListener('mousedown', (function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }).bind(this));
-
-            del.addEventListener('click', (function(doc, li, e) {
+            del.addEventListener('click', (function(doc, li, del, e) {
                 if (content.querySelectorAll('li').length > 1) {
+                    var spinner = new ui.Spinner();
+
+                    del.textContent = '';
+                    del.classList.add('spinning');
+
+                    del.appendChild(spinner.e);
+                    spinner.start();
+
                     this._store.delete(doc, (function(store, doc) {
+                        spinner.cancel();
+                        del.removeChild(spinner.e);
+                        del.classList.remove('spinning');
+
                         if (doc) {
                             content.removeChild(li);
 
                             if (this.document.id === doc.id) {
                                 this.document.id = null;
                             }
+                        } else {
+                            del.textContent = '×';
                         }
                     }).bind(this));
                 }
 
                 e.preventDefault();
                 e.stopPropagation();
-            }).bind(this, ret[i], li));
-
-            li.appendChild(del);
+            }).bind(this, ret[i], li, del));
 
             content.appendChild(li);
         }
@@ -819,6 +1022,8 @@ App.prototype._on_button_open_click = function() {
                 this._lastFocus.focus();
             }
         }).bind(this));
+
+        cb(popup);
     }).bind(this));
 }
 
