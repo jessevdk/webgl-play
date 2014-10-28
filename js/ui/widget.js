@@ -109,7 +109,7 @@ Widget.prototype.value = function(value) {
     }
 }
 
-Widget.prototype.create = function(name, attributes) {
+Widget.createUi = function(name, attributes) {
     var ret = document.createElement(name);
 
     if (!attributes) {
@@ -143,6 +143,10 @@ Widget.prototype.create = function(name, attributes) {
     }
 
     return ret;
+}
+
+Widget.prototype.create = function(name, attributes) {
+    return Widget.createUi(name, attributes);
 }
 
 Widget.prototype.childElements = function(e) {
