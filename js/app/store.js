@@ -329,7 +329,7 @@ Store.prototype._onupgradeneeded = function(e) {
         db.createObjectStore('object-cache');
     }
 
-    // Add object cache
+    // Add index on share key
     if (e.oldVersion <= 2) {
         var store = e.currentTarget.transaction.objectStore('documents');
         store.createIndex('share', 'share', { unique: false });
