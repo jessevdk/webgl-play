@@ -984,7 +984,7 @@ App.prototype._init = function() {
             if (saved !== null && doc !== null) {
                 saved = JSON.parse(saved);
 
-                if (typeof saved.id !== 'undefined' && saved.id === doc.id)
+                if (saved && typeof saved.id !== 'undefined' && saved.id === doc.id)
                 {
                     saved.modification_time = new Date(saved.modification_time);
                     saved.creation_time = new Date(saved.creation_time);
