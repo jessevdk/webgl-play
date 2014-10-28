@@ -57,6 +57,35 @@ function Popup(child, on) {
     this._on_destroy = this.register_signal('destroy');
 }
 
+Popup.on = function(on, cb) {
+    var popup = null;
+
+    on.addEventListener('mousedown', function() {
+        if (!popup) {
+            var f;
+
+            f = function(e) {
+                on.removeEventListener('mouseup', f);
+
+                var r = function(p) {
+                    popup = p;
+
+                    if (p) {
+                        popup = p;
+                        popup.on('destroy', function() {
+                            popup = null;
+                        });
+                    }
+                };
+
+                r(cb(r));
+            };
+
+            on.addEventListener('mouseup', f);
+        }
+    });
+}
+
 Popup.prototype = Object.create(Widget.prototype);
 Popup.prototype.constructor = Popup;
 
