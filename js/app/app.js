@@ -1022,19 +1022,19 @@ App.prototype._init = function() {
                             try {
                                 jdoc = JSON.parse(req.responseText);
                             } catch (e) {
-                                this._message('error', 'Failed parse document: ' + e.message);
+                                this.message('error', 'Failed parse document: ' + e.message);
                                 return;
                             }
 
                             f(Document.fromRemote(m[1], jdoc));
                         } else {
-                            this._message('error', 'Failed to load document: ' + req.textContent);
+                            this.message('error', 'Failed to load document: ' + req.textContent);
                         }
 
                     }).bind(this);
 
                     req.onerror = (function(e) {
-                        this._message('error', 'Failed to load document ' + m[1]);
+                        this.message('error', 'Failed to load document ' + m[1]);
                     }).bind(this);
 
                     req.open('get', '/d/' + m[1] + '.json');
