@@ -40,6 +40,7 @@ module.exports = {
     Spinner: require('./spinner'),
     Progress: require('./progress'),
     FilesReader: require('./filesreader'),
+    Widget: require('./widget')
 };
 
 // vi:ts=4:et
