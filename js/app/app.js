@@ -1011,6 +1011,11 @@ App.prototype._show_open_popup = function(cb) {
                 ]
             });
 
+            if (this.document !== null && ret[i].id === this.document.id) {
+                var title = li.querySelector('.title');
+                title.classList.add('active');
+            }
+
             li.addEventListener('click', (function(doc) {
                 this._load_doc(Document.deserialize(doc));
                 popup.destroy();

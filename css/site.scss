@@ -187,6 +187,10 @@ input[type="text"] {
       font-weight: bold;
       margin-left: 6px;
       white-space: nowrap;
+
+      &.active {
+        color: $blue;
+      }
     }
 
     .modification-time {
