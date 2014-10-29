@@ -878,6 +878,7 @@ App.prototype._show_models_popup = function(cb) {
 
                     if (deleted) {
                         content.removeChild(li);
+                        this._update_renderer();
                     } else {
                         del.textContent = '×';
                     }
