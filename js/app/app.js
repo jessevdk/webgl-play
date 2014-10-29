@@ -920,27 +920,59 @@ App.prototype._show_open_popup = function(cb) {
             var inp = W('input', { type: 'file', multiple: 'multiple' });
 
             inp.onchange = (function() {
-                var n = inp.files.length;
+                var reader = new ui.FilesReader(inp.files);
+                var msg;
 
-                for (var i = 0; i < n; i++) {
-                    var f = inp.files[i];
-                    var reader = new FileReader();
-
-                    reader.onloadend = (function(f, isLast) {
-                        return (function(e) {
-                            var res = e.target.result;
-                            var doc = Document.fromRemote(null, JSON.parse(res));
-
-                            if (isLast) {
-                                this.load_document(doc);
-                            } else {
-                                this._save_doc(doc);
-                            }
-                        }).bind(this);
-                    }).call(this, f, i === n - 1);
-
-                    reader.readAsText(f, 'utf-8');
+                if (inp.files.length === 1) {
+                    msg = 'Importing 1 document from file';
+                } else {
+                    msg = 'Importing ' + inp.files.length + ' documents from files';
                 }
+
+                var but = new ui.Button({
+                    value: 'Close'
+                });
+
+                var remover = this.message('files', W('div', {
+                    classes: 'files',
+                    children: [
+                        W('div', {
+                            classes: 'title',
+                            textContent: msg
+                        }),
+
+                        reader.e,
+
+                        W('div', {
+                            classes: 'actions',
+                            children: but.e
+                        })
+                    ]
+                }));
+
+                but.on('click', (function() {
+                    remover();
+                }).bind(this));
+
+                var docs = new Array(inp.files.length);
+
+                reader.on('loaded', (function(i, r, f, data) {
+                    var doc = Document.fromRemote(null, JSON.parse(data));
+                    this._save_doc(doc);
+
+                    docs[i] = doc;
+
+                    r.finished(f, true);
+                }).bind(this, i));
+
+                reader.on('finished', (function() {
+                    for (var i = docs.length - 1; i >= 0; i--) {
+                        if (docs[i]) {
+                            this._load_doc(docs[i]);
+                            break;
+                        }
+                    }
+                }).bind(this));
 
                 popup.destroy();
             }).bind(this);
