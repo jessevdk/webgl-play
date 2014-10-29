@@ -38,6 +38,8 @@ function FilesReader(files, settings) {
 
     this._files = {};
 
+    var countdown = files.length;
+
     for (var i = 0; i < files.length; i++) {
         var f = files[i];
         var reader = new FileReader(f);
@@ -88,6 +90,8 @@ function FilesReader(files, settings) {
         reader.onloadend = (function(f, row, perc, e) {
             var ret = null;
 
+            countdown--;
+
             if (e.loaded !== e.total) {
                 row.classList.add('error');
                 perc.textContent = '!';
@@ -109,6 +113,10 @@ function FilesReader(files, settings) {
             }
 
             this._on_loaded(f, ret);
+
+            if (countdown === 0) {
+                this._on_finished();
+            }
         }).bind(this, f, row, perc);
 
         this._files[f.name] = {
@@ -125,6 +133,7 @@ function FilesReader(files, settings) {
     Widget.call(this, 'files-reader', e, utils.merge({}, settings));
 
     this._on_loaded = this.register_signal('loaded');
+    this._on_finished = this.register_signal('finished');
 }
 
 FilesReader.prototype = Object.create(Widget.prototype);
