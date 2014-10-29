@@ -812,6 +812,10 @@ App.prototype._show_models_popup = function(cb) {
                     }
                 }).bind(this));
 
+                reader.on('finished', (function() {
+                    this._update_renderer();
+                }).bind(this));
+
                 popup.destroy();
             }).bind(this);
 
