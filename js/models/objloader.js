@@ -515,9 +515,8 @@ function cacheKey(filename, options) {
     });
 }
 
-function parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options) {
+function parseOrCachedObj(ctx, date, filename, ret, body, fromCache, options) {
     var key = cacheKey(filename, options);
-    var date = new Date(req.getResponseHeader('Last-Modified'));
 
     // Try local/session cache first
     var cached = objectCache[key];
@@ -533,7 +532,7 @@ function parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options) {
         store.object_from_cache(key, date, function(store, objects) {
             if (!objects) {
                 objects = parseObj(body, options);
-                store.object_to_cache(key, date, objects);
+                store.object_to_cache(key, filename, date, objects);
             }
 
             objectCache[key] = {
@@ -577,14 +576,24 @@ function parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options) {
  * @param options optional options.
  */
 exports.load = function(ctx, filename, options) {
-    if (document.location.protocol.indexOf('file') === 0) {
+    var localPrefix = 'local:';
+    var isLocal = (filename.indexOf(localPrefix) === 0);
+
+    if (!isLocal && document.location.protocol.indexOf('file') === 0) {
         throw new Error('Cannot load external models in local mode');
     }
 
-    var req = new XMLHttpRequest();
+    var makeError = (function(stack) {
+        return function(message) {
+            var e = new Error(message);
+            e.originalStack = stack;
+
+            return e;
+        };
+    })((new Error()).stack);
 
     options = utils.merge({
-        error: null,
+        error: function(m) { throw makeError(m); },
         success: function() {},
         complete: function() {},
         autosmooth: false,
@@ -604,48 +613,56 @@ exports.load = function(ctx, filename, options) {
         fromCache = ret.children.slice(0);
     }
 
-    var makeError = (function(stack) {
-        return function(message) {
-            var e = new Error(message);
-            e.originalStack = stack;
+    if (isLocal) {
+        new Store(function(store) {
+            var localName = filename.slice(localPrefix.length);
 
-            return e;
-        };
-    })((new Error()).stack);
+            store.modelData(localName, function(store, model) {
+                if (model !== null) {
+                    try {
+                        parseOrCachedObj(ctx, model.creation_time, filename, ret, model.data, fromCache, options);
+                    } catch (e) {
+                        console.error(e.stack);
+                        options.error(e.message);
+                    }
+                } else {
+                    options.error('Model not found');
+                }
+            });
+        });
+    } else {
+        var req = new XMLHttpRequest();
 
-    req.onload = function(ev) {
-        var req = ev.target;
-
-        if (req.status === 200) {
-            var body = req.responseText;
-
-            try {
-                parseOrCachedObj(ctx, req, filename, ret, body, fromCache, options);
-            } catch (e) {
-                console.error(e.stack);
-                options.error(req, e.message);
-            }
-        } else {
-            throw makeError(req.responseText);
-        }
-    }
-
-    req.onerror = function(ev) {
-        if (options.error) {
-            options.error(ev.target, ev.target.responseText);
-        } else {
+        req.onload = function(ev) {
             var req = ev.target;
-            throw makeError(req.responseText);
+
+            if (req.status === 200) {
+                var body = req.responseText;
+
+                try {
+                    var date = new Date(req.getResponseHeader('Last-Modified'));
+                    parseOrCachedObj(ctx, date, filename, ret, body, fromCache, options);
+                } catch (e) {
+                    console.error(e.stack);
+                    options.error(e.message);
+                }
+            } else {
+                options.error(req.responseText);
+            }
         }
-    }
 
-    req.open('get', '/m/' + encodeURIComponent(filename), true);
+        req.onerror = function(ev) {
+            options.error(ev.target.responseText);
+        }
 
-    try {
-        req.send();
-    } catch (e) {
-        console.error(e.stack);
-        throw new Error(e.message);
+        req.open('get', '/m/' + encodeURIComponent(filename), true);
+
+        try {
+            req.send();
+        } catch (e) {
+            console.error(e.stack);
+            options.error(e.message);
+        }
     }
 
     return ret;

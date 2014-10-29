@@ -31,7 +31,7 @@ function Store(ready) {
     this._db = null;
     this._ready = ready;
 
-    var version = 4;
+    var version = 5;
 
     //indexedDB.deleteDatabase('webgl-play');
     var req = indexedDB.open('webgl-play', version);
@@ -41,12 +41,19 @@ function Store(ready) {
     req.onupgradeneeded = this._onupgradeneeded.bind(this);
 }
 
-Store.prototype.object_to_cache = function(url, date, obj) {
+Store.prototype.object_to_cache = function(url, filename, date, obj) {
     var tr = this._db.transaction('object-cache', 'readwrite');
     var store = tr.objectStore('object-cache');
 
-    store.put(date, url + '-date');
-    store.put(obj, url);
+    store.put({
+        date: date,
+        filename: filename
+    }, url + '-date');
+
+    store.put({
+        object: obj,
+        filename: filename
+    }, url);
 }
 
 Store.prototype.object_from_cache = function(url, date, cb) {
@@ -57,14 +64,14 @@ Store.prototype.object_from_cache = function(url, date, cb) {
 
     req.onsuccess = (function(ev) {
         if (ev.target.result) {
-            var d = ev.target.result;
+            var d = ev.target.result.date;
 
             if (d.getTime() === date.getTime()) {
                 req = store.get(url);
 
                 req.onsuccess = (function(ev) {
                     if (ev.target.result) {
-                        cb(this, ev.target.result);
+                        cb(this, ev.target.result.object);
                     } else {
                         cb(this, null);
                     }
@@ -190,6 +197,8 @@ Store.prototype.addModel = function(model, data, cb) {
     models.put(model);
     modelData.put({
         filename: model.filename,
+        creation_time: model.creation_time,
+        modification_time: model.modification_time,
         data: data
     });
 
@@ -210,8 +219,8 @@ Store.prototype.modelData = function(filename, cb) {
     var req = store.get(filename);
 
     req.onsuccess = (function(e) {
-        if (ev.target.result) {
-            cb(this, ev.target.result.data);
+        if (e.target.result) {
+            cb(this, e.target.result);
         } else {
             cb(this, null);
         }
@@ -229,12 +238,24 @@ Store.prototype.deleteModel = function(model, cb) {
         return;
     }
 
-    var tr = this._db.transaction(['models', 'model-data'], 'readwrite');
-    var models = tr.objectStore('models');
-    var modelData = tr.objectStore('model-data');
+    var tr = this._db.transaction(['models', 'model-data', 'object-cache'], 'readwrite');
 
-    models.delete(model.filename);
-    modelData.delete(model.filename);
+    tr.objectStore('models').delete(model.filename);
+    tr.objectStore('model-data').delete(model.filename);
+
+    var cacheStore = tr.objectStore('object-cache');
+    var req = cacheStore.index('filename').openCursor('local:' + model.filename);
+
+    req.onsuccess = function(e) {
+        if (e.target) {
+            var cursor = e.target.result;
+
+            if (cursor) {
+                cacheStore.delete(cursor.primaryKey);
+                cursor.continue();
+            }
+        }
+    };
 
     tr.oncomplete = (function(ev) {
         cb(this, model);
@@ -315,31 +336,48 @@ Store.prototype._onerror = function(e) {
 
 Store.prototype._onupgradeneeded = function(e) {
     var db = e.target.result;
+    var tr = e.currentTarget.transaction;
+
+    var documentsStore;
+    var objectCacheStore;
+    var modelsStore;
+    var modelDataStore;
 
     // Initial database
     if (e.oldVersion <= 0) {
-        var store = db.createObjectStore('documents', { autoIncrement: true, keyPath: 'id' });
+        documentsStore = db.createObjectStore('documents', { autoIncrement: true, keyPath: 'id' });
 
-        store.createIndex('modification_time', 'modification_time', { unique: false });
-        store.createIndex('creation_time', 'creation_time', { unique: false });
-        store.createIndex('title', 'title', { unique: false });
+        documentsStore.createIndex('modification_time', 'modification_time', { unique: false });
+        documentsStore.createIndex('creation_time', 'creation_time', { unique: false });
+        documentsStore.createIndex('title', 'title', { unique: false });
+    } else {
+        documentsStore = tr.objectStore('documents');
     }
 
     // Add object cache
     if (e.oldVersion <= 1) {
-        db.createObjectStore('object-cache');
+        objectCacheStore = db.createObjectStore('object-cache');
+    } else {
+        objectCacheStore = tr.objectStore('object-cache');
     }
 
     // Add index on share key
     if (e.oldVersion <= 2) {
-        var store = e.currentTarget.transaction.objectStore('documents');
-        store.createIndex('share', 'share', { unique: false });
+        documentsStore.createIndex('share', 'share', { unique: false });
     }
 
     // Add stores for local models
     if (e.oldVersion <= 3) {
-        db.createObjectStore('models', { keyPath: 'filename' });
-        db.createObjectStore('model-data', { keyPath: 'filename' });
+        modelsStore = db.createObjectStore('models', { keyPath: 'filename' });
+        modelDataStore = db.createObjectStore('model-data', { keyPath: 'filename' });
+    } else {
+        modelsStore = tr.objectStore('models');
+        modelDataStore = tr.objectStore('model-data');
+    }
+
+    // Add index for local models
+    if (e.oldVersion <= 4) {
+        objectCacheStore.createIndex('filename', 'filename', { unique: false });
     }
 }
 
