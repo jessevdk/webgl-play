@@ -34,6 +34,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -59,6 +60,15 @@ func absPath(p string) string {
 	return p
 }
 
+type LimitedRequestHandler struct {
+}
+
+func (l LimitedRequestHandler) ServeHTTP(wr http.ResponseWriter, req *http.Request) {
+	// Limit requests to 2MB
+	req.Body = http.MaxBytesReader(wr, req.Body, 1<<21)
+	router.ServeHTTP(wr, req)
+}
+
 func main() {
 	if _, err := flags.Parse(&options); err != nil {
 		os.Exit(1)
@@ -70,7 +80,15 @@ func main() {
 	router.PathPrefix("/assets/").Handler(handlers.CompressHandler(http.FileServer(http.Dir(siteRoot))))
 	router.PathPrefix("/").Handler(handlers.CompressHandler(NewRestishHandler(SiteHandler{})))
 
-	if err := http.ListenAndServe(options.Listen, router); err != nil {
+	srv := &http.Server{
+		Addr:           options.Listen,
+		Handler:        LimitedRequestHandler{},
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+
+	if err := srv.ListenAndServe(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while listening: %s\n", err)
 		os.Exit(1)
 	}
