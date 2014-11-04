@@ -594,7 +594,13 @@ View.prototype.bind = function(ctx) {
         gl.enable(gl.DEPTH_TEST);
 
         if (this.depth !== true) {
-            gl.depthFunc(this.depth);
+            if (typeof this.depth.initial !== 'undefined') {
+                gl.depthFunc(this.depth.func);
+                gl.clearDepth(this.depth.initial);
+            } else {
+                gl.depthFunc(this.depth);
+                gl.clearDepth(1.0);
+            }
         } else {
             gl.depthFunc(gl.LESS);
         }
