@@ -108,9 +108,36 @@ Program.prototype._compile_shader = function(gl, type, source) {
     };
 }
 
-Program.prototype.compile = function(gl) {
-    var v = this._compile_shader(gl, gl.VERTEX_SHADER, this.vertex.data);
-    var f = this._compile_shader(gl, gl.FRAGMENT_SHADER, this.fragment.data);
+Program.prototype._definesToString = function(defines) {
+    if (defines) {
+        var ret = '';
+
+        for (var k in defines) {
+            ret += '#define ' + k + ' ' + defines[k] + '\n';
+        }
+
+        return ret;
+    } else {
+        return '';
+    }
+}
+
+Program.prototype._sourceWithDefines = function(source, defines) {
+    var m = source.match(/^\s*#version .*\n/);
+
+    if (!m) {
+        return defines + source;
+    }
+
+    var split = m.index + m[0].length;
+    return source.slice(0, split) + defines + source.slice(split);
+}
+
+Program.prototype.compile = function(gl, defines) {
+    var defs = this._definesToString(defines);
+
+    var v = this._compile_shader(gl, gl.VERTEX_SHADER, this._sourceWithDefines(this.vertex.data, defs));
+    var f = this._compile_shader(gl, gl.FRAGMENT_SHADER, this._sourceWithDefines(this.fragment.data, defs));
     var p = 0;
 
     var attrs = {

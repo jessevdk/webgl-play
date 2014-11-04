@@ -81,6 +81,9 @@ function JsContext(gl) {
     this._signals.on_event = this._signals.register_signal('event');
 
     this._view = null;
+    this._defines = {};
+
+    this._signals.on_define = this._signals.register_signal('define');
 }
 
 /**
@@ -107,6 +110,29 @@ JsContext.prototype.view = function(view) {
     view.updateViewport(this);
 
     view.bind(this);
+}
+
+JsContext.prototype.define = function(program, name, value) {
+    if (!(program in this._defines)) {
+        this._defines[program] = {};
+    }
+
+    this._defines[program][name] = value;
+    this._signals.on_define(program);
+}
+
+JsContext.prototype.defines = function(program, defines) {
+    if (!(program in this._defines)) {
+        this._defines[program] = {};
+    }
+
+    var prg = this._defines[program];
+
+    for (var k in defines) {
+        prg[k] = defines[k];
+    }
+
+    this._signals.on_define(program);
 }
 
 JsContext.prototype.requireExtension = function(ext) {
@@ -367,11 +393,13 @@ Renderer.prototype.update = function(doc) {
     // Compile all programs
     var programs = {};
     var default_program = null;
+    var originalPrograms = {};
 
     for (var i = 0; i < doc.programs.length; i++) {
         var p = doc.programs[i];
+        var prog = p.compile(this.context.gl, nctx._defines[p.name()]);
 
-        var prog = p.compile(this.context.gl);
+        originalPrograms[p.name()] = p;
 
         if (prog.vertex.error !== null || prog.fragment.error !== null || prog.error !== null) {
             if (errors.programs === null) {
@@ -406,6 +434,37 @@ Renderer.prototype.update = function(doc) {
         }
     }
 
+    nctx._default_program = default_program;
+
+    nctx._signals.on('define', (function(_, program) {
+        var p = originalPrograms[program];
+
+        if (p) {
+            var prog = p.compile(nctx.gl, nctx._defines[program]);
+
+            if (prog.vertex.error !== null || prog.fragment.error !== null || prog.error !== null) {
+                if (prog.vertex.error !== null) {
+                    console.error(p.name() + '(vertex): ' + prog.vertex.error);
+                }
+
+                if (prog.fragment.error !== null) {
+                    console.error(p.name() + '(fragment): ' + prog.fragment.error);
+                }
+
+                if (prog.error !== null) {
+                    console.error(p.name() + '(program): ' + prog.error);
+                }
+            } else {
+                programs[program] = prog;
+
+                if (program === nctx._default_program.name) {
+                    nctx._default_program = prog;
+                }
+            }
+
+        }
+    }).bind(this));
+
     var prevUi = this._ui;
     this._ui = [];
 
@@ -430,7 +489,6 @@ Renderer.prototype.update = function(doc) {
 
     this.context = nctx;
     this.context.programs = programs;
-    this.context._default_program = default_program;
 
     this.program = ret;
 
