@@ -553,12 +553,29 @@ for (var i = 0; i < mats.length; i++) {
 for (var k in glMatrix) {
     if (glMatrix.hasOwnProperty(k)) {
         var v = glMatrix[k];
+        var f;
 
-        var f = (function(obj) {
-            return function() {
-                return obj.fromValues.apply(this, arguments);
-            };
-        })(v);
+        if (typeof v.fromValues === 'function') {
+            f = (function(obj) {
+                return function() {
+                    return obj.fromValues.apply(this, arguments);
+                };
+            })(v);
+        } else if (k === 'mat2' || k === 'mat3' || k === 'mat4') {
+            f = (function(obj) {
+                return function() {
+                    var ret = obj.create();
+
+                    for (var i = 0; i < arguments.length; i++) {
+                        ret[i] = arguments[i];
+                    }
+
+                    return ret;
+                };
+            })(v);
+        } else {
+            f = {};
+        }
 
         for (var j in v) {
             if (v.hasOwnProperty(j)) {
