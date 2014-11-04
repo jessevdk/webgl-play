@@ -67,6 +67,10 @@ function View(ctx, projection, viewport, options) {
         buffer: null
     }, options);
 
+    if (this.options.viewport && !viewport) {
+        viewport = this.options.viewport;
+    }
+
     /** The viewport, or unset to track the canvas dimensions. */
     this.viewport = viewport;
 
@@ -354,6 +358,14 @@ View.prototype.updateViewport = function(ctx) {
         vp = [0, 0, gl.canvas.clientWidth, gl.canvas.clientHeight];
     } else {
         vp = this.viewport;
+
+        if (vp[0] < 0) {
+            vp[0] = gl.canvas.clientWidth + vp[0];
+        }
+
+        if (vp[1] < 0) {
+            vp[1] = gl.canvas.clientHeight + vp[1];
+        }
     }
 
     if (!this._viewportChanged(vp)) {
@@ -464,7 +476,7 @@ View.prototype.updateViewport = function(ctx) {
             var rb = gl.createRenderbuffer();
 
             gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
-            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, gl.canvas.clientWidth, gl.canvas.clientHeight);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, vp[2], vp[3]);
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rb);
         }
 
