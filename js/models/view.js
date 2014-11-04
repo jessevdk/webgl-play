@@ -516,6 +516,7 @@ View.prototype.updateViewport = function(ctx) {
             msgs[gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS] = 'not all attached images have the same dimensions';
             msgs[gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT] = 'no images are attached to the framebuffer';
             msgs[gl.FRAMEBUFFER_UNSUPPORTED] = 'combination of internal formats of attached images violates restrictions';
+            msgs[36059] = 'incomplete draw buffer';
 
             throw new Error('Framebuffer not complete: ' + status + '(' + msgs[status] + ')');
         }
