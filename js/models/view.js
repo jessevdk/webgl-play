@@ -610,7 +610,12 @@ View.prototype.bind = function(ctx) {
 
     if (this.blend) {
         gl.enable(gl.BLEND);
-        gl.blendFunc(this.blend.sfactor, this.blend.dfactor);
+
+        if (this.blend === true) {
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        } else {
+            gl.blendFunc(this.blend.sfactor, this.blend.dfactor);
+        }
     } else {
         gl.disable(gl.BLEND);
     }
