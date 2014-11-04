@@ -32,6 +32,8 @@ var math = require('../math/math');
 var utils = require('../utils/utils');
 var Texture = require('./texture');
 
+"use strict";
+
 /**
  * A basic view. A View is a collection of transform (inherited from model),
  * a projection matrix and a viewport. Note that you can use View.perspective
