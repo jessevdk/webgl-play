@@ -580,6 +580,17 @@ for (var k in glMatrix) {
         for (var j in v) {
             if (v.hasOwnProperty(j)) {
                 f[j] = v[j];
+
+                f[j + '$'] = (function(v, j) {
+                    var ret = function() {
+                        var args = Array.prototype.slice.call(arguments);
+                        args.unshift(v.create());
+
+                        return v[j].apply(null, args)
+                    }
+
+                    return ret;
+                })(v, j);
             }
         }
 
