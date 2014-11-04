@@ -176,7 +176,7 @@ function Editor(editor, ctx, type) {
             mode.indent = function(state, textAfter) {
                 var ret = indentOrig.call(this, state, textAfter);
 
-                if (textAfter[0] === '.') {
+                if (textAfter.length > 0 && textAfter[0] === '.') {
                     ret += editor.getOption('indentUnit');
                 }
 
