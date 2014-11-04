@@ -29,6 +29,7 @@
 
 module.exports = {
 	Label: require('./label'),
+    MultiSwitch: require('./multiswitch'),
 	OnOff: require('./onoff'),
 	Grid: require('./grid'),
     Panel: require('./panel'),

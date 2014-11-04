@@ -28,54 +28,44 @@
  */
 
 .ui-on-off {
-	border: 1px solid $borders_color;
-	background-color: white;
-	border-radius: 3px;
+  td:first-child {
+    opacity: 1;
 
-	td {
-		padding: 3px 6px 3px 6px;
-	}
+    &, &.active {
+      background-color: $bg_color;
 
-	.on, .off {
-		transition: opacity ease 300ms;
-	}
+      &:hover {
+        background-color: lighten($bg_color, 5%);
+      }
 
-	.off {
-		opacity: 0;
-		background-color: $bg_color;
-		border-radius: 3px 0px 0px 3px;
+      &:active {
+        background-color: $bg_color;
+      }
+    }
 
-		&:hover {
-			background-color: lighten($bg_color, 5%);
-		}
+    &.active {
+      opacity: 0;
+    }
+  }
 
-		&:active {
-			background-color: $bg_color;
-		}
-	}
+  td:last-child {
+    opacity: 1;
 
-	.on {
-		opacity: 1;
-		background-color: $ui_active_bg;
-		color: white;
-		border-radius: 0px 3px 3px 0px;
+    &, &.active {
+      background-color: $ui_active_bg;
+      color: white;
 
-		&:hover {
-			background-color: lighten($ui_active_bg, 5%);
-		}
+      &:hover {
+        background-color: lighten($ui_active_bg, 5%);
+      }
 
-		&:active {
-			background-color: $ui_active_bg;
-		}
-	}
+      &:active {
+        background-color: $ui_active_bg;
+      }
+    }
 
-	&.active {
-		.on {
-			opacity: 0;
-		}
-
-		.off {
-			opacity: 1;
-		}
-	}
+    &.active {
+      opacity: 0;
+    }
+  }
 }

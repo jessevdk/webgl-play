@@ -43,6 +43,10 @@ function label(props) {
     return new ui.Label(props);
 }
 
+function multiswitch(props) {
+    return new ui.MultiSwitch(props);
+}
+
 function onoff(props) {
     return new ui.OnOff(props);
 }
@@ -57,6 +61,7 @@ function colorPicker(props) {
 
 exports.grid = grid;
 exports.label = label;
+exports.multiswitch = multiswitch;
 exports.onoff = onoff;
 exports.slider = slider;
 exports.colorPicker = colorPicker;

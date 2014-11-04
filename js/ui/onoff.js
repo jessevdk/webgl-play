@@ -27,71 +27,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var Widget = require('./widget');
+var MultiSwitch = require('./multiswitch');
 var utils = require('../utils/utils');
 
 function OnOff(settings) {
     this._value = false;
 
-    Widget.call(this, 'on-off', this.create('table', {
-        children: [
-            this.create('colgroup', {
-                children: [
-                    this.create('col', {
-                        width: '50%'
-                    }),
-                    this.create('col', {
-                        width: '50%'
-                    })
-                ]
-            }),
-            this.create('tr', {
-                children: [
-                    this.create('td', {
-                        textContent: 'Off',
-                        classes: 'off'
-                    }),
-
-                    this.create('td', {
-                        textContent: 'On',
-                        classes: 'on'
-                    })
-                ]
-            })
+    MultiSwitch.call(this, utils.merge({
+        values: [
+            { name: 'Off', value: false },
+            { name: 'On', value: true }
         ]
-    }), utils.merge({}, settings));
+    }, settings));
 
-    this._on = this.e.querySelector('.on');
-    this._off = this.e.querySelector('.off');
-
-    this._on.addEventListener('click', (function(e) {
-        this.value(true);
-
-        e.preventDefault();
-        e.stopPropagation();
-    }).bind(this));
-
-    this._off.addEventListener('click', (function(e) {
-        this.value(false);
-
-        e.preventDefault();
-        e.stopPropagation();
-    }).bind(this));
+    this.e.classList.add('ui-on-off');
 }
 
-OnOff.prototype = Object.create(Widget.prototype);
+OnOff.prototype = Object.create(MultiSwitch.prototype);
 OnOff.prototype.constructor = OnOff;
 
 OnOff.prototype._valueTransform = function(v) {
     return !!v;
-}
-
-OnOff.prototype._valueUpdated = function() {
-    if (this._value) {
-        this.e.classList.add('active');
-    } else {
-        this.e.classList.remove('active');
-    }
 }
 
 module.exports = OnOff;

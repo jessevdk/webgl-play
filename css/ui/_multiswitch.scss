@@ -27,22 +27,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-$ui_active_bg: lighten($blue, 10%);
+.ui-multi-switch {
+  border: 1px solid $borders_color;
+  background-color: white;
+  border-radius: 3px;
 
-@import 'panel';
-@import 'button';
-@import 'sidebar';
-@import 'popup';
-@import 'multiswitch';
-@import 'onoff';
-@import 'slider';
-@import 'colorpicker';
-@import 'grid';
-@import 'spinner';
-@import 'progress';
-@import 'filesreader';
-@import 'label';
+  td {
+    padding: 3px 6px 3px 6px;
+    transition: opacity ease 300ms;
+    background-color: $bg_color;
 
-.ui-widget {
-	cursor: default;
+    &:first-child {
+      border-radius: 3px 0px 0px 3px;
+    }
+
+    &:last-child {
+      border-radius: 0px 3px 3px 0px;
+    }
+
+    &:hover {
+      background-color: lighten($bg_color, 5%);
+    }
+
+    &:active {
+      background-color: $bg_color;
+    }
+
+    &.active {
+      background-color: $ui_active_bg;
+      color: white;
+    }
+  }
 }
