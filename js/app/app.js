@@ -670,8 +670,44 @@ App.prototype._init_programs_bar = function() {
     this.programs_bar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
 }
 
+App.prototype._show_opengl_popup = function(cb) {
+    var gl = this.renderer.context.gl;
+
+    var exts = gl.getSupportedExtensions();
+    exts.sort();
+
+    for (var i = 0; i < exts.length; i++) {
+        exts[i] = ui.Widget.createUi('div', {
+            children: ui.Widget.createUi('a', {
+                href: 'https://www.khronos.org/registry/webgl/extensions/' + exts[i],
+                textContent: exts[i]
+            })
+        });
+    }
+
+    var content = ui.Widget.createUi('table', {
+        classes: 'opengl',
+        children: [
+            ui.Widget.createUi('tr', {
+                children: [
+                    ui.Widget.createUi('td', { textContent: 'Supported Extensions:' }),
+                    ui.Widget.createUi('td', {
+                        children: ui.Widget.createUi('div', {
+                            classes: 'extensions',
+                            children: exts
+                        })
+                    })
+                ]
+            })
+        ]
+    });
+
+    var popup = new ui.Popup(content, this.buttons.opengl.e);
+    cb(popup);
+}
+
 App.prototype._init_buttons = function() {
-    var buttons = ['new', 'copy', 'export', 'open', 'models', 'help', 'share', 'publish'];
+    var buttons = ['new', 'copy', 'export', 'models', 'open', 'opengl', 'help', 'share', 'publish'];
 
     this.buttons = {};
 
@@ -694,6 +730,7 @@ App.prototype._init_buttons = function() {
 
     ui.Popup.on(this.buttons.open.e, this._show_open_popup.bind(this));
     ui.Popup.on(this.buttons.models.e, this._show_models_popup.bind(this));
+    ui.Popup.on(this.buttons.opengl.e, this._show_opengl_popup.bind(this));
 }
 
 App.prototype._on_button_copy_click = function() {

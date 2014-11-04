@@ -391,4 +391,24 @@ $description_height: 400px;
   opacity: 0.2;
 }
 
+.ui-popup .opengl {
+  border-spacing: 6px;
+
+  td {
+    vertical-align: top;
+  }
+
+  td:first-child {
+    font-weight: bold;
+  }
+
+  div.extensions {
+    max-height: 10em;
+    overflow-y: scroll;
+    padding: 3px;
+    border: 1px solid $borders_color;
+    background-color: white;
+  }
+}
+
 /* vi:ts=2:et */
