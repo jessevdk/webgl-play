@@ -392,18 +392,25 @@ View.prototype.updateViewport = function(ctx) {
                 gl.deleteTexture(this._buffer.cubes[i].id);
             }
 
+            for (var i = 0; i < this._buffer.renderBuffers.length; i++) {
+                var buffer = this._buffer.renderBuffers[i];
+                gl.deleteRenderbuffer(buffer.id);
+            }
+
             gl.deleteFramebuffer(this._buffer.fbo);
         }
 
         this._buffer = {
             fbo: gl.createFramebuffer(),
             textureBuffers: {},
+            renderBuffers: [],
             cubes: []
         };
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._buffer.fbo);
 
         var hasDepth = false;
+        var hasColor = false;
 
         for (var k in this.options.buffer) {
             var n = this.options.buffer[k];
@@ -478,6 +485,11 @@ View.prototype.updateViewport = function(ctx) {
             gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, vp[2], vp[3]);
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rb);
+
+            this._buffer.renderBuffers.push({
+                id: rb,
+                attachment: gl.DEPTH_ATTACHMENT
+            });
         }
 
         var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
