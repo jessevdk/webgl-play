@@ -1322,8 +1322,6 @@ Annotator.prototype._annotate_index_expr = function(node) {
     if (node.index.t.type !== null) {
         if (node.index.t.type != this._builtins.Int) {
             this._error(node.index.location(), 'expected integer index expression, but got expression of type ' + node.index.t.type.name);
-        } else if (!node.index.t.is_const_expression) {
-            this._error(node.index.location(), 'cannot use dynamic indexing');
         } else if (node.expression.t.is_const_expression) {
             node.t.const_value = node.expression.t.const_value[node.index.t.const_value];
             node.t.is_const_expression = true;
