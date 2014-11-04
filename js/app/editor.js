@@ -50,8 +50,12 @@ function Editor(editor, ctx, type) {
 
     var keymap = {
         Tab: function(cm) {
-            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-            cm.replaceSelection(spaces);
+            var start = cm.getCursor('from');
+            var end = cm.getCursor('to');
+
+            for (var i = start.line; i <= end.line; i++) {
+                cm.indentLine(i);
+            }
         },
 
         Backspace: function(cm) {
