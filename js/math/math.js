@@ -489,6 +489,22 @@ transform.prototype.invert = function() {
     return transform.invert(this, this);
 }
 
+transform.lookAt = function(out, eye, center, up) {
+    var m = glMatrix.mat4.lookAt(glMatrix.mat4.create(), eye, center, up);
+
+    glMatrix.quat.fromMat3(out.orientation, glMatrix.mat3.fromMat4(glMatrix.mat3.create(), m));
+
+    out.position[0] = m[12];
+    out.position[1] = m[13];
+    out.position[2] = m[14];
+
+    return out;
+}
+
+transform.prototype.lookAt = function(eye, center, up) {
+    return transform.lookAt(this, eye, center, up);
+}
+
 transform.str = function(a) {
     return '{' + glMatrix.quat.str(a.orientation) + ', ' + glMatrix.vec3.str(a.position) + '}';
 }
