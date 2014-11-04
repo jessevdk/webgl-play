@@ -73,6 +73,10 @@ RenderGroup.prototype.update = function(ctx, geometry, indices, options) {
         gl.deleteBuffer(this._ibo);
     }
 
+    if (indices && (typeof indices !== 'object' || Object.getPrototypeOf(indices) !== Uint16Array.prototype)) {
+        indices = new Uint16Array(indices);
+    }
+
     this._ibo = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._ibo);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, opts.binding);
