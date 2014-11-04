@@ -27,19 +27,66 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module.exports = {
-    Box: require('./box'),
-    Geometry: require('./geometry'),
-    RenderGroup: require('./rendergroup'),
-    RenderGroups: require('./rendergroups'),
-    Material: require('./material'),
-    Model: require('./model'),
-    Quad: require('./quad'),
-    Triangle: require('./triangle'),
-    Plane: require('./plane'),
-    IcoSphere: require('./icosphere'),
-    UvSphere: require('./uvsphere'),
-    View: require('./view')
-};
+var Model = require('./model');
+var Geometry = require('./geometry');
+var RenderGroup = require('./rendergroup');
+
+/**
+ * A simple plane model. Creates a simple plane geometry, centered around [0, 0, 0] for
+ * the given dimensions.
+ *
+ * @param ctx the context.
+ * @param dx the X size of the plane.
+ * @param dz the Z size of the plane.
+ * @param options optional options.
+ * @constructor
+ */
+function Plane(ctx, dx, dz, options) {
+    Model.call(this, ctx, 'plane', options);
+
+    dx /= 2;
+    dz /= 2;
+
+    var vertices = [
+        -dx, 0,  dz,
+         dx, 0,  dz,
+         dx, 0, -dz,
+        -dx, 0, -dz
+    ];
+
+    var normals = [
+         0,  1,  0,
+         0,  1,  0,
+         0,  1,  0,
+         0,  1,  0
+    ];
+
+    var indices = [
+         0,  1,  2,
+         0,  2,  3
+    ];
+
+    if (options.doubleSided) {
+        vertices.push(-dx, 0, -dz,
+                       dx, 0, -dz,
+                       dx, 0,  dz,
+                      -dx, 0,  dz);
+
+        normals.push(0, -1, 0,
+                     0, -1, 0,
+                     0, -1, 0,
+                     0, -1, 0);
+
+        indices.push(4, 5, 6,
+                     4, 6, 7);
+    }
+
+    this.renderer = new RenderGroup(ctx, new Geometry(ctx, vertices, normals), indices);
+}
+
+Plane.prototype = Object.create(Model.prototype);
+Plane.prototype.constructor = Plane;
+
+module.exports = Plane;
 
 // vi:ts=4:et
