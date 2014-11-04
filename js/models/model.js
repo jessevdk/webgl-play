@@ -72,9 +72,9 @@ function Model(ctx, name, options) {
     /** The full transform (i.e. to world coordinates). This will
      * be computed and cached as needed when rendering.
      */
-    this.fullTransform = (function() {
-        return this.transform;
-    }).bind(this);
+    this.fullTransform = math.transform.track(math.transform.create(), this, 'transform', function(out, tr) {
+        return math.transform.copy(out, tr);
+    });
 
     /** The geometry to render. This is usually a RenderGroup or
       * RenderGroups, but may be anything with a .renderParts()
