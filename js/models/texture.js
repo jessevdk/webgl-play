@@ -27,17 +27,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-function Texture(ctx, target) {
+var utils = require('../utils/utils');
+
+function Texture(ctx, options) {
     var gl = ctx.gl;
 
+    options = utils.merge({
+        target: gl.TEXTURE_2D,
+
+        filter: {
+            mag: gl.NEAREST,
+            min: gl.NEAREST
+        },
+
+        wrap: {
+            s: gl.CLAMP_TO_EDGE,
+            t: gl.CLAMP_TO_EDGE
+        }
+    }, options);
+
     this.id = gl.createTexture();
-    this.target = target || gl.TEXTURE_2D;
+    this.target = options.target;
 
     this.bind(ctx);
-    gl.texParameteri(this.target, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(this.target, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(this.target, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(this.target, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(this.target, gl.TEXTURE_MAG_FILTER, options.filter.mag);
+    gl.texParameteri(this.target, gl.TEXTURE_MIN_FILTER, options.filter.min);
+    gl.texParameteri(this.target, gl.TEXTURE_WRAP_S, options.wrap.s);
+    gl.texParameteri(this.target, gl.TEXTURE_WRAP_T, options.wrap.t);
     this.unbind(ctx);
 }
 

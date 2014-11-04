@@ -291,7 +291,7 @@ View.prototype.currentViewport = function() {
 }
 
 View.prototype.bufferTextures = function(name) {
-    return this._buffer.buffers[name];
+    return this._buffer.textureBuffers[name];
 }
 
 View.prototype.activeBufferTexture = function(name) {
@@ -304,7 +304,7 @@ View.prototype.cycleBufferTextures = function(ctx, names) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, this._buffer.fbo);
 
     for (var i = 0; i < names.length; i++) {
-        var buffer = this._buffer.buffers[name];
+        var buffer = this._buffer.textureBuffers[name];
 
         if (buffer.textures.length === 1) {
             continue;
@@ -364,8 +364,8 @@ View.prototype.updateViewport = function(ctx) {
 
     if (this.options.buffer !== null) {
         if (this._buffer !== null) {
-            for (var k in this._buffer.buffers) {
-                var buffer = this._buffer.buffers[k];
+            for (var k in this._buffer.textureBuffers) {
+                var buffer = this._buffer.textureBuffers[k];
 
                 for (var i = 0; i < buffer.textures.length; i++) {
                     var texture = buffer.textures[i];
@@ -385,7 +385,7 @@ View.prototype.updateViewport = function(ctx) {
 
         this._buffer = {
             fbo: gl.createFramebuffer(),
-            buffers: {},
+            textureBuffers: {},
             cubes: []
         };
 
@@ -396,59 +396,66 @@ View.prototype.updateViewport = function(ctx) {
         for (var k in this.options.buffer) {
             var n = this.options.buffer[k];
 
-            var textureTarget = n.textureTarget || gl.TEXTURE_2D;
-            var attachment = n.attachment || gl.COLOR_ATTACHMENT0;
-            var internalFormat = n.internalFormat || gl.RGBA;
-            var format = n.format || gl.RGBA;
+            n = utils.merge({
+                texture: {
+                    target: gl.TEXTURE_2D,
+                    internalFormat: gl.RGBA,
+                    format: gl.RGBA,
+                    type: gl.UNSIGNED_BYTE
+                },
+
+                attachment: gl.COLOR_ATTACHMENT0,
+                n: 1
+            }, n);
 
             var textures = [];
 
-            if (attachment === gl.DEPTH_ATTACHMENT || attachment === gl.DEPTH_STENCIL_ATTACHMENT) {
+            if (n.attachment === gl.DEPTH_ATTACHMENT || n.attachment === gl.DEPTH_STENCIL_ATTACHMENT) {
                 hasDepth = true;
             }
 
-            for (var i = 0; i < (n.n || 1); i++) {
+            for (var i = 0; i < n.n; i++) {
                 var texture;
 
-                if (textureTarget !== gl.TEXTURE_2D) {
+                if (n.texture.target === gl.TEXTURE_CUBE) {
                     if (i >= this._buffer.cubes.length) {
 
-                        texture = new Texture(ctx, gl.TEXTURE_CUBE);
+                        texture = new Texture(ctx, n.texture);
                         this._buffer.cubes.push(texture);
                     } else {
                         texture = this._buffer.cubes[i];
                     }
                 } else {
-                    texture = new Texture(ctx);
+                    texture = new Texture(ctx, n.texture);
                 }
 
                 texture.bind(ctx);
 
-                gl.texImage2D(textureTarget,
+                gl.texImage2D(n.texture.target,
                               0,
-                              internalFormat,
-                              gl.canvas.clientWidth,
-                              gl.canvas.clientHeight,
+                              n.texture.internalFormat,
+                              vp[2],
+                              vp[3],
                               0,
-                              format,
-                              n.type,
+                              n.texture.format,
+                              n.texture.type,
                               null);
 
                 if (i === 0) {
-                    gl.framebufferTexture2D(gl.FRAMEBUFFER, attachment, textureTarget, texture.id, 0);
+                    gl.framebufferTexture2D(gl.FRAMEBUFFER, n.attachment, n.texture.target, texture.id, 0);
                 }
 
                 texture.unbind(ctx);
                 textures.push(texture);
             }
 
-            this._buffer.buffers[k] = {
+            this._buffer.textureBuffers[k] = {
                 textures: textures,
-                attachment: attachment,
-                internalFormat: internalFormat,
-                format: format,
-                type: n.type,
-                textureTarget: textureTarget,
+                attachment: n.attachment,
+                internalFormat: n.texture.internalFormat,
+                format: n.texture.format,
+                type: n.texture.type,
+                textureTarget: n.texture.target,
                 active: 0
             };
         }
@@ -515,8 +522,8 @@ View.prototype.bind = function(ctx) {
     if (this._buffer) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, this._buffer.fbo);
 
-        for (var k in this._buffer.buffers) {
-            var buffer = this._buffer.buffers[k];
+        for (var k in this._buffer.textureBuffers) {
+            var buffer = this._buffer.textureBuffers[k];
 
             gl.framebufferTexture2D(gl.FRAMEBUFFER,
                                     buffer.attachment,
