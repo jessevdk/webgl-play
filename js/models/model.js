@@ -96,6 +96,8 @@ Model.prototype.render = function(ctx, options) {
         return;
     }
 
+    options = options || {};
+
     var view = ctx.view();
 
     var fullTransform = this.fullTransform();
@@ -136,7 +138,15 @@ Model.prototype.render = function(ctx, options) {
         }
     }
 
-    var p = ctx.findProgram(this.material.program);
+    var material;
+
+    if (options.material) {
+        material = options.material;
+    } else {
+        material = this.material;
+    }
+
+    var p = ctx.findProgram(material.program);
     var parts = this.renderer.renderParts();
 
     var prevGeometry = null;
@@ -180,7 +190,7 @@ Model.prototype.render = function(ctx, options) {
         }
 
         if (needsRebind || i === 0) {
-            this.material.bind(ctx, uniforms);
+            material.bind(ctx, uniforms);
         }
 
         part.render(ctx);
