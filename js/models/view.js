@@ -431,6 +431,8 @@ View.prototype.updateViewport = function(ctx) {
 
             if (n.attachment === gl.DEPTH_ATTACHMENT || n.attachment === gl.DEPTH_STENCIL_ATTACHMENT) {
                 hasDepth = true;
+            } else {
+                hasColor = true;
             }
 
             for (var i = 0; i < n.n; i++) {
@@ -477,6 +479,19 @@ View.prototype.updateViewport = function(ctx) {
                 textureTarget: n.texture.target,
                 active: 0
             };
+        }
+
+        if (!hasColor) {
+            var rb = gl.createRenderbuffer();
+
+            gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.RGBA4, vp[2], vp[3]);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, rb);
+
+            this._buffer.renderBuffers.push({
+                id: rb,
+                attachment: gl.COLOR_ATTACHMENT0
+            });
         }
 
         if (!hasDepth) {
