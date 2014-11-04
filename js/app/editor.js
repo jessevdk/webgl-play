@@ -155,11 +155,19 @@ function Editor(editor, ctx, type) {
                 cm.replaceSelection('.');
                 cm.indentLine(cm.getCursor().line);
 
-                this._hint();
+                try {
+                    this._hint();
+                } catch (e) {
+                    console.error(e);
+                }
             }).bind(this);
 
             keymap['Ctrl-Space'] = (function(cm) {
-                this._hint();
+                try {
+                    this._hint();
+                } catch (e) {
+                    console.error(e);
+                }
             }).bind(this);
 
             var mode = this.editor.getMode();
