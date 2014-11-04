@@ -115,20 +115,18 @@ Material.prototype.mixColors = function(color, prop) {
     this._mixColor(this.uniforms.specular, color, prop);
 }
 
-Material.prototype._setUniform = function(ctx, u, v, name) {
-    if (typeof v === 'number') {
-        ctx.gl.uniform1f(u, v);
-        return;
-    }
+Material.prototype._setUniformTyped = function(ctx, u, v, name) {
+    var l;
 
-    if (typeof v === 'boolean') {
-        ctx.gl.uniform1i(u, v);
-        return;
+    if (v.typeLength) {
+        l = v.typeLength;
+    } else {
+        l = v.length;
     }
 
     switch (Object.getPrototypeOf(v)) {
     case Float32Array.prototype:
-        switch (v.length) {
+        switch (l) {
         case 1:
             ctx.gl.uniform1fv(u, v);
             break;
@@ -152,11 +150,11 @@ Material.prototype._setUniform = function(ctx, u, v, name) {
             ctx.gl.uniformMatrix4fv(u, false, v);
             break;
         default:
-            throw new Error('cannot set uniform ' + v);
+            throw new Error('cannot set uniform ' + name + ' = ' + v);
         }
         break;
     case Int32Array.prototype:
-        switch (v.length) {
+        switch (l) {
         case 1:
             ctx.gl.uniform1iv(u, v);
             break;
@@ -170,8 +168,29 @@ Material.prototype._setUniform = function(ctx, u, v, name) {
             ctx.gl.uniform4iv(u, v);
             break;
         default:
-            throw new Error('cannot set uniform ' + v);
+            throw new Error('cannot set uniform ' + name + ' = ' + v);
         }
+        break;
+    default:
+        break;
+    }
+}
+
+Material.prototype._setUniform = function(ctx, u, v, name) {
+    if (typeof v === 'number') {
+        ctx.gl.uniform1f(u, v);
+        return;
+    }
+
+    if (typeof v === 'boolean') {
+        ctx.gl.uniform1i(u, v);
+        return;
+    }
+
+    switch (Object.getPrototypeOf(v)) {
+    case Float32Array.prototype:
+    case Int32Array.prototype:
+        this._setUniformTyped(ctx, u, v, name);
         break;
     case Texture.prototype:
         var unit = this._texunit++;
@@ -223,7 +242,7 @@ Material.prototype._setUniforms = function(ctx, p, uniforms, prefix, depth, seen
             var proto = Object.getPrototypeOf(v);
             seen.push(v);
 
-            if (proto !== Float32Array.prototype && proto !== Int32Array.prototype && proto !== Texture.prototype) {
+            if (proto !== Float32Array.prototype && proto !== Int32Array.prototype && proto !== Texture.prototype && proto !== Array.prototype) {
                 this._setUniforms(ctx, p, v, fname, depth + 1, seen);
                 continue;
             }
