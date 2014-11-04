@@ -62,10 +62,12 @@ RenderGroup.prototype.update = function(ctx, geometry, indices, options) {
 
     var opts = utils.merge({
         binding: gl.STATIC_DRAW,
-        type: gl.TRIANGLES
+        type: gl.TRIANGLES,
+        aabbox: null
     }, options);
 
     this.type = opts.type;
+    this.aabbox = opts.aabbox;
 
     if (this._ibo) {
         gl.deleteBuffer(this._ibo);

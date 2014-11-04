@@ -27,11 +27,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+var utils = require('../utils/utils');
+
 /**
  * A collection of render groups.
  */
-function RenderGroups() {
+function RenderGroups(options) {
+	options = utils.merge({
+		aabbox: null
+	}, options);
+
     this.groups = [];
+    this.aabbox = options.aabbox;
 }
 
 /**

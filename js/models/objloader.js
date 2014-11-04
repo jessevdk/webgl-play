@@ -68,7 +68,23 @@ function ensureGroup(state, autosmooth, name) {
         state.group = {
             smooth: autosmooth ? true : false,
             name: name || 'Default',
-            indices: []
+            indices: [],
+            aabbox: [
+                {
+                    min: null,
+                    max: null
+                },
+
+                {
+                    min: null,
+                    max: null
+                },
+
+                {
+                    min: null,
+                    max: null
+                }
+            ]
         };
 
         state.object.groups.push(state.group);
@@ -154,7 +170,12 @@ function splitObj(o) {
 
     var ret = {
         name: o.name,
-        buffers: []
+        buffers: [],
+        aabbox: [
+            { min: 0, max: 0 },
+            { min: 0, max: 0 },
+            { min: 0, max: 0 }
+        ]
     };
 
     // Iterate over groups, keep appending to the current buffer,
@@ -182,6 +203,21 @@ function splitObj(o) {
         var g = o.groups[gi];
         group = null;
 
+        for (var i = 0; i < 3; i++) {
+            if (gi === 0) {
+                ret.aabbox[i].min = g.aabbox[i].min;
+                ret.aabbox[i].max = g.aabbox[i].max;
+            } else {
+                if (g.aabbox[i].min < ret.aabbox[i].min) {
+                    ret.aabbox[i].min = g.aabbox[i].min;
+                }
+
+                if (g.aabbox[i].max < ret.aabbox[i].max) {
+                    ret.aabbox[i].max = g.aabbox[i].max;
+                }
+            }
+        }
+
         for (var i = 0; i < g.indices.length; i += 3) {
             if ((buffer.attributes.vertices.length / 3) + 3 > indexLimit) {
                 buffer = makeBuffer();
@@ -194,7 +230,12 @@ function splitObj(o) {
             if (group === null) {
                 group = {
                     name: g.name,
-                    indices: []
+                    indices: [],
+                    aabbox: [
+                        { min: null, max: null },
+                        { min: null, max: null },
+                        { min: null, max: null }
+                    ]
                 };
 
                 buffer.groups.push(group);
@@ -357,6 +398,16 @@ function parseObj(s, options) {
                         gi.push(ii);
                         gv.push(verts[k][0], verts[k][1], verts[k][2]);
 
+                        for (var j = 0; j < 3; j++) {
+                            if (state.group.aabbox[j].min === null || verts[k][j] < state.group.aabbox[j].min) {
+                                state.group.aabbox[j].min = verts[k][j];
+                            }
+
+                            if (state.group.aabbox[j].max === null || verts[k][j] > state.group.aabbox[j].min) {
+                                state.group.aabbox[j].max = verts[k][j];
+                            }
+                        }
+
                         if (hasT) {
                             var ti = parseIndex(parseInt(p[k][1]), t.length);
                             gt.push(t[ti], t[ti + 1], t[ti + 2]);
@@ -483,7 +534,9 @@ function createModel(ctx, ret, objects, options) {
         var o = objects[i];
         var m = new Model(ctx, o.name, options);
 
-        m.renderer = new RenderGroups();
+        m.renderer = new RenderGroups({
+            aabbox: o.aabbox
+        });
 
         for (var k = 0; k < o.buffers.length; k++) {
             var buffer = o.buffers[k];
@@ -494,7 +547,10 @@ function createModel(ctx, ret, objects, options) {
 
             for (var gi = 0; gi < buffer.groups.length; gi++) {
                 var g = buffer.groups[gi];
-                m.renderer.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices)));
+
+                m.renderer.add(new RenderGroup(ctx, geom, new Uint16Array(g.indices), {
+                    aabbox: g.aabbox
+                }));
             }
         }
 
