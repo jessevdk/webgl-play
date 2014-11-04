@@ -122,6 +122,8 @@ Slider.prototype._valueTransform = function(v) {
 
 Slider.prototype._valueUpdated = function() {
     this._bob.style.left = ((this._value - this._settings.min) / (this._settings.max - this._settings.min) * 100) + '%';
+
+    this._bob.title = this._value;
 }
 
 module.exports = Slider;
