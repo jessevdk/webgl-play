@@ -447,23 +447,12 @@ View.prototype.updateViewport = function(ctx) {
                     texture = new Texture(ctx, n.texture);
                 }
 
-                texture.bind(ctx);
-
-                gl.texImage2D(n.texture.target,
-                              0,
-                              n.texture.internalFormat,
-                              vp[2],
-                              vp[3],
-                              0,
-                              n.texture.format,
-                              n.texture.type,
-                              null);
+                texture.data(ctx, vp[2], vp[3], null, n.texture);
 
                 if (i === 0) {
                     gl.framebufferTexture2D(gl.FRAMEBUFFER, n.attachment, n.texture.target, texture.id, 0);
                 }
 
-                texture.unbind(ctx);
                 textures.push(texture);
             }
 

@@ -57,6 +57,29 @@ function Texture(ctx, options) {
     this.unbind(ctx);
 }
 
+Texture.prototype.data = function(ctx, width, height, data, options) {
+    var gl = ctx.gl;
+
+    options = utils.merge({
+        internalFormat: gl.RGBA,
+        format: gl.RGBA,
+        type: gl.UNSIGNED_BYTE,
+        level: 0
+    }, options);
+
+    this.bind(ctx);
+    gl.texImage2D(this.target,
+                  options.level,
+                  options.internalFormat,
+                  width,
+                  height,
+                  0,
+                  options.format,
+                  options.type,
+                  data);
+    this.unbind(ctx);
+}
+
 Texture.prototype.bind = function(ctx, unit) {
     var gl = ctx.gl;
 
