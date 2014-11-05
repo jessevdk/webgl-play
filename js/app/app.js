@@ -717,6 +717,26 @@ App.prototype._show_opengl_popup = function(cb) {
         ]
     });
 
+    var ext = gl.getExtension('WEBGL_debug_renderer_info');
+
+    if (ext) {
+        ui.Widget.createUi('tr', {
+            children: [
+                ui.Widget.createUi('td', { textContent: 'Vendor:' }),
+                ui.Widget.createUi('td', { textContent: gl.getParameter(ext.UNMASKED_VENDOR_WEBGL) }),
+            ],
+            parent: content
+        });
+
+        ui.Widget.createUi('tr', {
+            children: [
+                ui.Widget.createUi('td', { textContent: 'Renderer:' }),
+                ui.Widget.createUi('td', { textContent: gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) }),
+            ],
+            parent: content
+        });
+    }
+
     var popup = new ui.Popup(content, this.buttons.opengl.e);
     cb(popup);
 }
