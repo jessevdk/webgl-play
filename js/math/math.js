@@ -619,6 +619,31 @@ function wrapIsMat(orig) {
     }
 }
 
+var numWrappers = {
+    int8: Int8Array,
+    int16: Int16Array,
+    int32: Int32Array,
+
+    uint8: Uint8Array,
+    uint16: Uint16Array,
+    uint32: Uint32Array,
+
+    float32: Float32Array,
+    float64: Float64Array
+};
+
+for (var k in numWrappers) {
+    exports[k] = (function(w) {
+        return function(v) {
+            if (typeof v === 'object' && Array.prototype.isPrototypeOf(v)) {
+                return new w(v);
+            } else {
+                return new w([v]);
+            }
+        }
+    })(numWrappers[k]);
+}
+
 var mats = [glMatrix.mat2, glMatrix.mat3, glMatrix.mat4];
 
 for (var i = 0; i < mats.length; i++) {
