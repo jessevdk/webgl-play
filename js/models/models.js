@@ -39,6 +39,7 @@ module.exports = {
     Plane: require('./plane'),
     IcoSphere: require('./icosphere'),
     UvSphere: require('./uvsphere'),
+    Texture: require('./texture'),
     View: require('./view')
 };
 
