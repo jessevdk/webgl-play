@@ -169,11 +169,6 @@ View.prototype._rotate_dx_dy = function(dx, dy, s, origTransform) {
 
     var tr = math.vec3.transformQuat(math.vec3.create(), otr, rot);
     math.transform.copy(this.transform, new math.transform(rot, math.vec3.add(tr, tr, this._interactive.origin)));
-
-    //var tr = math.transform.create().rotate(rot);
-
-    // Rotate with deltas, around origin
-    //this.transform.preMul(tr);
 }
 
 View.prototype._translate_dx_dy = function(dx, dy, sx, sy, origTransform) {
