@@ -354,7 +354,7 @@ View.prototype.updateViewport = function(ctx) {
     if (!this.viewport) {
         vp = [0, 0, gl.canvas.clientWidth, gl.canvas.clientHeight];
     } else {
-        vp = this.viewport;
+        vp = [this.viewport[0], this.viewport[1], this.viewport[2], this.viewport[3]];
 
         if (vp[0] < 0) {
             vp[0] = gl.canvas.clientWidth + vp[0];
