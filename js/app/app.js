@@ -694,6 +694,7 @@ App.prototype._show_opengl_popup = function(cb) {
         exts[i] = ui.Widget.createUi('div', {
             children: ui.Widget.createUi('a', {
                 href: 'https://www.khronos.org/registry/webgl/extensions/' + exts[i],
+                target: '_blank',
                 textContent: exts[i]
             })
         });
