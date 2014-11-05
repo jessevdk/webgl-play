@@ -184,6 +184,25 @@ transform.prototype.rotateX = function(rad) {
     return transform.rotateX(this, this, rad);
 }
 
+transform.preRotateX = function(out, a, rad) {
+    glMatrix.vec3.rotateX(out.position, a.position, [0, 0, 0], rad);
+    glMatrix.quat.rotateX(out.orientation, a.orientation, rad);
+
+    out._dirty++;
+
+    return out;
+}
+
+/**
+ * Rotate the transform around its global X axis. Note that this
+ * modifies the receiving transform.
+ *
+ * @param rad the angle by which to rotate in radians.
+ */
+transform.prototype.preRotateX = function(rad) {
+    return transform.preRotateX(this, this, rad);
+}
+
 transform.rotateY = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
     glMatrix.quat.rotateY(out.orientation, a.orientation, rad);
@@ -201,6 +220,25 @@ transform.rotateY = function(out, a, rad) {
  */
 transform.prototype.rotateY = function(rad) {
     return transform.rotateY(this, this, rad);
+}
+
+transform.preRotateY = function(out, a, rad) {
+    glMatrix.vec3.rotateY(out.position, a.position, [0, 0, 0], rad);
+    glMatrix.quat.rotateY(out.orientation, a.orientation, rad);
+
+    out._dirty++;
+
+    return out;
+}
+
+/**
+ * Rotate the transform around its global Y axis. Note that this
+ * modifies the receiving transform.
+ *
+ * @param rad the angle by which to rotate in radians.
+ */
+transform.prototype.preRotateY = function(rad) {
+    return transform.preRotateY(this, this, rad);
 }
 
 transform.rotateZ = function(out, a, rad) {
@@ -222,6 +260,25 @@ transform.prototype.rotateZ = function(rad) {
     return transform.rotateZ(this, this, rad);
 }
 
+transform.preRotateZ = function(out, a, rad) {
+    glMatrix.vec3.rotateZ(out.position, a.position, [0, 0, 0], rad);
+    glMatrix.quat.rotateZ(out.orientation, a.orientation, rad);
+
+    out._dirty++;
+
+    return out;
+}
+
+/**
+ * Rotate the transform around its global Z axis. Note that this
+ * modifies the receiving transform.
+ *
+ * @param rad the angle by which to rotate in radians.
+ */
+transform.prototype.preRotateZ = function(rad) {
+    return transform.preRotateZ(this, this, rad);
+}
+
 transform.rotate = function(out, a, q) {
     glMatrix.vec3.copy(out.position, a.position);
     glMatrix.quat.mul(out.orientation, a.orientation, q);
@@ -238,6 +295,25 @@ transform.rotate = function(out, a, q) {
  * @param q the quaternion by which to rotate.
  */
 transform.prototype.rotate = function(q) {
+    return transform.rotate(this, this, q);
+}
+
+transform.preRotate = function(out, a, q) {
+    glMatrix.vec3.transformQuat(out.position, a.position, q);
+    glMatrix.quat.mul(out.orientation, a.orientation, q);
+
+    out._dirty++;
+
+    return out;
+}
+
+/**
+ * Rotate the transform globally by the given quaternion. Note that this
+ * modifies the receiving transform.
+ *
+ * @param q the quaternion by which to rotate.
+ */
+transform.prototype.preRotate = function(q) {
     return transform.rotate(this, this, q);
 }
 
