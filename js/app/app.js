@@ -464,8 +464,22 @@ App.prototype._init_canvas = function() {
         this._update_canvas_size();
     }).bind(this));
 
-    this.renderer.on('error', (function(r, e) {
-        this._handle_js_error(e);
+    this.renderer.on('error', (function(r, type, e) {
+        switch (type) {
+        case 'js':
+            this._handle_js_error(e);
+            break;
+        case 'program':
+            for (var i = 0; i < this.document.programs.length; i++) {
+                var p = this.document.programs[i];
+
+                if (p.name() === e.program) {
+                    p.error(e.errors);
+                }
+            }
+
+            break;
+        }
     }).bind(this));
 }
 

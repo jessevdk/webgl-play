@@ -295,7 +295,7 @@ Renderer.prototype._event = function(e) {
         try {
             this.program.event.call(this.program, this.context, e);
         } catch (e) {
-            this._on_error(e);
+            this._on_error('js', e);
             this.pause();
         }
     }
@@ -443,17 +443,15 @@ Renderer.prototype.update = function(doc) {
             var prog = p.compile(nctx.gl, nctx._defines[program]);
 
             if (prog.vertex.error !== null || prog.fragment.error !== null || prog.error !== null) {
-                if (prog.vertex.error !== null) {
-                    console.error(p.name() + '(vertex): ' + prog.vertex.error);
-                }
+                this._on_error('program', {
+                    errors: {
+                        program: prog.error,
+                        vertex: prog.vertex.error,
+                        fragment: prog.fragment.error
+                    },
 
-                if (prog.fragment.error !== null) {
-                    console.error(p.name() + '(fragment): ' + prog.fragment.error);
-                }
-
-                if (prog.error !== null) {
-                    console.error(p.name() + '(program): ' + prog.error);
-                }
+                    program: p.name()
+                });
             } else {
                 programs[program] = prog;
 
@@ -613,7 +611,7 @@ Renderer.prototype.do_render = function(t) {
         try {
             this.program.render.call(this.program, this.context);
         } catch (e) {
-            this._on_error(e);
+            this._on_error('js', e);
             console.error(e.stack);
             this.pause();
             return;
