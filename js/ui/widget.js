@@ -38,6 +38,10 @@ function Widget(clsname, e, settings) {
         this.e = e;
     }
 
+    if (settings.title) {
+        this.e.title = settings.title;
+    }
+
     this.e.classList.add('ui-widget');
 
     if (clsname) {
