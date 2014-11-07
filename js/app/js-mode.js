@@ -358,9 +358,13 @@ function hint(editor, options) {
         var obj = completion.obj;
         var doc = null;
 
-        if (obj !== null && typeof obj.__doc__ !== 'undefined') {
+        if (typeof obj !== 'undefined' &&
+            obj !== null &&
+            typeof obj.__doc__ !== 'undefined') {
             doc = obj.__doc__;
-        } else if (typeof parent.__doc__ !== 'undefined' &&
+        } else if (typeof parent !== 'undefined' &&
+                   parent !== null &&
+                   typeof parent.__doc__ !== 'undefined' &&
                    typeof parent.__doc__.members !== 'undefined' &&
                    typeof parent.__doc__.members[completion.text] !== 'undefined') {
             doc = {
