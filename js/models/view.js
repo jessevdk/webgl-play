@@ -306,6 +306,14 @@ View.prototype.cycleBufferTextures = function(ctx, names) {
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, this._buffer.fbo);
 
+    if (!names) {
+        names = [];
+
+        for (var k in this._buffer.textureBuffers) {
+            names.push(k);
+        }
+    }
+
     for (var i = 0; i < names.length; i++) {
         var buffer = this._buffer.textureBuffers[names[i]];
 
