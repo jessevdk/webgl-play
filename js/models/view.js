@@ -302,10 +302,12 @@ View.prototype.activeBufferTexture = function(name) {
 }
 
 View.prototype.cycleBufferTextures = function(ctx, names) {
+    var gl = ctx.gl;
+
     gl.bindFramebuffer(gl.FRAMEBUFFER, this._buffer.fbo);
 
     for (var i = 0; i < names.length; i++) {
-        var buffer = this._buffer.textureBuffers[name];
+        var buffer = this._buffer.textureBuffers[names[i]];
 
         if (buffer.textures.length === 1) {
             continue;
