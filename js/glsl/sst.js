@@ -1518,8 +1518,15 @@ Annotator.prototype._annotate_selection_stmt = function(node) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
+    this._push_scope(node.body);
     this._annotate_node(node.body);
-    this._annotate_node(node.els);
+    this._pop_scope();
+
+    if (node.els) {
+        this._push_scope(node.els);
+        this._annotate_node(node.els);
+        this._pop_scope(node.els);
+    }
 };
 
 Annotator.prototype._annotate_selection_else_stmt = function(node) {
