@@ -98,6 +98,17 @@ Popup.prototype.destroy = function() {
     this._onDestroy();
 }
 
+Popup.prototype.content = function(c) {
+    if (typeof c === 'undefined') {
+        return this._child;
+    }
+
+    this._content.removeChild(this._child);
+
+    this._child = c;
+    this._content.appendChild(this._child);
+}
+
 Popup.prototype._build = function() {
     var outer = document.createElement('div');
     outer.classList.add('ui-popup');
@@ -112,6 +123,8 @@ Popup.prototype._build = function() {
     var content = document.createElement('div');
     content.classList.add('content');
     content.appendChild(this._child);
+
+    this._content = content;
 
     outer.appendChild(content);
 

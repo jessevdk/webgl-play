@@ -691,7 +691,7 @@ App.prototype._initProgramsBar = function() {
     this.programsBar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
 }
 
-App.prototype._showOpenglPopup = function(cb) {
+App.prototype._showOpenglPopup = function(popup) {
     var gl = this.renderer.context.gl;
 
     var exts = gl.getSupportedExtensions();
@@ -744,12 +744,66 @@ App.prototype._showOpenglPopup = function(cb) {
         });
     }
 
-    var popup = new ui.Popup(content, this.buttons.opengl.e);
+    popup.content(content);
+}
+
+App.prototype._showAboutPopup = function(cb) {
+    var popup;
+
+    var items = [
+        { name: 'OpenGL Information', action: (function(popup) {
+            this._showOpenglPopup(popup);
+        }).bind(this) },
+        //{ name: 'Introduction', action: function(popup) { popup.destroy(); } },
+        { name: 'Source on Github', action: 'https://github.com/jessevdk/webgl-play' },
+        { name: 'Issues on Github', action: 'https://github.com/jessevdk/webgl-play/issues' }
+    ];
+
+    var children = [];
+
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var li;
+
+        if (typeof item.action === 'string') {
+            var a = ui.Widget.createUi('a', {
+                href: item.action,
+                target: '_blank',
+                textContent: item.name
+            });
+
+            li = ui.Widget.createUi('li', {
+                children: a
+            });
+
+            li.addEventListener('click', (function(a) {
+                a.click();
+                popup.destroy();
+            }).bind(this, a));
+        } else {
+            li = ui.Widget.createUi('li', {
+                textContent: item.name
+            });
+
+            li.addEventListener('click', (function(action) {
+                action(popup);
+            }).bind(this, item.action));
+        }
+
+        children.push(li);
+    }
+
+    var content = ui.Widget.createUi('ul', {
+        children: children,
+        classes: 'about'
+    });
+
+    popup = new ui.Popup(content, this.buttons.about.e);
     cb(popup);
 }
 
 App.prototype._initButtons = function() {
-    var buttons = ['new', 'copy', 'export', 'models', 'open', 'opengl', 'help', 'share', 'publish'];
+    var buttons = ['new', 'copy', 'export', 'models', 'open', 'about', 'help', 'share', 'publish'];
 
     this.buttons = {};
 
@@ -772,7 +826,7 @@ App.prototype._initButtons = function() {
 
     ui.Popup.on(this.buttons.open.e, this._showOpenPopup.bind(this));
     ui.Popup.on(this.buttons.models.e, this._showModelsPopup.bind(this));
-    ui.Popup.on(this.buttons.opengl.e, this._showOpenglPopup.bind(this));
+    ui.Popup.on(this.buttons.about.e, this._showAboutPopup.bind(this));
 }
 
 App.prototype._onButtonCopyClick = function() {

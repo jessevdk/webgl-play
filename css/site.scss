@@ -163,7 +163,7 @@ input[type="text"] {
   outline: none;
 }
 
-.ui-popup .documents, .ui-popup .models {
+.ui-popup .documents, .ui-popup .models, .ui-popup .about {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -257,6 +257,14 @@ input[type="text"] {
         border-bottom: 0;
       }
     }
+  }
+}
+
+.ui-popup .about {
+  a {
+    color: $fg_color;
+    text-decoration: none;
+    cursor: default;
   }
 }
 
