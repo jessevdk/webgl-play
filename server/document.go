@@ -150,6 +150,6 @@ func (d NewDocumentHandler) Post(writer http.ResponseWriter, req *http.Request) 
 }
 
 func init() {
-	router.Handle("/d/new", NewRestishHandler(NewDocumentHandler{}))
-	router.Handle("/d/{id:[A-Za-z0-9]+}.json", handlers.CompressHandler(NewRestishHandler(DocumentHandler{})))
+	router.Handle("/d/new", CORSHandler(NewRestishHandler(NewDocumentHandler{})))
+	router.Handle("/d/{id:[A-Za-z0-9]+}.json", handlers.CompressHandler(CORSHandler(NewRestishHandler(DocumentHandler{}))))
 }

@@ -1338,7 +1338,7 @@ App.prototype._init = function() {
                         this.message('error', 'Failed to load document ' + m[1]);
                     }).bind(this);
 
-                    req.open('get', '/d/' + m[1] + '.json');
+                    req.open('get', global.Settings.backend('d/' + m[1] + '.json'), true);
                     req.send();
                 }
             }).bind(this));

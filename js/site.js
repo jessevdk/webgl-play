@@ -27,4 +27,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-app = require('./app/app.js');
+var utils = require('./utils/utils');
+
+// TODO: this isn't great
+global.Settings = utils.merge({
+    backend: function(u) {
+        return '/' + u;
+    }
+}, global.Settings);
+
+app = require('./app/app');
+
+// vi:ts=4:et

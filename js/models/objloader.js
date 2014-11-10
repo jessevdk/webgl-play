@@ -711,7 +711,12 @@ exports.load = function(ctx, filename, options) {
             options.error(ev.target.responseText);
         }
 
-        req.open('get', '/m/' + encodeURIComponent(filename), true);
+        // Remote requests have to go through our proxy
+        if (filename.indexOf("http:") === 0 || filename.indexOf("https:") === 0) {
+            req.open('get', global.Settings.backend('m/' + encodeURIComponent(filename)), true);
+        } else {
+            req.open('get', '/assets/models/' + encodeURIComponent(filename), true);
+        }
 
         try {
             req.send();

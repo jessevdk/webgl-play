@@ -29,59 +29,32 @@
 
 package main
 
-import (
-	"net/http"
-	"net/http/httputil"
-	"net/url"
-	"path"
-	"strings"
+import "net/http"
 
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-)
-
-type ModelHandler struct {
-	RestishVoid
-
-	proxy *httputil.ReverseProxy
+type corsHandler struct {
+	handler http.Handler
 }
 
-func (d *ModelHandler) Get(writer http.ResponseWriter, req *http.Request) {
-	vars := mux.Vars(req)
+func (c corsHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	if len(options.CORSDomain) != 0 {
+		if origin := req.Header.Get("Origin"); origin != "" {
+			h := rw.Header()
 
-	u, err := url.Parse(vars["url"])
-
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if !u.IsAbs() {
-		root := path.Join(siteRoot, "assets", "models")
-		filename := path.Clean(path.Join(root, u.Path))
-
-		if !strings.HasPrefix(filename, root+"/") {
-			http.Error(writer, "404 not found", http.StatusNotFound)
-			return
+			h.Set("Access-Control-Allow-Origin", options.CORSDomain)
+			h.Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+			h.Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 		}
 
-		// Load from local file
-		writer.Header().Set("Content-Type", "text/plain")
-		http.ServeFile(writer, req, filename)
-	} else {
-		d.proxy.ServeHTTP(writer, req)
+		if req.Method == "OPTIONS" {
+			return
+		}
 	}
+
+	c.handler.ServeHTTP(rw, req)
 }
 
-func redirectModelRequest(r *http.Request) {
-	vars := mux.Vars(r)
-	r.URL, _ = url.Parse(vars["url"])
-}
-
-func init() {
-	router.Handle("/m/{url:.*}", handlers.CompressHandler(CORSHandler(NewRestishHandler(&ModelHandler{
-		proxy: &httputil.ReverseProxy{
-			Director: redirectModelRequest,
-		},
-	}))))
+func CORSHandler(handler http.Handler) http.Handler {
+	return corsHandler{
+		handler: handler,
+	}
 }
