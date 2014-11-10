@@ -35,6 +35,7 @@ var Store = require('./store');
 var Renderer = require('./renderer');
 var Signals = require('../signals/signals');
 var marked = require('../vendor/marked');
+var utils = require('../utils/utils');
 
 require('./js-mode');
 
@@ -573,7 +574,11 @@ App.prototype._onEditorParsed = function() {
     }).bind(this), 50);
 }
 
-App.prototype.message = function(type, m) {
+App.prototype.message = function(type, m, options) {
+    options = utils.merge({
+        canCancel: true
+    }, options);
+
     var div = document.createElement('div');
     this._message = div;
 
@@ -596,11 +601,13 @@ App.prototype.message = function(type, m) {
     div.style.top = ((document.body.offsetHeight - h) / 2) + 'px';
 
     var remover = (function() {
-        window.removeEventListener('keydown', this._messageKeydown);
-        window.removeEventListener('mousedown', this._messageMousedown);
+        if (options.canCancel) {
+            window.removeEventListener('keydown', this._messageKeydown);
+            window.removeEventListener('mousedown', this._messageMousedown);
 
-        document.body.removeChild(overlay);
-        document.body.removeChild(div);
+            document.body.removeChild(overlay);
+            document.body.removeChild(div);
+        }
     }).bind(this);
 
     this._messageKeydown = (function(e) {
@@ -1279,7 +1286,66 @@ App.prototype._initTitle = function() {
     ui.Popup.on(this.title, this._showInfoPopup.bind(this));
 }
 
+App.prototype._checkCompatibility = function() {
+    var missing = [];
+
+    var view = document.getElementById('view');
+
+    if (!view.getContext('webgl')) {
+        missing.push({
+            name: 'WebGL',
+            description: 'It looks like WebGL is not supported in your browser, and this playground is all about WebGL!'
+        });
+    }
+
+    // Check for IndexedDB
+    if (typeof indexedDB === 'undefined') {
+        missing.push({
+            name: 'indexedDB',
+            description: 'A suitable implementation of indexedDB could not be found. indexedDB is a local data storage which is used by the WebGL Playground to store documents.'
+        });
+    }
+
+    if (missing.length !== 0) {
+        var children = [];
+
+        for (var i = 0; i < missing.length; i++) {
+            var m = missing[i];
+
+            children.push(ui.Widget.createUi('tr', {
+                children: [
+                    ui.Widget.createUi('td', { textContent: m.name }),
+                    ui.Widget.createUi('td', { textContent: m.description })
+                ]
+            }));
+        }
+
+        var d = ui.Widget.createUi('div', {
+            classes: 'compatibility',
+            children: [
+                ui.Widget.createUi('div', {
+                    classes: 'title',
+                    textContent: 'Sorry! The WebGL Playground does not support your browser'
+                }),
+
+                ui.Widget.createUi('table', {
+                    children: children
+                })
+            ]
+        });
+
+        this.message('error', d, { canCancel: false });
+        return false;
+    } else {
+        return true;
+    }
+}
+
 App.prototype._init = function() {
+    if (!this._checkCompatibility()) {
+        return;
+    }
+
     this._store = new Store((function(store) {
         var m = document.location.pathname.match(/d\/([A-Za-z0-9]+)/);
 

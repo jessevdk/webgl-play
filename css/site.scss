@@ -411,4 +411,26 @@ $description_height: 400px;
   }
 }
 
+.compatibility {
+  max-width: 500px;
+
+  .title {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 6px;
+  }
+
+  table {
+    border-spacing: 12px 6px;
+
+    td {
+      vertical-align: baseline;
+    }
+
+    td:first-child {
+      font-style: italic;
+    }
+  }
+}
+
 /* vi:ts=2:et */
