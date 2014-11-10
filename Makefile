@@ -9,35 +9,39 @@ SASS = .gem/bin/sass
 
 BROWSERIFY = $(NODE_MODULES_BIN)/browserify
 BROWSERIFYINC = $(NODE_MODULES_BIN)/browserifyinc
-BRFS = $(NODE_MODULES_BIN)/brfs
-UGLIFYIFY = node_modules/uglifyify
 EXORCIST = $(NODE_MODULES_BIN)/exorcist
-UGLIFYJS = $(NODE_MODULES_BIN)/uglifyjs
 
 VENDORJS = js/vendor/codemirror.min.js
 
-define install-npm-module
-$1:
-	@printf "Installing required dependency \033[1m$2\033[0m using npm\n"; \
-	npm install --loglevel error $2 >/dev/null
-endef
+ifeq ($(shell which npm),)
+.gen/npm.stamp: npm-not-found
+npm-not-found:
+	@printf "\033[31;1m[ERROR]: building the playground requires \033[0;1mnpm\033[31;1m to be installed\033[0m\n"
+	exit 1
+endif
 
-define install-bin-npm-module
-	$(eval $(call install-npm-module,$(NODE_MODULES_BIN)/$1,$2))
-endef
+ifeq ($(shell which gem),)
+$(SASS): gem-not-found
+gem-not-found:
+	@printf "\033[31;1m[ERROR]: building the playground requires \033[0;1mgem\033[31;1m to be installed\033[0m\n"
+	exit 1
+endif
 
 all: site
+
+$(BROWSERIFY) $(BROWSERIFYINC) $(EXORCIST): .gen/npm.stamp
+
+.SECONDARY: .gen/npm.stamp
+
+.gen/npm.stamp: package.json
+	@printf "Installing dependencies using npm\n"; \
+	mkdir -p .gen; \
+	touch .gen/npm.stamp; \
+	npm install
 
 $(SASS):
 	@printf "Installing required dependency \033[1msass\033[0m using gem\n"; \
 	gem install -i .gem -q sass
-
-$(eval $(call install-bin-npm-module,browserifyinc,browserify-incremental))
-$(eval $(call install-bin-npm-module,browserify,browserify))
-$(eval $(call install-bin-npm-module,brfs,brfs))
-$(eval $(call install-bin-npm-module,exorcist,exorcist))
-$(eval $(call install-bin-npm-module,uglifyjs,uglify-js))
-$(eval $(call install-npm-module,node_modules/uglifyify,uglifyify))
 
 MODELS = $(foreach i,$(wildcard models/*.obj models/*.mtl),site/assets/models/$(notdir $(i)))
 
@@ -48,7 +52,7 @@ SITE_EXTERNAL_DEPS =		\
 
 -include .gen/js/site.min.js.deps
 
-site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(BRFS) $(EXORCIST) $(SITE_EXTERNAL_DEPS)
+site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(EXORCIST) $(SITE_EXTERNAL_DEPS)
 	@mkdir -p $(dir $@); 															\
 	full=no; 																		\
 	for f in $(SITE_EXTERNAL_DEPS); do 												\

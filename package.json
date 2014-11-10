@@ -11,9 +11,11 @@
     "exorcist": "0.1.x",
     "falafel": "^0.3.1",
     "istanbul": "0.3.x",
+    "jsdoc": "3.3.x",
+    "jsdoc-parse": "0.2.x",
     "jshint": "2.5.x",
     "mocha": "1.21.x",
     "through": "^2.3.6",
-    "uglify-js": "2.4.x"
+    "uglifyify": "2.5.x"
   }
 }
