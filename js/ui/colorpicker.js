@@ -232,7 +232,7 @@ ColorPicker.prototype._clip = function(v, a, b) {
 }
 
 ColorPicker.prototype._updateAlpha = function(alphaArea, alphaPick, e) {
-    var pos = this.page_position(alphaArea);
+    var pos = this.pagePosition(alphaArea);
     var w = alphaArea.offsetWidth;
 
     pos.x += 1;
@@ -244,7 +244,7 @@ ColorPicker.prototype._updateAlpha = function(alphaArea, alphaPick, e) {
 }
 
 ColorPicker.prototype._updateSv = function(svarea, svpick, e) {
-    var pos = this.page_position(svarea);
+    var pos = this.pagePosition(svarea);
 
     pos.x += 1;
     pos.y += 1;
@@ -265,7 +265,7 @@ ColorPicker.prototype._updateSv = function(svarea, svpick, e) {
 }
 
 ColorPicker.prototype._updateH = function(harea, hpick, svarea, e) {
-    var pos = this.page_position(harea);
+    var pos = this.pagePosition(harea);
     var h = harea.offsetHeight;
 
     pos.y += 1;

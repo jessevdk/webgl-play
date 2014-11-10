@@ -41,7 +41,7 @@ function Store(ready) {
     req.onupgradeneeded = this._onupgradeneeded.bind(this);
 }
 
-Store.prototype.object_to_cache = function(url, filename, date, obj) {
+Store.prototype.objectToCache = function(url, filename, date, obj) {
     var tr = this._db.transaction('object-cache', 'readwrite');
     var store = tr.objectStore('object-cache');
 
@@ -56,7 +56,7 @@ Store.prototype.object_to_cache = function(url, filename, date, obj) {
     }, url);
 }
 
-Store.prototype.object_from_cache = function(url, date, cb) {
+Store.prototype.objectFromCache = function(url, date, cb) {
     var tr = this._db.transaction('object-cache');
     var store = tr.objectStore('object-cache');
 
@@ -140,7 +140,7 @@ Store.prototype.byShare = function(share, cb) {
 Store.prototype.last = function(cb) {
     var tr = this._db.transaction('documents');
     var store = tr.objectStore('documents');
-    var idx = store.index('modification_time');
+    var idx = store.index('modificationTime');
 
     var req = idx.openCursor(null, 'prev');
 
@@ -161,7 +161,7 @@ Store.prototype.last = function(cb) {
 Store.prototype.all = function(cb) {
     var tr = this._db.transaction('documents');
     var store = tr.objectStore('documents');
-    var idx = store.index('modification_time');
+    var idx = store.index('modificationTime');
 
     var req = idx.openCursor(null, 'prev');
 
@@ -197,8 +197,8 @@ Store.prototype.addModel = function(model, data, cb) {
     models.put(model);
     modelData.put({
         filename: model.filename,
-        creation_time: model.creation_time,
-        modification_time: model.modification_time,
+        creationTime: model.creationTime,
+        modificationTime: model.modificationTime,
         data: data
     });
 
@@ -347,8 +347,8 @@ Store.prototype._onupgradeneeded = function(e) {
     if (e.oldVersion <= 0) {
         documentsStore = db.createObjectStore('documents', { autoIncrement: true, keyPath: 'id' });
 
-        documentsStore.createIndex('modification_time', 'modification_time', { unique: false });
-        documentsStore.createIndex('creation_time', 'creation_time', { unique: false });
+        documentsStore.createIndex('modificationTime', 'modificationTime', { unique: false });
+        documentsStore.createIndex('creationTime', 'creationTime', { unique: false });
         documentsStore.createIndex('title', 'title', { unique: false });
     } else {
         documentsStore = tr.objectStore('documents');

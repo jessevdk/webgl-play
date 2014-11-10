@@ -44,13 +44,13 @@ function Panel(p) {
     this.sep = children[1];
     this.child2 = children[2];
 
-    this._on_mousedown = this._on_mousedown_real.bind(this);
-    this._on_mouseup = this._on_mouseup_real.bind(this);
-    this._on_mousemove = this._on_mousemove_real.bind(this);
+    this._onMousedown = this._onMousedownReal.bind(this);
+    this._onMouseup = this._onMouseupReal.bind(this);
+    this._onMousemove = this._onMousemoveReal.bind(this);
 
-    this._on_resized = this.register_signal('resized');
+    this._onResized = this.registerSignal('resized');
 
-    this.sep.addEventListener('mousedown', this._on_mousedown);
+    this.sep.addEventListener('mousedown', this._onMousedown);
 }
 
 Panel.prototype = Object.create(Widget.prototype);
@@ -75,11 +75,11 @@ Panel.prototype.position = function(value) {
     }
 }
 
-Panel.prototype._on_mousedown_real = function(e) {
-    window.addEventListener('mousemove', this._on_mousemove);
-    window.addEventListener('mouseup', this._on_mouseup);
+Panel.prototype._onMousedownReal = function(e) {
+    window.addEventListener('mousemove', this._onMousemove);
+    window.addEventListener('mouseup', this._onMouseup);
 
-    p = this.page_position(this.sep);
+    p = this.pagePosition(this.sep);
 
     if (this._orientation == Panel.Orientation.VERTICAL) {
         this._doffset = e.pageY - p.y;
@@ -92,19 +92,19 @@ Panel.prototype._on_mousedown_real = function(e) {
     e.preventDefault();
 }
 
-Panel.prototype._on_mouseup_real = function(e) {
-    window.removeEventListener('mousemove', this._on_mousemove);
-    window.removeEventListener('mouseup', this._on_mouseup);
+Panel.prototype._onMouseupReal = function(e) {
+    window.removeEventListener('mousemove', this._onMousemove);
+    window.removeEventListener('mouseup', this._onMouseup);
 
     document.body.style.cursor = '';
 
     e.preventDefault();
 }
 
-Panel.prototype._on_mousemove_real = function(e) {
+Panel.prototype._onMousemoveReal = function(e) {
     var d;
 
-    pagepos = this.page_position();
+    pagepos = this.pagePosition();
 
     if (this._orientation == Panel.Orientation.VERTICAL) {
         d = e.pageY - pagepos.y;
@@ -114,7 +114,7 @@ Panel.prototype._on_mousemove_real = function(e) {
 
     this.child1.style.flexBasis = (d - this._doffset) + 'px';
 
-    this._on_resized();
+    this._onResized();
 
     e.preventDefault();
 }

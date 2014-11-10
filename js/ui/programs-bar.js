@@ -35,7 +35,7 @@ function ProgramsBar(e, app) {
     Widget.call(this, 'programs-bar', null, { wrap: e });
 
     this._document = null;
-    this._show_delete = null;
+    this._showDelete = null;
 
     this.document(app.document);
 
@@ -45,19 +45,19 @@ function ProgramsBar(e, app) {
 
     this._ul = e.querySelector('ul');
 
-    this._new_program = new Button({ wrap: e.querySelector('#new-program') });
-    this._new_program.on('click', this._on_new_program_click, this);
+    this._newProgram = new Button({ wrap: e.querySelector('#new-program') });
+    this._newProgram.on('click', this._onNewProgramClick, this);
 
-    this._new_program_name = e.querySelector('#new-program-name');
-    this._new_program_name.addEventListener('keypress', this._on_new_program_name_keypress.bind(this));
+    this._newProgramName = e.querySelector('#new-program-name');
+    this._newProgramName.addEventListener('keypress', this._onNewProgramNameKeypress.bind(this));
 }
 
 ProgramsBar.prototype = Object.create(Widget.prototype);
 ProgramsBar.prototype.constructor = Widget;
 
-ProgramsBar.prototype._on_new_program_name_keypress = function(e) {
+ProgramsBar.prototype._onNewProgramNameKeypress = function(e) {
     if (e.keyCode === 13) {
-        this._on_new_program_click(this._new_program, e);
+        this._onNewProgramClick(this._newProgram, e);
     }
 }
 
@@ -71,33 +71,33 @@ ProgramsBar.prototype.document = function(document) {
     }
 
     if (this._document !== null) {
-        this._document.off('notify::active-program', this._on_active_program_changed, this);
-        this._document.off('program-added', this._on_program_added, this);
-        this._document.off('program-removed', this._on_program_removed, this);
+        this._document.off('notify::active-program', this._onActiveProgramChanged, this);
+        this._document.off('program-added', this._onProgramAdded, this);
+        this._document.off('program-removed', this._onProgramRemoved, this);
 
         for (var i = 0; i < this._document.programs.length; i++) {
             var p = this._document.programs[i];
-            this._on_program_removed(this._document, p, true);
+            this._onProgramRemoved(this._document, p, true);
         }
     }
 
     this._document = document;
 
     if (this._document !== null) {
-        this._document.on('notify::active-program', this._on_active_program_changed, this);
-        this._document.on('program-added', this._on_program_added, this);
-        this._document.on('program-removed', this._on_program_removed, this);
+        this._document.on('notify::active-program', this._onActiveProgramChanged, this);
+        this._document.on('program-added', this._onProgramAdded, this);
+        this._document.on('program-removed', this._onProgramRemoved, this);
 
         for (var i = 0; i < this._document.programs.length; i++) {
             var p = this._document.programs[i];
-            this._on_program_added(this._document, p);
+            this._onProgramAdded(this._document, p);
         }
 
-        this._on_active_program_changed();
+        this._onActiveProgramChanged();
     }
 }
 
-ProgramsBar.prototype._unique_program_name = function(name) {
+ProgramsBar.prototype._uniqueProgramName = function(name) {
     var names = {};
 
     for (var i = 0; i < this._document.programs.length; i++) {
@@ -124,32 +124,32 @@ ProgramsBar.prototype._unique_program_name = function(name) {
     return uname;
 }
 
-ProgramsBar.prototype._on_new_program_click = function(button, e) {
-    var name = this._new_program_name.value.trim();
+ProgramsBar.prototype._onNewProgramClick = function(button, e) {
+    var name = this._newProgramName.value.trim();
 
     if (name.length === 0) {
-        this._new_program_name.focus();
+        this._newProgramName.focus();
         return;
     }
 
     var prg = Program.default();
-    var uname = this._unique_program_name(name);
+    var uname = this._uniqueProgramName(name);
 
     prg.name(uname);
-    this._document.add_program(prg);
-    this._document.active_program(prg);
+    this._document.addProgram(prg);
+    this._document.activeProgram(prg);
 
-    this._new_program_name.value = '';
+    this._newProgramName.value = '';
 
     e.preventDefault();
     e.stopPropagation();
 }
 
-ProgramsBar.prototype._find_by_name = function(name) {
+ProgramsBar.prototype._findByName = function(name) {
     return this._ul.querySelector('[data-program-name=' + JSON.stringify(name) + ']');
 }
 
-ProgramsBar.prototype._insert_program_item = function(program, item) {
+ProgramsBar.prototype._insertProgramItem = function(program, item) {
     var lis = this._ul.querySelectorAll('li');
     var found = null;
 
@@ -164,52 +164,52 @@ ProgramsBar.prototype._insert_program_item = function(program, item) {
     this._ul.insertBefore(item, found);
 }
 
-ProgramsBar.prototype._display_name = function(program) {
+ProgramsBar.prototype._displayName = function(program) {
     var name = program.name();
 
-    if (program.is_default()) {
+    if (program.isDefault()) {
         return '► ' + name;
     }
 
     return name;
 }
 
-ProgramsBar.prototype._on_program_name_changed = function(program, prevname) {
-    var item = this._find_by_name(prevname);
+ProgramsBar.prototype._onProgramNameChanged = function(program, prevname) {
+    var item = this._findByName(prevname);
 
     if (item) {
         item.setAttribute('data-program-name', program.name());
-        item.querySelector('span.name').textContent = this._display_name(program);
+        item.querySelector('span.name').textContent = this._displayName(program);
 
         this._ul.removeChild(item);
-        this._insert_program_item(program, item);
+        this._insertProgramItem(program, item);
     }
 }
 
-ProgramsBar.prototype._on_active_program_changed = function() {
+ProgramsBar.prototype._onActiveProgramChanged = function() {
     var sel = this._ul.querySelector('li.selected');
 
     if (sel) {
         sel.classList.remove('selected');
     }
 
-    var p = this._document.active_program();
-    sel = this._find_by_name(p.name());
+    var p = this._document.activeProgram();
+    sel = this._findByName(p.name());
 
     if (sel) {
         sel.classList.add('selected');
     }
 
-    if (this._show_delete !== null && this._show_delete.element !== sel) {
-        this._on_program_toggle_delete(this._show_delete.element, this._show_delete.program);
+    if (this._showDelete !== null && this._showDelete.element !== sel) {
+        this._onProgramToggleDelete(this._showDelete.element, this._showDelete.program);
     }
 }
 
-ProgramsBar.prototype._on_program_click = function(program) {
-    this._document.active_program(program);
+ProgramsBar.prototype._onProgramClick = function(program) {
+    this._document.activeProgram(program);
 }
 
-ProgramsBar.prototype._on_program_toggle_delete = function(elem, program) {
+ProgramsBar.prototype._onProgramToggleDelete = function(elem, program) {
     var name = elem.querySelector('span.name');
 
     if (elem.classList.contains('deleting')) {
@@ -218,7 +218,7 @@ ProgramsBar.prototype._on_program_toggle_delete = function(elem, program) {
         var del = elem.querySelector('div.delete');
         del.classList.remove('animate-in');
 
-        this._show_delete = null;
+        this._showDelete = null;
 
         setTimeout(function() {
             elem.removeChild(del);
@@ -241,19 +241,19 @@ ProgramsBar.prototype._on_program_toggle_delete = function(elem, program) {
         del.classList.add('animate-in');
 
         del.addEventListener('click', (function(e) {
-            this._document.remove_program(program);
+            this._document.removeProgram(program);
             e.preventDefault();
             e.stopPropagation();
         }).bind(this));
 
-        this._show_delete = {
+        this._showDelete = {
             element: elem,
             program: program
         };
     }
 }
 
-ProgramsBar.prototype._on_program_begin_edit_name = function(elem, program) {
+ProgramsBar.prototype._onProgramBeginEditName = function(elem, program) {
     if (elem.classList.contains('editing')) {
         return;
     }
@@ -297,13 +297,13 @@ ProgramsBar.prototype._on_program_begin_edit_name = function(elem, program) {
 
         if (name.length !== 0 && program.name() !== name) {
             // Make unique
-            program.name(this._unique_program_name(name));
+            program.name(this._uniqueProgramName(name));
         }
     }).bind(this));
 }
 
-ProgramsBar.prototype._on_program_error_changed = function(program) {
-    var elem = this._find_by_name(program.name());
+ProgramsBar.prototype._onProgramErrorChanged = function(program) {
+    var elem = this._findByName(program.name());
 
     if (elem) {
         var e = program.error();
@@ -333,30 +333,30 @@ ProgramsBar.prototype._on_program_error_changed = function(program) {
     }
 }
 
-ProgramsBar.prototype._on_program_added = function(doc, program) {
-    program.on('notify::name', this._on_program_name_changed, this);
-    program.on('notify::error', this._on_program_error_changed, this);
+ProgramsBar.prototype._onProgramAdded = function(doc, program) {
+    program.on('notify::name', this._onProgramNameChanged, this);
+    program.on('notify::error', this._onProgramErrorChanged, this);
 
     var li = document.createElement('li');
     li.setAttribute('data-program-name', program.name());
 
     var span = document.createElement('span');
     span.classList.add('name');
-    span.textContent = this._display_name(program);
+    span.textContent = this._displayName(program);
 
     li.appendChild(span);
 
     li.addEventListener('click', (function(e) {
-        this._on_program_click(program);
+        this._onProgramClick(program);
         e.preventDefault();
         e.stopPropagation();
     }).bind(this));
 
     li.addEventListener('contextmenu', (function(e) {
-        this._on_program_click(program);
+        this._onProgramClick(program);
 
-        if (!program.is_default()) {
-            this._on_program_toggle_delete(li, program);
+        if (!program.isDefault()) {
+            this._onProgramToggleDelete(li, program);
         }
 
         e.preventDefault();
@@ -364,40 +364,40 @@ ProgramsBar.prototype._on_program_added = function(doc, program) {
     }).bind(this));
 
     li.addEventListener('dblclick', (function(e) {
-        this._on_program_begin_edit_name(li, program);
+        this._onProgramBeginEditName(li, program);
 
         e.preventDefault();
         e.stopPropagation();
     }).bind(this));
 
-    if (program === this._document.active_program()) {
+    if (program === this._document.activeProgram()) {
         li.classList.add('selected');
     }
 
-    this._insert_program_item(program, li);
-    this._on_program_error_changed(program);
+    this._insertProgramItem(program, li);
+    this._onProgramErrorChanged(program);
 }
 
-ProgramsBar.prototype._on_program_removed = function(doc, program, changing_doc) {
-    program.off('notify::name', this._on_program_name_changed, this);
-    program.off('notify::error', this._on_program_error_changed, this);
+ProgramsBar.prototype._onProgramRemoved = function(doc, program, changingDoc) {
+    program.off('notify::name', this._onProgramNameChanged, this);
+    program.off('notify::error', this._onProgramErrorChanged, this);
 
-    var item = this._find_by_name(program.name());
+    var item = this._findByName(program.name());
 
     if (item) {
-        if (!changing_doc) {
+        if (!changingDoc) {
             item.classList.add('removed');
 
-            if (this._show_delete !== null && this._show_delete.element === item) {
-                this._on_program_toggle_delete(elem, program);
+            if (this._showDelete !== null && this._showDelete.element === item) {
+                this._onProgramToggleDelete(elem, program);
             }
 
             setTimeout((function() {
                 this._ul.removeChild(item);
             }).bind(this), 300);
         } else {
-            if (this._show_delete !== null && this._show_delete.element === item) {
-                this._show_delete = null;
+            if (this._showDelete !== null && this._showDelete.element === item) {
+                this._showDelete = null;
             }
 
             this._ul.removeChild(item);

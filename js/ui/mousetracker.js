@@ -34,9 +34,9 @@ function MouseTracker(e) {
 
     e.addEventListener('mousedown', this._onMouseDown.bind(this));
 
-    this._emitMouseDown = this.register_signal('mousedown');
-    this._emitMouseUp = this.register_signal('mouseup');
-    this._emitMouseMove = this.register_signal('mousemove');
+    this._emitMouseDown = this.registerSignal('mousedown');
+    this._emitMouseUp = this.registerSignal('mouseup');
+    this._emitMouseMove = this.registerSignal('mousemove');
 }
 
 MouseTracker.prototype = Object.create(Signals.prototype);

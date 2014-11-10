@@ -33,11 +33,11 @@ var utils = require('../utils/utils');
 function Button(settings) {
     Widget.call(this, 'button', this.create('div'), utils.merge({}, settings));
 
-    this.e.addEventListener('click', this._on_click.bind(this));
-    this.e.addEventListener('dblclick', this._on_dblclick.bind(this));
+    this.e.addEventListener('click', this._onClick.bind(this));
+    this.e.addEventListener('dblclick', this._onDblclick.bind(this));
 
-    this._on_click_event = this.register_signal('click');
-    this._on_dblclick_event = this.register_signal('dblclick');
+    this._onClickEvent = this.registerSignal('click');
+    this._onDblclickEvent = this.registerSignal('dblclick');
 }
 
 Button.prototype = Object.create(Widget.prototype);
@@ -53,15 +53,15 @@ Button.prototype._valueUpdated = function() {
     }
 }
 
-Button.prototype._on_click = function(e) {
-    this._on_click_event(e);
+Button.prototype._onClick = function(e) {
+    this._onClickEvent(e);
 
     e.preventDefault();
     e.stopPropagation();
 }
 
-Button.prototype._on_dblclick = function(e) {
-    this._on_dblclick_event(e);
+Button.prototype._onDblclick = function(e) {
+    this._onDblclickEvent(e);
 
     e.preventDefault();
     e.stopPropagation();

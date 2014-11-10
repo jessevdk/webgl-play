@@ -117,8 +117,8 @@ function Preprocessor(source, type, options) {
         }
     }
 
-    this._source_mapping = [];
-    this._source_location = new glsl.source.Location(1, 1);
+    this._sourceMapping = [];
+    this._sourceLocation = new glsl.source.Location(1, 1);
 
     var lines = source.split('\n');
 
@@ -205,7 +205,7 @@ function Preprocessor(source, type, options) {
             case Tokenizer.T_LINE:
                 break;
             default:
-                this._error(tok.location, 'expected preprocessor directive, but got ' + tokenizer.token_name(tok.id) + ':' + tok.text);
+                this._error(tok.location, 'expected preprocessor directive, but got ' + tokenizer.tokenName(tok.id) + ':' + tok.text);
                 break;
             }
         } else if (!p.skip) {
@@ -213,7 +213,7 @@ function Preprocessor(source, type, options) {
                 line += '\n';
             }
 
-            this._add_source(line, new glsl.source.Location(i + 1, 1));
+            this._addSource(line, new glsl.source.Location(i + 1, 1));
         }
 
         var opos = line.lastIndexOf('/*');
@@ -224,11 +224,11 @@ function Preprocessor(source, type, options) {
         }
     }
 
-    this._source_reader = new glsl.source.Source(this._source, this._type);
-    this._source_reader._source_map = this._source_map.bind(this);
+    this._sourceReader = new glsl.source.Source(this._source, this._type);
+    this._sourceReader._sourceMap = this._sourceMap.bind(this);
 }
 
-Preprocessor.options_from_context = function(c) {
+Preprocessor.optionsFromContext = function(c) {
     var defines = {};
 
     var nmap = {
@@ -263,14 +263,14 @@ Preprocessor.prototype.extensions = function() {
     return this._extensions.slice(0);
 }
 
-Preprocessor.prototype._source_map = function(range) {
-    return new glsl.source.Range(this._source_map_one(range.start, false),
-                                 this._source_map_one(range.end, true));
+Preprocessor.prototype._sourceMap = function(range) {
+    return new glsl.source.Range(this._sourceMapOne(range.start, false),
+                                 this._sourceMapOne(range.end, true));
 };
 
-Preprocessor.prototype._source_map_one = function(loc, isend) {
-    for (var i = 0; i < this._source_mapping.length; i++) {
-        var m = this._source_mapping[i];
+Preprocessor.prototype._sourceMapOne = function(loc, isend) {
+    for (var i = 0; i < this._sourceMapping.length; i++) {
+        var m = this._sourceMapping[i];
 
         if (m.current.start.compare(loc) > 0) {
             break;
@@ -303,36 +303,36 @@ Preprocessor.prototype._source_map_one = function(loc, isend) {
 };
 
 Preprocessor.prototype.eof = function() {
-    return this._source_reader.eof();
+    return this._sourceReader.eof();
 };
 
 Preprocessor.prototype.skip = function(r) {
-    this._source_reader.skip(r);
+    this._sourceReader.skip(r);
 };
 
 Preprocessor.prototype.next = function(r) {
-    return this._source_reader.next(r);
+    return this._sourceReader.next(r);
 };
 
 Preprocessor.prototype.location = function() {
-    return this._source_reader.location();
+    return this._sourceReader.location();
 };
 
 Preprocessor.prototype.errors = function() {
     return this._errors;
 };
 
-Preprocessor.prototype._add_source = function(s, orig) {
-    var expanded = this._expand(s, orig, this._source_location);
+Preprocessor.prototype._addSource = function(s, orig) {
+    var expanded = this._expand(s, orig, this._sourceLocation);
 
     this._source += expanded.text;
 
     // Add source mapping
     for (var i = 0; i < expanded.mapping.length; i++) {
-        this._source_mapping.push(expanded.mapping[i]);
+        this._sourceMapping.push(expanded.mapping[i]);
 
         if (i == expanded.mapping.length - 1) {
-            this._source_location = expanded.mapping[i].current.end.copy();
+            this._sourceLocation = expanded.mapping[i].current.end.copy();
         }
     }
 };
@@ -347,7 +347,7 @@ Preprocessor.prototype._expand = function(s, origloc, curloc) {
         defre.push(d);
     }
 
-    defre = new RegExp('\\b' + glsl.tokenizer.regex_choices(defre) + '\\b', 'g');
+    defre = new RegExp('\\b' + glsl.tokenizer.regexChoices(defre) + '\\b', 'g');
 
     var smap = [];
 
@@ -403,7 +403,7 @@ Preprocessor.prototype._expand = function(s, origloc, curloc) {
     }
 };
 
-Preprocessor.prototype._strip_comments = function(s) {
+Preprocessor.prototype._stripComments = function(s) {
     var cpos = s.indexOf('//');
 
     if (cpos != -1) {
@@ -417,7 +417,7 @@ Preprocessor.prototype._define = function(tok, tokenizer) {
     var def = tokenizer.next();
 
     if (def.id != Tokenizer.T_IDENTIFIER) {
-        this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
+        this._error(def.location, 'expected identifier, but got ' + tokenizer.tokenName(def.id) + ':' + def.text);
         return;
     }
 
@@ -432,21 +432,21 @@ Preprocessor.prototype._define = function(tok, tokenizer) {
     }
 
     var rest = tokenizer.remainder();
-    this._defines[def.text] = this._expand(this._strip_comments(rest.text));
+    this._defines[def.text] = this._expand(this._stripComments(rest.text));
 };
 
 Preprocessor.prototype._undef = function(tok, tokenizer) {
     var def = tokenizer.next();
 
     if (def.id != Tokenizer.T_IDENTIFIER) {
-        this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
+        this._error(def.location, 'expected identifier, but got ' + tokenizer.tokenName(def.id) + ':' + def.text);
         return;
     }
 
     var next = tokenizer.next();
 
     if (next.id != Tokenizer.T_EOF) {
-        this._error(next.location, 'unexpected input after defined, got ' + tokenizer.token_name(next.id) + ':' + next.text);
+        this._error(next.location, 'unexpected input after defined, got ' + tokenizer.tokenName(next.id) + ':' + next.text);
     } else {
         delete this._defines[def.text];
     }
@@ -463,7 +463,7 @@ Preprocessor.prototype._if = function(tok, tokenizer) {
     var rest = tokenizer.remainder();
 
     var exprtok = this._makeExpressionTokenizer(tok, rest.text);
-    var expr = this._parse_expression(exprtok, -1);
+    var expr = this._parseExpression(exprtok, -1);
 
     if (expr === null) {
         return;
@@ -479,14 +479,14 @@ Preprocessor.prototype._ifdef = function(tok, tokenizer, negate) {
     var def = tokenizer.next();
 
     if (def.id != Tokenizer.T_IDENTIFIER) {
-        this._error(def.location, 'expected identifier, but got ' + tokenizer.token_name(def.id) + ':' + def.text);
+        this._error(def.location, 'expected identifier, but got ' + tokenizer.tokenName(def.id) + ':' + def.text);
         return;
     }
 
     var next = tokenizer.next();
 
     if (next.id != Tokenizer.T_EOF) {
-        this._error(next.location, 'unexpected input after defined, got ' + tokenizer.token_name(next.id) + ':' + next.text);
+        this._error(next.location, 'unexpected input after defined, got ' + tokenizer.tokenName(next.id) + ':' + next.text);
     } else {
         var skip = !(def.text in this._defines);
 
@@ -531,10 +531,10 @@ Preprocessor.prototype._elif = function(tok, tokenizer) {
     }
 
     var rest = tokenizer.remainder();
-    var s = this._expand(this._strip_comments(rest.text));
+    var s = this._expand(this._stripComments(rest.text));
     var exprtok = this._makeExpressionTokenizer(tok, s);
 
-    var expr = this._parse_expression(exprtok, -1);
+    var expr = this._parseExpression(exprtok, -1);
 
     if (expr === null) {
         p.skip = true;
@@ -559,7 +559,7 @@ Preprocessor.prototype._endif = function(tok, tokenizer) {
     this._pstack.pop();
 };
 
-Preprocessor.prototype._parse_expression_primary = function(tokenizer) {
+Preprocessor.prototype._parseExpressionPrimary = function(tokenizer) {
     var tok = tokenizer.next();
 
     switch (tok.id) {
@@ -572,7 +572,7 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer) {
 
         return null;
     case ExpressionTokenizer.T_LEFT_PAREN:
-        var ret = this._parse_expression(tokenizer);
+        var ret = this._parseExpression(tokenizer);
 
         if (ret === null) {
             return null;
@@ -615,7 +615,7 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer) {
     case ExpressionTokenizer.T_DASH:
     case ExpressionTokenizer.T_TILDE:
     case ExpressionTokenizer.T_BANG:
-        var ret = this._parse_expression(tokenizer, 2);
+        var ret = this._parseExpression(tokenizer, 2);
 
         if (ret === null) {
             return null;
@@ -635,11 +635,11 @@ Preprocessor.prototype._parse_expression_primary = function(tokenizer) {
         break;
     }
 
-    this._error(tok.location, 'expected expression, but got ' + ExpressionTokenizer.token_name(tok.id) + ':' + tok.text);
+    this._error(tok.location, 'expected expression, but got ' + ExpressionTokenizer.tokenName(tok.id) + ':' + tok.text);
     return null;
 };
 
-Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
+Preprocessor.prototype._parseExpressionBinop = function(tokenizer, p, lhs) {
     var tok = tokenizer.peek();
 
     var prec = 0;
@@ -694,7 +694,7 @@ Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
     // Consume peeked token
     tokenizer.next();
 
-    var rhs = this._parse_expression(tokenizer, prec);
+    var rhs = this._parseExpression(tokenizer, prec);
 
     if (rhs === null) {
         return null;
@@ -742,19 +742,19 @@ Preprocessor.prototype._parse_expression_binop = function(tokenizer, p, lhs) {
     return null;
 };
 
-Preprocessor.prototype._parse_expression_rhs = function(tokenizer, p, lhs) {
-    return this._parse_expression_binop(tokenizer, p, lhs);
+Preprocessor.prototype._parseExpressionRhs = function(tokenizer, p, lhs) {
+    return this._parseExpressionBinop(tokenizer, p, lhs);
 };
 
-Preprocessor.prototype._parse_expression = function(tokenizer, p) {
-    var lhs = this._parse_expression_primary(tokenizer);
+Preprocessor.prototype._parseExpression = function(tokenizer, p) {
+    var lhs = this._parseExpressionPrimary(tokenizer);
 
     if (lhs === null) {
         return null;
     }
 
     while (true) {
-        var ret = this._parse_expression_rhs(tokenizer, p, lhs);
+        var ret = this._parseExpressionRhs(tokenizer, p, lhs);
 
         if (ret === null) {
             return lhs;

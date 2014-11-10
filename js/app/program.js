@@ -44,10 +44,10 @@ function Program(name, v, f) {
     };
 
     this._name = name;
-    this._on_notify_name = this.register_signal('notify::name');
-    this._on_notify_error = this.register_signal('notify::error');
+    this._onNotifyName = this.registerSignal('notify::name');
+    this._onNotifyError = this.registerSignal('notify::error');
 
-    this._is_default = false;
+    this._isDefault = false;
     this._error = null;
 }
 
@@ -67,11 +67,11 @@ Program.prototype.error = function(error) {
     }
 
     this._error = error;
-    this._on_notify_error();
+    this._onNotifyError();
 }
 
-Program.prototype.is_default = function() {
-    return this._is_default;
+Program.prototype.isDefault = function() {
+    return this._isDefault;
 }
 
 Program.prototype.name = function(name) {
@@ -83,11 +83,11 @@ Program.prototype.name = function(name) {
         var prev = this._name;
 
         this._name = name;
-        this._on_notify_name(prev);
+        this._onNotifyName(prev);
     }
 }
 
-Program.prototype._compile_shader = function(gl, type, source) {
+Program.prototype._compileShader = function(gl, type, source) {
     var ret = gl.createShader(type);
 
     gl.shaderSource(ret, source);
@@ -136,8 +136,8 @@ Program.prototype._sourceWithDefines = function(source, defines) {
 Program.prototype.compile = function(gl, defines) {
     var defs = this._definesToString(defines);
 
-    var v = this._compile_shader(gl, gl.VERTEX_SHADER, this._sourceWithDefines(this.vertex.data, defs));
-    var f = this._compile_shader(gl, gl.FRAGMENT_SHADER, this._sourceWithDefines(this.fragment.data, defs));
+    var v = this._compileShader(gl, gl.VERTEX_SHADER, this._sourceWithDefines(this.vertex.data, defs));
+    var f = this._compileShader(gl, gl.FRAGMENT_SHADER, this._sourceWithDefines(this.fragment.data, defs));
     var p = 0;
 
     var attrs = {
@@ -186,7 +186,7 @@ Program.prototype.compile = function(gl, defines) {
         fragment: f,
         program: p,
         attributes: attrs,
-        is_default: this._is_default,
+        isDefault: this._isDefault,
         error: error,
         name: this._name
     };
@@ -206,7 +206,7 @@ Program.fromRemote = function(p) {
     };
 
     ret._name = p.name;
-    ret._is_default = p.isDefault || false;
+    ret._isDefault = p.isDefault || false;
 
     return ret;
 }
@@ -217,7 +217,7 @@ Program.prototype.remote = function() {
         name: this._name,
         vertex: this.vertex.data,
         fragment: this.fragment.data,
-        isDefault: this._is_default
+        isDefault: this._isDefault
     };
 }
 
@@ -233,7 +233,7 @@ Program.prototype.serialize = function() {
             data: this.fragment.data,
             history: this.fragment.history
         },
-        is_default: this._is_default
+        isDefault: this._isDefault
     };
 }
 
@@ -251,7 +251,7 @@ Program.deserialize = function(program) {
     };
 
     ret._name = program.name;
-    ret._is_default = program.is_default;
+    ret._isDefault = program.isDefault;
 
     return ret;
 }

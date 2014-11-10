@@ -44,10 +44,10 @@ function TypeClass(name) {
 
     this.name = name;
 
-    this.is_primitive = false;
-    this.is_array = false;
-    this.is_composite = false;
-    this.is_user = false;
+    this.isPrimitive = false;
+    this.isArray = false;
+    this.isComposite = false;
+    this.isUser = false;
 
     this.decl = null;
 }
@@ -59,11 +59,11 @@ exports.TypeClass = TypeClass;
 function CompositeType(name) {
     TypeClass.call(this, name);
 
-    this.field_map = {};
+    this.fieldMap = {};
     this.fields = [];
-    this.is_composite = true;
-    this.has_array_field = false;
-    this.has_sampler_field = false;
+    this.isComposite = true;
+    this.hasArrayField = false;
+    this.hasSamplerField = false;
 
     this.zero = {};
 }
@@ -71,23 +71,23 @@ function CompositeType(name) {
 CompositeType.prototype = glsl.ast.Node.create('builtins.CompositeType', CompositeType, TypeClass);
 exports.CompositeType = CompositeType;
 
-CompositeType.prototype.declare_field = function(name, type) {
+CompositeType.prototype.declareField = function(name, type) {
     var field = {
         name: name,
         type: type,
         decl: null
     };
 
-    if (type.is_array || (type.is_composite && type.has_array_field)) {
-        this.has_array_field = true;
+    if (type.isArray || (type.isComposite && type.hasArrayField)) {
+        this.hasArrayField = true;
     }
 
-    if (type.is_sampler || (type.is_composite && type.has_sampler_field)) {
-        this.has_sampler_field = true;
+    if (type.isSampler || (type.isComposite && type.hasSamplerField)) {
+        this.hasSamplerField = true;
     }
 
     this.fields.push(field);
-    this.field_map[name] = field;
+    this.fieldMap[name] = field;
 
     this.zero[name] = type.zero;
     return field;
@@ -98,26 +98,26 @@ function UserType(name, decl) {
     CompositeType.call(this, name);
 
     this.decl = decl;
-    this.is_user = true;
+    this.isUser = true;
 }
 
 UserType.prototype = glsl.ast.Node.create('builtins.UserType', UserType, CompositeType);
 exports.UserType = UserType;
 
 
-function ArrayType(element_type, length) {
-    TypeClass.call(this, element_type.name + '[' + length + ']');
+function ArrayType(elementType, length) {
+    TypeClass.call(this, elementType.name + '[' + length + ']');
 
-    this.element_type = element_type;
+    this.elementType = elementType;
     this.length = length;
 
     this.zero = [];
 
     for (var i = 0; i < length; i++) {
-        this.zero.push(element_type.zero);
+        this.zero.push(elementType.zero);
     }
 
-    this.is_array = true;
+    this.isArray = true;
 }
 
 ArrayType.prototype = glsl.ast.Node.create('builtins.ArrayType', ArrayType, TypeClass);
@@ -125,22 +125,22 @@ exports.ArrayType = ArrayType;
 
 
 function PrimitiveType(id, zero) {
-    TypeClass.call(this, dtn.token_name(id));
+    TypeClass.call(this, dtn.tokenName(id));
 
     this.id = id;
     this.zero = zero;
 
-    this.is_scalar = PrimitiveType._is_scalar(id);
-    this.is_vec = PrimitiveType._is_vec(id);
-    this.is_mat = PrimitiveType._is_mat(id);
-    this.is_sampler = PrimitiveType._is_sampler(id);
+    this.isScalar = PrimitiveType._isScalar(id);
+    this.isVec = PrimitiveType._isVec(id);
+    this.isMat = PrimitiveType._isMat(id);
+    this.isSampler = PrimitiveType._isSampler(id);
 
-    this.element_type = PrimitiveType._element_type(id);
-    this.is_int = (this.element_type == Tn.T_INT);
-    this.is_float = (this.element_type == Tn.T_FLOAT);
-    this.is_bool = (this.element_type == Tn.T_BOOL);
+    this.elementType = PrimitiveType._elementType(id);
+    this.isInt = (this.elementType == Tn.T_INT);
+    this.isFloat = (this.elementType == Tn.T_FLOAT);
+    this.isBool = (this.elementType == Tn.T_BOOL);
 
-    this.is_primitive = true;
+    this.isPrimitive = true;
 
     this.length = PrimitiveType._length(id);
 }
@@ -148,7 +148,7 @@ function PrimitiveType(id, zero) {
 PrimitiveType.prototype = glsl.ast.Node.create('builtins.PrimitiveType', PrimitiveType, TypeClass);
 exports.PrimitiveType = PrimitiveType;
 
-PrimitiveType.prototype.marshal_can_ref = function() {
+PrimitiveType.prototype.marshalCanRef = function() {
     return false;
 };
 
@@ -156,7 +156,7 @@ PrimitiveType.prototype.marshal = function() {
     return '$' + this.name;
 };
 
-PrimitiveType._is_vec = function(tok) {
+PrimitiveType._isVec = function(tok) {
     switch (tok) {
     case Tn.T_VEC2:
     case Tn.T_VEC3:
@@ -173,7 +173,7 @@ PrimitiveType._is_vec = function(tok) {
     return false;
 };
 
-PrimitiveType._is_sampler = function(tok) {
+PrimitiveType._isSampler = function(tok) {
     switch (tok) {
     case Tn.T_SAMPLER2D:
     case Tn.T_SAMPLERCUBE:
@@ -183,7 +183,7 @@ PrimitiveType._is_sampler = function(tok) {
     return false;
 };
 
-PrimitiveType._is_mat = function(tok) {
+PrimitiveType._isMat = function(tok) {
     switch (tok) {
     case Tn.T_MAT2:
     case Tn.T_MAT3:
@@ -194,7 +194,7 @@ PrimitiveType._is_mat = function(tok) {
     return false;
 };
 
-PrimitiveType._is_scalar = function(tok) {
+PrimitiveType._isScalar = function(tok) {
     switch (tok) {
     case Tn.T_FLOAT:
     case Tn.T_INT:
@@ -205,7 +205,7 @@ PrimitiveType._is_scalar = function(tok) {
     return false;
 };
 
-PrimitiveType._element_type = function(tok) {
+PrimitiveType._elementType = function(tok) {
     switch (tok) {
     case Tn.T_FLOAT:
     case Tn.T_VEC2:
@@ -264,7 +264,7 @@ function Operator(op) {
     this.rhs = null;
 }
 
-Operator.prototype._evaluate_elem = function(a, b) {
+Operator.prototype._evaluateElem = function(a, b) {
     switch (this.op) {
     case Tn.T_PLUS:
         return a + b;
@@ -297,7 +297,7 @@ Operator.prototype._evaluate_elem = function(a, b) {
 
 Operator.prototype.evaluate = function(a, b) {
     if (this.op == Tn.T_STAR) {
-        if (this.lhs.is_vec && this.rhs.is_mat) {
+        if (this.lhs.isVec && this.rhs.isMat) {
             var ret = [];
 
             for (var i = 0; i < this.lhs.length; i++) {
@@ -311,7 +311,7 @@ Operator.prototype.evaluate = function(a, b) {
             }
 
             return ret;
-        } else if (this.lhs.is_mat && this.rhs.is_vec) {
+        } else if (this.lhs.isMat && this.rhs.isVec) {
             var ret = [];
 
             for (var i = 0; i < this.lhs.length; i++) {
@@ -328,28 +328,28 @@ Operator.prototype.evaluate = function(a, b) {
         }
     }
 
-    if (this.lhs.is_vec || this.rhs.is_vec) {
+    if (this.lhs.isVec || this.rhs.isVec) {
         var ret = [];
-        var l = (this.lhs.is_vec ? this.lhs.length : this.rhs.length);
+        var l = (this.lhs.isVec ? this.lhs.length : this.rhs.length);
 
         for (var i = 0; i < l; i++) {
-            ret.push(this._evaluate_elem(this.lhs.is_vec ? a[i] : a, this.rhs.is_vec ? b[i] : b));
+            ret.push(this._evaluateElem(this.lhs.isVec ? a[i] : a, this.rhs.isVec ? b[i] : b));
         }
 
         return ret;
-    } else if (this.lhs.is_mat || this.rhs.is_mat) {
+    } else if (this.lhs.isMat || this.rhs.isMat) {
         var ret = [];
-        var l = (this.lhs.is_mat ? this.lhs.length : this.rhs.length);
+        var l = (this.lhs.isMat ? this.lhs.length : this.rhs.length);
 
         for (var i = 0; i < l; i++) {
             for (var j = 0; j < l; j++) {
-                ret.push(this._evaluate_elem(this.lhs.is_mat ? a[i][j] : a, this.rhs.is_mat ? b[i][j] : b));
+                ret.push(this._evaluateElem(this.lhs.isMat ? a[i][j] : a, this.rhs.isMat ? b[i][j] : b));
             }
         }
 
         return ret;
     } else {
-        return this._evaluate_elem(a, b);
+        return this._evaluateElem(a, b);
     }
 };
 
@@ -382,35 +382,35 @@ function Builtins(type, options) {
     this._options = options;
 
     this.types = [];
-    this.type_map = {};
+    this.typeMap = {};
 
     this.variables = [];
-    this.variable_map = {};
+    this.variableMap = {};
 
     this.functions = [];
-    this.function_map = {};
+    this.functionMap = {};
 
     this.operators = [];
-    this.operator_map = {};
+    this.operatorMap = {};
 
     this.precisions = [];
-    this.precision_map = {};
+    this.precisionMap = {};
 
-    this._define_types();
-    this._define_constants();
-    this._define_variables();
-    this._define_functions();
-    this._define_operators();
-    this._define_precisions();
+    this._defineTypes();
+    this._defineConstants();
+    this._defineVariables();
+    this._defineFunctions();
+    this._defineOperators();
+    this._definePrecisions();
 }
 
 exports.Builtins = Builtins;
 
-Builtins.create_for_context = function(ctx, type) {
-    return new Builtins(type, Builtins.options_from_context(ctx));
+Builtins.createForContext = function(ctx, type) {
+    return new Builtins(type, Builtins.optionsFromContext(ctx));
 };
 
-Builtins.options_from_context = function(ctx) {
+Builtins.optionsFromContext = function(ctx) {
     var constants = {};
 
     if (ctx !== null) {
@@ -435,10 +435,10 @@ Builtins.options_from_context = function(ctx) {
             }
         }
 
-        var drawbuffers_ext = ctx.getExtension('WEBGL_draw_buffers');
+        var drawbuffersExt = ctx.getExtension('WEBGL_draw_buffers');
 
-        if (drawbuffers_ext !== null) {
-            constants['gl_MaxDrawBuffers'] = ctx.getParameter(drawbuffers_ext.MAX_DRAW_BUFFERS_WEBGL);
+        if (drawbuffersExt !== null) {
+            constants['gl_MaxDrawBuffers'] = ctx.getParameter(drawbuffersExt.MAX_DRAW_BUFFERS_WEBGL);
         } else {
             constants['gl_MaxDrawBuffers'] = 1;
         }
@@ -457,7 +457,7 @@ Builtins.options_from_context = function(ctx) {
     return ret;
 };
 
-Builtins.prototype._define_types = function() {
+Builtins.prototype._defineTypes = function() {
     var btypetoks = [
         [Tn.T_VOID, 0],
         [Tn.T_FLOAT, 0.0],
@@ -488,13 +488,13 @@ Builtins.prototype._define_types = function() {
         var tokid = btypetoks[i][0];
         var zero = btypetoks[i][1];
 
-        var name = dtn.token_name(tokid);
+        var name = dtn.tokenName(tokid);
 
         var bloc = new glsl.source.BuiltinRange();
-        var tok = dtn.create_token(tokid, name, bloc);
+        var tok = dtn.createToken(tokid, name, bloc);
 
         var decl = new glsl.ast.TypeDecl((new glsl.ast.TypeRef(tok)).complete());
-        decl.semi = dtn.create_token(Tn.T_SEMICOLON, ';', bloc);
+        decl.semi = dtn.createToken(Tn.T_SEMICOLON, ';', bloc);
         decl.incomplete = false;
 
         decl.type.t = {
@@ -502,7 +502,7 @@ Builtins.prototype._define_types = function() {
         };
 
         this.types.push(decl);
-        this.type_map[tokid] = decl;
+        this.typeMap[tokid] = decl;
 
         name = name[0].toUpperCase() + name.slice(1);
 
@@ -510,17 +510,17 @@ Builtins.prototype._define_types = function() {
     }
 };
 
-Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize, defintval) {
-    var type = this.type_map[typeid];
+Builtins.prototype._declareVariable = function(qualifiers, typeid, name, arsize, defintval) {
+    var type = this.typeMap[typeid];
     var bloc = new glsl.source.BuiltinRange();
 
-    var tp = new glsl.ast.TypeRef(dtn.create_token(typeid, dtn.token_name(typeid), bloc));
+    var tp = new glsl.ast.TypeRef(dtn.createToken(typeid, dtn.tokenName(typeid), bloc));
     tp.complete();
 
     for (var i = 0; i < qualifiers.length; i++) {
         var q = qualifiers[i];
 
-        tp.qualifiers.push(dtn.create_token(q, dtn.token_name(q), bloc));
+        tp.qualifiers.push(dtn.createToken(q, dtn.tokenName(q), bloc));
     }
 
     tp.t = {
@@ -529,7 +529,7 @@ Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize
 
     var decl = new glsl.ast.VariableDecl(tp);
 
-    var n = new glsl.ast.Named(dtn.create_token(Tn.T_IDENTIFIER, name, bloc), decl);
+    var n = new glsl.ast.Named(dtn.createToken(Tn.T_IDENTIFIER, name, bloc), decl);
 
     n.type = tp;
 
@@ -538,38 +538,38 @@ Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize
         users: []
     };
 
-    var Int = this.type_map[Tn.T_INT].type.t.type;
+    var Int = this.typeMap[Tn.T_INT].type.t.type;
 
     if (typeof arsize !== 'undefined' && arsize !== null) {
-        n.is_array = true;
-        n.left_bracket = dtn.create_token(Tn.T_LEFT_BRACKET, dtn.token_name(Tn.T_LEFT_BRACKET), bloc);
-        n.right_bracket = dtn.create_token(Tn.T_RIGHT_BRACKET, dtn.token_name(Tn.T_RIGHT_BRACKET), bloc);
+        n.isArray = true;
+        n.leftBracket = dtn.createToken(Tn.T_LEFT_BRACKET, dtn.tokenName(Tn.T_LEFT_BRACKET), bloc);
+        n.rightBracket = dtn.createToken(Tn.T_RIGHT_BRACKET, dtn.tokenName(Tn.T_RIGHT_BRACKET), bloc);
 
         if (typeof arsize === 'string') {
-            var expr = new glsl.ast.VariableExpr(dtn.create_token(Tn.T_IDENTIFIER, arsize, bloc));
+            var expr = new glsl.ast.VariableExpr(dtn.createToken(Tn.T_IDENTIFIER, arsize, bloc));
             expr.complete();
 
-            var c = this.variable_map[arsize];
+            var c = this.variableMap[arsize];
 
             expr.t = {
                 decl: c,
                 type: c.names[0].t.type,
-                is_const_expression: true,
-                const_value: c.names[0].t.const_value
+                isConstExpression: true,
+                constValue: c.names[0].t.constValue
             };
 
-            n.array_size = expr;
+            n.arraySize = expr;
         } else {
-            var tok = dtn.create_token(Tn.T_INTCONSTANT, "" + arsize, bloc);
+            var tok = dtn.createToken(Tn.T_INTCONSTANT, "" + arsize, bloc);
             tok.value = arsize;
 
-            n.array_size = new glsl.ast.ConstantExpr(tok);
-            n.array_size.complete();
+            n.arraySize = new glsl.ast.ConstantExpr(tok);
+            n.arraySize.complete();
 
-            n.array_size.t = {
+            n.arraySize.t = {
                 type: Int,
-                is_const_expression: true,
-                const_value: arsize
+                isConstExpression: true,
+                constValue: arsize
             };
         }
     }
@@ -579,21 +579,21 @@ Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize
             defintval = this._options.constants[name];
         }
 
-        n.initial_assign = dtn.create_token(Tn.T_EQUAL, dtn.token_name(Tn.T_EQUAL), bloc);
+        n.initialAssign = dtn.createToken(Tn.T_EQUAL, dtn.tokenName(Tn.T_EQUAL), bloc);
 
-        var tok = dtn.create_token(Tn.T_INTCONSTANT, "" + defintval, bloc);
+        var tok = dtn.createToken(Tn.T_INTCONSTANT, "" + defintval, bloc);
         tok.value = defintval;
 
-        n.initial_value = new glsl.ast.ConstantExpr(tok);
-        n.initial_value.complete();
-        n.initial_value.t = {
+        n.initialValue = new glsl.ast.ConstantExpr(tok);
+        n.initialValue.complete();
+        n.initialValue.t = {
             type: Int,
-            is_const_expression: true,
-            const_value: defintval
+            isConstExpression: true,
+            constValue: defintval
         };
 
-        n.t.is_const_expression = true;
-        n.t.const_value = defintval;
+        n.t.isConstExpression = true;
+        n.t.constValue = defintval;
     }
 
     n.complete();
@@ -606,45 +606,45 @@ Builtins.prototype._declare_variable = function(qualifiers, typeid, name, arsize
     };
 
     this.variables.push(decl);
-    this.variable_map[name] = decl;
+    this.variableMap[name] = decl;
 };
 
-Builtins.prototype._define_constants = function() {
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexAttribs', null, 8);
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexUniformVectors', null, 128);
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVaryingVectors', null, 8);
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexTextureImageUnits', null, 0);
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxCombinedTextureImageUnits', null, 8);
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxTextureImageUnits', null, 8);
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxFragmentUniformVectors', null, 16);
-    this._declare_variable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxDrawBuffers', null, 1);
+Builtins.prototype._defineConstants = function() {
+    this._declareVariable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexAttribs', null, 8);
+    this._declareVariable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexUniformVectors', null, 128);
+    this._declareVariable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVaryingVectors', null, 8);
+    this._declareVariable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxVertexTextureImageUnits', null, 0);
+    this._declareVariable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxCombinedTextureImageUnits', null, 8);
+    this._declareVariable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxTextureImageUnits', null, 8);
+    this._declareVariable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxFragmentUniformVectors', null, 16);
+    this._declareVariable([Tn.T_CONST, Tn.T_MEDIUMP], Tn.T_INT, 'gl_MaxDrawBuffers', null, 1);
 };
 
-Builtins.prototype._define_variables = function() {
+Builtins.prototype._defineVariables = function() {
     switch (this.type) {
     case glsl.source.VERTEX:
-        this._declare_variable([Tn.T_HIGHP], Tn.T_VEC4, 'gl_Position');
-        this._declare_variable([Tn.T_MEDIUMP], Tn.T_FLOAT, 'gl_PointSize');
+        this._declareVariable([Tn.T_HIGHP], Tn.T_VEC4, 'gl_Position');
+        this._declareVariable([Tn.T_MEDIUMP], Tn.T_FLOAT, 'gl_PointSize');
         break;
     case glsl.source.FRAGMENT:
-        this._declare_variable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragCoord');
-        this._declare_variable([], Tn.T_BOOL, 'gl_FrontFacing');
-        this._declare_variable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragColor');
-        this._declare_variable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragData', 'gl_MaxDrawBuffers');
-        this._declare_variable([Tn.T_MEDIUMP], Tn.T_VEC2, 'gl_PointCoord');
+        this._declareVariable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragCoord');
+        this._declareVariable([], Tn.T_BOOL, 'gl_FrontFacing');
+        this._declareVariable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragColor');
+        this._declareVariable([Tn.T_MEDIUMP], Tn.T_VEC4, 'gl_FragData', 'gl_MaxDrawBuffers');
+        this._declareVariable([Tn.T_MEDIUMP], Tn.T_VEC2, 'gl_PointCoord');
         break;
     }
 };
 
-Builtins.prototype._declare_precision = function(precision, typeid) {
+Builtins.prototype._declarePrecision = function(precision, typeid) {
     var bloc = new glsl.source.BuiltinRange();
-    var type = this.type_map[typeid];
+    var type = this.typeMap[typeid];
 
-    var prec = new glsl.ast.PrecisionStmt(dtn.create_token(Tn.T_PRECISION, dtn.token_name(Tn.T_PRECISION), bloc));
+    var prec = new glsl.ast.PrecisionStmt(dtn.createToken(Tn.T_PRECISION, dtn.tokenName(Tn.T_PRECISION), bloc));
 
-    prec.qualifier = dtn.create_token(precision, dtn.token_name(precision), bloc);
+    prec.qualifier = dtn.createToken(precision, dtn.tokenName(precision), bloc);
 
-    var tp = new glsl.ast.TypeRef(dtn.create_token(typeid, dtn.token_name(typeid), bloc));
+    var tp = new glsl.ast.TypeRef(dtn.createToken(typeid, dtn.tokenName(typeid), bloc));
     tp.complete();
 
     tp.t = {
@@ -652,29 +652,29 @@ Builtins.prototype._declare_precision = function(precision, typeid) {
     };
 
     prec.type = tp;
-    prec.semi = dtn.create_token(Tn.T_SEMICOLON, ';', bloc);
+    prec.semi = dtn.createToken(Tn.T_SEMICOLON, ';', bloc);
 
     this.precisions.push(prec);
-    this.precision_map[type.name] = prec;
+    this.precisionMap[type.name] = prec;
 }
 
-Builtins.prototype._define_precisions = function() {
+Builtins.prototype._definePrecisions = function() {
     switch (this.type) {
     case glsl.source.VERTEX:
-        this._declare_precision(Tn.T_HIGHP, Tn.T_FLOAT);
-        this._declare_precision(Tn.T_HIGHP, Tn.T_INT);
-        this._declare_precision(Tn.T_LOWP, Tn.T_SAMPLER2D);
-        this._declare_precision(Tn.T_LOWP, Tn.T_SAMPLERCUBE);
+        this._declarePrecision(Tn.T_HIGHP, Tn.T_FLOAT);
+        this._declarePrecision(Tn.T_HIGHP, Tn.T_INT);
+        this._declarePrecision(Tn.T_LOWP, Tn.T_SAMPLER2D);
+        this._declarePrecision(Tn.T_LOWP, Tn.T_SAMPLERCUBE);
         break;
     case glsl.source.FRAGMENT:
-        this._declare_precision(Tn.T_MEDIUMP, Tn.T_INT);
-        this._declare_precision(Tn.T_LOWP, Tn.T_SAMPLER2D);
-        this._declare_precision(Tn.T_LOWP, Tn.T_SAMPLERCUBE);
+        this._declarePrecision(Tn.T_MEDIUMP, Tn.T_INT);
+        this._declarePrecision(Tn.T_LOWP, Tn.T_SAMPLER2D);
+        this._declarePrecision(Tn.T_LOWP, Tn.T_SAMPLERCUBE);
         break;
     }
 }
 
-Builtins.prototype._elem_evaluator = function() {
+Builtins.prototype._elemEvaluator = function() {
     var l = 0;
 
     for (var i = 0; i < arguments.length; i++) {
@@ -709,7 +709,7 @@ Builtins.prototype._elem_evaluator = function() {
     }
 };
 
-Builtins.prototype._func_evaluator = function() {
+Builtins.prototype._funcEvaluator = function() {
     var args = [];
 
     for (var i = 0; i < arguments.length; i++) {
@@ -723,9 +723,9 @@ Builtins.prototype._func_evaluator = function() {
     return this.apply(this, args);
 };
 
-Builtins.prototype._define_builtin_function = function(rettype, name, params, elemfunc, func) {
+Builtins.prototype._defineBuiltinFunction = function(rettype, name, params, elemfunc, func) {
     if (!glsl.ast.TypeDecl.prototype.isPrototypeOf(rettype)) {
-        rettype = this.type_map[rettype];
+        rettype = this.typeMap[rettype];
     }
 
     var sp = params.slice();
@@ -734,24 +734,24 @@ Builtins.prototype._define_builtin_function = function(rettype, name, params, el
         var p = sp[i];
 
         if (!glsl.ast.TypeDecl.prototype.isPrototypeOf(p)) {
-            sp[i] = this.type_map[p];
+            sp[i] = this.typeMap[p];
         }
     }
 
     var bloc = new glsl.source.BuiltinRange();
 
-    var type = new glsl.ast.TypeRef(dtn.create_token(rettype.type.token.id, dtn.token_name(rettype.type.token.id), bloc));
+    var type = new glsl.ast.TypeRef(dtn.createToken(rettype.type.token.id, dtn.tokenName(rettype.type.token.id), bloc));
     type.incomplete = false;
 
     type.t = {
         type: rettype.type.t.type
     };
 
-    var name = dtn.create_token(Tn.T_IDENTIFIER, name, bloc);
+    var name = dtn.createToken(Tn.T_IDENTIFIER, name, bloc);
 
     var header = new glsl.ast.FunctionHeader(type, name);
-    header.left_paren = dtn.create_token(Tn.T_LEFT_PAREN, '(', bloc);
-    header.right_paren = dtn.create_token(Tn.T_RIGHT_PAREN, ')', bloc);
+    header.leftParen = dtn.createToken(Tn.T_LEFT_PAREN, '(', bloc);
+    header.rightParen = dtn.createToken(Tn.T_RIGHT_PAREN, ')', bloc);
 
     header.incomplete = false;
 
@@ -761,44 +761,44 @@ Builtins.prototype._define_builtin_function = function(rettype, name, params, el
         var decl = (new glsl.ast.ParamDecl()).complete();
 
         decl.type = p.type;
-        decl.name = dtn.create_token(Tn.T_IDENTIFIER, sp[i + 1], bloc);
+        decl.name = dtn.createToken(Tn.T_IDENTIFIER, sp[i + 1], bloc);
 
         header.parameters.push(decl);
     }
 
     var sig = header.signature();
 
-    if (sig in this.function_map) {
+    if (sig in this.functionMap) {
         return;
     }
 
     var f = new glsl.ast.FunctionProto(header);
 
-    f.is_builtin = true;
-    f.semi = dtn.create_token(Tn.T_SEMICOLON, ';', bloc);
+    f.isBuiltin = true;
+    f.semi = dtn.createToken(Tn.T_SEMICOLON, ';', bloc);
     f.incomplete = false;
 
     if (elemfunc) {
-        f.evaluate = this._elem_evaluator.bind(elemfunc);
+        f.evaluate = this._elemEvaluator.bind(elemfunc);
     } else if (func) {
-        f.evaluate = this._func_evaluator.bind(func);
+        f.evaluate = this._funcEvaluator.bind(func);
     } else {
         f.evaluate = null;
     }
 
     this.functions.push(f);
-    this.function_map[sig] = f;
+    this.functionMap[sig] = f;
 
     return f;
 };
 
-Builtins.prototype._define_builtin_function_gen = function(gentypes, rettype, name, params, elemfunc, func) {
+Builtins.prototype._defineBuiltinFunctionGen = function(gentypes, rettype, name, params, elemfunc, func) {
     if (rettype !== null) {
-        rettype = this.type_map[rettype];
+        rettype = this.typeMap[rettype];
     }
 
     for (var i = 0; i < gentypes.length; i++) {
-        var g = this.type_map[gentypes[i]];
+        var g = this.typeMap[gentypes[i]];
         var sp = params.slice();
 
         for (var j = 0; j < sp.length; j += 2) {
@@ -807,11 +807,11 @@ Builtins.prototype._define_builtin_function_gen = function(gentypes, rettype, na
             if (item === null) {
                 sp[j] = g;
             } else {
-                sp[j] = this.type_map[item];
+                sp[j] = this.typeMap[item];
             }
         }
 
-        this._define_builtin_function(rettype !== null ? rettype : g,
+        this._defineBuiltinFunction(rettype !== null ? rettype : g,
                                       name,
                                       sp,
                                       elemfunc,
@@ -819,19 +819,19 @@ Builtins.prototype._define_builtin_function_gen = function(gentypes, rettype, na
     }
 };
 
-Builtins.prototype._define_builtin_gentype_function = function(rettype, name, params, elemfunc, func) {
+Builtins.prototype._defineBuiltinGentypeFunction = function(rettype, name, params, elemfunc, func) {
     var gentypes = [Tn.T_FLOAT, Tn.T_VEC2, Tn.T_VEC3, Tn.T_VEC4];
 
-    this._define_builtin_function_gen(gentypes, rettype, name, params, elemfunc, func);
+    this._defineBuiltinFunctionGen(gentypes, rettype, name, params, elemfunc, func);
 };
 
-Builtins.prototype._define_builtin_mat_function = function(rettype, name, params, elemfunc, func) {
+Builtins.prototype._defineBuiltinMatFunction = function(rettype, name, params, elemfunc, func) {
     var gentypes = [Tn.T_MAT2, Tn.T_MAT3, Tn.T_MAT4];
 
-    this._define_builtin_function_gen(gentypes, rettype, name, params, elemfunc, func);
+    this._defineBuiltinFunctionGen(gentypes, rettype, name, params, elemfunc, func);
 };
 
-Builtins.prototype._define_builtin_relvec_function = function(rettype, name, params, elemfunc, func) {
+Builtins.prototype._defineBuiltinRelvecFunction = function(rettype, name, params, elemfunc, func) {
     var vmap = {
         'bvec': [Tn.T_BVEC2, Tn.T_BVEC3, Tn.T_BVEC4],
         'vec':  [Tn.T_VEC2,  Tn.T_VEC3,  Tn.T_VEC4],
@@ -855,19 +855,19 @@ Builtins.prototype._define_builtin_relvec_function = function(rettype, name, par
             }
         }
 
-        this._define_builtin_function(ret, name, sp, elemfunc, func);
+        this._defineBuiltinFunction(ret, name, sp, elemfunc, func);
     }
 };
 
-Builtins.prototype._find_type = function(t, def) {
+Builtins.prototype._findType = function(t, def) {
     if (t === null) {
         t = def;
     }
 
-    return this.type_map[t].type.t.type;
+    return this.typeMap[t].type.t.type;
 };
 
-Builtins.prototype._define_builtin_bin_operator_gen = function(rettype, optypes, lhs, rhs, gens) {
+Builtins.prototype._defineBuiltinBinOperatorGen = function(rettype, optypes, lhs, rhs, gens) {
     for (var i = 0; i < optypes.length; i++) {
         var op = optypes[i];
 
@@ -875,19 +875,19 @@ Builtins.prototype._define_builtin_bin_operator_gen = function(rettype, optypes,
             var g = gens[j];
 
             var o = new Operator(op);
-            o.ret = this._find_type(rettype, g);
-            o.lhs = this._find_type(lhs, g);
-            o.rhs = this._find_type(rhs, g);
+            o.ret = this._findType(rettype, g);
+            o.lhs = this._findType(lhs, g);
+            o.rhs = this._findType(rhs, g);
 
-            var sig = dtn.token_name(op) + '(' + o.lhs.name + ',' + o.rhs.name + ')';
+            var sig = dtn.tokenName(op) + '(' + o.lhs.name + ',' + o.rhs.name + ')';
 
             this.operators.push(o);
-            this.operator_map[sig] = o;
+            this.operatorMap[sig] = o;
         }
     }
 };
 
-Builtins.prototype._define_builtin_unary_operator_gen = function(rettype, optypes, expr, gens) {
+Builtins.prototype._defineBuiltinUnaryOperatorGen = function(rettype, optypes, expr, gens) {
     for (var i = 0; i < optypes.length; i++) {
         var op = optypes[i];
 
@@ -895,13 +895,13 @@ Builtins.prototype._define_builtin_unary_operator_gen = function(rettype, optype
             var g = gens[j];
 
             var o = new UnaryOperator(op);
-            o.ret = this._find_type(rettype, g);
-            o.expr = this._find_type(expr, g);
+            o.ret = this._findType(rettype, g);
+            o.expr = this._findType(expr, g);
 
-            var sig = dtn.token_name(op) + '(' + o.expr.name + ')';
+            var sig = dtn.tokenName(op) + '(' + o.expr.name + ')';
 
             this.operators.push(o);
-            this.operator_map[sig] = o;
+            this.operatorMap[sig] = o;
         }
     }
 };
@@ -1111,179 +1111,179 @@ var Emulate = {
     },
 };
 
-Builtins.prototype._define_functions = function() {
-    this._define_builtin_function(Tn.T_VOID, 'main', []);
+Builtins.prototype._defineFunctions = function() {
+    this._defineBuiltinFunction(Tn.T_VOID, 'main', []);
 
     // Angle and Trigonometry functions
-    this._define_builtin_gentype_function(null, 'radians', [null, 'degrees'], Emulate.radians);
-    this._define_builtin_gentype_function(null, 'degrees', [null, 'radians'], Emulate.degrees);
+    this._defineBuiltinGentypeFunction(null, 'radians', [null, 'degrees'], Emulate.radians);
+    this._defineBuiltinGentypeFunction(null, 'degrees', [null, 'radians'], Emulate.degrees);
 
-    this._define_builtin_gentype_function(null, 'sin', [null, 'angle'], Math.sin);
-    this._define_builtin_gentype_function(null, 'cos', [null, 'angle'], Math.cos);
-    this._define_builtin_gentype_function(null, 'tan', [null, 'angle'], Math.tan);
+    this._defineBuiltinGentypeFunction(null, 'sin', [null, 'angle'], Math.sin);
+    this._defineBuiltinGentypeFunction(null, 'cos', [null, 'angle'], Math.cos);
+    this._defineBuiltinGentypeFunction(null, 'tan', [null, 'angle'], Math.tan);
 
-    this._define_builtin_gentype_function(null, 'asin', [null, 'x'], Math.asin);
-    this._define_builtin_gentype_function(null, 'acos', [null, 'x'], Math.acos);
-    this._define_builtin_gentype_function(null, 'atan', [null, 'y', null, 'x'], Math.atan2);
-    this._define_builtin_gentype_function(null, 'atan', [null, 'y_over_x'], Math.atan);
+    this._defineBuiltinGentypeFunction(null, 'asin', [null, 'x'], Math.asin);
+    this._defineBuiltinGentypeFunction(null, 'acos', [null, 'x'], Math.acos);
+    this._defineBuiltinGentypeFunction(null, 'atan', [null, 'y', null, 'x'], Math.atan2);
+    this._defineBuiltinGentypeFunction(null, 'atan', [null, 'y_over_x'], Math.atan);
 
     // Exponential Functions
-    this._define_builtin_gentype_function(null, 'pow', [null, 'x', null, 'y'], Math.pow);
-    this._define_builtin_gentype_function(null, 'exp', [null, 'x'], Math.exp);
-    this._define_builtin_gentype_function(null, 'log', [null, 'x'], Math.log);
-    this._define_builtin_gentype_function(null, 'exp2', [null, 'x'], Emulate.exp2);
-    this._define_builtin_gentype_function(null, 'log2', [null, 'x'], Emulate.log2);
-    this._define_builtin_gentype_function(null, 'sqrt', [null, 'x'], Math.sqrt);
-    this._define_builtin_gentype_function(null, 'inversesqrt', [null, 'x'], Emulate.inversesqrt);
+    this._defineBuiltinGentypeFunction(null, 'pow', [null, 'x', null, 'y'], Math.pow);
+    this._defineBuiltinGentypeFunction(null, 'exp', [null, 'x'], Math.exp);
+    this._defineBuiltinGentypeFunction(null, 'log', [null, 'x'], Math.log);
+    this._defineBuiltinGentypeFunction(null, 'exp2', [null, 'x'], Emulate.exp2);
+    this._defineBuiltinGentypeFunction(null, 'log2', [null, 'x'], Emulate.log2);
+    this._defineBuiltinGentypeFunction(null, 'sqrt', [null, 'x'], Math.sqrt);
+    this._defineBuiltinGentypeFunction(null, 'inversesqrt', [null, 'x'], Emulate.inversesqrt);
 
     // Common Functions
-    this._define_builtin_gentype_function(null, 'abs', [null, 'x'], Math.abs);
-    this._define_builtin_gentype_function(null, 'sign', [null, 'x'], Emulate.sign);
-    this._define_builtin_gentype_function(null, 'floor', [null, 'x'], Math.floor);
-    this._define_builtin_gentype_function(null, 'ceil', [null, 'x'], Math.ceil);
-    this._define_builtin_gentype_function(null, 'fract', [null, 'x'], Emulate.fract);
-    this._define_builtin_gentype_function(null, 'mod', [null, 'x', null, 'y'], Emulate.mod);
-    this._define_builtin_gentype_function(null, 'min', [null, 'x', null, 'y'], Math.min);
-    this._define_builtin_gentype_function(null, 'min', [null, 'x', Tn.T_FLOAT, 'y'], Math.min);
-    this._define_builtin_gentype_function(null, 'max', [null, 'x', null, 'y'], Math.max);
-    this._define_builtin_gentype_function(null, 'max', [null, 'x', Tn.T_FLOAT, 'y'], Math.max);
-    this._define_builtin_gentype_function(null, 'clamp', [null, 'x', null, 'minVal', null, 'maxVal'], Emulate.clamp);
-    this._define_builtin_gentype_function(null, 'clamp', [null, 'x', Tn.T_FLOAT, 'minVal', Tn.T_FLOAT, 'maxVal'], Emulate.clamp);
-    this._define_builtin_gentype_function(null, 'mix', [null, 'x', null, 'y', null, 'a'], Emulate.mix);
-    this._define_builtin_gentype_function(null, 'mix', [null, 'x', null, 'y', Tn.T_FLOAT, 'a'], Emulate.mix);
-    this._define_builtin_gentype_function(null, 'step', [null, 'edge', null, 'x'], Emulate.step);
-    this._define_builtin_gentype_function(null, 'step', [Tn.T_FLOAT, 'edge', null, 'x'], Emulate.step);
-    this._define_builtin_gentype_function(null, 'smoothstep', [null, 'edge0', null, 'edge1', null, 'x'], Emulate.smoothstep);
-    this._define_builtin_gentype_function(null, 'smoothstep', [Tn.T_FLOAT, 'edge0', Tn.T_FLOAT, 'edge1', null, 'x'], Emulate.smootstep);
+    this._defineBuiltinGentypeFunction(null, 'abs', [null, 'x'], Math.abs);
+    this._defineBuiltinGentypeFunction(null, 'sign', [null, 'x'], Emulate.sign);
+    this._defineBuiltinGentypeFunction(null, 'floor', [null, 'x'], Math.floor);
+    this._defineBuiltinGentypeFunction(null, 'ceil', [null, 'x'], Math.ceil);
+    this._defineBuiltinGentypeFunction(null, 'fract', [null, 'x'], Emulate.fract);
+    this._defineBuiltinGentypeFunction(null, 'mod', [null, 'x', null, 'y'], Emulate.mod);
+    this._defineBuiltinGentypeFunction(null, 'min', [null, 'x', null, 'y'], Math.min);
+    this._defineBuiltinGentypeFunction(null, 'min', [null, 'x', Tn.T_FLOAT, 'y'], Math.min);
+    this._defineBuiltinGentypeFunction(null, 'max', [null, 'x', null, 'y'], Math.max);
+    this._defineBuiltinGentypeFunction(null, 'max', [null, 'x', Tn.T_FLOAT, 'y'], Math.max);
+    this._defineBuiltinGentypeFunction(null, 'clamp', [null, 'x', null, 'minVal', null, 'maxVal'], Emulate.clamp);
+    this._defineBuiltinGentypeFunction(null, 'clamp', [null, 'x', Tn.T_FLOAT, 'minVal', Tn.T_FLOAT, 'maxVal'], Emulate.clamp);
+    this._defineBuiltinGentypeFunction(null, 'mix', [null, 'x', null, 'y', null, 'a'], Emulate.mix);
+    this._defineBuiltinGentypeFunction(null, 'mix', [null, 'x', null, 'y', Tn.T_FLOAT, 'a'], Emulate.mix);
+    this._defineBuiltinGentypeFunction(null, 'step', [null, 'edge', null, 'x'], Emulate.step);
+    this._defineBuiltinGentypeFunction(null, 'step', [Tn.T_FLOAT, 'edge', null, 'x'], Emulate.step);
+    this._defineBuiltinGentypeFunction(null, 'smoothstep', [null, 'edge0', null, 'edge1', null, 'x'], Emulate.smoothstep);
+    this._defineBuiltinGentypeFunction(null, 'smoothstep', [Tn.T_FLOAT, 'edge0', Tn.T_FLOAT, 'edge1', null, 'x'], Emulate.smootstep);
 
     // Geometric Functions
-    this._define_builtin_gentype_function(Tn.T_FLOAT, 'length',
+    this._defineBuiltinGentypeFunction(Tn.T_FLOAT, 'length',
                                           [null, 'x'], null, Emulate.length);
 
-    this._define_builtin_gentype_function(Tn.T_FLOAT, 'distance',
+    this._defineBuiltinGentypeFunction(Tn.T_FLOAT, 'distance',
                                           [null, 'p0', null, 'p1'], null, Emulate.distance);
 
-    this._define_builtin_gentype_function(Tn.T_FLOAT, 'dot',
+    this._defineBuiltinGentypeFunction(Tn.T_FLOAT, 'dot',
                                           [null, 'x', null, 'y'], null, Emulate.dot);
 
-    this._define_builtin_function(Tn.T_VEC3, 'cross',
+    this._defineBuiltinFunction(Tn.T_VEC3, 'cross',
                                   [Tn.T_VEC3, 'x', Tn.T_VEC3, 'y'], null, Emulate.cross);
 
-    this._define_builtin_gentype_function(null, 'normalize',
+    this._defineBuiltinGentypeFunction(null, 'normalize',
                                           [null, 'x'], null, Emulate.normalize);
 
-    this._define_builtin_gentype_function(null, 'faceforward',
+    this._defineBuiltinGentypeFunction(null, 'faceforward',
                                           [null, 'N', null, 'I', null, 'Nref'], null, Emulate.faceforward);
 
-    this._define_builtin_gentype_function(null, 'reflect',
+    this._defineBuiltinGentypeFunction(null, 'reflect',
                                           [null, 'I', null, 'N'], null, Emulate.reflect);
 
-    this._define_builtin_gentype_function(null, 'refract',
+    this._defineBuiltinGentypeFunction(null, 'refract',
                                           [null, 'I', null, 'N', Tn.T_FLOAT, 'eta'], null, Emulate.refract);
 
     // Matrix Functions
-    this._define_builtin_mat_function(null, 'matrixCompMult', [null, 'x', null, 'y'], Emulate.matrixCompMult);
+    this._defineBuiltinMatFunction(null, 'matrixCompMult', [null, 'x', null, 'y'], Emulate.matrixCompMult);
 
     // Vector Relational Functions
-    this._define_builtin_relvec_function('bvec', 'lessThan',
+    this._defineBuiltinRelvecFunction('bvec', 'lessThan',
                                          ['vec', 'x', 'vec', 'y'], Emulate.lessThan);
 
-    this._define_builtin_relvec_function('bvec', 'lessThan',
+    this._defineBuiltinRelvecFunction('bvec', 'lessThan',
                                          ['ivec', 'x', 'ivec', 'y'], Emulate.lessThan);
 
-    this._define_builtin_relvec_function('bvec', 'lessThanEqual',
+    this._defineBuiltinRelvecFunction('bvec', 'lessThanEqual',
                                          ['vec', 'x', 'vec', 'y'], Emulate.lessThanEqual);
 
-    this._define_builtin_relvec_function('bvec', 'lessThanEqual',
+    this._defineBuiltinRelvecFunction('bvec', 'lessThanEqual',
                                          ['ivec', 'x', 'ivec', 'y'], Emulate.lessThanEqual);
 
-    this._define_builtin_relvec_function('bvec', 'greaterThan',
+    this._defineBuiltinRelvecFunction('bvec', 'greaterThan',
                                          ['vec', 'x', 'vec', 'y'], Emulate.greaterThan);
-    this._define_builtin_relvec_function('bvec', 'greaterThan',
+    this._defineBuiltinRelvecFunction('bvec', 'greaterThan',
                                          ['ivec', 'x', 'ivec', 'y'], Emulate.greaterThan);
 
-    this._define_builtin_relvec_function('bvec', 'greaterThanEqual',
+    this._defineBuiltinRelvecFunction('bvec', 'greaterThanEqual',
                                          ['vec', 'x', 'vec', 'y'], Emulate.greaterThanEqual);
 
-    this._define_builtin_relvec_function('bvec', 'greaterThanEqual',
+    this._defineBuiltinRelvecFunction('bvec', 'greaterThanEqual',
                                          ['ivec', 'x', 'ivec', 'y'], Emulate.greaterThanEqual);
 
-    this._define_builtin_relvec_function('bvec', 'equal',
+    this._defineBuiltinRelvecFunction('bvec', 'equal',
                                          ['vec', 'x', 'vec', 'y'], Emulate.equal);
 
-    this._define_builtin_relvec_function('bvec', 'equal',
+    this._defineBuiltinRelvecFunction('bvec', 'equal',
                                          ['ivec', 'x', 'ivec', 'y'], Emulate.equal);
 
-    this._define_builtin_relvec_function('bvec', 'notEqual',
+    this._defineBuiltinRelvecFunction('bvec', 'notEqual',
                                          ['vec', 'x', 'vec', 'y'], Emulate.notEqual);
 
-    this._define_builtin_relvec_function('bvec', 'notEqual',
+    this._defineBuiltinRelvecFunction('bvec', 'notEqual',
                                          ['ivec', 'x', 'ivec', 'y'], Emulate.notEqual);
 
-    this._define_builtin_relvec_function('bvec', 'notEqual',
+    this._defineBuiltinRelvecFunction('bvec', 'notEqual',
                                          ['bvec', 'x', 'bvec', 'y'], Emulate.notEqual);
 
-    this._define_builtin_relvec_function(Tn.T_BOOL, 'any',
+    this._defineBuiltinRelvecFunction(Tn.T_BOOL, 'any',
                                          ['bvec', 'x'], null, Emulate.any);
 
-    this._define_builtin_relvec_function(Tn.T_BOOL, 'all',
+    this._defineBuiltinRelvecFunction(Tn.T_BOOL, 'all',
                                          ['bvec', 'x'], null, Emulate.all);
 
-    this._define_builtin_relvec_function('bvec', 'not',
+    this._defineBuiltinRelvecFunction('bvec', 'not',
                                          ['bvec', 'x'], Emulate.not);
 
     // Texture Lookup Functions
-    this._define_builtin_function(Tn.T_VEC4, 'texture2D',
+    this._defineBuiltinFunction(Tn.T_VEC4, 'texture2D',
                                   [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC2, 'coord']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'texture2D',
+    this._defineBuiltinFunction(Tn.T_VEC4, 'texture2D',
                                   [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC2, 'coord', Tn.T_FLOAT, 'bias']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'texture2DProj',
+    this._defineBuiltinFunction(Tn.T_VEC4, 'texture2DProj',
                                   [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC3, 'coord']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'texture2DProj',
+    this._defineBuiltinFunction(Tn.T_VEC4, 'texture2DProj',
                                   [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'bias']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'texture2DProj',
+    this._defineBuiltinFunction(Tn.T_VEC4, 'texture2DProj',
                                   [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC4, 'coord']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'texture2DProj',
+    this._defineBuiltinFunction(Tn.T_VEC4, 'texture2DProj',
                                   [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC4, 'coord', Tn.T_FLOAT, 'bias']);
 
     if (this.type == glsl.source.VERTEX) {
-        this._define_builtin_function(Tn.T_VEC4, 'texture2DLod',
+        this._defineBuiltinFunction(Tn.T_VEC4, 'texture2DLod',
                                       [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC2, 'coord', Tn.T_FLOAT, 'lod']);
 
-        this._define_builtin_function(Tn.T_VEC4, 'texture2DProjLod',
+        this._defineBuiltinFunction(Tn.T_VEC4, 'texture2DProjLod',
                                       [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
 
-        this._define_builtin_function(Tn.T_VEC4, 'texture2DProjLod',
+        this._defineBuiltinFunction(Tn.T_VEC4, 'texture2DProjLod',
                                       [Tn.T_SAMPLER2D, 'sampler', Tn.T_VEC4, 'coord', Tn.T_FLOAT, 'lod']);
     }
 
-    this._define_builtin_function(Tn.T_VEC4, 'textureCube',
+    this._defineBuiltinFunction(Tn.T_VEC4, 'textureCube',
                                   [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord']);
 
-    this._define_builtin_function(Tn.T_VEC4, 'textureCube',
+    this._defineBuiltinFunction(Tn.T_VEC4, 'textureCube',
                                   [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'bias']);
 
     if (this.type === glsl.source.VERTEX) {
-        this._define_builtin_function(Tn.T_VEC4, 'textureCubeLod',
+        this._defineBuiltinFunction(Tn.T_VEC4, 'textureCubeLod',
                                       [Tn.T_SAMPLERCUBE, 'sampler', Tn.T_VEC3, 'coord', Tn.T_FLOAT, 'lod']);
     }
 
     // Derivative functions
     if (this._options.derivatives && this.type === glsl.source.FRAGMENT) {
-        this._define_builtin_gentype_function(null, 'dFdx', [null, 'x']);
-        this._define_builtin_gentype_function(null, 'dFdy', [null, 'x']);
-        this._define_builtin_gentype_function(null, 'fwidth', [null, 'x']);
+        this._defineBuiltinGentypeFunction(null, 'dFdx', [null, 'x']);
+        this._defineBuiltinGentypeFunction(null, 'dFdy', [null, 'x']);
+        this._defineBuiltinGentypeFunction(null, 'fwidth', [null, 'x']);
     }
 };
 
-Builtins.prototype._define_operators = function() {
+Builtins.prototype._defineOperators = function() {
     // Operators
-    this._define_builtin_bin_operator_gen(null,
+    this._defineBuiltinBinOperatorGen(null,
                                           [Tn.T_PLUS, Tn.T_DASH, Tn.T_STAR, Tn.T_SLASH],
                                           null, null,
                                           [Tn.T_INT, Tn.T_FLOAT,
@@ -1291,45 +1291,45 @@ Builtins.prototype._define_operators = function() {
                                            Tn.T_MAT2, Tn.T_MAT3, Tn.T_MAT4,
                                            Tn.T_IVEC2, Tn.T_IVEC3, Tn.T_IVEC4]);
 
-    this._define_builtin_bin_operator_gen(null,
+    this._defineBuiltinBinOperatorGen(null,
                                           [Tn.T_PLUS, Tn.T_DASH, Tn.T_STAR, Tn.T_SLASH],
                                           Tn.T_FLOAT, null,
                                           [Tn.T_VEC2, Tn.T_VEC3, Tn.T_VEC4,
                                            Tn.T_MAT2, Tn.T_MAT3, Tn.T_MAT3]);
 
-    this._define_builtin_bin_operator_gen(null,
+    this._defineBuiltinBinOperatorGen(null,
                                           [Tn.T_PLUS, Tn.T_DASH, Tn.T_STAR, Tn.T_SLASH],
                                           null, Tn.T_FLOAT,
                                           [Tn.T_VEC2, Tn.T_VEC3, Tn.T_VEC4,
                                            Tn.T_MAT2, Tn.T_MAT3, Tn.T_MAT3]);
 
-    this._define_builtin_bin_operator_gen(null,
+    this._defineBuiltinBinOperatorGen(null,
                                           [Tn.T_PLUS, Tn.T_DASH, Tn.T_STAR, Tn.T_SLASH],
                                           Tn.T_INT, null,
                                           [Tn.T_IVEC2, Tn.T_IVEC3, Tn.T_IVEC4]);
 
-    this._define_builtin_bin_operator_gen(null,
+    this._defineBuiltinBinOperatorGen(null,
                                           [Tn.T_PLUS, Tn.T_DASH, Tn.T_STAR, Tn.T_SLASH],
                                           null, Tn.T_INT,
                                           [Tn.T_IVEC2, Tn.T_IVEC3, Tn.T_IVEC4]);
 
     // Matrix/vector multiplication
-    this._define_builtin_bin_operator_gen(null, [Tn.T_STAR], Tn.T_MAT2, null, [Tn.T_VEC2]);
-    this._define_builtin_bin_operator_gen(null, [Tn.T_STAR], Tn.T_MAT3, null, [Tn.T_VEC3]);
-    this._define_builtin_bin_operator_gen(null, [Tn.T_STAR], Tn.T_MAT4, null, [Tn.T_VEC4]);
+    this._defineBuiltinBinOperatorGen(null, [Tn.T_STAR], Tn.T_MAT2, null, [Tn.T_VEC2]);
+    this._defineBuiltinBinOperatorGen(null, [Tn.T_STAR], Tn.T_MAT3, null, [Tn.T_VEC3]);
+    this._defineBuiltinBinOperatorGen(null, [Tn.T_STAR], Tn.T_MAT4, null, [Tn.T_VEC4]);
 
-    this._define_builtin_bin_operator_gen(null, [Tn.T_STAR], Tn.T_VEC2, null, [Tn.T_MAT2]);
-    this._define_builtin_bin_operator_gen(null, [Tn.T_STAR], Tn.T_VEC3, null, [Tn.T_MAT3]);
-    this._define_builtin_bin_operator_gen(null, [Tn.T_STAR], Tn.T_VEC4, null, [Tn.T_MAT4]);
+    this._defineBuiltinBinOperatorGen(null, [Tn.T_STAR], Tn.T_VEC2, null, [Tn.T_MAT2]);
+    this._defineBuiltinBinOperatorGen(null, [Tn.T_STAR], Tn.T_VEC3, null, [Tn.T_MAT3]);
+    this._defineBuiltinBinOperatorGen(null, [Tn.T_STAR], Tn.T_VEC4, null, [Tn.T_MAT4]);
 
     // Relational operators
-    this._define_builtin_bin_operator_gen(Tn.T_BOOL,
+    this._defineBuiltinBinOperatorGen(Tn.T_BOOL,
                                           [Tn.T_LEFT_ANGLE, Tn.T_RIGHT_ANGLE, Tn.T_LE_OP, Tn.T_GE_OP],
                                           null, null,
                                           [Tn.T_FLOAT, Tn.T_INT]);
 
     // Logical operators
-    this._define_builtin_bin_operator_gen(Tn.T_BOOL,
+    this._defineBuiltinBinOperatorGen(Tn.T_BOOL,
                                           [Tn.T_EQ_OP, Tn.T_NE_OP],
                                           null, null,
                                           [Tn.T_INT, Tn.T_FLOAT, Tn.T_BOOL,
@@ -1337,13 +1337,13 @@ Builtins.prototype._define_operators = function() {
                                            Tn.T_MAT2, Tn.T_MAT3, Tn.T_MAT4,
                                            Tn.T_IVEC2, Tn.T_IVEC3, Tn.T_IVEC4]);
 
-    this._define_builtin_bin_operator_gen(null,
+    this._defineBuiltinBinOperatorGen(null,
                                           [Tn.T_AND_OP, Tn.T_OR_OP, Tn.T_XOR_OP],
                                           null, null,
                                           [Tn.T_BOOL]);
 
     // Unary operators
-    this._define_builtin_unary_operator_gen(null,
+    this._defineBuiltinUnaryOperatorGen(null,
                                             [Tn.T_DASH, Tn.T_DEC_OP, Tn.T_INC_OP],
                                             null,
                                             [Tn.T_INT, Tn.T_FLOAT,
@@ -1351,7 +1351,7 @@ Builtins.prototype._define_operators = function() {
                                              Tn.T_MAT2, Tn.T_MAT3, Tn.T_MAT4,
                                              Tn.T_IVEC2, Tn.T_IVEC3, Tn.T_IVEC4]);
 
-    this._define_builtin_unary_operator_gen(null,
+    this._defineBuiltinUnaryOperatorGen(null,
                                             [Tn.T_BANG],
                                             null,
                                             [Tn.T_BOOL]);

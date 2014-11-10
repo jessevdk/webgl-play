@@ -61,13 +61,13 @@ Node.create = function(name, constructor, parent) {
 
     var ret = Object.create(parent.prototype);
 
-    ret.node_name = name;
+    ret.nodeName = name;
     ret.constructor = constructor;
 
     return ret;
 };
 
-Node.prototype._value_is_empty = function(v) {
+Node.prototype._valueIsEmpty = function(v) {
     if (v === null) {
         return true;
     }
@@ -102,92 +102,92 @@ Node.prototype.complete = function() {
     return this;
 };
 
-Node.prototype._marshal_object_is_ref = function(value, inctype) {
+Node.prototype._marshalObjectIsRef = function(value, inctype) {
     if (Node.prototype.isPrototypeOf(value) &&
-        value.marshal_can_ref() &&
-        typeof value.__marshal_ref_id != 'undefined') {
+        value.marshalCanRef() &&
+        typeof value.__marshalRefId != 'undefined') {
 
-        value.__marshal_ref++;
+        value.__marshalRef++;
 
         var ret = '';
 
         if (inctype) {
-            ret += value.node_name;
+            ret += value.nodeName;
         }
 
-        return ret + '@' + value.__marshal_ref_id;
+        return ret + '@' + value.__marshalRefId;
     }
 
     return null;
 };
 
-Node.prototype.marshal_node_name = function() {
-    return this.node_name;
+Node.prototype.marshalNodeName = function() {
+    return this.nodeName;
 };
 
-Node.prototype.marshal_can_ref = function() {
+Node.prototype.marshalCanRef = function() {
     return true;
 };
 
-Node.prototype._marshal_object = function(value, ctx) {
+Node.prototype._marshalObject = function(value, ctx) {
     var ret = {};
 
-    var isref = this._marshal_object_is_ref(value, false);
+    var isref = this._marshalObjectIsRef(value, false);
 
     if (isref !== null) {
         return isref;
     }
 
-    if (Node.prototype.isPrototypeOf(value) && value.marshal_can_ref()) {
-        value.__marshal_ref = 1;
-        value.__marshal_ref_id = ctx.__marshal_ref_id++;
+    if (Node.prototype.isPrototypeOf(value) && value.marshalCanRef()) {
+        value.__marshalRef = 1;
+        value.__marshalRefId = ctx.__marshalRefId++;
         value.__marshalled = ret;
 
         ctx.objects.push(value);
     }
 
     for (var k in value) {
-        if (k[0] != '_' && value.hasOwnProperty(k) && !this._value_is_empty(value[k])) {
+        if (k[0] != '_' && value.hasOwnProperty(k) && !this._valueIsEmpty(value[k])) {
             var name = k;
             var val = value[k];
 
-            if (typeof val == 'object' && typeof val.marshal_node_name === 'function') {
-                name += '(' + val.marshal_node_name() + ')';
+            if (typeof val == 'object' && typeof val.marshalNodeName === 'function') {
+                name += '(' + val.marshalNodeName() + ')';
             }
 
-            ret[name] = this._marshal_value(val, ctx);
+            ret[name] = this._marshalValue(val, ctx);
         }
     }
 
     return ret;
 };
 
-Node.prototype._marshal_array = function(value, ctx) {
+Node.prototype._marshalArray = function(value, ctx) {
     var ret = new Array(value.length);
 
     for (var i = 0; i < value.length; i++) {
         var val = value[i];
 
         if (typeof val == 'object' && Node.prototype.isPrototypeOf(val)) {
-            var isref = this._marshal_object_is_ref(val, true);
+            var isref = this._marshalObjectIsRef(val, true);
 
             if (isref === null) {
                 var h = {};
-                h[val.node_name] = this._marshal_value(val, ctx);
+                h[val.nodeName] = this._marshalValue(val, ctx);
 
                 ret[i] = h;
             } else {
                 ret[i] = isref;
             }
         } else {
-            ret[i] = this._marshal_value(val, ctx);
+            ret[i] = this._marshalValue(val, ctx);
         }
     }
 
     return ret;
 };
 
-Node.prototype._marshal_value = function(value, ctx) {
+Node.prototype._marshalValue = function(value, ctx) {
     if (typeof value === 'undefined') {
         return 'undefined';
     }
@@ -197,16 +197,16 @@ Node.prototype._marshal_value = function(value, ctx) {
     }
 
     if (Array.prototype.isPrototypeOf(value)) {
-        return this._marshal_array(value, ctx);
+        return this._marshalArray(value, ctx);
     }
 
-    var ret = this._marshal_object_is_ref(value, false);
+    var ret = this._marshalObjectIsRef(value, false);
 
     if (ret === null) {
         if (typeof value.marshal == 'function') {
             ret = value.marshal(ctx);
         } else {
-            ret = this._marshal_object(value, ctx);
+            ret = this._marshalObject(value, ctx);
         }
     }
 
@@ -214,30 +214,30 @@ Node.prototype._marshal_value = function(value, ctx) {
 };
 
 Node.prototype.marshal = function(ctx) {
-    var owned_ctx = false;
+    var ownedCtx = false;
 
     if (typeof ctx === 'undefined') {
         ctx = {
-            __marshal_ref_id: 1,
+            __marshalRefId: 1,
             objects: []
         };
 
-        owned_ctx = true;
+        ownedCtx = true;
     }
 
-    var ret = this._marshal_object(this, ctx);
+    var ret = this._marshalObject(this, ctx);
 
-    if (owned_ctx) {
+    if (ownedCtx) {
         for (var i = 0; i < ctx.objects.length; i++) {
             var obj = ctx.objects[i];
 
-            if (obj.__marshal_ref > 1) {
-                obj.__marshalled['@id'] = obj.__marshal_ref_id;
+            if (obj.__marshalRef > 1) {
+                obj.__marshalled['@id'] = obj.__marshalRefId;
             }
 
-            delete obj.__marshal_ref;
+            delete obj.__marshalRef;
             delete obj.__marshalled;
-            delete obj.__marshal_ref_id;
+            delete obj.__marshalRefId;
         }
     }
 
@@ -245,10 +245,10 @@ Node.prototype.marshal = function(ctx) {
 };
 
 Node.prototype.location = function() {
-    throw new Error(this.node_name + ' does not implement required location()');
+    throw new Error(this.nodeName + ' does not implement required location()');
 };
 
-Node.prototype.to_json = function() {
+Node.prototype.toJson = function() {
     return JSON.stringify(this, function(key, value) {
         if (key[0] == '_') {
             return null;
@@ -267,16 +267,16 @@ function TypeRef(tok) {
     this.qualifiers = [];
 
     if (tok !== null) {
-        this.is_primitive = (tok.id != Tn.T_IDENTIFIER);
+        this.isPrimitive = (tok.id != Tn.T_IDENTIFIER);
     } else {
-        this.is_primitive = false;
+        this.isPrimitive = false;
     }
 }
 
 TypeRef.prototype = Node.create('TypeRef', TypeRef);
 exports.TypeRef = TypeRef;
 
-TypeRef.wrap_decl = function(decl) {
+TypeRef.wrapDecl = function(decl) {
     if (TypeRef.prototype.isPrototypeOf(decl)) {
         return decl;
     }
@@ -295,7 +295,7 @@ TypeRef.prototype.location = function() {
     return glsl.source.Range.spans(this.token, this.qualifiers);
 };
 
-TypeRef.prototype.has_qualifier = function(qid) {
+TypeRef.prototype.hasQualifier = function(qid) {
     for (var i = 0; i < this.qualifiers.length; i++) {
         var q = this.qualifiers[i];
 
@@ -307,20 +307,20 @@ TypeRef.prototype.has_qualifier = function(qid) {
     return false;
 };
 
-TypeRef.prototype.is_const = function() {
-    return this.has_qualifier(Tn.T_CONST);
+TypeRef.prototype.isConst = function() {
+    return this.hasQualifier(Tn.T_CONST);
 };
 
-TypeRef.prototype.is_attribute = function() {
-    return this.has_qualifier(Tn.T_ATTRIBUTE);
+TypeRef.prototype.isAttribute = function() {
+    return this.hasQualifier(Tn.T_ATTRIBUTE);
 };
 
-TypeRef.prototype.is_varying = function() {
-    return this.has_qualifier(Tn.T_VARYING);
+TypeRef.prototype.isVarying = function() {
+    return this.hasQualifier(Tn.T_VARYING);
 };
 
-TypeRef.prototype.is_uniform = function() {
-    return this.has_qualifier(Tn.T_UNIFORM);
+TypeRef.prototype.isUniform = function() {
+    return this.hasQualifier(Tn.T_UNIFORM);
 };
 
 function StructDecl(stok) {
@@ -329,8 +329,8 @@ function StructDecl(stok) {
     this.token = stok;
     this.name = null;
 
-    this.left_brace = null;
-    this.right_brace = null;
+    this.leftBrace = null;
+    this.rightBrace = null;
 
     this.fields = [];
 }
@@ -342,8 +342,8 @@ StructDecl.prototype.location = function() {
     return glsl.source.Range.spans(this.token,
                                    this.name,
                                    this.fields,
-                                   this.left_brace,
-                                   this.right_brace);
+                                   this.leftBrace,
+                                   this.rightBrace);
 };
 
 function FieldDecl(type) {
@@ -439,10 +439,10 @@ function ParamDecl() {
     this.name = null;
     this.qualifier = null;
 
-    this.is_array = false;
-    this.array_size = null;
-    this.left_bracket = null;
-    this.right_bracket = null;
+    this.isArray = false;
+    this.arraySize = null;
+    this.leftBracket = null;
+    this.rightBracket = null;
 }
 
 ParamDecl.prototype = Node.create('ParamDecl', ParamDecl);
@@ -452,9 +452,9 @@ ParamDecl.prototype.location = function() {
     return glsl.source.Range.spans(this.type,
                                    this.name,
                                    this.qualifier,
-                                   this.array_size,
-                                   this.left_bracket,
-                                   this.right_bracket);
+                                   this.arraySize,
+                                   this.leftBracket,
+                                   this.rightBracket);
 };
 
 
@@ -465,13 +465,13 @@ function Named(name, decl) {
     this.decl = decl;
     this.type = null;
 
-    this.initial_assign = null;
-    this.initial_value = null;
+    this.initialAssign = null;
+    this.initialValue = null;
 
-    this.is_array = false;
-    this.array_size = null;
-    this.left_bracket = null;
-    this.right_bracket = null;
+    this.isArray = false;
+    this.arraySize = null;
+    this.leftBracket = null;
+    this.rightBracket = null;
 }
 
 Named.prototype = Node.create('Named', Named);
@@ -479,11 +479,11 @@ exports.Named = Named;
 
 Named.prototype.location = function() {
     return glsl.source.Range.spans(this.name,
-                                   this.initial_assign,
-                                   this.initial_value,
-                                   this.array_size,
-                                   this.left_bracket,
-                                   this.right_bracket);
+                                   this.initialAssign,
+                                   this.initialValue,
+                                   this.arraySize,
+                                   this.leftBracket,
+                                   this.rightBracket);
 };
 
 
@@ -493,8 +493,8 @@ function FunctionHeader(type, name) {
     this.type = type;
     this.name = name;
     this.parameters = [];
-    this.left_paren = null;
-    this.right_paren = null;
+    this.leftParen = null;
+    this.rightParen = null;
 }
 
 FunctionHeader.prototype = Node.create('FunctionHeader', FunctionHeader);
@@ -504,11 +504,11 @@ FunctionHeader.prototype.location = function() {
     return glsl.source.Range.spans(this.type,
                                    this.name,
                                    this.parameters,
-                                   this.left_paren,
-                                   this.right_paren);
+                                   this.leftParen,
+                                   this.rightParen);
 };
 
-FunctionHeader.signature_from_names = function(name, argnames) {
+FunctionHeader.signatureFromNames = function(name, argnames) {
     var ret = name + '(';
 
     for (var i = 0; i < argnames.length; i++) {
@@ -537,14 +537,14 @@ FunctionHeader.prototype.signature = function() {
         argnames.push(param.type.token.text);
     }
 
-    return FunctionHeader.signature_from_names(this.name.text, argnames);
+    return FunctionHeader.signatureFromNames(this.name.text, argnames);
 };
 
 function FunctionProto(header) {
     Node.call(this);
 
     this.header = header;
-    this.is_builtin = false;
+    this.isBuiltin = false;
     this.semi = null;
 }
 
@@ -572,17 +572,17 @@ FunctionDef.prototype.location = function() {
 function Block() {
     Node.call(this);
 
-    this.right_brace = null;
-    this.left_brace = null;
+    this.rightBrace = null;
+    this.leftBrace = null;
     this.body = [];
-    this.new_scope = true;
+    this.newScope = true;
 }
 
 Block.prototype = Node.create('Block', Block);
 exports.Block = Block;
 
 Block.prototype.location = function() {
-    return glsl.source.Range.spans(this.right_brace, this.body, this.left_brace);
+    return glsl.source.Range.spans(this.rightBrace, this.body, this.leftBrace);
 };
 
 function EmptyStmt(semi) {
@@ -631,9 +631,9 @@ function SelectionStmt(tok) {
     Node.call(this);
 
     this.token = tok;
-    this.left_paren = null;
+    this.leftParen = null;
     this.condition = null;
-    this.right_paren = null;
+    this.rightParen = null;
     this.body = null;
     this.els = null;
 }
@@ -643,9 +643,9 @@ exports.SelectionStmt = SelectionStmt;
 
 SelectionStmt.prototype.location = function() {
     return glsl.source.Range.spans(this.token,
-                                   this.left_paren,
+                                   this.leftParen,
                                    this.condition,
-                                   this.right_paren,
+                                   this.rightParen,
                                    this.body,
                                    this.els);
 };
@@ -671,9 +671,9 @@ function WhileStmt(tok) {
 
     this.token = tok;
 
-    this.left_paren = null;
+    this.leftParen = null;
     this.condition = null;
-    this.right_paren = null;
+    this.rightParen = null;
     this.body = null;
 }
 
@@ -682,9 +682,9 @@ exports.WhileStmt = WhileStmt;
 
 WhileStmt.prototype.location = function() {
     return glsl.source.Range.spans(this.token,
-                                   this.left_paren,
+                                   this.leftParen,
                                    this.condition,
-                                   this.right_paren,
+                                   this.rightParen,
                                    this.body);
 };
 
@@ -692,12 +692,12 @@ WhileStmt.prototype.location = function() {
 function DoStmt(dtok) {
     Node.call(this);
 
-    this.do_token = dtok;
-    this.while_token = null;
+    this.doToken = dtok;
+    this.whileToken = null;
 
-    this.left_paren = null;
+    this.leftParen = null;
     this.condition = null;
-    this.right_paren = null;
+    this.rightParen = null;
     this.body = null;
 }
 
@@ -705,11 +705,11 @@ DoStmt.prototype = Node.create('DoStmt', DoStmt);
 exports.DoStmt = DoStmt;
 
 DoStmt.prototype.location = function() {
-    return glsl.source.Range.spans(this.do_token,
-                                   this.while_token,
-                                   this.left_paren,
+    return glsl.source.Range.spans(this.doToken,
+                                   this.whileToken,
+                                   this.leftParen,
                                    this.condition,
-                                   this.right_paren,
+                                   this.rightParen,
                                    this.body);
 };
 
@@ -719,10 +719,10 @@ function ForStmt(tok) {
 
     this.token = tok;
 
-    this.left_paren = null;
+    this.leftParen = null;
     this.init = null;
     this.rest = null;
-    this.right_paren = null;
+    this.rightParen = null;
     this.body = null;
 }
 
@@ -731,10 +731,10 @@ exports.ForStmt = ForStmt;
 
 ForStmt.prototype.location = function() {
     return glsl.source.Range.spans(this.token,
-                                   this.left_paren,
+                                   this.leftParen,
                                    this.init,
                                    this.rest,
-                                   this.right_paren,
+                                   this.rightParen,
                                    this.body);
 };
 
@@ -835,10 +835,10 @@ function TernaryExpr(condition) {
     Node.call(this);
 
     this.condition = condition;
-    this.question_token = null;
-    this.true_expression = null;
-    this.colon_token = null;
-    this.false_expression = null;
+    this.questionToken = null;
+    this.trueExpression = null;
+    this.colonToken = null;
+    this.falseExpression = null;
 }
 
 TernaryExpr.prototype = Node.create('TernaryExpr', TernaryExpr);
@@ -846,10 +846,10 @@ exports.TernaryExpr = TernaryExpr;
 
 TernaryExpr.prototype.location = function() {
     return glsl.source.Range.spans(this.condition,
-                                   this.question_token,
-                                   this.true_expression,
-                                   this.colon_token,
-                                   this.false_expression);
+                                   this.questionToken,
+                                   this.trueExpression,
+                                   this.colonToken,
+                                   this.falseExpression);
 };
 
 function BinOpExpr(lhs, op, rhs) {
@@ -915,16 +915,16 @@ ConstantExpr.prototype.location = function() {
 function GroupExpr() {
     Node.call(this);
 
-    this.left_paren = null;
+    this.leftParen = null;
     this.expression = null;
-    this.right_paren = null;
+    this.rightParen = null;
 }
 
 GroupExpr.prototype = Node.create('GroupExpr', GroupExpr);
 exports.GroupExpr = GroupExpr;
 
 GroupExpr.prototype.location = function() {
-    return glsl.source.Range.spans(this.left_paren, this.expression, this.right_paren);
+    return glsl.source.Range.spans(this.leftParen, this.expression, this.rightParen);
 };
 
 
@@ -946,8 +946,8 @@ function FunctionCallExpr(name) {
     Node.call(this);
 
     this.name = name;
-    this.left_paren = null;
-    this.right_paren = null;
+    this.leftParen = null;
+    this.rightParen = null;
     this.arguments = [];
 }
 
@@ -955,7 +955,7 @@ FunctionCallExpr.prototype = Node.create('FunctionCallExpr', FunctionCallExpr);
 exports.FunctionCallExpr = FunctionCallExpr;
 
 FunctionCallExpr.prototype.location = function() {
-    return glsl.source.Range.spans(this.name, this.left_paren, this.right_paren, this.arguments);
+    return glsl.source.Range.spans(this.name, this.leftParen, this.rightParen, this.arguments);
 };
 
 
@@ -981,16 +981,16 @@ function IndexExpr(expr) {
 
     this.expression = expr;
 
-    this.right_bracket = null;
+    this.rightBracket = null;
     this.index = null;
-    this.left_bracket = null;
+    this.leftBracket = null;
 }
 
 IndexExpr.prototype = Node.create('IndexExpr', IndexExpr);
 exports.IndexExpr = IndexExpr;
 
 IndexExpr.prototype.location = function() {
-    return glsl.source.Range.spans(this.expression, this.right_bracket, this.index, this.left_bracket);
+    return glsl.source.Range.spans(this.expression, this.rightBracket, this.index, this.leftBracket);
 };
 
 
@@ -1029,7 +1029,7 @@ function Parser(source, type, options) {
 
     this.comments = [];
 
-    this._parse_tu();
+    this._parseTu();
     this.complete();
 }
 
@@ -1039,28 +1039,28 @@ Parser.prototype.marshal = function(ctx) {
     var ret = Node.prototype.marshal.call(this, ctx);
 
     if (this._errors.length !== 0) {
-        ret.errors = this._marshal_array(this._errors, ctx);
+        ret.errors = this._marshalArray(this._errors, ctx);
     }
 
     return ret;
 };
 
-Parser.prototype._require_one_of_error = function(ids, tok) {
+Parser.prototype._requireOneOfError = function(ids, tok) {
     var loc;
     var got;
 
     if (tok.id == Tn.T_EOF) {
-        loc = this._t.location().to_range();
+        loc = this._t.location().toRange();
         got = 'nothing';
     } else {
         loc = tok.location;
-        got = this._t.token_name(tok.id);
+        got = this._t.tokenName(tok.id);
     }
 
     var choices = [];
 
     for (var i = 0; i < ids.length; i++) {
-        choices.push(this._t.token_name(ids[i]));
+        choices.push(this._t.tokenName(ids[i]));
     }
 
     if (choices.length > 1) {
@@ -1075,7 +1075,7 @@ Parser.prototype._require_one_of_error = function(ids, tok) {
     return null;
 };
 
-Parser.prototype._require_one_of = function(ids) {
+Parser.prototype._requireOneOf = function(ids) {
     var tok = this._t.next();
 
     for (var i = 0; i < ids.length; i++) {
@@ -1084,10 +1084,10 @@ Parser.prototype._require_one_of = function(ids) {
         }
     }
 
-    return this._require_one_of_error(ids, tok);
+    return this._requireOneOfError(ids, tok);
 };
 
-Parser.prototype._match_one_of = function(matchers, tok) {
+Parser.prototype._matchOneOf = function(matchers, tok) {
     var retf = function(m, tok) {
         return m.call(this, tok, ret);
     };
@@ -1105,7 +1105,7 @@ Parser.prototype._match_one_of = function(matchers, tok) {
     return false;
 };
 
-function match_one_of(f, oneof) {
+function matchOneOf(f, oneof) {
     for (var i = 0; i < oneof.length; i++) {
         var m = oneof[i];
 
@@ -1119,7 +1119,7 @@ function match_one_of(f, oneof) {
     }
 
     f.match = function(tok) {
-        return this._match_one_of(oneof, tok);
+        return this._matchOneOf(oneof, tok);
     };
 
     f.expected = function() {
@@ -1133,10 +1133,10 @@ function match_one_of(f, oneof) {
     };
 }
 
-Parser.prototype._parse_binop_expression = function(tok, m, expr, opid, rule) {
+Parser.prototype._parseBinopExpression = function(tok, m, expr, opid, rule) {
     var ret;
 
-    if (rule == this._parse_unary_expression && typeof expr != 'undefined') {
+    if (rule == this._parseUnaryExpression && typeof expr != 'undefined') {
         ret = expr;
     } else {
         ret = rule.call(this, tok, m, expr);
@@ -1154,7 +1154,7 @@ Parser.prototype._parse_binop_expression = function(tok, m, expr, opid, rule) {
         // consume peeked token
         this._t.next();
 
-        var rhs = this._parse_rule(rule, this._t.next());
+        var rhs = this._parseRule(rule, this._t.next());
 
         ret = new BinOpExpr(ret, op, rhs);
 
@@ -1169,20 +1169,20 @@ Parser.prototype._parse_binop_expression = function(tok, m, expr, opid, rule) {
     return ret;
 };
 
-Parser.prototype._parse_function_call = function(tok) {
+Parser.prototype._parseFunctionCall = function(tok) {
     var cl = new FunctionCallExpr(tok);
 
-    cl.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+    cl.leftParen = this._requireOneOf([Tn.T_LEFT_PAREN]);
 
-    if (cl.left_paren === null) {
+    if (cl.leftParen === null) {
         return cl;
     }
 
     var n = this._t.peek();
 
-    if (this._match(this._parse_assignment_expression, n)) {
+    if (this._match(this._parseAssignmentExpression, n)) {
         while (true) {
-            var ret = this._parse_rule(this._parse_assignment_expression, this._t.next());
+            var ret = this._parseRule(this._parseAssignmentExpression, this._t.next());
 
             cl.arguments.push(ret);
 
@@ -1204,20 +1204,20 @@ Parser.prototype._parse_function_call = function(tok) {
         cl.arguments = [this._t.next()];
     }
 
-    cl.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    cl.rightParen = this._requireOneOf([Tn.T_RIGHT_PAREN]);
 
-    if (cl.right_paren === null) {
+    if (cl.rightParen === null) {
         return cl;
     }
 
     return cl.complete();
 };
 
-Parser.prototype._parse_function_identifier = function(tok) {
+Parser.prototype._parseFunctionIdentifier = function(tok) {
     return (new Named(tok, null)).complete();
 };
 
-Parser.prototype._is_primitive_type = function(id) {
+Parser.prototype._isPrimitiveType = function(id) {
     switch (id) {
     case Tn.T_FLOAT:
     case Tn.T_INT:
@@ -1242,16 +1242,16 @@ Parser.prototype._is_primitive_type = function(id) {
     return false;
 };
 
-Parser.prototype._parse_function_identifier.match = function(tok) {
-    return this._is_primitive_type(tok.id) || tok.id == Tn.T_IDENTIFIER;
+Parser.prototype._parseFunctionIdentifier.match = function(tok) {
+    return this._isPrimitiveType(tok.id) || tok.id == Tn.T_IDENTIFIER;
 };
 
-Parser.prototype._parse_primary_expression = function(tok) {
-    if (this._parse_function_identifier.match.call(this, tok)) {
+Parser.prototype._parsePrimaryExpression = function(tok) {
+    if (this._parseFunctionIdentifier.match.call(this, tok)) {
         var n = this._t.peek();
 
         if (n.id == Tn.T_LEFT_PAREN) {
-            return this._parse_function_call(tok);
+            return this._parseFunctionCall(tok);
         }
 
         return (new VariableExpr(tok)).complete();
@@ -1265,16 +1265,16 @@ Parser.prototype._parse_primary_expression = function(tok) {
     case Tn.T_LEFT_PAREN:
         var grp = new GroupExpr();
 
-        grp.left_paren = tok;
-        grp.expression = this._parse_rule(this._parse_expression, this._t.next());
+        grp.leftParen = tok;
+        grp.expression = this._parseRule(this._parseExpression, this._t.next());
 
         if (grp.expression.incomplete) {
             return grp;
         }
 
-        grp.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
+        grp.rightParen = this._requireOneOf([Tn.T_RIGHT_PAREN]);
 
-        if (grp.right_paren === null) {
+        if (grp.rightParen === null) {
             return grp;
         }
 
@@ -1284,7 +1284,7 @@ Parser.prototype._parse_primary_expression = function(tok) {
     return new NoMatch(tok);
 };
 
-Parser.prototype._parse_primary_expression.match = function(tok) {
+Parser.prototype._parsePrimaryExpression.match = function(tok) {
     switch (tok.id) {
     case Tn.T_INTCONSTANT:
     case Tn.T_FLOATCONSTANT:
@@ -1293,15 +1293,15 @@ Parser.prototype._parse_primary_expression.match = function(tok) {
         return true;
     }
 
-    return this._match(this._parse_function_identifier, tok);
+    return this._match(this._parseFunctionIdentifier, tok);
 };
 
-Parser.prototype._parse_primary_expression.expected = function() {
+Parser.prototype._parsePrimaryExpression.expected = function() {
     return ['identifier', 'integer', 'float', 'bool', 'grouped expression'];
 };
 
-Parser.prototype._parse_postfix_expression = function(tok, m) {
-    var expr = this._parse_primary_expression(tok, m);
+Parser.prototype._parsePostfixExpression = function(tok, m) {
+    var expr = this._parsePrimaryExpression(tok, m);
 
     if (expr.incomplete) {
         return expr;
@@ -1316,17 +1316,17 @@ Parser.prototype._parse_postfix_expression = function(tok, m) {
             this._t.next();
 
             expr = new IndexExpr(expr);
-            expr.left_bracket = tok;
+            expr.leftBracket = tok;
 
-            expr.index = this._parse_rule(this._parse_expression, this._t.next());
+            expr.index = this._parseRule(this._parseExpression, this._t.next());
 
             if (expr.index.incomplete) {
                 break;
             }
 
-            expr.right_bracket = this._require_one_of([Tn.T_RIGHT_BRACKET]);
+            expr.rightBracket = this._requireOneOf([Tn.T_RIGHT_BRACKET]);
 
-            if (expr.right_bracket === null) {
+            if (expr.rightBracket === null) {
                 break;
             }
 
@@ -1338,7 +1338,7 @@ Parser.prototype._parse_postfix_expression = function(tok, m) {
 
             expr = new FieldSelectionExpr(expr, tok);
 
-            expr.selector = this._require_one_of([Tn.T_IDENTIFIER]);
+            expr.selector = this._requireOneOf([Tn.T_IDENTIFIER]);
 
             if (expr.selector === null) {
                 break;
@@ -1368,11 +1368,11 @@ Parser.prototype._parse_postfix_expression = function(tok, m) {
     return expr;
 };
 
-Parser.prototype._parse_postfix_expression.match = Parser.prototype._parse_primary_expression.match;
+Parser.prototype._parsePostfixExpression.match = Parser.prototype._parsePrimaryExpression.match;
 
-Parser.prototype._parse_postfix_expression.expected = Parser.prototype._parse_primary_expression.expected;
+Parser.prototype._parsePostfixExpression.expected = Parser.prototype._parsePrimaryExpression.expected;
 
-Parser.prototype._parse_unary_expression = function(tok, m) {
+Parser.prototype._parseUnaryExpression = function(tok, m) {
     switch (tok.id) {
     case Tn.T_INC_OP:
     case Tn.T_DEC_OP:
@@ -1380,7 +1380,7 @@ Parser.prototype._parse_unary_expression = function(tok, m) {
     case Tn.T_DASH:
     case Tn.T_BANG:
     case Tn.T_TILDE:
-        var expr = this._parse_rule(this._parse_unary_expression, this._t.next());
+        var expr = this._parseRule(this._parseUnaryExpression, this._t.next());
         var ret = new UnaryOpExpr(tok, expr);
 
         if (!expr.incomplete) {
@@ -1390,10 +1390,10 @@ Parser.prototype._parse_unary_expression = function(tok, m) {
         return ret;
     }
 
-    return this._parse_postfix_expression(tok, m);
+    return this._parsePostfixExpression(tok, m);
 };
 
-Parser.prototype._parse_unary_expression.match = function(tok) {
+Parser.prototype._parseUnaryExpression.match = function(tok) {
     switch (tok.id) {
     case Tn.T_INC_OP:
     case Tn.T_DEC_OP:
@@ -1404,160 +1404,160 @@ Parser.prototype._parse_unary_expression.match = function(tok) {
         return true;
     }
 
-    return this._match(this._parse_postfix_expression, tok);
+    return this._match(this._parsePostfixExpression, tok);
 };
 
-Parser.prototype._parse_unary_expression.expected = function() {
-    return ['unary operator'].concat(this._parse_postfix_expression.expected.call(this));
+Parser.prototype._parseUnaryExpression.expected = function() {
+    return ['unary operator'].concat(this._parsePostfixExpression.expected.call(this));
 };
 
-Parser.prototype._parse_multiplicative_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseMultiplicativeExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_STAR ||
                                                                id == Tn.T_SLASH ||
                                                                id == Tn.T_PERCENT; },
-                                        this._parse_unary_expression);
+                                        this._parseUnaryExpression);
 };
 
-Parser.prototype._parse_multiplicative_expression.match = Parser.prototype._parse_unary_expression.match;
+Parser.prototype._parseMultiplicativeExpression.match = Parser.prototype._parseUnaryExpression.match;
 
-Parser.prototype._parse_multiplicative_expression.expected = Parser.prototype._parse_unary_expression.expected;
+Parser.prototype._parseMultiplicativeExpression.expected = Parser.prototype._parseUnaryExpression.expected;
 
 
-Parser.prototype._parse_additive_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseAdditiveExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_PLUS ||
                                                                id == Tn.T_DASH; },
-                                        this._parse_multiplicative_expression);
+                                        this._parseMultiplicativeExpression);
 };
 
-Parser.prototype._parse_additive_expression.match = Parser.prototype._parse_multiplicative_expression.match;
+Parser.prototype._parseAdditiveExpression.match = Parser.prototype._parseMultiplicativeExpression.match;
 
-Parser.prototype._parse_additive_expression.expected = Parser.prototype._parse_multiplicative_expression.expected;
+Parser.prototype._parseAdditiveExpression.expected = Parser.prototype._parseMultiplicativeExpression.expected;
 
 
-Parser.prototype._parse_shift_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseShiftExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_LEFT_OP ||
                                                                id == Tn.T_RIGHT_OP; },
-                                        this._parse_additive_expression);
+                                        this._parseAdditiveExpression);
 };
 
-Parser.prototype._parse_shift_expression.match = Parser.prototype._parse_additive_expression.match;
+Parser.prototype._parseShiftExpression.match = Parser.prototype._parseAdditiveExpression.match;
 
-Parser.prototype._parse_shift_expression.expected = Parser.prototype._parse_additive_expression.expected;
+Parser.prototype._parseShiftExpression.expected = Parser.prototype._parseAdditiveExpression.expected;
 
 
-Parser.prototype._parse_relational_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseRelationalExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_LEFT_ANGLE ||
                                                                id == Tn.T_RIGHT_ANGLE ||
                                                                id == Tn.T_LE_OP ||
                                                                id == Tn.T_GE_OP; },
-                                        this._parse_shift_expression);
+                                        this._parseShiftExpression);
 };
 
-Parser.prototype._parse_relational_expression.match = Parser.prototype._parse_shift_expression.match;
+Parser.prototype._parseRelationalExpression.match = Parser.prototype._parseShiftExpression.match;
 
-Parser.prototype._parse_relational_expression.expected = Parser.prototype._parse_shift_expression.expected;
+Parser.prototype._parseRelationalExpression.expected = Parser.prototype._parseShiftExpression.expected;
 
 
-Parser.prototype._parse_equality_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseEqualityExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_EQ_OP || id == Tn.T_NE_OP; },
-                                        this._parse_relational_expression);
+                                        this._parseRelationalExpression);
 };
 
-Parser.prototype._parse_equality_expression.match = Parser.prototype._parse_relational_expression.match;
+Parser.prototype._parseEqualityExpression.match = Parser.prototype._parseRelationalExpression.match;
 
-Parser.prototype._parse_equality_expression.expected = Parser.prototype._parse_relational_expression.expected;
+Parser.prototype._parseEqualityExpression.expected = Parser.prototype._parseRelationalExpression.expected;
 
-Parser.prototype._parse_and_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseAndExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_AMPERSAND; },
-                                        this._parse_equality_expression);
+                                        this._parseEqualityExpression);
 };
 
 
-Parser.prototype._parse_and_expression.match = Parser.prototype._parse_equality_expression.match;
+Parser.prototype._parseAndExpression.match = Parser.prototype._parseEqualityExpression.match;
 
-Parser.prototype._parse_and_expression.expected = Parser.prototype._parse_equality_expression.expected;
+Parser.prototype._parseAndExpression.expected = Parser.prototype._parseEqualityExpression.expected;
 
 
-Parser.prototype._parse_exclusive_or_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseExclusiveOrExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function(id) { return id == Tn.T_CARET; },
-                                        this._parse_and_expression);
+                                        this._parseAndExpression);
 };
 
-Parser.prototype._parse_exclusive_or_expression.match = Parser.prototype._parse_and_expression.match;
+Parser.prototype._parseExclusiveOrExpression.match = Parser.prototype._parseAndExpression.match;
 
-Parser.prototype._parse_exclusive_or_expression.expected = Parser.prototype._parse_and_expression.expected;
+Parser.prototype._parseExclusiveOrExpression.expected = Parser.prototype._parseAndExpression.expected;
 
 
-Parser.prototype._parse_inclusive_or_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseInclusiveOrExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function(id) { return id == Tn.T_VERTICAL_BAR; },
-                                        this._parse_exclusive_or_expression);
+                                        this._parseExclusiveOrExpression);
 };
 
-Parser.prototype._parse_inclusive_or_expression.match = Parser.prototype._parse_exclusive_or_expression.match;
+Parser.prototype._parseInclusiveOrExpression.match = Parser.prototype._parseExclusiveOrExpression.match;
 
-Parser.prototype._parse_inclusive_or_expression.expected = Parser.prototype._parse_exclusive_or_expression.expected;
+Parser.prototype._parseInclusiveOrExpression.expected = Parser.prototype._parseExclusiveOrExpression.expected;
 
-Parser.prototype._parse_logical_and_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseLogicalAndExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_AND_OP; },
-                                        this._parse_inclusive_or_expression);
+                                        this._parseInclusiveOrExpression);
 };
 
-Parser.prototype._parse_logical_and_expression.match = Parser.prototype._parse_inclusive_or_expression.match;
+Parser.prototype._parseLogicalAndExpression.match = Parser.prototype._parseInclusiveOrExpression.match;
 
-Parser.prototype._parse_logical_and_expression.expected = Parser.prototype._parse_inclusive_or_expression.expected;
+Parser.prototype._parseLogicalAndExpression.expected = Parser.prototype._parseInclusiveOrExpression.expected;
 
-Parser.prototype._parse_logical_xor_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseLogicalXorExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_XOR_OP; },
-                                        this._parse_logical_and_expression);
+                                        this._parseLogicalAndExpression);
 };
 
-Parser.prototype._parse_logical_xor_expression.match = Parser.prototype._parse_logical_and_expression.match;
+Parser.prototype._parseLogicalXorExpression.match = Parser.prototype._parseLogicalAndExpression.match;
 
-Parser.prototype._parse_logical_xor_expression.expected = Parser.prototype._parse_logical_and_expression.expected;
+Parser.prototype._parseLogicalXorExpression.expected = Parser.prototype._parseLogicalAndExpression.expected;
 
-Parser.prototype._parse_logical_or_expression = function(tok, m, expr) {
-    return this._parse_binop_expression(tok,
+Parser.prototype._parseLogicalOrExpression = function(tok, m, expr) {
+    return this._parseBinopExpression(tok,
                                         m,
                                         expr,
                                         function (id) { return id == Tn.T_OR_OP; },
-                                        this._parse_logical_xor_expression);
+                                        this._parseLogicalXorExpression);
 };
 
-Parser.prototype._parse_logical_or_expression.match = Parser.prototype._parse_logical_xor_expression.match;
+Parser.prototype._parseLogicalOrExpression.match = Parser.prototype._parseLogicalXorExpression.match;
 
-Parser.prototype._parse_logical_or_expression.expected = Parser.prototype._parse_logical_xor_expression.expected;
+Parser.prototype._parseLogicalOrExpression.expected = Parser.prototype._parseLogicalXorExpression.expected;
 
-Parser.prototype._parse_unary_conditional_expression_rest = function(expr) {
+Parser.prototype._parseUnaryConditionalExpressionRest = function(expr) {
     if (expr.incomplete) {
         return expr;
     }
@@ -1566,23 +1566,23 @@ Parser.prototype._parse_unary_conditional_expression_rest = function(expr) {
 
     if (n.id == Tn.T_QUESTION) {
         var ret = new TernaryExpr(expr);
-        ret.question_token = this._t.next();
+        ret.questionToken = this._t.next();
 
-        ret.true_expression = this._parse_rule(this._parse_expression, this._t.next());
+        ret.trueExpression = this._parseRule(this._parseExpression, this._t.next());
 
-        if (ret.true_expression.incomplete) {
+        if (ret.trueExpression.incomplete) {
             return ret;
         }
 
-        ret.colon_token = this._require_one_of([Tn.T_COLON]);
+        ret.colonToken = this._requireOneOf([Tn.T_COLON]);
 
-        if (ret.colon_token === null) {
+        if (ret.colonToken === null) {
             return ret;
         }
 
-        ret.false_expression = this._parse_rule(this._parse_assignment_expression, this._t.next());
+        ret.falseExpression = this._parseRule(this._parseAssignmentExpression, this._t.next());
 
-        if (ret.false_expression.incomplete) {
+        if (ret.falseExpression.incomplete) {
             return ret;
         }
 
@@ -1592,27 +1592,27 @@ Parser.prototype._parse_unary_conditional_expression_rest = function(expr) {
     return expr;
 };
 
-Parser.prototype._parse_unary_conditional_expression = function(expr) {
+Parser.prototype._parseUnaryConditionalExpression = function(expr) {
     var tok, m;
 
-    var expr = this._parse_logical_or_expression(tok, m, expr);
-    return this._parse_unary_conditional_expression_rest(expr);
+    var expr = this._parseLogicalOrExpression(tok, m, expr);
+    return this._parseUnaryConditionalExpressionRest(expr);
 };
 
-Parser.prototype._parse_conditional_expression = function(tok, m) {
-    var expr = this._parse_logical_or_expression(tok, m);
-    return this._parse_unary_conditional_expression_rest(expr);
+Parser.prototype._parseConditionalExpression = function(tok, m) {
+    var expr = this._parseLogicalOrExpression(tok, m);
+    return this._parseUnaryConditionalExpressionRest(expr);
 };
 
-Parser.prototype._parse_conditional_expression.match = Parser.prototype._parse_logical_or_expression.match;
+Parser.prototype._parseConditionalExpression.match = Parser.prototype._parseLogicalOrExpression.match;
 
-Parser.prototype._parse_conditional_expression.expected = Parser.prototype._parse_logical_or_expression.expected;
+Parser.prototype._parseConditionalExpression.expected = Parser.prototype._parseLogicalOrExpression.expected;
 
-Parser.prototype._parse_assignment_operator = function(tok) {
+Parser.prototype._parseAssignmentOperator = function(tok) {
     return {token: tok, incomplete: false};
 };
 
-Parser.prototype._parse_assignment_operator.match = function(tok) {
+Parser.prototype._parseAssignmentOperator.match = function(tok) {
     switch (tok.id) {
     case Tn.T_EQUAL:
     case Tn.T_MUL_ASSIGN:
@@ -1631,13 +1631,13 @@ Parser.prototype._parse_assignment_operator.match = function(tok) {
     return false;
 };
 
-Parser.prototype._parse_assignment_operator.expected = function() {
+Parser.prototype._parseAssignmentOperator.expected = function() {
     return ['assignment operator'];
 };
 
-Parser.prototype._parse_unary_assignment_expression = function(expr) {
+Parser.prototype._parseUnaryAssignmentExpression = function(expr) {
     var ret = new AssignmentExpr(expr);
-    var op = this._parse_rule(this._parse_assignment_operator, this._t.next());
+    var op = this._parseRule(this._parseAssignmentOperator, this._t.next());
 
     if (op.incomplete) {
         return ret;
@@ -1645,7 +1645,7 @@ Parser.prototype._parse_unary_assignment_expression = function(expr) {
 
     ret.op = op.token;
 
-    ret.rhs = this._parse_rule(this._parse_assignment_expression, this._t.next());
+    ret.rhs = this._parseRule(this._parseAssignmentExpression, this._t.next());
 
     if (!ret.rhs.incomplete) {
         ret.complete();
@@ -1654,33 +1654,33 @@ Parser.prototype._parse_unary_assignment_expression = function(expr) {
     return ret;
 };
 
-Parser.prototype._parse_unary_assignment_expression.match = Parser.prototype._parse_unary_expression.match;
+Parser.prototype._parseUnaryAssignmentExpression.match = Parser.prototype._parseUnaryExpression.match;
 
-Parser.prototype._parse_unary_assignment_expression.expected = Parser.prototype._parse_unary_expression.expected;
+Parser.prototype._parseUnaryAssignmentExpression.expected = Parser.prototype._parseUnaryExpression.expected;
 
-Parser.prototype._parse_assignment_expression = function(tok, m) {
-    var expr = this._parse_unary_expression(tok, m);
+Parser.prototype._parseAssignmentExpression = function(tok, m) {
+    var expr = this._parseUnaryExpression(tok, m);
 
     if (expr.incomplete) {
         return expr;
     }
 
     var n = this._t.peek();
-    var m = this._match(this._parse_assignment_operator, n);
+    var m = this._match(this._parseAssignmentOperator, n);
 
     if (m) {
-        return this._parse_unary_assignment_expression(expr);
+        return this._parseUnaryAssignmentExpression(expr);
     } else {
-        return this._parse_unary_conditional_expression(expr);
+        return this._parseUnaryConditionalExpression(expr);
     }
 };
 
-Parser.prototype._parse_assignment_expression.match = Parser.prototype._parse_unary_expression.match;
+Parser.prototype._parseAssignmentExpression.match = Parser.prototype._parseUnaryExpression.match;
 
-Parser.prototype._parse_assignment_expression.expected = Parser.prototype._parse_unary_expression.expected;
+Parser.prototype._parseAssignmentExpression.expected = Parser.prototype._parseUnaryExpression.expected;
 
-Parser.prototype._parse_expression = function(tok, m) {
-    var expr = this._parse_assignment_expression(tok, m);
+Parser.prototype._parseExpression = function(tok, m) {
+    var expr = this._parseAssignmentExpression(tok, m);
 
     if (expr.incomplete) {
         return expr;
@@ -1701,7 +1701,7 @@ Parser.prototype._parse_expression = function(tok, m) {
 
         tok = this._t.next();
 
-        expr = this._parse_assignment_expression(tok, m);
+        expr = this._parseAssignmentExpression(tok, m);
         ret.expressions.push(expr);
 
         if (expr.incomplete) {
@@ -1714,33 +1714,33 @@ Parser.prototype._parse_expression = function(tok, m) {
     return ret.complete();
 };
 
-Parser.prototype._parse_expression.match = Parser.prototype._parse_assignment_expression.match;
-Parser.prototype._parse_expression.expected = Parser.prototype._parse_assignment_expression.expected;
+Parser.prototype._parseExpression.match = Parser.prototype._parseAssignmentExpression.match;
+Parser.prototype._parseExpression.expected = Parser.prototype._parseAssignmentExpression.expected;
 
-Parser.prototype._parse_constant_expression = Parser.prototype._parse_conditional_expression;
-Parser.prototype._parse_constant_expression.match = Parser.prototype._parse_conditional_expression.match;
-Parser.prototype._parse_constant_expression.expected = Parser.prototype._parse_conditional_expression.expected;
+Parser.prototype._parseConstantExpression = Parser.prototype._parseConditionalExpression;
+Parser.prototype._parseConstantExpression.match = Parser.prototype._parseConditionalExpression.match;
+Parser.prototype._parseConstantExpression.expected = Parser.prototype._parseConditionalExpression.expected;
 
-Parser.prototype._parse_field_declaration_name = function(tok) {
+Parser.prototype._parseFieldDeclarationName = function(tok) {
     var name = tok;
 
     var ret = new Named(name, null);
     ret.complete();
 
-    this._parse_optional_array_spec(ret);
+    this._parseOptionalArraySpec(ret);
 
     return ret;
 };
 
-Parser.prototype._parse_field_declaration_name.match = function(tok) {
+Parser.prototype._parseFieldDeclarationName.match = function(tok) {
     return tok.id == Tn.T_IDENTIFIER;
 };
 
-Parser.prototype._parse_field_declaration_name.expected = function() {
+Parser.prototype._parseFieldDeclarationName.expected = function() {
     return ['field name'];
 };
 
-Parser.prototype._parse_field_declaration = function(tok, m) {
+Parser.prototype._parseFieldDeclaration = function(tok, m) {
     var type = m(tok);
     var sdecl = new FieldDecl(type);
 
@@ -1754,7 +1754,7 @@ Parser.prototype._parse_field_declaration = function(tok, m) {
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_SEMICOLON) {
         if (!first) {
             if (tok.id != Tn.T_COMMA) {
-                this._require_one_of_error([Tn.T_COMMA], tok);
+                this._requireOneOfError([Tn.T_COMMA], tok);
                 return sdecl;
             }
 
@@ -1763,7 +1763,7 @@ Parser.prototype._parse_field_declaration = function(tok, m) {
             first = false;
         }
 
-        var fname = this._parse_rule(this._parse_field_declaration_name, tok);
+        var fname = this._parseRule(this._parseFieldDeclarationName, tok);
 
         fname.decl = sdecl;
         fname.type = type;
@@ -1778,7 +1778,7 @@ Parser.prototype._parse_field_declaration = function(tok, m) {
     }
 
     if (tok.id != Tn.T_SEMICOLON) {
-        this._require_one_of_error([Tn.T_SEMICOLON], tok);
+        this._requireOneOfError([Tn.T_SEMICOLON], tok);
         return sdecl;
     }
 
@@ -1786,13 +1786,13 @@ Parser.prototype._parse_field_declaration = function(tok, m) {
     return sdecl.complete();
 };
 
-Parser.prototype._parse_struct_specifier = function(tok) {
+Parser.prototype._parseStructSpecifier = function(tok) {
     var lb = this._t.next();
 
     var sdl = new StructDecl(tok);
 
     if (lb.id != Tn.T_IDENTIFIER && lb.id != Tn.T_LEFT_BRACE ) {
-        this._require_one_of_error([Tn.T_IDENTIFIER, Tn.T_LEFT_BRACE], lb);
+        this._requireOneOfError([Tn.T_IDENTIFIER, Tn.T_LEFT_BRACE], lb);
         return sdl;
     }
 
@@ -1806,16 +1806,16 @@ Parser.prototype._parse_struct_specifier = function(tok) {
     sdl.name = name;
 
     if (lb.id != Tn.T_LEFT_BRACE) {
-        this._require_one_of_error([Tn.T_LEFT_BRACE], lb);
+        this._requireOneOfError([Tn.T_LEFT_BRACE], lb);
         return sdl;
     }
 
-    sdl.left_brace = lb;
+    sdl.leftBrace = lb;
 
     tok = this._t.next();
 
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
-        var decl = this._parse_rule(this._parse_field_declaration, tok);
+        var decl = this._parseRule(this._parseFieldDeclaration, tok);
 
         if (!NoMatch.prototype.isPrototypeOf(decl)) {
             sdl.fields.push(decl);
@@ -1829,27 +1829,27 @@ Parser.prototype._parse_struct_specifier = function(tok) {
     }
 
     if (tok.id != Tn.T_RIGHT_BRACE) {
-        this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+        this._requireOneOfError([Tn.T_RIGHT_BRACE], tok);
         return sdl;
     }
 
-    sdl.right_brace = tok;
+    sdl.rightBrace = tok;
     return sdl.complete();
 };
 
-Parser.prototype._parse_struct_specifier.match = function(tok) {
+Parser.prototype._parseStructSpecifier.match = function(tok) {
     return tok.id == Tn.T_STRUCT;
 };
 
-Parser.prototype._parse_type_specifier_no_prec_impl = function(tok) {
+Parser.prototype._parseTypeSpecifierNoPrecImpl = function(tok) {
     return (new TypeRef(tok)).complete();
 };
 
-Parser.prototype._parse_type_specifier_no_prec = function(tok, m) {
+Parser.prototype._parseTypeSpecifierNoPrec = function(tok, m) {
     return m(tok);
 };
 
-Parser.prototype._parse_type_specifier_no_prec.match = function(tok) {
+Parser.prototype._parseTypeSpecifierNoPrec.match = function(tok) {
     switch (tok.id) {
     case Tn.T_VOID:
     case Tn.T_FLOAT:
@@ -1870,27 +1870,27 @@ Parser.prototype._parse_type_specifier_no_prec.match = function(tok) {
     case Tn.T_SAMPLER2D:
     case Tn.T_SAMPLERCUBE:
     case Tn.T_IDENTIFIER:
-        return this._parse_type_specifier_no_prec_impl;
+        return this._parseTypeSpecifierNoPrecImpl;
     }
 
-    if (this._match(this._parse_struct_specifier, tok)) {
-        return this._parse_struct_specifier.bind(this);
+    if (this._match(this._parseStructSpecifier, tok)) {
+        return this._parseStructSpecifier.bind(this);
     }
 };
 
-Parser.prototype._parse_type_specifier_no_prec.expected = function() {
+Parser.prototype._parseTypeSpecifierNoPrec.expected = function() {
     return ['builtin type', 'user type identifier'];
 };
 
-Parser.prototype._parse_type_specifier = function(tok, m) {
+Parser.prototype._parseTypeSpecifier = function(tok, m) {
     return m(tok);
 };
 
-Parser.prototype._parse_precision_qualifier = function(tok) {
+Parser.prototype._parsePrecisionQualifier = function(tok) {
     return tok;
 };
 
-Parser.prototype._parse_precision_qualifier.match = function(tok) {
+Parser.prototype._parsePrecisionQualifier.match = function(tok) {
     switch (tok.id) {
     case Tn.T_HIGH_PRECISION:
     case Tn.T_MEDIUM_PRECISION:
@@ -1901,49 +1901,49 @@ Parser.prototype._parse_precision_qualifier.match = function(tok) {
     return false;
 };
 
-Parser.prototype._parse_precision_qualifier.expected = function() {
+Parser.prototype._parsePrecisionQualifier.expected = function() {
     return ['highp', 'mediump', 'lowp'];
 };
 
-Parser.prototype._parse_type_precision_qualifier = function(tok) {
-    var type = this._parse_rule(this._parse_type_specifier_no_prec, this._t.next());
+Parser.prototype._parseTypePrecisionQualifier = function(tok) {
+    var type = this._parseRule(this._parseTypeSpecifierNoPrec, this._t.next());
 
-    type = TypeRef.wrap_decl(type);
+    type = TypeRef.wrapDecl(type);
 
     type.qualifiers.unshift(tok);
     return type;
 };
 
-Parser.prototype._parse_type_precision_qualifier.match = Parser.prototype._parse_precision_qualifier.match;
+Parser.prototype._parseTypePrecisionQualifier.match = Parser.prototype._parsePrecisionQualifier.match;
 
-Parser.prototype._parse_type_precision_qualifier.expected = Parser.prototype._parse_precision_qualifier.expected;
+Parser.prototype._parseTypePrecisionQualifier.expected = Parser.prototype._parsePrecisionQualifier.expected;
 
-match_one_of(Parser.prototype._parse_type_specifier, [
-    Parser.prototype._parse_type_specifier_no_prec,
-    Parser.prototype._parse_type_precision_qualifier
+matchOneOf(Parser.prototype._parseTypeSpecifier, [
+    Parser.prototype._parseTypeSpecifierNoPrec,
+    Parser.prototype._parseTypePrecisionQualifier
 ]);
 
-Parser.prototype._parse_field_declaration.match = Parser.prototype._parse_type_specifier.match;
-Parser.prototype._parse_field_declaration.expected = Parser.prototype._parse_type_specifier.expected;
+Parser.prototype._parseFieldDeclaration.match = Parser.prototype._parseTypeSpecifier.match;
+Parser.prototype._parseFieldDeclaration.expected = Parser.prototype._parseTypeSpecifier.expected;
 
-Parser.prototype._parse_type_qualifier = function(tok) {
+Parser.prototype._parseTypeQualifier = function(tok) {
     var node;
 
     if (tok.id == Tn.T_INVARIANT) {
-        var varying = this._require_one_of([Tn.T_VARYING]);
+        var varying = this._requireOneOf([Tn.T_VARYING]);
 
         if (varying === null) {
             // Should have been followed by varying (invariant IDENT is handled elsewhere).
             // Create empty, incomplete TypeRef.
             node = new TypeRef(null);
         } else {
-            node = this._parse_rule(this._parse_type_specifier, this._t.next());
+            node = this._parseRule(this._parseTypeSpecifier, this._t.next());
         }
 
         node.qualifiers.unshift(varying);
     } else {
-        node = this._parse_rule(this._parse_type_specifier, this._t.next());
-        node = TypeRef.wrap_decl(node);
+        node = this._parseRule(this._parseTypeSpecifier, this._t.next());
+        node = TypeRef.wrapDecl(node);
     }
 
     if (node) {
@@ -1953,7 +1953,7 @@ Parser.prototype._parse_type_qualifier = function(tok) {
     return node;
 };
 
-Parser.prototype._parse_type_qualifier.match = function(tok) {
+Parser.prototype._parseTypeQualifier.match = function(tok) {
     switch (tok.id) {
     case Tn.T_CONST:
     case Tn.T_ATTRIBUTE:
@@ -1964,39 +1964,39 @@ Parser.prototype._parse_type_qualifier.match = function(tok) {
     }
 };
 
-Parser.prototype._parse_type_qualifier.expected = function() {
+Parser.prototype._parseTypeQualifier.expected = function() {
     return ['const', 'attribute', 'varying', 'invariant', 'uniform'];
 };
 
-Parser.prototype._parse_fully_specified_type = function(tok, m) {
+Parser.prototype._parseFullySpecifiedType = function(tok, m) {
     return m(tok);
 };
 
-match_one_of(Parser.prototype._parse_fully_specified_type, [
-    Parser.prototype._parse_type_specifier,
-    Parser.prototype._parse_type_qualifier
+matchOneOf(Parser.prototype._parseFullySpecifiedType, [
+    Parser.prototype._parseTypeSpecifier,
+    Parser.prototype._parseTypeQualifier
 ]);
 
-Parser.prototype._parse_optional_array_spec = function(ret) {
+Parser.prototype._parseOptionalArraySpec = function(ret) {
    var tok = this._t.peek();
 
     if (tok.id == Tn.T_LEFT_BRACKET) {
-        ret.is_array = true;
-        ret.left_bracket = tok;
+        ret.isArray = true;
+        ret.leftBracket = tok;
 
         // consume peeked token
         this._t.next();
 
-        ret.array_size = this._parse_rule(this._parse_constant_expression, this._t.next());
+        ret.arraySize = this._parseRule(this._parseConstantExpression, this._t.next());
 
-        if (ret.array_size.incomplete) {
+        if (ret.arraySize.incomplete) {
             ret.incomplete = true;
             return true;
         }
 
-        ret.right_bracket = this._require_one_of([Tn.T_RIGHT_BRACKET]);
+        ret.rightBracket = this._requireOneOf([Tn.T_RIGHT_BRACKET]);
 
-        if (ret.right_bracket === null) {
+        if (ret.rightBracket === null) {
             ret.incomplete = true;
             return true;
         }
@@ -2007,8 +2007,8 @@ Parser.prototype._parse_optional_array_spec = function(ret) {
     }
 };
 
-Parser.prototype._parse_parameter_declarator = function(tok, m) {
-    var type = this._parse_type_specifier(tok, m);
+Parser.prototype._parseParameterDeclarator = function(tok, m) {
+    var type = this._parseTypeSpecifier(tok, m);
 
     var pdecl = new ParamDecl();
     pdecl.type = type;
@@ -2024,22 +2024,22 @@ Parser.prototype._parse_parameter_declarator = function(tok, m) {
     }
 
     pdecl.complete();
-    this._parse_optional_array_spec(pdecl);
+    this._parseOptionalArraySpec(pdecl);
 
     return pdecl;
 };
 
-Parser.prototype._parse_parameter_declarator.match = Parser.prototype._parse_type_specifier.match;
-Parser.prototype._parse_parameter_declarator.expected = Parser.prototype._parse_type_specifier.expected;
+Parser.prototype._parseParameterDeclarator.match = Parser.prototype._parseTypeSpecifier.match;
+Parser.prototype._parseParameterDeclarator.expected = Parser.prototype._parseTypeSpecifier.expected;
 
-Parser.prototype._parse_parameter_qualifier = function(tok) {
-    var ret = this._parse_rule(this._parse_parameter_declarator, this._t.next());
+Parser.prototype._parseParameterQualifier = function(tok) {
+    var ret = this._parseRule(this._parseParameterDeclarator, this._t.next());
     ret.qualifier = tok;
 
     return ret;
 };
 
-Parser.prototype._parse_parameter_qualifier.match = function(tok) {
+Parser.prototype._parseParameterQualifier.match = function(tok) {
     switch (tok.id) {
     case Tn.T_IN:
     case Tn.T_OUT:
@@ -2050,52 +2050,52 @@ Parser.prototype._parse_parameter_qualifier.match = function(tok) {
     return false;
 };
 
-Parser.prototype._parse_parameter_qualifier.expected = function() {
+Parser.prototype._parseParameterQualifier.expected = function() {
     return ['in', 'out', 'inout'];
 };
 
-Parser.prototype._parse_parameter_type_qualifier = function(tok, m) {
+Parser.prototype._parseParameterTypeQualifier = function(tok, m) {
     var q = tok;
 
     tok = this._t.next();
 
-    m = this._match(this._parse_parameter_qualifier, tok);
+    m = this._match(this._parseParameterQualifier, tok);
 
     var decl;
 
     if (m) {
-        decl = this._parse_parameter_qualifier(tok, m);
+        decl = this._parseParameterQualifier(tok, m);
     } else {
-        decl = this._parse_rule(this._parse_parameter_declarator, tok);
+        decl = this._parseRule(this._parseParameterDeclarator, tok);
     }
 
     decl.qualifier = q;
     return decl;
 };
 
-Parser.prototype._parse_parameter_type_qualifier.match = function (tok) {
+Parser.prototype._parseParameterTypeQualifier.match = function (tok) {
     return tok.id == Tn.T_CONST;
 };
 
-Parser.prototype._parse_parameter_type_qualifier.expected = function() {
+Parser.prototype._parseParameterTypeQualifier.expected = function() {
     return ["const"];
 };
 
-Parser.prototype._parse_parameter_declaration = function(tok, m) {
+Parser.prototype._parseParameterDeclaration = function(tok, m) {
     return m(tok);
 };
 
-match_one_of(Parser.prototype._parse_parameter_declaration, [
-    Parser.prototype._parse_parameter_type_qualifier,
-    Parser.prototype._parse_parameter_qualifier,
-    Parser.prototype._parse_parameter_declarator
+matchOneOf(Parser.prototype._parseParameterDeclaration, [
+    Parser.prototype._parseParameterTypeQualifier,
+    Parser.prototype._parseParameterQualifier,
+    Parser.prototype._parseParameterDeclarator
 ]);
 
-Parser.prototype._parse_function_header = function(type, name) {
+Parser.prototype._parseFunctionHeader = function(type, name) {
     var func = new FunctionHeader(type, name);
-    func.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+    func.leftParen = this._requireOneOf([Tn.T_LEFT_PAREN]);
 
-    if (func.left_paren === null) {
+    if (func.leftParen === null) {
         return false;
     }
 
@@ -2105,7 +2105,7 @@ Parser.prototype._parse_function_header = function(type, name) {
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_PAREN) {
         if (!first) {
             if (tok.id != Tn.T_COMMA) {
-                this._require_one_of_error([Tn.T_COMMA], tok);
+                this._requireOneOfError([Tn.T_COMMA], tok);
                 return func;
             }
 
@@ -2114,7 +2114,7 @@ Parser.prototype._parse_function_header = function(type, name) {
             first = false;
         }
 
-        var m = this._parse_rule(this._parse_parameter_declaration, tok);
+        var m = this._parseRule(this._parseParameterDeclaration, tok);
         func.parameters.push(m);
 
         if (m.incomplete) {
@@ -2125,16 +2125,16 @@ Parser.prototype._parse_function_header = function(type, name) {
     }
 
     if (tok.id != Tn.T_RIGHT_PAREN) {
-        this._require_one_of_error([Tn.T_RIGHT_PAREN], tok);
+        this._requireOneOfError([Tn.T_RIGHT_PAREN], tok);
         return func;
     }
 
-    func.right_paren = tok;
+    func.rightParen = tok;
     return func.complete();
 };
 
-Parser.prototype._sync_statement = function(tok) {
-    if (this._is_primitive_type(tok.id)) {
+Parser.prototype._syncStatement = function(tok) {
+    if (this._isPrimitiveType(tok.id)) {
         return SYNC_OK;
     }
 
@@ -2166,7 +2166,7 @@ Parser.prototype._sync_statement = function(tok) {
     return SYNC_FAIL;
 };
 
-Parser.prototype._parse_function_definition = function(header, lb) {
+Parser.prototype._parseFunctionDefinition = function(header, lb) {
     var func = new FunctionDef(header);
 
     if (header.incomplete) {
@@ -2174,41 +2174,41 @@ Parser.prototype._parse_function_definition = function(header, lb) {
     }
 
     func.body = new Block();
-    func.body.left_brace = lb;
+    func.body.leftBrace = lb;
 
     var tok = this._t.next();
 
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
-        var ret = this._parse_rule(this._parse_statement_no_new_scope, tok);
+        var ret = this._parseRule(this._parseStatementNoNewScope, tok);
         func.body.body.push(ret);
 
         if (ret.incomplete) {
-            this._sync(this._sync_statement);
+            this._sync(this._syncStatement);
         }
 
         tok = this._t.next();
     }
 
     if (tok.id != Tn.T_RIGHT_BRACE) {
-        this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+        this._requireOneOfError([Tn.T_RIGHT_BRACE], tok);
         return func;
     }
 
-    func.body.right_brace = tok;
+    func.body.rightBrace = tok;
     func.body.complete();
 
     return func.complete();
 };
 
-Parser.prototype._parse_function_prototype_or_definition = function(type, ident) {
-    var ret = this._parse_function_header(type, ident);
+Parser.prototype._parseFunctionPrototypeOrDefinition = function(type, ident) {
+    var ret = this._parseFunctionHeader(type, ident);
 
     if (ret.incomplete) {
         // return most likely incomplete function definition
         return new FunctionDef(ret);
     }
 
-    var n = this._require_one_of([Tn.T_SEMICOLON, Tn.T_LEFT_BRACE]);
+    var n = this._requireOneOf([Tn.T_SEMICOLON, Tn.T_LEFT_BRACE]);
 
     if (n === null) {
         // return most likely incomplete function definition
@@ -2221,16 +2221,16 @@ Parser.prototype._parse_function_prototype_or_definition = function(type, ident)
         proto.semi = n;
         return proto.complete();
     } else {
-        return this._parse_function_definition(ret, n);
+        return this._parseFunctionDefinition(ret, n);
     }
 };
 
-Parser.prototype._parse_statement_with_scope = function(tok, m) {
+Parser.prototype._parseStatementWithScope = function(tok, m) {
     return m(tok);
 };
 
-Parser.prototype._parse_selection_rest_statement = function(tok, m) {
-    var stmt = this._parse_statement_with_scope(tok, m);
+Parser.prototype._parseSelectionRestStatement = function(tok, m) {
+    var stmt = this._parseStatementWithScope(tok, m);
 
     var ret = {body: stmt, els: null, incomplete: true};
 
@@ -2247,7 +2247,7 @@ Parser.prototype._parse_selection_rest_statement = function(tok, m) {
         // consume peeked token
         this._t.next();
 
-        selelse.body = this._parse_rule(this._parse_statement_with_scope, this._t.next());
+        selelse.body = this._parseRule(this._parseStatementWithScope, this._t.next());
 
         if (!selelse.body.incomplete) {
             selelse.complete();
@@ -2260,32 +2260,32 @@ Parser.prototype._parse_selection_rest_statement = function(tok, m) {
     return ret;
 };
 
-Parser.prototype._parse_selection_statement = function(tok) {
+Parser.prototype._parseSelectionStatement = function(tok) {
     var sel = new SelectionStmt(tok);
 
-    sel.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+    sel.leftParen = this._requireOneOf([Tn.T_LEFT_PAREN]);
 
-    if (sel.left_paren === null) {
+    if (sel.leftParen === null) {
         return sel;
     }
 
     tok = this._t.next();
 
-    sel.condition = this._parse_rule(this._parse_expression, tok);
+    sel.condition = this._parseRule(this._parseExpression, tok);
 
     if (sel.condition.incomplete) {
         return sel;
     }
 
-    sel.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    sel.rightParen = this._requireOneOf([Tn.T_RIGHT_PAREN]);
 
-    if (sel.right_paren === null) {
+    if (sel.rightParen === null) {
         return sel;
     }
 
     tok = this._t.next();
 
-    var ret = this._parse_rule(this._parse_selection_rest_statement, tok);
+    var ret = this._parseRule(this._parseSelectionRestStatement, tok);
 
     if (!NoMatch.prototype.isPrototypeOf(ret)) {
         sel.body = ret.body;
@@ -2299,31 +2299,31 @@ Parser.prototype._parse_selection_statement = function(tok) {
     return sel;
 };
 
-Parser.prototype._parse_selection_statement.match = function(tok) {
+Parser.prototype._parseSelectionStatement.match = function(tok) {
     return tok.id == Tn.T_IF;
 };
 
-Parser.prototype._parse_selection_statement.expected = function() {
+Parser.prototype._parseSelectionStatement.expected = function() {
     return ["if"];
 };
 
-Parser.prototype._parse_condition_var_init = function(tok, m) {
-    var type = this._parse_fully_specified_type(tok, m);
+Parser.prototype._parseConditionVarInit = function(tok, m) {
+    var type = this._parseFullySpecifiedType(tok, m);
 
-    type = TypeRef.wrap_decl(type);
+    type = TypeRef.wrapDecl(type);
     var ret = new VariableDecl(type);
 
     if (type.incomplete) {
         return ret;
     }
 
-    var ident = this._require_one_of([Tn.T_IDENTIFIER]);
+    var ident = this._requireOneOf([Tn.T_IDENTIFIER]);
 
     if (ident === null) {
         return ret;
     }
 
-    var equal = this._require_one_of([Tn.T_EQUAL]);
+    var equal = this._requireOneOf([Tn.T_EQUAL]);
 
     if (equal === null) {
         return ret;
@@ -2333,10 +2333,10 @@ Parser.prototype._parse_condition_var_init = function(tok, m) {
     named.type = type;
     ret.names.push(named);
 
-    named.initial_assign = equal;
+    named.initialAssign = equal;
 
-    var init = this._parse_rule(this._parse_initializer, this._t.next());
-    named.initial_value = init;
+    var init = this._parseRule(this._parseInitializer, this._t.next());
+    named.initialValue = init;
 
     if (!init.incomplete) {
         named.complete();
@@ -2346,18 +2346,18 @@ Parser.prototype._parse_condition_var_init = function(tok, m) {
     return ret;
 };
 
-Parser.prototype._parse_condition_var_init.match = Parser.prototype._parse_fully_specified_type.match;
-Parser.prototype._parse_condition_var_init.expected = Parser.prototype._parse_fully_specified_type.expected;
+Parser.prototype._parseConditionVarInit.match = Parser.prototype._parseFullySpecifiedType.match;
+Parser.prototype._parseConditionVarInit.expected = Parser.prototype._parseFullySpecifiedType.expected;
 
-Parser.prototype._parse_condition = function(tok, m) {
+Parser.prototype._parseCondition = function(tok, m) {
     if (tok.id == Tn.T_IDENTIFIER) {
         var n = this._t.peek();
 
         if (n.id == Tn.T_IDENTIFIER) {
-            return this._parse_condition_var_init(tok, this._match(this._parse_condition_var_init, tok));
+            return this._parseConditionVarInit(tok, this._match(this._parseConditionVarInit, tok));
         } else {
             // go for the expression
-            return this._parse_rule(this._parse_expression, tok);
+            return this._parseRule(this._parseExpression, tok);
         }
     }
 
@@ -2365,39 +2365,39 @@ Parser.prototype._parse_condition = function(tok, m) {
     return m(tok);
 };
 
-match_one_of(Parser.prototype._parse_condition, [
-    Parser.prototype._parse_condition_var_init,
-    Parser.prototype._parse_expression
+matchOneOf(Parser.prototype._parseCondition, [
+    Parser.prototype._parseConditionVarInit,
+    Parser.prototype._parseExpression
 ]);
 
-Parser.prototype._parse_condition.expected = function() {
+Parser.prototype._parseCondition.expected = function() {
     return ["condition expression"];
 };
 
-Parser.prototype._parse_while_statement = function(tok) {
+Parser.prototype._parseWhileStatement = function(tok) {
     var ret = new WhileStmt(tok);
 
-    ret.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+    ret.leftParen = this._requireOneOf([Tn.T_LEFT_PAREN]);
 
-    if (ret.left_paren === null) {
+    if (ret.leftParen === null) {
         return ret;
     }
 
     tok = this._t.next();
 
-    ret.condition = this._parse_rule(this._parse_condition, tok);
+    ret.condition = this._parseRule(this._parseCondition, tok);
 
     if (ret.condition.incomplete) {
         return ret;
     }
 
-    ret.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    ret.rightParen = this._requireOneOf([Tn.T_RIGHT_PAREN]);
 
-    if (ret.right_paren === null) {
+    if (ret.rightParen === null) {
         return ret;
     }
 
-    ret.body = this._parse_rule(this._parse_statement_no_new_scope, this._t.next());
+    ret.body = this._parseRule(this._parseStatementNoNewScope, this._t.next());
 
     if (!ret.body.incomplete) {
         ret.complete();
@@ -2406,51 +2406,51 @@ Parser.prototype._parse_while_statement = function(tok) {
     return ret;
 };
 
-Parser.prototype._parse_while_statement.match = function(tok) {
+Parser.prototype._parseWhileStatement.match = function(tok) {
     return tok.id == Tn.T_WHILE;
 };
 
-Parser.prototype._parse_while_statement.expected = function() {
+Parser.prototype._parseWhileStatement.expected = function() {
     return ["while"];
 };
 
-Parser.prototype._parse_do_statement = function(tok) {
+Parser.prototype._parseDoStatement = function(tok) {
     var ret = new DoStmt(tok);
 
-    var stmt = this._parse_rule(this._parse_statement_with_scope, this._t.next());
+    var stmt = this._parseRule(this._parseStatementWithScope, this._t.next());
     ret.body = stmt;
 
     if (stmt.incomplete) {
         return ret;
     }
 
-    ret.while_token = this._require_one_of([Tn.T_WHILE]);
+    ret.whileToken = this._requireOneOf([Tn.T_WHILE]);
 
-    if (ret.while_token === null) {
+    if (ret.whileToken === null) {
         return ret;
     }
 
-    ret.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+    ret.leftParen = this._requireOneOf([Tn.T_LEFT_PAREN]);
 
-    if (ret.left_paren === null) {
+    if (ret.leftParen === null) {
         return ret;
     }
 
     tok = this._t.next();
 
-    ret.condition = this._parse_rule(this._parse_expression, tok);
+    ret.condition = this._parseRule(this._parseExpression, tok);
 
     if (ret.condition.incomplete) {
         return ret;
     }
 
-    ret.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    ret.rightParen = this._requireOneOf([Tn.T_RIGHT_PAREN]);
 
-    if (ret.right_paren === null) {
+    if (ret.rightParen === null) {
         return ret;
     }
 
-    ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
+    ret.semi = this._requireOneOf([Tn.T_SEMICOLON]);
 
     if (ret.semi === null) {
         return ret;
@@ -2459,99 +2459,99 @@ Parser.prototype._parse_do_statement = function(tok) {
     return ret.complete();
 };
 
-Parser.prototype._parse_do_statement.match = function(tok) {
+Parser.prototype._parseDoStatement.match = function(tok) {
     return tok.id == Tn.T_DO;
 };
 
-Parser.prototype._parse_do_statement.expected = function() {
+Parser.prototype._parseDoStatement.expected = function() {
     return ["do"];
 };
 
-Parser.prototype._parse_declaration_or_expression_statement = function(tok, m) {
+Parser.prototype._parseDeclarationOrExpressionStatement = function(tok, m) {
     // Check for double identifier, should be a declaration
     if (tok.id == Tn.T_IDENTIFIER) {
         var n = this._t.peek();
 
         if (n.id == Tn.T_IDENTIFIER) {
-            return this._parse_declaration(tok, this._match(this._parse_declaration, tok));
+            return this._parseDeclaration(tok, this._match(this._parseDeclaration, tok));
         } else {
             // go for the expression
-            return this._parse_expression_statement(tok, this._match(this._parse_expression_statement, tok));
+            return this._parseExpressionStatement(tok, this._match(this._parseExpressionStatement, tok));
         }
     }
 
     // Check to see if we start with a constructor
-    if (this._match(this._parse_function_identifier, tok)) {
+    if (this._match(this._parseFunctionIdentifier, tok)) {
         var n = this._t.peek();
 
         if (n.id == Tn.T_LEFT_PAREN) {
-            return this._parse_rule(this._parse_expression_statement, tok);
+            return this._parseRule(this._parseExpressionStatement, tok);
         }
     }
 
-    var m = this._match(this._parse_declaration, tok);
+    var m = this._match(this._parseDeclaration, tok);
 
     if (m) {
-        return this._parse_declaration(tok, m);
+        return this._parseDeclaration(tok, m);
     } else {
-        return this._parse_rule(this._parse_expression_statement, tok);
+        return this._parseRule(this._parseExpressionStatement, tok);
     }
 };
 
-Parser.prototype._parse_declaration_or_expression_statement.match = function(tok) {
+Parser.prototype._parseDeclarationOrExpressionStatement.match = function(tok) {
     // Either a declaration or an expression here, but we need lookahead
-    var m = this._match(this._parse_declaration, tok);
+    var m = this._match(this._parseDeclaration, tok);
 
     if (!m) {
-        m = this._match(this._parse_expression_statement, tok);
+        m = this._match(this._parseExpressionStatement, tok);
     }
 
     return m;
 };
 
-Parser.prototype._parse_declaration_or_expression_statement.expected = function() {
+Parser.prototype._parseDeclarationOrExpressionStatement.expected = function() {
     return ['declaration', 'expression'];
 };
 
-Parser.prototype._parse_for_init_statement = function(tok, m) {
-    return this._parse_declaration_or_expression_statement(tok, m);
+Parser.prototype._parseForInitStatement = function(tok, m) {
+    return this._parseDeclarationOrExpressionStatement(tok, m);
 };
 
-Parser.prototype._parse_for_init_statement.match = Parser.prototype._parse_declaration_or_expression_statement.match;
+Parser.prototype._parseForInitStatement.match = Parser.prototype._parseDeclarationOrExpressionStatement.match;
 
-Parser.prototype._parse_conditionopt = function(tok, m) {
-    m = this._match(this._parse_condition, tok);
+Parser.prototype._parseConditionopt = function(tok, m) {
+    m = this._match(this._parseCondition, tok);
 
     if (!m) {
         return null;
     }
 
-    return this._parse_condition(tok, m);
+    return this._parseCondition(tok, m);
 };
 
-Parser.prototype._parse_conditionopt.match = function() {
+Parser.prototype._parseConditionopt.match = function() {
     return true;
 };
 
-Parser.prototype._parse_for_rest_statement = function(tok, m) {
-    var copt = this._parse_rule(this._parse_conditionopt, tok);
+Parser.prototype._parseForRestStatement = function(tok, m) {
+    var copt = this._parseRule(this._parseConditionopt, tok);
     var ret = new ForRestStmt(copt);
 
     if (copt !== null && copt.incomplete) {
         return ret;
     }
 
-    ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
+    ret.semi = this._requireOneOf([Tn.T_SEMICOLON]);
 
     if (ret.semi === null) {
         return ret;
     }
 
     var n = this._t.peek();
-    var m = this._match(this._parse_expression, n);
+    var m = this._match(this._parseExpression, n);
 
     if (m) {
-        ret.expression = this._parse_expression(this._t.next(), m);
+        ret.expression = this._parseExpression(this._t.next(), m);
 
         if (ret.expression.incomplete) {
             return ret;
@@ -2561,20 +2561,20 @@ Parser.prototype._parse_for_rest_statement = function(tok, m) {
     return ret.complete();
 };
 
-Parser.prototype._parse_for_rest_statement.match = Parser.prototype._parse_conditionopt.match;
+Parser.prototype._parseForRestStatement.match = Parser.prototype._parseConditionopt.match;
 
-Parser.prototype._parse_for_statement = function(tok) {
+Parser.prototype._parseForStatement = function(tok) {
     var ret = new ForStmt(tok);
 
-    ret.left_paren = this._require_one_of([Tn.T_LEFT_PAREN]);
+    ret.leftParen = this._requireOneOf([Tn.T_LEFT_PAREN]);
 
-    if (ret.left_paren === null) {
+    if (ret.leftParen === null) {
         return ret;
     }
 
     tok = this._t.next();
 
-    ret.init = this._parse_rule(this._parse_for_init_statement, tok);
+    ret.init = this._parseRule(this._parseForInitStatement, tok);
 
     if (ret.init.incomplete) {
         return ret;
@@ -2582,19 +2582,19 @@ Parser.prototype._parse_for_statement = function(tok) {
 
     tok = this._t.next();
 
-    ret.rest = this._parse_rule(this._parse_for_rest_statement, tok);
+    ret.rest = this._parseRule(this._parseForRestStatement, tok);
 
     if (ret.rest.incomplete) {
         return ret;
     }
 
-    ret.right_paren = this._require_one_of([Tn.T_RIGHT_PAREN]);
+    ret.rightParen = this._requireOneOf([Tn.T_RIGHT_PAREN]);
 
-    if (ret.right_paren === null) {
+    if (ret.rightParen === null) {
         return ret;
     }
 
-    ret.body = this._parse_rule(this._parse_statement_no_new_scope, this._t.next());
+    ret.body = this._parseRule(this._parseStatementNoNewScope, this._t.next());
 
     if (ret.body.incomplete) {
         return ret;
@@ -2603,25 +2603,25 @@ Parser.prototype._parse_for_statement = function(tok) {
     return ret.complete();
 };
 
-Parser.prototype._parse_for_statement.match = function(tok) {
+Parser.prototype._parseForStatement.match = function(tok) {
     return tok.id == Tn.T_FOR;
 };
 
-Parser.prototype._parse_for_statement.expected = function() {
+Parser.prototype._parseForStatement.expected = function() {
     return ["for"];
 };
 
-Parser.prototype._parse_iteration_statement = function(tok, m) {
+Parser.prototype._parseIterationStatement = function(tok, m) {
     return m(tok);
 };
 
-match_one_of(Parser.prototype._parse_iteration_statement, [
-    Parser.prototype._parse_while_statement,
-    Parser.prototype._parse_do_statement,
-    Parser.prototype._parse_for_statement
+matchOneOf(Parser.prototype._parseIterationStatement, [
+    Parser.prototype._parseWhileStatement,
+    Parser.prototype._parseDoStatement,
+    Parser.prototype._parseForStatement
 ]);
 
-Parser.prototype._parse_jump_statement = function(tok) {
+Parser.prototype._parseJumpStatement = function(tok) {
     var ret = null;
 
     switch (tok.id) {
@@ -2637,7 +2637,7 @@ Parser.prototype._parse_jump_statement = function(tok) {
         var n = this._t.peek();
 
         if (n !== null && n.id != Tn.T_SEMICOLON) {
-            ret.expression = this._parse_rule(this._parse_expression, this._t.next());
+            ret.expression = this._parseRule(this._parseExpression, this._t.next());
 
             if (ret.expression.incomplete) {
                 return ret;
@@ -2647,7 +2647,7 @@ Parser.prototype._parse_jump_statement = function(tok) {
         break;
     case Tn.T_DISCARD:
         ret = new DiscardStmt(tok);
-        ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
+        ret.semi = this._requireOneOf([Tn.T_SEMICOLON]);
 
         if (this.type !== glsl.source.FRAGMENT) {
             this._error(tok.location, 'invalid use of discard outside of fragment shader');
@@ -2657,7 +2657,7 @@ Parser.prototype._parse_jump_statement = function(tok) {
         return ret.complete();
     }
 
-    ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
+    ret.semi = this._requireOneOf([Tn.T_SEMICOLON]);
 
     if (ret.semi === null) {
         return ret;
@@ -2666,7 +2666,7 @@ Parser.prototype._parse_jump_statement = function(tok) {
     return ret.complete();
 };
 
-Parser.prototype._parse_jump_statement.match = function(tok) {
+Parser.prototype._parseJumpStatement.match = function(tok) {
     switch (tok.id) {
     case Tn.T_CONTINUE:
     case Tn.T_BREAK:
@@ -2678,31 +2678,31 @@ Parser.prototype._parse_jump_statement.match = function(tok) {
     return false;
 };
 
-Parser.prototype._parse_jump_statement.expected = function() {
+Parser.prototype._parseJumpStatement.expected = function() {
     return ['continue', 'break', 'return', 'discard'];
 };
 
-Parser.prototype._parse_simple_statement = function(tok, m) {
+Parser.prototype._parseSimpleStatement = function(tok, m) {
     return m(tok);
 };
 
-match_one_of(Parser.prototype._parse_simple_statement, [
-    Parser.prototype._parse_declaration_or_expression_statement,
-    Parser.prototype._parse_selection_statement,
-    Parser.prototype._parse_iteration_statement,
-    Parser.prototype._parse_jump_statement
+matchOneOf(Parser.prototype._parseSimpleStatement, [
+    Parser.prototype._parseDeclarationOrExpressionStatement,
+    Parser.prototype._parseSelectionStatement,
+    Parser.prototype._parseIterationStatement,
+    Parser.prototype._parseJumpStatement
 ]);
 
-Parser.prototype._parse_compound_statement = function(tok, newscope) {
+Parser.prototype._parseCompoundStatement = function(tok, newscope) {
     var block = new Block();
 
-    block.new_scope = newscope;
-    block.left_brace = tok;
+    block.newScope = newscope;
+    block.leftBrace = tok;
 
     tok = this._t.next();
 
     while (tok.id != Tn.T_EOF && tok.id != Tn.T_RIGHT_BRACE) {
-        var ret = this._parse_rule(this._parse_statement_no_new_scope, tok);
+        var ret = this._parseRule(this._parseStatementNoNewScope, tok);
         block.body.push(ret);
 
         if (ret.incomplete) {
@@ -2713,73 +2713,73 @@ Parser.prototype._parse_compound_statement = function(tok, newscope) {
     }
 
     if (tok.id != Tn.T_RIGHT_BRACE) {
-        this._require_one_of_error([Tn.T_RIGHT_BRACE], tok);
+        this._requireOneOfError([Tn.T_RIGHT_BRACE], tok);
         return block;
     }
 
-    block.right_brace = tok;
+    block.rightBrace = tok;
     return block.complete();
 };
 
 
-Parser.prototype._parse_compound_statement_with_scope = function(tok) {
-    return this._parse_compound_statement(tok, true);
+Parser.prototype._parseCompoundStatementWithScope = function(tok) {
+    return this._parseCompoundStatement(tok, true);
 };
 
-Parser.prototype._parse_compound_statement_with_scope.match = function(tok) {
+Parser.prototype._parseCompoundStatementWithScope.match = function(tok) {
     return tok.id == Tn.T_LEFT_BRACE;
 };
 
-Parser.prototype._parse_compound_statement_with_scope.expected = function() {
+Parser.prototype._parseCompoundStatementWithScope.expected = function() {
     return ['opening curly brace {'];
 };
 
-Parser.prototype._parse_compound_statement_no_new_scope = function(tok) {
-    return this._parse_compound_statement(tok, false);
+Parser.prototype._parseCompoundStatementNoNewScope = function(tok) {
+    return this._parseCompoundStatement(tok, false);
 };
 
-Parser.prototype._parse_compound_statement_no_new_scope.match = function(tok) {
+Parser.prototype._parseCompoundStatementNoNewScope.match = function(tok) {
     return tok.id == Tn.T_LEFT_BRACE;
 };
 
-Parser.prototype._parse_compound_statement_no_new_scope.expected = function() {
+Parser.prototype._parseCompoundStatementNoNewScope.expected = function() {
     return ["opening scope brace {"];
 };
 
-Parser.prototype._parse_statement_no_new_scope = function(tok, m) {
+Parser.prototype._parseStatementNoNewScope = function(tok, m) {
     return m(tok);
 };
 
-match_one_of(Parser.prototype._parse_statement_no_new_scope, [
-    Parser.prototype._parse_compound_statement_with_scope,
-    Parser.prototype._parse_simple_statement
+matchOneOf(Parser.prototype._parseStatementNoNewScope, [
+    Parser.prototype._parseCompoundStatementWithScope,
+    Parser.prototype._parseSimpleStatement
 ]);
 
-match_one_of(Parser.prototype._parse_statement_with_scope, [
-    Parser.prototype._parse_compound_statement_no_new_scope,
-    Parser.prototype._parse_simple_statement
+matchOneOf(Parser.prototype._parseStatementWithScope, [
+    Parser.prototype._parseCompoundStatementNoNewScope,
+    Parser.prototype._parseSimpleStatement
 ]);
 
-Parser.prototype._parse_selection_rest_statement.match = Parser.prototype._parse_statement_with_scope.match;
+Parser.prototype._parseSelectionRestStatement.match = Parser.prototype._parseStatementWithScope.match;
 
-Parser.prototype._parse_selection_rest_statement.expected = Parser.prototype._parse_statement_with_scope.expected;
+Parser.prototype._parseSelectionRestStatement.expected = Parser.prototype._parseStatementWithScope.expected;
 
-Parser.prototype._parse_declaration_precision = function(tok) {
+Parser.prototype._parseDeclarationPrecision = function(tok) {
     var ret = new PrecisionStmt(tok);
 
-    ret.qualifier = this._parse_rule(this._parse_precision_qualifier, this._t.next());
+    ret.qualifier = this._parseRule(this._parsePrecisionQualifier, this._t.next());
 
     if (ret.qualifier.incomplete) {
         return ret;
     }
 
-    ret.type = this._parse_rule(this._parse_type_specifier_no_prec, this._t.next());
+    ret.type = this._parseRule(this._parseTypeSpecifierNoPrec, this._t.next());
 
     if (ret.type.incomplete) {
         return ret;
     }
 
-    ret.semi = this._require_one_of([Tn.T_SEMICOLON]);
+    ret.semi = this._requireOneOf([Tn.T_SEMICOLON]);
 
     if (ret.semi === null) {
         return ret;
@@ -2788,12 +2788,12 @@ Parser.prototype._parse_declaration_precision = function(tok) {
     return ret.complete();
 };
 
-Parser.prototype._parse_initializer = Parser.prototype._parse_assignment_expression;
-Parser.prototype._parse_initializer.match = Parser.prototype._parse_assignment_expression.match;
-Parser.prototype._parse_initializer.expected = Parser.prototype._parse_assignment_expression.expected;
+Parser.prototype._parseInitializer = Parser.prototype._parseAssignmentExpression;
+Parser.prototype._parseInitializer.match = Parser.prototype._parseAssignmentExpression.match;
+Parser.prototype._parseInitializer.expected = Parser.prototype._parseAssignmentExpression.expected;
 
-Parser.prototype._parse_single_declaration = function(type, ident) {
-    type = TypeRef.wrap_decl(type);
+Parser.prototype._parseSingleDeclaration = function(type, ident) {
+    type = TypeRef.wrapDecl(type);
     var decl = new VariableDecl(type);
 
     if (type.incomplete) {
@@ -2814,15 +2814,15 @@ Parser.prototype._parse_single_declaration = function(type, ident) {
         // consume peeked token
         this._t.next();
 
-        named.initial_assign = n;
-        named.initial_value = this._parse_rule(this._parse_initializer, this._t.next());
+        named.initialAssign = n;
+        named.initialValue = this._parseRule(this._parseInitializer, this._t.next());
 
-        if (named.initial_value.incomplete) {
+        if (named.initialValue.incomplete) {
             named.incomplete = true;
             return decl;
         }
     } else {
-        this._parse_optional_array_spec(named);
+        this._parseOptionalArraySpec(named);
 
         if (named.incomplete) {
             return decl;
@@ -2832,7 +2832,7 @@ Parser.prototype._parse_single_declaration = function(type, ident) {
     return decl.complete();
 };
 
-Parser.prototype._parse_init_declarator_list = function(decl, opts) {
+Parser.prototype._parseInitDeclaratorList = function(decl, opts) {
     if (decl.incomplete) {
         return decl;
     }
@@ -2845,7 +2845,7 @@ Parser.prototype._parse_init_declarator_list = function(decl, opts) {
         // consume comma
         this._t.next();
 
-        var ident = this._require_one_of([Tn.T_IDENTIFIER]);
+        var ident = this._requireOneOf([Tn.T_IDENTIFIER]);
 
         if (ident === null) {
             return decl;
@@ -2867,7 +2867,7 @@ Parser.prototype._parse_init_declarator_list = function(decl, opts) {
             if (opts.array) {
                 name.complete();
 
-                if (this._parse_optional_array_spec(name)) {
+                if (this._parseOptionalArraySpec(name)) {
                     isarray = true;
                 }
 
@@ -2880,10 +2880,10 @@ Parser.prototype._parse_init_declarator_list = function(decl, opts) {
                 // consume peeked token
                 this._t.next();
 
-                name.initial_value = this._parse_rule(this._parse_initializer, this._t.next());
-                name.initial_assign = tok;
+                name.initialValue = this._parseRule(this._parseInitializer, this._t.next());
+                name.initialAssign = tok;
 
-                if (name.initial_value.incomplete) {
+                if (name.initialValue.incomplete) {
                     return decl;
                 }
             }
@@ -2894,7 +2894,7 @@ Parser.prototype._parse_init_declarator_list = function(decl, opts) {
         tok = this._t.peek();
     }
 
-    decl.semi = this._require_one_of([Tn.T_SEMICOLON]);
+    decl.semi = this._requireOneOf([Tn.T_SEMICOLON]);
 
     if (decl.semi === null) {
         return decl;
@@ -2903,13 +2903,13 @@ Parser.prototype._parse_init_declarator_list = function(decl, opts) {
     return decl.complete();
 };
 
-Parser.prototype._parse_declaration = function(tok, m) {
+Parser.prototype._parseDeclaration = function(tok, m) {
     var decl = null;
 
     var opts = {equal: true, array: true};
 
     if (tok.id == Tn.T_PRECISION) {
-        return this._parse_declaration_precision(tok);
+        return this._parseDeclarationPrecision(tok);
     } else if (tok.id == Tn.T_INVARIANT) {
         var n = this._t.peek();
 
@@ -2938,9 +2938,9 @@ Parser.prototype._parse_declaration = function(tok, m) {
             var n = this._t.peek();
 
             if (n.id == Tn.T_LEFT_PAREN) {
-                return this._parse_function_prototype_or_definition(type, ident);
+                return this._parseFunctionPrototypeOrDefinition(type, ident);
             } else {
-                decl = this._parse_single_declaration(type, ident);
+                decl = this._parseSingleDeclaration(type, ident);
             }
         } else {
             decl = new TypeDecl(type);
@@ -2954,33 +2954,33 @@ Parser.prototype._parse_declaration = function(tok, m) {
     }
 
     // Finish the declarator list
-    return this._parse_init_declarator_list(decl, opts);
+    return this._parseInitDeclaratorList(decl, opts);
 };
 
-Parser.prototype._parse_declaration.match = function(tok) {
+Parser.prototype._parseDeclaration.match = function(tok) {
     if (tok.id == Tn.T_PRECISION) {
         return true;
     }
 
-    return this._match(this._parse_fully_specified_type, tok);
+    return this._match(this._parseFullySpecifiedType, tok);
 };
 
-Parser.prototype._parse_declaration.expected = function() {
+Parser.prototype._parseDeclaration.expected = function() {
     return ['function prototype', 'function definition', 'struct declaration', 'variable declaration'];
 };
 
-Parser.prototype._parse_expression_statement = function(tok, m) {
+Parser.prototype._parseExpressionStatement = function(tok, m) {
     if (tok.id == Tn.T_SEMICOLON) {
         return (new EmptyStmt(tok)).complete();
     } else {
-        var ret = this._parse_expression(tok, m);
+        var ret = this._parseExpression(tok, m);
         var stmt = new ExpressionStmt(ret);
 
         if (ret.incomplete) {
             return stmt;
         }
 
-        stmt.semi = this._require_one_of([Tn.T_SEMICOLON]);
+        stmt.semi = this._requireOneOf([Tn.T_SEMICOLON]);
 
         if (stmt.semi === null) {
             return stmt;
@@ -2990,20 +2990,20 @@ Parser.prototype._parse_expression_statement = function(tok, m) {
     }
 };
 
-Parser.prototype._parse_expression_statement.match = function(tok) {
+Parser.prototype._parseExpressionStatement.match = function(tok) {
     if (tok.id == Tn.T_SEMICOLON) {
         return true;
     }
 
-    return this._match(this._parse_expression, tok);
+    return this._match(this._parseExpression, tok);
 };
 
-Parser.prototype._parse_external_declaration = function(tok, m) {
+Parser.prototype._parseExternalDeclaration = function(tok, m) {
     return m(tok);
 };
 
-Parser.prototype._sync_declaration = function(tok) {
-    if (this._is_primitive_type(tok.id)) {
+Parser.prototype._syncDeclaration = function(tok) {
+    if (this._isPrimitiveType(tok.id)) {
         return SYNC_OK;
     }
 
@@ -3046,11 +3046,11 @@ Parser.prototype._sync = function(syncer) {
     }
 };
 
-match_one_of(Parser.prototype._parse_external_declaration, [
-    Parser.prototype._parse_declaration
+matchOneOf(Parser.prototype._parseExternalDeclaration, [
+    Parser.prototype._parseDeclaration
 ]);
 
-Parser.prototype._parse_tu = function() {
+Parser.prototype._parseTu = function() {
     while (!this._t.eof()) {
         var tok = this._t.next();
 
@@ -3059,11 +3059,11 @@ Parser.prototype._parse_tu = function() {
             break;
         }
 
-        var node = this._parse_rule(this._parse_external_declaration, tok);
+        var node = this._parseRule(this._parseExternalDeclaration, tok);
         this.body.push(node);
 
         if (node.incomplete) {
-            this._sync(this._sync_declaration);
+            this._sync(this._syncDeclaration);
         }
     }
 };
@@ -3076,7 +3076,7 @@ Parser.prototype._match = function(rule, tok) {
     return rule.match.call(this, tok);
 };
 
-Parser.prototype._parse_rule = function(rule, tok) {
+Parser.prototype._parseRule = function(rule, tok) {
     if (typeof tok == 'undefined') {
         return false;
     }
@@ -3092,7 +3092,7 @@ Parser.prototype._parse_rule = function(rule, tok) {
             ex = '`' + ex[0] + '\'';
         }
 
-        this._error(tok.location, 'expected ' + ex + ' but got `' + this._t.token_name(tok.id) + '\'');
+        this._error(tok.location, 'expected ' + ex + ' but got `' + this._t.tokenName(tok.id) + '\'');
         this._t.unconsume(tok);
 
         return new NoMatch(tok);

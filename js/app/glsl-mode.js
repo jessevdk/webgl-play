@@ -73,7 +73,7 @@ var mode = function(config, modeopts) {
         ints: true,
         bools: true,
         comments: true,
-        skip_comments: false
+        skipComments: false
     });
 
     var t = new T(wsource);

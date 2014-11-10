@@ -37,24 +37,24 @@ function Spinner(settings) {
 
     Widget.call(this, 'spinner', this.create('div'), settings);
 
-    this._animate_id = 0;
-    this._animate_start = null;
-    this._frame_period = 1 / (this._settings.nframes + 1);
+    this._animateId = 0;
+    this._animateStart = null;
+    this._framePeriod = 1 / (this._settings.nframes + 1);
 }
 
 Spinner.prototype = Object.create(Widget.prototype);
 Spinner.prototype.constructor = Spinner;
 
 Spinner.prototype.start = function() {
-    this._animate_id = requestAnimationFrame(this._animate.bind(this));
+    this._animateId = requestAnimationFrame(this._animate.bind(this));
 }
 
 Spinner.prototype.cancel = function() {
-    if (this._animate_id != 0) {
-        cancelAnimationFrame(this._animate_id);
+    if (this._animateId != 0) {
+        cancelAnimationFrame(this._animateId);
 
-        this._animate_id = 0;
-        this._animate_start = null;
+        this._animateId = 0;
+        this._animateStart = null;
 
         // Set back to initial
         this.e.style.backgroundPositionX = '';
@@ -68,13 +68,13 @@ Spinner.prototype._animate = function(stamp) {
         return;
     }
 
-    if (this._animate_start == null) {
-        this._animate_start = stamp;
+    if (this._animateStart == null) {
+        this._animateStart = stamp;
     }
 
     // In seconds
-    var elapsed = (stamp - this._animate_start) / 1000.0;
-    var frame = Math.floor(elapsed / this._frame_period % this._settings.nframes);
+    var elapsed = (stamp - this._animateStart) / 1000.0;
+    var frame = Math.floor(elapsed / this._framePeriod % this._settings.nframes);
 
     // Skip first frame, which is empty
     frame += 1;

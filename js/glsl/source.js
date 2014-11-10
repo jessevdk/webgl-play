@@ -42,7 +42,7 @@ Location.prototype.copy = function() {
     return new Location(this.line, this.column);
 };
 
-Location.prototype.to_range = function() {
+Location.prototype.toRange = function() {
     var rng = new Range(this, this);
     rng.end.column++;
 
@@ -69,7 +69,7 @@ Location.prototype.compare = function(loc) {
     return 0;
 };
 
-Location.prototype.advance_chars = function(n) {
+Location.prototype.advanceChars = function(n) {
     var ret = this.copy();
     ret.column += n;
 
@@ -139,7 +139,7 @@ Range.prototype.extend = function(loc) {
     var ret = this.copy();
 
     if (Location.prototype.isPrototypeOf(loc)) {
-        loc = loc.to_range();
+        loc = loc.toRange();
     }
 
     if (loc.start.compare(ret.start) < 0) {
@@ -167,7 +167,7 @@ Range.spans = function() {
         if (Range.prototype.isPrototypeOf(arg)) {
             locs.push(arg);
         } else if (Location.prototype.isPrototypeOf(arg)) {
-            locs.push(arg.to_range());
+            locs.push(arg.toRange());
         } else if (Array.prototype.isPrototypeOf(arg)) {
             args.concat(arg);
         } else if (typeof arg.location === 'function') {
@@ -226,7 +226,7 @@ function SourceError(loc, message) {
     this._stack = (new Error()).stack;
 }
 
-SourceError.prototype.formatted_message = function() {
+SourceError.prototype.formattedMessage = function() {
     var l = this.location.start.line;
     var c = this.location.start.column;
 
@@ -258,7 +258,7 @@ Source.prototype.eof = function() {
     return this._remainder.length === 0;
 };
 
-Source.prototype._source_map = function(loc) {
+Source.prototype._sourceMap = function(loc) {
     return loc;
 };
 
@@ -290,7 +290,7 @@ Source.prototype._next = function(r, tokenize) {
         this._location = this._location.advance(m[0]);
 
         if (tokenize) {
-            var rng = this._source_map(new Range(start, this._location));
+            var rng = this._sourceMap(new Range(start, this._location));
 
             return new glsl.tokenizer.Token(0, m[0], rng);
         }

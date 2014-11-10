@@ -69,7 +69,7 @@ function JsContext(gl) {
      * A map of program names to compiled GLSL programs.
      */
     this.programs = {};
-    this._default_program = null;
+    this._defaultProgram = null;
 
     /**
      * A persistent state. You can use this to store and retrieve persistent state
@@ -78,12 +78,12 @@ function JsContext(gl) {
     this.state = {};
 
     this._signals = new Signals();
-    this._signals.on_event = this._signals.register_signal('event');
+    this._signals.onEvent = this._signals.registerSignal('event');
 
     this._view = null;
     this._defines = {};
 
-    this._signals.on_define = this._signals.register_signal('define');
+    this._signals.onDefine = this._signals.registerSignal('define');
 }
 
 /**
@@ -118,7 +118,7 @@ JsContext.prototype.define = function(program, name, value) {
     }
 
     this._defines[program][name] = value;
-    this._signals.on_define(program);
+    this._signals.onDefine(program);
 }
 
 JsContext.prototype.defines = function(program, defines) {
@@ -132,7 +132,7 @@ JsContext.prototype.defines = function(program, defines) {
         prg[k] = defines[k];
     }
 
-    this._signals.on_define(program);
+    this._signals.onDefine(program);
 }
 
 JsContext.prototype.requireExtension = function(ext) {
@@ -184,7 +184,7 @@ JsContext.prototype.getExtensions = function(exts) {
  */
 JsContext.prototype.findProgram = function(name) {
     if (!name) {
-        return this._default_program;
+        return this._defaultProgram;
     }
 
     if (!(name in this.programs)) {
@@ -198,8 +198,8 @@ function Renderer(canvas, fullscreenParent, options) {
     Signals.call(this);
 
     this.options = utils.merge({
-        thumbnail_width: 80,
-        thumbnail_height: 45
+        thumbnailWidth: 80,
+        thumbnailHeight: 45
     }, options);
 
     this.canvas = canvas;
@@ -211,23 +211,23 @@ function Renderer(canvas, fullscreenParent, options) {
 
     this._hideUi = false;
 
-    this.context = this._create_context();
+    this.context = this._createContext();
     this.program = null;
-    this._mouse_pressed = false;
+    this._mousePressed = false;
     this._frameCounter = 0;
 
-    this._on_notify_first_frame = this.register_signal('notify::first-frame');
-    this._on_notify_fullscreen = this.register_signal('notify::fullscreen');
+    this._onNotifyFirstFrame = this.registerSignal('notify::first-frame');
+    this._onNotifyFullscreen = this.registerSignal('notify::fullscreen');
 
-    this._on_error = this.register_signal('error');
+    this._onError = this.registerSignal('error');
 
     var events = ['mousedown', 'mouseup', 'mousemove', 'keyup', 'keypress', 'wheel'];
 
     for (var i = 0; i < events.length; i++) {
-        canvas.addEventListener(events[i], this._on_pass_event.bind(this));
+        canvas.addEventListener(events[i], this._onPassEvent.bind(this));
     }
 
-    canvas.addEventListener('keydown', this._on_keydown.bind(this));
+    canvas.addEventListener('keydown', this._onKeydown.bind(this));
 
     this._ui = [];
 }
@@ -235,7 +235,7 @@ function Renderer(canvas, fullscreenParent, options) {
 Renderer.prototype = Object.create(Signals.prototype);
 Renderer.prototype.constructor = Renderer;
 
-Renderer.prototype._on_keydown = function(e) {
+Renderer.prototype._onKeydown = function(e) {
     this._event(e);
 
     if (!e.defaultPrevented) {
@@ -262,30 +262,30 @@ Renderer.prototype._on_keydown = function(e) {
     }
 }
 
-Renderer.prototype._on_pass_event = function(e) {
+Renderer.prototype._onPassEvent = function(e) {
     if (e.type === 'mousedown') {
-        this._mouse_pressed = true;
+        this._mousePressed = true;
 
-        this._on_mousemove = (function(e) {
+        this._onMousemove = (function(e) {
             this._event(e);
 
             e.preventDefault();
             e.stopPropagation();
         }).bind(this);
 
-        this._on_mouseup = (function(e) {
+        this._onMouseup = (function(e) {
             this._event(e);
-            this._mouse_pressed = false;
+            this._mousePressed = false;
 
-            window.removeEventListener('mousemove', this._on_mousemove);
-            window.removeEventListener('mouseup', this._on_mouseup);
+            window.removeEventListener('mousemove', this._onMousemove);
+            window.removeEventListener('mouseup', this._onMouseup);
         }).bind(this);
 
-        window.addEventListener('mousemove', this._on_mousemove);
-        window.addEventListener('mouseup', this._on_mouseup);
+        window.addEventListener('mousemove', this._onMousemove);
+        window.addEventListener('mouseup', this._onMouseup);
     }
 
-    if ((e.type !== 'mousemove' && e.type !== 'mouseup') || !this._mouse_pressed) {
+    if ((e.type !== 'mousemove' && e.type !== 'mouseup') || !this._mousePressed) {
         this._event(e);
     }
 }
@@ -295,20 +295,20 @@ Renderer.prototype._event = function(e) {
         try {
             this.program.event.call(this.program, this.context, e);
         } catch (e) {
-            this._on_error('js', e);
+            this._onError('js', e);
             this.pause();
         }
     }
 
     if (!e.defaultPrevented) {
-        this.context._signals.on_event(e);
+        this.context._signals.onEvent(e);
     }
 }
 
-Renderer.prototype._create_context = function() {
+Renderer.prototype._createContext = function() {
     var ret = new JsContext(this.canvas.getContext('webgl'));
 
-    ret.ui.add = this._ui_add.bind(this)
+    ret.ui.add = this._uiAdd.bind(this)
     return ret;
 }
 
@@ -362,7 +362,7 @@ Renderer.prototype.update = function(doc) {
         }
     }
 
-    var nctx = this._create_context();
+    var nctx = this._createContext();
     nctx.state = state;
 
     var obj = {};
@@ -392,7 +392,7 @@ Renderer.prototype.update = function(doc) {
 
     // Compile all programs
     var programs = {};
-    var default_program = null;
+    var defaultProgram = null;
     var originalPrograms = {};
 
     for (var i = 0; i < doc.programs.length; i++) {
@@ -429,12 +429,12 @@ Renderer.prototype.update = function(doc) {
 
         programs[p.name()] = prog;
 
-        if (prog.is_default) {
-            default_program = prog;
+        if (prog.isDefault) {
+            defaultProgram = prog;
         }
     }
 
-    nctx._default_program = default_program;
+    nctx._defaultProgram = defaultProgram;
 
     nctx._signals.on('define', (function(_, program) {
         var p = originalPrograms[program];
@@ -443,7 +443,7 @@ Renderer.prototype.update = function(doc) {
             var prog = p.compile(nctx.gl, nctx._defines[program]);
 
             if (prog.vertex.error !== null || prog.fragment.error !== null || prog.error !== null) {
-                this._on_error('program', {
+                this._onError('program', {
                     errors: {
                         program: prog.error,
                         vertex: prog.vertex.error,
@@ -455,8 +455,8 @@ Renderer.prototype.update = function(doc) {
             } else {
                 programs[program] = prog;
 
-                if (program === nctx._default_program.name) {
-                    nctx._default_program = prog;
+                if (program === nctx._defaultProgram.name) {
+                    nctx._defaultProgram = prog;
                 }
             }
 
@@ -494,7 +494,7 @@ Renderer.prototype.update = function(doc) {
     this.start();
 }
 
-Renderer.prototype._extract_ui_ids = function(ui, prefix, ret) {
+Renderer.prototype._extractUiIds = function(ui, prefix, ret) {
     if (typeof ui._settings.id !== 'undefined') {
         if (prefix) {
             prefix += '.' + ui._settings.id;
@@ -506,13 +506,13 @@ Renderer.prototype._extract_ui_ids = function(ui, prefix, ret) {
     }
 
     for (var i = 0; i < ui.children.length; i++) {
-        this._extract_ui_ids(ui.children[i], prefix, ret);
+        this._extractUiIds(ui.children[i], prefix, ret);
     }
 
     return ret;
 }
 
-Renderer.prototype._ui_add = function(ui, placement) {
+Renderer.prototype._uiAdd = function(ui, placement) {
     this._canvasContainer.appendChild(ui.e);
     this._ui.push(ui);
 
@@ -528,10 +528,10 @@ Renderer.prototype._ui_add = function(ui, placement) {
         }
     }
 
-    return this._extract_ui_ids(ui, '', {});
+    return this._extractUiIds(ui, '', {});
 }
 
-Renderer.prototype._grab_image = function() {
+Renderer.prototype._grabImage = function() {
     var canvas = document.createElement('canvas');
 
     var r = this.canvas.height / this.canvas.width;
@@ -546,15 +546,15 @@ Renderer.prototype._grab_image = function() {
     var h = Math.floor(ph / step);
 
     var thumbnail = {
-        width: this.options.thumbnail_width,
-        height: this.options.thumbnail_height
+        width: this.options.thumbnailWidth,
+        height: this.options.thumbnailHeight
     };
 
     // Keep aspect ratio
-    if (pw > this.options.thumbnail_width / this.options.thumbnail_height * ph) {
-        thumbnail.height = (this.options.thumbnail_width / pw) * ph;
+    if (pw > this.options.thumbnailWidth / this.options.thumbnailHeight * ph) {
+        thumbnail.height = (this.options.thumbnailWidth / pw) * ph;
     } else {
-        thumbnail.width = (this.options.thumbnail_height / ph) * pw;
+        thumbnail.width = (this.options.thumbnailHeight / ph) * pw;
     }
 
     canvas.width = Math.max(w, thumbnail.width);
@@ -600,8 +600,8 @@ Renderer.prototype._grab_image = function() {
     return canvas.toDataURL();
 }
 
-Renderer.prototype.do_render = function(t) {
-    this._anim = requestAnimationFrame(this.do_render.bind(this));
+Renderer.prototype.doRender = function(t) {
+    this._anim = requestAnimationFrame(this.doRender.bind(this));
 
     var gl = this.context.gl;
 
@@ -611,7 +611,7 @@ Renderer.prototype.do_render = function(t) {
         try {
             this.program.render.call(this.program, this.context);
         } catch (e) {
-            this._on_error('js', e);
+            this._onError('js', e);
             console.error(e.stack);
             this.pause();
             return;
@@ -621,8 +621,8 @@ Renderer.prototype.do_render = function(t) {
             this._frameCounter++;
 
             if (this._frameCounter === 1) {
-                var dataurl = this._grab_image();
-                this._on_notify_first_frame(dataurl);
+                var dataurl = this._grabImage();
+                this._onNotifyFirstFrame(dataurl);
             }
         }
     }
@@ -634,7 +634,7 @@ Renderer.prototype.start = function() {
         this._anim = 0;
     }
 
-    this._anim = requestAnimationFrame(this.do_render.bind(this));
+    this._anim = requestAnimationFrame(this.doRender.bind(this));
 }
 
 Renderer.prototype.pause = function() {
@@ -672,7 +672,7 @@ Renderer.prototype.toggleFullscreen = function() {
     }
 
     this._isFullscreen = !this._isFullscreen;
-    this._on_notify_fullscreen();
+    this._onNotifyFullscreen();
 }
 
 module.exports = Renderer;

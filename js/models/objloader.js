@@ -46,7 +46,7 @@ function ensureObject(state, name) {
             vertices: [],
             normals: [],
             texcoords: [],
-            shared_vertices: {},
+            sharedVertices: {},
             groups: [],
 
             attributes: {
@@ -373,24 +373,24 @@ function parseObj(s, options) {
                         // with normals defined
                         if (state.group.smooth || hasN) {
                             if (options.shareVertices) {
-                                var seen = state.object.shared_vertices[h];
+                                var seen = state.object.sharedVertices[h];
 
                                 if (typeof seen !== 'undefined') {
                                     gi.push(seen);
                                     continue;
                                 } else {
-                                    state.object.shared_vertices[h] = ii;
+                                    state.object.sharedVertices[h] = ii;
                                 }
                             } else {
-                                var sh = state.object.shared_vertices[h];
+                                var sh = state.object.sharedVertices[h];
 
                                 if (!sh) {
-                                    state.object.shared_vertices[h] = [ii];
+                                    state.object.sharedVertices[h] = [ii];
                                 } else {
                                     var ni = sh[0] * 3;
 
                                     ninit = gn.slice(ni, ni + 3);
-                                    state.object.shared_vertices[h].push(ii);
+                                    state.object.sharedVertices[h].push(ii);
                                 }
                             }
                         }
@@ -435,9 +435,9 @@ function parseObj(s, options) {
                                 var sh;
 
                                 if (options.shareVertices) {
-                                    sh = [state.object.shared_vertices[h]];
+                                    sh = [state.object.sharedVertices[h]];
                                 } else {
-                                    sh = state.object.shared_vertices[h];
+                                    sh = state.object.sharedVertices[h];
                                 }
 
                                 for (var si = 0; si < sh.length; si++) {
@@ -585,10 +585,10 @@ function parseOrCachedObj(ctx, date, filename, ret, body, fromCache, options) {
 
     // Try storage cache
     new Store(function(store) {
-        store.object_from_cache(key, date, function(store, objects) {
+        store.objectFromCache(key, date, function(store, objects) {
             if (!objects) {
                 objects = parseObj(body, options);
-                store.object_to_cache(key, filename, date, objects);
+                store.objectToCache(key, filename, date, objects);
             }
 
             objectCache[key] = {
@@ -676,7 +676,7 @@ exports.load = function(ctx, filename, options) {
             store.modelData(localName, function(store, model) {
                 if (model !== null) {
                     try {
-                        parseOrCachedObj(ctx, model.creation_time, filename, ret, model.data, fromCache, options);
+                        parseOrCachedObj(ctx, model.creationTime, filename, ret, model.data, fromCache, options);
                     } catch (e) {
                         console.error(e.stack);
                         options.error(e.message);

@@ -36,8 +36,8 @@ function Popup(child, on) {
 
     Widget.call(this, 'popup', null, { wrap: this._outer });
 
-    this._on_window_mousedown = (function(e) {
-        var ppos = this.page_position(this._outer);
+    this._onWindowMousedown = (function(e) {
+        var ppos = this.pagePosition(this._outer);
 
         if (e.clientX < ppos.x || e.clientX > ppos.x + this._outer.offsetWidth ||
             e.clientY < ppos.y || e.clientY > ppos.y + this._outer.offsetHeight) {
@@ -45,16 +45,16 @@ function Popup(child, on) {
         }
     }).bind(this);
 
-    this._on_window_keydown = (function(e) {
+    this._onWindowKeydown = (function(e) {
         if (e.keyCode === 27) {
             this.destroy();
         }
     }).bind(this);
 
-    window.addEventListener('mousedown', this._on_window_mousedown);
-    window.addEventListener('keydown', this._on_window_keydown);
+    window.addEventListener('mousedown', this._onWindowMousedown);
+    window.addEventListener('keydown', this._onWindowKeydown);
 
-    this._on_destroy = this.register_signal('destroy');
+    this._onDestroy = this.registerSignal('destroy');
 }
 
 Popup.on = function(on, cb) {
@@ -92,10 +92,10 @@ Popup.prototype.constructor = Popup;
 Popup.prototype.destroy = function() {
     document.body.removeChild(this._outer);
 
-    window.removeEventListener('mousedown', this._on_window_mousedown);
-    window.removeEventListener('keydown', this._on_window_keydown);
+    window.removeEventListener('mousedown', this._onWindowMousedown);
+    window.removeEventListener('keydown', this._onWindowKeydown);
 
-    this._on_destroy();
+    this._onDestroy();
 }
 
 Popup.prototype._build = function() {
@@ -115,7 +115,7 @@ Popup.prototype._build = function() {
 
     outer.appendChild(content);
 
-    var epos = this.page_position(this._on);
+    var epos = this.pagePosition(this._on);
     epos.width = this._on.offsetWidth;
     epos.height = this._on.offsetHeight;
 

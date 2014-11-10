@@ -64,24 +64,24 @@ function Annotator(ast, opts) {
         this._builtins = new glsl.builtins.Builtins(ast.type);
     }
 
-    this._ast.function_protos = [];
-    this._ast.function_proto_map = {};
+    this._ast.functionProtos = [];
+    this._ast.functionProtoMap = {};
 
     this._ast.functions = [];
-    this._ast.function_map = {};
+    this._ast.functionMap = {};
 
     this._ast.uniforms = [];
-    this._ast.uniform_map = {};
+    this._ast.uniformMap = {};
 
     this._ast.varyings = [];
-    this._ast.varying_map = {};
+    this._ast.varyingMap = {};
 
     this._scope = null;
     this._scopes = [];
 
-    var bscope = this._push_scope({
-        function_protos: [],
-        function_proto_map: {}
+    var bscope = this._pushScope({
+        functionProtos: [],
+        functionProtoMap: {}
     });
 
     bscope.marshal = function() {
@@ -93,21 +93,21 @@ function Annotator(ast, opts) {
         var btype = this._builtins.types[i];
         var t = btype.type.t.type;
 
-        this._declare_type(t);
+        this._declareType(t);
     }
 
     // Push builtin functions into the scope
     for (var i = 0; i < this._builtins.functions.length; i++) {
         var f = this._builtins.functions[i];
 
-        this._scope.function_proto_map[f.header.signature()] = f;
-        this._scope.function_protos.push(f);
+        this._scope.functionProtoMap[f.header.signature()] = f;
+        this._scope.functionProtos.push(f);
     }
 
     // Push builtin variables into the scope
     for (var i = 0; i < this._builtins.variables.length; i++) {
         var v = this._builtins.variables[i];
-        this._declare_variable(v.names[0]);
+        this._declareVariable(v.names[0]);
     }
 
     // Push builtin precision into the scope
@@ -115,42 +115,42 @@ function Annotator(ast, opts) {
         var p = this._builtins.precisions[i];
 
         this._scope.precisions.push(p);
-        this._scope.precision_map[p.type.t.type.name] = p;
+        this._scope.precisionMap[p.type.t.type.name] = p;
     }
 
-    this._push_scope(ast);
+    this._pushScope(ast);
     this._errors = [];
 }
 
 Annotator.prototype.annotate = function() {
-    this._annotate_node(this._ast);
+    this._annotateNode(this._ast);
     this._ast._errors = this._ast._errors.concat(this._errors);
 };
 
-Annotator.prototype._is_toplevel_scope = function() {
+Annotator.prototype._isToplevelScope = function() {
     return this._scope == this._ast;
 };
 
-Annotator.prototype._push_scope = function(node) {
+Annotator.prototype._pushScope = function(node) {
     if (!glsl.ast.StructDecl.prototype.isPrototypeOf(node)) {
         node.variables = [];
-        node.variable_map = {};
+        node.variableMap = {};
     }
 
     node.types = [];
-    node.type_map = {};
+    node.typeMap = {};
     node.scopes = [];
 
     node.symbols = {};
 
     node.precisions = [];
-    node.precision_map = {};
+    node.precisionMap = {};
 
     if (this._scope !== null) {
         this._scope.scopes.push(node);
     }
 
-    node.parent_scope = this._scope;
+    node.parentScope = this._scope;
 
     this._scope = node;
     this._scopes.unshift(this._scope);
@@ -158,23 +158,22 @@ Annotator.prototype._push_scope = function(node) {
     return node;
 };
 
-Annotator.prototype._pop_scope = function() {
+Annotator.prototype._popScope = function() {
     var ret = this._scopes.shift();
     this._scope = this._scopes[0];
 
     return ret;
 };
 
-Annotator.prototype._annotate_node = function(node) {
+Annotator.prototype._annotateNode = function(node) {
     if (!node) {
         return;
     }
 
-    var n = node.node_name.replace(/\B[A-Z]+/g, '_$&').toLowerCase();
-    var fn = '_annotate_' + n;
+    var fn = '_annotate' + node.nodeName;
 
     if (typeof this[fn] !== 'function') {
-        throw new global.Error('no annotator available for ' + node.node_name);
+        throw new global.Error('no annotator available for ' + node.nodeName);
     }
 
     node.t = {
@@ -184,9 +183,9 @@ Annotator.prototype._annotate_node = function(node) {
     return this[fn](node);
 };
 
-Annotator.prototype._annotate_parser = function(node) {
+Annotator.prototype._annotateParser = function(node) {
     for (var i = 0; i < node.body.length; i++) {
-        this._annotate_node(node.body[i]);
+        this._annotateNode(node.body[i]);
     }
 };
 
@@ -198,84 +197,84 @@ Annotator.prototype._lookup = function(name, mapname) {
             return scope[mapname][name];
         }
 
-        scope = scope.parent_scope;
+        scope = scope.parentScope;
     }
 
     return null;
 };
 
-Annotator.prototype._lookup_type = function(name) {
-    return this._lookup(name, 'type_map');
+Annotator.prototype._lookupType = function(name) {
+    return this._lookup(name, 'typeMap');
 };
 
-Annotator.prototype._lookup_symbol = function(name) {
+Annotator.prototype._lookupSymbol = function(name) {
     return this._lookup(name, 'symbols');
 };
 
-Annotator.prototype._lookup_function = function(name) {
-    return this._lookup(name, 'function_map');
+Annotator.prototype._lookupFunction = function(name) {
+    return this._lookup(name, 'functionMap');
 };
 
-Annotator.prototype._lookup_function_proto = function(name) {
-    return this._lookup(name, 'function_proto_map');
+Annotator.prototype._lookupFunctionProto = function(name) {
+    return this._lookup(name, 'functionProtoMap');
 };
 
-Annotator.prototype._lookup_function_or_proto = function(name) {
-    var f = this._lookup_function(name);
+Annotator.prototype._lookupFunctionOrProto = function(name) {
+    var f = this._lookupFunction(name);
 
     if (f !== null) {
         return f;
     }
 
-    return this._lookup_function_proto(name);
+    return this._lookupFunctionProto(name);
 };
 
-Annotator.prototype._declare_type = function(type) {
+Annotator.prototype._declareType = function(type) {
     this._scope.types.push(type);
-    this._scope.type_map[type.name] = type;
+    this._scope.typeMap[type.name] = type;
     this._scope.symbols[type.name] = type;
 };
 
-Annotator.prototype._declare_variable = function(node) {
-    this._scope.variable_map[node.name.text] = node;
+Annotator.prototype._declareVariable = function(node) {
+    this._scope.variableMap[node.name.text] = node;
     this._scope.variables.push(node);
 
-    if (node.type.is_uniform() && this._is_toplevel_scope()) {
+    if (node.type.isUniform() && this._isToplevelScope()) {
         this._scope.uniforms.push(node);
-        this._scope.uniform_map[node.name.text] = node;
-    } else if (node.type.is_varying()) {
+        this._scope.uniformMap[node.name.text] = node;
+    } else if (node.type.isVarying()) {
         this._scope.varyings.push(node);
-        this._scope.varying_map[node.name.text] = node;
+        this._scope.varyingMap[node.name.text] = node;
     }
 
     this._scope.symbols[node.name.text] = node;
 };
 
-Annotator.prototype._lookup_or_declare_type = function(type) {
-    var tp = this._lookup_type(type.name);
+Annotator.prototype._lookupOrDeclareType = function(type) {
+    var tp = this._lookupType(type.name);
 
     if (tp === null) {
-        this._declare_type(type);
+        this._declareType(type);
         return type;
     }
 
     return tp;
 };
 
-Annotator.prototype._annotate_type_ref = function(type) {
+Annotator.prototype._annotateTypeRef = function(type) {
     if (type.incomplete) {
         return;
     }
 
     if (type.decl !== null) {
-        this._annotate_node(type.decl);
+        this._annotateNode(type.decl);
 
         type.t.type = type.decl.t.type;
     } else {
-        if (type.is_primitive) {
-            type.t.type = this._builtins.type_map[type.token.id].type.t.type;
+        if (type.isPrimitive) {
+            type.t.type = this._builtins.typeMap[type.token.id].type.t.type;
         } else {
-            type.t.type = this._lookup_type(type.token.text);
+            type.t.type = this._lookupType(type.token.text);
         }
     }
 
@@ -284,115 +283,115 @@ Annotator.prototype._annotate_type_ref = function(type) {
     }
 };
 
-Annotator.prototype._annotate_array = function(node, element_type) {
-    if (node.is_array) {
-        if (this._resolve_array_size(node)) {
-            node.t.type = this._lookup_or_declare_type(new glsl.builtins.ArrayType(element_type, node.array_size.t.const_value));
+Annotator.prototype._annotateArray = function(node, elementType) {
+    if (node.isArray) {
+        if (this._resolveArraySize(node)) {
+            node.t.type = this._lookupOrDeclareType(new glsl.builtins.ArrayType(elementType, node.arraySize.t.constValue));
         }
     }
 };
 
-Annotator.prototype._annotate_named = function(node) {
-    this._annotate_node(node.initial_value);
+Annotator.prototype._annotateNamed = function(node) {
+    this._annotateNode(node.initialValue);
 
-    if (!node.is_array) {
+    if (!node.isArray) {
         node.t.type = node.type.t.type;
     } else {
-        this._annotate_array(node, node.type.t.type);
+        this._annotateArray(node, node.type.t.type);
     }
 
     if (node.t.type !== null) {
-        if (node.type.is_attribute()) {
-            if (node.t.type.is_composite) {
+        if (node.type.isAttribute()) {
+            if (node.t.type.isComposite) {
                 this._error(node.location(), 'structures cannot be attributes');
-            } else if (node.t.type.is_array) {
+            } else if (node.t.type.isArray) {
                 this._error(node.location(), 'arrays cannot be attributes');
             }
         }
 
-        if (node.type.is_varying()) {
-            if (node.t.type.is_composite) {
+        if (node.type.isVarying()) {
+            if (node.t.type.isComposite) {
                 this._error(node.location(), 'structures cannot be varying');
             }
         }
     }
 
-    if (node.type.is_attribute()) {
+    if (node.type.isAttribute()) {
         if (this._ast.type != glsl.source.VERTEX) {
             this._error(node.location(), 'attributes can only be declared in vertex shaders');
         }
 
-        if (!this._is_toplevel_scope()) {
+        if (!this._isToplevelScope()) {
             this._error(node.location(), 'attributes can only be declared globally');
         }
 
-        if (node.initial_value !== null) {
-            this._error(node.initial_value.location(), 'attributes cannot have an initial value');
+        if (node.initialValue !== null) {
+            this._error(node.initialValue.location(), 'attributes cannot have an initial value');
         }
     }
 
-    if (node.type.is_uniform()) {
-        if (!this._is_toplevel_scope() ) {
+    if (node.type.isUniform()) {
+        if (!this._isToplevelScope() ) {
             this._error(node.location(), 'uniforms can only be declared globally');
         }
 
-        if (node.initial_value !== null) {
-            this._error(node.initial_value.location(), 'uniforms cannot have an initial value');
+        if (node.initialValue !== null) {
+            this._error(node.initialValue.location(), 'uniforms cannot have an initial value');
         }
     }
 
-    if (node.type.is_varying()) {
-        if (!this._is_toplevel_scope()) {
+    if (node.type.isVarying()) {
+        if (!this._isToplevelScope()) {
             this._error(node.location(), 'varyings can only be declared globally');
         }
 
-        if (node.initial_value !== null) {
-            this._error(node.initial_value.location(), 'varyings cannot have an initial value');
+        if (node.initialValue !== null) {
+            this._error(node.initialValue.location(), 'varyings cannot have an initial value');
         }
     }
 
-    if (node.type.is_const()) {
-        if (node.is_array) {
+    if (node.type.isConst()) {
+        if (node.isArray) {
             this._error(node.location(), 'arrays cannot be declared as const');
-        } else if (node.t.type.is_composite && node.t.type.has_array_field) {
+        } else if (node.t.type.isComposite && node.t.type.hasArrayField) {
             this._error(node.location(), 'cannot declare a struct containing an array as const');
         }
 
-        if (node.initial_value !== null) {
-            if (!node.initial_value.t.is_const_expression) {
-                this._error(node.initial_value.location(), 'expected constant initial value expression');
+        if (node.initialValue !== null) {
+            if (!node.initialValue.t.isConstExpression) {
+                this._error(node.initialValue.location(), 'expected constant initial value expression');
             } else {
-                node.t.is_const_expression = true;
-                node.t.const_value = node.initial_value.t.const_value;
+                node.t.isConstExpression = true;
+                node.t.constValue = node.initialValue.t.constValue;
             }
         } else {
             this._error(node.location(), 'missing constant value initialization');
 
-            node.t.is_const_expression = true;
-            node.t.const_value = node.t.type.zero;
+            node.t.isConstExpression = true;
+            node.t.constValue = node.t.type.zero;
         }
     }
 };
 
-Annotator.prototype._annotate_param_decl = function(node) {
-    this._annotate_node(node.type);
+Annotator.prototype._annotateParamDecl = function(node) {
+    this._annotateNode(node.type);
 
     node.t.users = [];
 
-    if (!node.is_array) {
+    if (!node.isArray) {
         node.t.type = node.type.t.type;
     } else {
-        this._annotate_array(node, node.type.t.type);
+        this._annotateArray(node, node.type.t.type);
     }
 };
 
-Annotator.prototype._annotate_variable_decl = function(node) {
-    this._annotate_node(node.type);
+Annotator.prototype._annotateVariableDecl = function(node) {
+    this._annotateNode(node.type);
 
     for (var i = 0; i < node.names.length; i++) {
         var name = node.names[i];
 
-        this._annotate_node(name);
+        this._annotateNode(name);
         name.t.users = [];
 
         // Check if variable with the same name is already declared in this
@@ -404,27 +403,27 @@ Annotator.prototype._annotate_variable_decl = function(node) {
                 this._error(name.location(), 'the variable \'' + name.name.text + '\' has already been declared in this scope, previous declaration was at ' + sym.location().inspect());
                 continue;
             } else {
-                this._error(name.location(), 'a ' + this._error_symbol_type_name(sym) + ' \'' + name.name.text + '\' has already been declared in this scope, previous declaration was at ' + sym.location().inspect());
+                this._error(name.location(), 'a ' + this._errorSymbolTypeName(sym) + ' \'' + name.name.text + '\' has already been declared in this scope, previous declaration was at ' + sym.location().inspect());
             }
         }
 
         // Declare variable
-        this._declare_variable(name);
+        this._declareVariable(name);
 
         if (node.type !== null && node.type.t.type !== null &&
-            name.initial_value !== null && name.initial_value.t.type !== null) {
-            if (node.type.t.type !== name.initial_value.t.type) {
-                this._error(name.location(), 'cannot assign value of type ' + name.initial_value.t.type.name + ' to variable of type ' + node.type.t.type.name);
+            name.initialValue !== null && name.initialValue.t.type !== null) {
+            if (node.type.t.type !== name.initialValue.t.type) {
+                this._error(name.location(), 'cannot assign value of type ' + name.initialValue.t.type.name + ' to variable of type ' + node.type.t.type.name);
             }
         }
     }
 };
 
-Annotator.prototype._annotate_type_decl = function(node) {
-    this._annotate_node(node.type);
+Annotator.prototype._annotateTypeDecl = function(node) {
+    this._annotateNode(node.type);
 };
 
-Annotator.prototype._annotate_struct_decl = function(node) {
+Annotator.prototype._annotateStructDecl = function(node) {
     var type;
 
     if (glsl.ast.StructDecl.prototype.isPrototypeOf(this._scope)) {
@@ -432,7 +431,7 @@ Annotator.prototype._annotate_struct_decl = function(node) {
     }
 
     if (node.name !== null) {
-        var tp = this._lookup_symbol(node.name.text);
+        var tp = this._lookupSymbol(node.name.text);
 
         if (tp !== null) {
             this._error(node.location(), 'a type named ' + node.name.text + ' has already been declared, previous declaration was at ' + tp.location().inspect());
@@ -440,90 +439,90 @@ Annotator.prototype._annotate_struct_decl = function(node) {
         }
 
         type = new glsl.builtins.UserType(node.name.text, node);
-        this._declare_type(type);
+        this._declareType(type);
     } else {
         // new anonymous user type
         type = new glsl.builtins.UserType(null, node);
     }
 
     node.t.type = type;
-    this._push_scope(node);
+    this._pushScope(node);
 
-    var field_map = {};
+    var fieldMap = {};
 
     for (var i = 0; i < node.fields.length; i++) {
         var field = node.fields[i];
 
-        this._annotate_node(field.type);
+        this._annotateNode(field.type);
 
         for (var j = 0; j < field.names.length; j++) {
             var name = field.names[j];
 
-            this._annotate_node(name);
+            this._annotateNode(name);
 
             if (name.type.t.type) {
-                var f = node.t.type.declare_field(name.name.text, name.type.t.type);
+                var f = node.t.type.declareField(name.name.text, name.type.t.type);
                 f.decl = name;
 
-                if (name.name.text in field_map) {
-                    this._error(name.location(), 'a field named ' + name.name.text + ' already exists, previous declaration was at ' + field_map[name.name.text].location().inspect());
+                if (name.name.text in fieldMap) {
+                    this._error(name.location(), 'a field named ' + name.name.text + ' already exists, previous declaration was at ' + fieldMap[name.name.text].location().inspect());
                 }
 
-                field_map[name.name.text] = field;
+                fieldMap[name.name.text] = field;
             }
         }
     }
 
-    this._pop_scope(node);
+    this._popScope(node);
 };
 
-Annotator.prototype._resolve_array_size = function(node) {
-    if (!node.is_array) {
+Annotator.prototype._resolveArraySize = function(node) {
+    if (!node.isArray) {
         return false;
     }
 
-    this._annotate_node(node.array_size);
+    this._annotateNode(node.arraySize);
 
-    if (!node.array_size.t.is_const_expression) {
-        this._error(node.array_size.location(), 'expected constant expression for array size');
+    if (!node.arraySize.t.isConstExpression) {
+        this._error(node.arraySize.location(), 'expected constant expression for array size');
         return false;
-    } else if (node.array_size.t.type != this._builtins.Int) {
+    } else if (node.arraySize.t.type != this._builtins.Int) {
         var n;
 
-        if (node.array_size.t.type == this._builtins.Float) {
+        if (node.arraySize.t.type == this._builtins.Float) {
             n = 'float';
-        } else if (node.array_size.t.type == this._builtins.Bool) {
+        } else if (node.arraySize.t.type == this._builtins.Bool) {
             n = 'boolean';
         } else {
             n = 'user type';
         }
 
-        this._error(node.array_size.location(), 'expected constant integer expression for array size, but got ' + n);
+        this._error(node.arraySize.location(), 'expected constant integer expression for array size, but got ' + n);
         return false;
-    } else if (node.array_size.const_value <= 0) {
-        this._error(node.array_size.location(), 'array size must be larger or equal to 1, but got ' + node.array_size_.const_value);
+    } else if (node.arraySize.constValue <= 0) {
+        this._error(node.arraySize.location(), 'array size must be larger or equal to 1, but got ' + node.arraySize.constValue);
     }
 
     return true;
 };
 
-Annotator.prototype._annotate_function_header = function(node) {
+Annotator.prototype._annotateFunctionHeader = function(node) {
     // return type
-    this._annotate_node(node.type);
+    this._annotateNode(node.type);
 
-    if (node.type.t.type !== null && node.type.t.type.is_array) {
+    if (node.type.t.type !== null && node.type.t.type.isArray) {
         this._error(node.type.location(), 'array return values are not allowed');
     }
 
     node.t.type = node.type.t.type;
 
     for (var i = 0; i < node.parameters.length; i++) {
-        this._annotate_node(node.parameters[i]);
+        this._annotateNode(node.parameters[i]);
     }
 };
 
-Annotator.prototype._annotate_function_proto = function(node) {
-    if (!this._is_toplevel_scope()) {
+Annotator.prototype._annotateFunctionProto = function(node) {
+    if (!this._isToplevelScope()) {
         this._error(node.location(), 'nested function prototypes are not allowed');
         return;
     }
@@ -535,7 +534,7 @@ Annotator.prototype._annotate_function_proto = function(node) {
         this._error(name.location, 'cannot overload main');
     }
 
-    var prev = this._lookup_function(id);
+    var prev = this._lookupFunction(id);
 
     if (prev !== null) {
         this._error(name.location, 'the function prototype ' + name.text + ' appears after its definition at ' + prev.name.location);
@@ -543,19 +542,19 @@ Annotator.prototype._annotate_function_proto = function(node) {
     } else if (name.text in this._scope.symbols) {
         var sym = this._scope.symbols[name.text];
 
-        this._error(name.location, 'a ' + this._error_symbol_type_name(sym) + ' ' + name.text + ' has already been declared, previous declaration was at ' + sym.location());
+        this._error(name.location, 'a ' + this._errorSymbolTypeName(sym) + ' ' + name.text + ' has already been declared, previous declaration was at ' + sym.location());
         return;
     }
 
-    this._annotate_node(node.header);
+    this._annotateNode(node.header);
 
     node.t.type = node.header.t.type;
 
-    this._scope.function_protos.push(node);
-    this._scope.function_proto_map[id] = node;
+    this._scope.functionProtos.push(node);
+    this._scope.functionProtoMap[id] = node;
 };
 
-Annotator.prototype._qualifiers_to_string = function(qualifiers) {
+Annotator.prototype._qualifiersToString = function(qualifiers) {
     var ret = '';
 
     for (var i = 0; i < qualifiers.length; i++) {
@@ -571,7 +570,7 @@ Annotator.prototype._qualifiers_to_string = function(qualifiers) {
     return ret;
 };
 
-Annotator.prototype._matching_qualifiers = function(a, b) {
+Annotator.prototype._matchingQualifiers = function(a, b) {
     if (a.length != b.length) {
         return false;
     }
@@ -596,8 +595,8 @@ Annotator.prototype._matching_qualifiers = function(a, b) {
     return true;
 };
 
-Annotator.prototype._annotate_function_def = function(node) {
-    if (!this._is_toplevel_scope()) {
+Annotator.prototype._annotateFunctionDef = function(node) {
+    if (!this._isToplevelScope()) {
         this._error(node.location(), 'nested function definitions are not allowed');
         return;
     }
@@ -605,7 +604,7 @@ Annotator.prototype._annotate_function_def = function(node) {
     var id = node.header.signature();
     var name = node.header.name;
 
-    var prev = this._lookup_function(id);
+    var prev = this._lookupFunction(id);
 
     if (prev !== null) {
         this._error(name.location, 'the function ' + name.text + ' is already defined, previous definition was at ' + prev.name.location.inspect());
@@ -613,14 +612,14 @@ Annotator.prototype._annotate_function_def = function(node) {
     } else if (name.text in this._scope.symbols) {
         var sym = this._scope.symbols[name.text];
 
-        this._error(name.location, 'a ' + this._error_symbol_type_name(sym) + ' ' + name.text + ' has already been declared, previous declaration was at ' + sym.location().inspect());
+        this._error(name.location, 'a ' + this._errorSymbolTypeName(sym) + ' ' + name.text + ' has already been declared, previous declaration was at ' + sym.location().inspect());
         return;
     }
 
-    this._annotate_node(node.header);
+    this._annotateNode(node.header);
     node.t.type = node.header.t.type;
 
-    var proto = this._lookup_function_proto(id);
+    var proto = this._lookupFunctionProto(id);
 
     if (proto !== null) {
         if (proto.header.type.type != node.header.type.type) {
@@ -632,8 +631,8 @@ Annotator.prototype._annotate_function_def = function(node) {
                 var param1 = node.header.parameters[i];
                 var param2 = proto.header.parameters[i];
 
-                if (!this._matching_qualifiers(param1.type.qualifiers, param2.type.qualifiers)) {
-                    this._error(param1.location(), 'the type qualifiers of parameter ' + param1.name.text + ' (' + this._qualifiers_to_string(param1.type.qualifiers) + ') of the function definition of ' + name.text + ' do not correspond to the parameter type qualifiers ' + this._qualifiers_to_string(param2.type.qualifiers) + ' of its prototype declared at ' + param2.location());
+                if (!this._matchingQualifiers(param1.type.qualifiers, param2.type.qualifiers)) {
+                    this._error(param1.location(), 'the type qualifiers of parameter ' + param1.name.text + ' (' + this._qualifiersToString(param1.type.qualifiers) + ') of the function definition of ' + name.text + ' do not correspond to the parameter type qualifiers ' + this._qualifiersToString(param2.type.qualifiers) + ' of its prototype declared at ' + param2.location());
                 }
             }
         }
@@ -642,9 +641,9 @@ Annotator.prototype._annotate_function_def = function(node) {
     }
 
     this._scope.functions.push(node);
-    this._scope.function_map[id] = node;
+    this._scope.functionMap[id] = node;
 
-    this._push_scope(node);
+    this._pushScope(node);
 
     for (var i = 0; i < node.header.parameters.length; i++) {
         var param = node.header.parameters[i];
@@ -656,35 +655,35 @@ Annotator.prototype._annotate_function_def = function(node) {
         this._scope.variables.push(param);
 
         if (param.name !== null) {
-            this._scope.variable_map[param.name.text] = param;
+            this._scope.variableMap[param.name.text] = param;
 
             this._scope.symbols[param.name.text] = param;
         }
     }
 
-    this._annotate_node(node.body);
+    this._annotateNode(node.body);
 
-    this._pop_scope();
+    this._popScope();
 };
 
-Annotator.prototype._annotate_block = function(node) {
-    if (node.new_scope) {
-        this._push_scope(node);
+Annotator.prototype._annotateBlock = function(node) {
+    if (node.newScope) {
+        this._pushScope(node);
     }
 
     for (var i = 0; i < node.body.length; i++) {
         var item = node.body[i];
 
-        this._annotate_node(item);
+        this._annotateNode(item);
     }
 
-    if (node.new_scope) {
-        this._pop_scope();
+    if (node.newScope) {
+        this._popScope();
     }
 };
 
-Annotator.prototype._annotate_precision_stmt = function(node) {
-    this._annotate_node(node.type);
+Annotator.prototype._annotatePrecisionStmt = function(node) {
+    this._annotateNode(node.type);
 
     if (node.type === null || node.type.t.type === null) {
         return;
@@ -704,12 +703,12 @@ Annotator.prototype._annotate_precision_stmt = function(node) {
     }
 
     this._scope.precisions.push(node);
-    this._scope.precision_map[tp.name] = node;
+    this._scope.precisionMap[tp.name] = node;
 };
 
-Annotator.prototype._error_symbol_type_name = function(node) {
+Annotator.prototype._errorSymbolTypeName = function(node) {
     if (glsl.ast.Named.prototype.isPrototypeOf(node)) {
-        return this._error_symbol_type_name(node.decl);
+        return this._errorSymbolTypeName(node.decl);
     }
 
     var map = [
@@ -727,40 +726,40 @@ Annotator.prototype._error_symbol_type_name = function(node) {
         }
     }
 
-    return node.node_name;
+    return node.nodeName;
 };
 
-Annotator.prototype._annotate_invariant_decl = function(node) {
+Annotator.prototype._annotateInvariantDecl = function(node) {
     for (var i = 0; i < node.names.length; i++) {
         var name = node.names[i];
 
-        var symbol = this._lookup_symbol(name.text);
+        var symbol = this._lookupSymbol(name.text);
 
         if (symbol === null) {
             this._error(name.location, 'cannot make unknown variable ' + name.text + ' invariant');
         } else if (!glsl.ast.Named.prototype.isPrototypeOf(symbol) ||
                    !glsl.ast.VariableDecl.prototype.isPrototypeOf(symbol.decl)) {
-            var n = this._error_symbol_type_name(symbol);
+            var n = this._errorSymbolTypeName(symbol);
 
             this._error(name.location, 'cannot make the ' + n + ' ' + name.text + ' invariant');
         }
     }
 };
 
-Annotator.prototype._annotate_expression_stmt = function(node) {
-    this._annotate_node(node.expression);
+Annotator.prototype._annotateExpressionStmt = function(node) {
+    this._annotateNode(node.expression);
 };
 
-Annotator.prototype._init_expr = function(node) {
-    node.t.is_const_expression = false;
-    node.t.const_value = null;
+Annotator.prototype._initExpr = function(node) {
+    node.t.isConstExpression = false;
+    node.t.constValue = null;
 };
 
-Annotator.prototype._annotate_constant_expr = function(node) {
-    this._init_expr(node);
+Annotator.prototype._annotateConstantExpr = function(node) {
+    this._initExpr(node);
 
-    node.t.is_const_expression = true;
-    node.t.const_value = node.token.value;
+    node.t.isConstExpression = true;
+    node.t.constValue = node.token.value;
 
     switch (node.token.id) {
     case Tn.T_INTCONSTANT:
@@ -775,20 +774,20 @@ Annotator.prototype._annotate_constant_expr = function(node) {
     }
 };
 
-Annotator.prototype._annotate_function_call_expr = function(node) {
-    this._init_expr(node);
+Annotator.prototype._annotateFunctionCallExpr = function(node) {
+    this._initExpr(node);
 
     var argnames = [];
 
     node.t.decl = null;
-    node.t.is_constructor = false;
+    node.t.isConstructor = false;
 
     var isok = true;
 
     for (var i = 0; i < node.arguments.length; i++) {
         var arg = node.arguments[i];
 
-        this._annotate_node(arg);
+        this._annotateNode(arg);
 
         if (arg.t.type === null) {
             isok = false;
@@ -806,69 +805,69 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
         return;
     }
 
-    var tp = this._lookup_type(node.name.text);
+    var tp = this._lookupType(node.name.text);
 
     if (tp !== null) {
         node.t.type = tp;
-        node.t.is_constructor = true;
+        node.t.isConstructor = true;
 
-        if (tp.is_primitive) {
-            if (tp.is_scalar) {
+        if (tp.isPrimitive) {
+            if (tp.isScalar) {
                 if (node.arguments.length != 1) {
                     this._error(node.location(), 'constructor of type ' + tp.name + ' requires exactly 1 argument, ' + node.arguments.length + ' given');
                 } else {
                     var nt = node.arguments[0].t;
 
-                    if (!nt.type.is_primitive) {
+                    if (!nt.type.isPrimitive) {
                         this._error(node.location, 'constructor of type ' + tp.name + ' cannot be called with type ' + nt.type.name);
-                    } else if (nt.is_const_expression) {
-                        node.t.is_const_expression = true;
+                    } else if (nt.isConstExpression) {
+                        node.t.isConstExpression = true;
 
-                        if (nt.type.is_scalar) {
-                            node.t.const_value = nt.const_value;
+                        if (nt.type.isScalar) {
+                            node.t.constValue = nt.constValue;
                         } else {
-                            node.t.const_value = nt.const_value[0];
+                            node.t.constValue = nt.constValue[0];
                         }
                     }
                 }
-            } else if (tp.is_vec || tp.is_mat) {
+            } else if (tp.isVec || tp.isMat) {
                 if (node.arguments.length == 1) {
                     var arg0 = node.arguments[0].t;
 
-                    if (arg0.type.is_scalar && arg0.is_const_expression) {
-                        node.t.is_const_expression = true;
-                        node.t.const_value = [];
+                    if (arg0.type.isScalar && arg0.isConstExpression) {
+                        node.t.isConstExpression = true;
+                        node.t.constValue = [];
 
                         for (var i = 0; i < tp.length; i++) {
-                            if (tp.is_vec) {
-                                node.t.const_value.push(arg0.const_value);
+                            if (tp.isVec) {
+                                node.t.constValue.push(arg0.constValue);
                             } else {
                                 var col = [];
 
                                 for (var j = 0; j < tp.length; j++) {
                                     if (j == i) {
-                                        col.push(arg0.const_value);
+                                        col.push(arg0.constValue);
                                     } else {
                                         col.push(0);
                                     }
                                 }
 
-                                node.t.const_value.push(col);
+                                node.t.constValue.push(col);
                             }
                         }
-                    } else if (!arg0.type.is_scalar) {
-                        if (arg0.type.is_vec != tp.is_vec || arg0.type.is_mat != tp.is_mat) {
+                    } else if (!arg0.type.isScalar) {
+                        if (arg0.type.isVec != tp.isVec || arg0.type.isMat != tp.isMat) {
                             this._error(node.location(), 'cannot call constructor of type ' + tp.name + ' with argument of type ' + arg0.type.name);
-                        } else if (arg0.is_const_expression) {
-                            node.t.is_const_expression = true;
-                            node.t.const_value = [];
+                        } else if (arg0.isConstExpression) {
+                            node.t.isConstExpression = true;
+                            node.t.constValue = [];
 
                             for (var i = 0; i < tp.length; i++) {
-                                if (tp.is_vec) {
+                                if (tp.isVec) {
                                     if (i >= arg0.type.length) {
-                                        node.t.const_value.push(0);
+                                        node.t.constValue.push(0);
                                     } else {
-                                        node.t.const_value.push(arg0.const_value[i]);
+                                        node.t.constValue.push(arg0.constValue[i]);
                                     }
                                 } else {
                                     var col = [];
@@ -877,11 +876,11 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                                         if (i >= arg0.type.length || j >= arg0.type.length) {
                                             col.push(i == j ? 1 : 0);
                                         } else {
-                                            col.push(arg0.const_value[i][j]);
+                                            col.push(arg0.constValue[i][j]);
                                         }
                                     }
 
-                                    node.t.const_value.push(col);
+                                    node.t.constValue.push(col);
                                 }
                             }
                         }
@@ -893,23 +892,23 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                     var numel = 0;
                     var numex;
 
-                    if (tp.is_mat) {
+                    if (tp.isMat) {
                         numex = tp.length * tp.length;
                     } else {
                         numex = tp.length;
                     }
 
-                    node.t.is_const_expression = true;
+                    node.t.isConstExpression = true;
 
                     for (var i = 0; i < node.arguments.length; i++) {
                         var arg = node.arguments[i];
 
-                        if (tp.is_mat && arg.t.type.is_mat) {
+                        if (tp.isMat && arg.t.type.isMat) {
                             this._error(arg.location(), 'cannot construct matrix with intermixed matrix argument');
                             return;
                         }
 
-                        if (!arg.t.type.is_primitive) {
+                        if (!arg.t.type.isPrimitive) {
                             this._error(arg.location(), 'cannot use value of type ' + arg.t.type.name + ' to construct value of type ' + tp.name);
                             return;
                         }
@@ -921,15 +920,15 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
 
                         numel += arg.t.type.length;
 
-                        if (arg.t.is_const_expression) {
-                            var v = arg.t.const_value;
+                        if (arg.t.isConstExpression) {
+                            var v = arg.t.constValue;
 
-                            if (arg.t.type.is_scalar) {
+                            if (arg.t.type.isScalar) {
                                 v = [v];
                             }
 
                             for (var j = 0; j < v.length; j++) {
-                                if (val.length == tp.length && tp.is_mat) {
+                                if (val.length == tp.length && tp.isMat) {
                                     mval.push(val);
                                     val = [];
                                 }
@@ -937,12 +936,12 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                                 val.push(v[j]);
                             }
                         } else {
-                            node.t.is_const_expression = false;
+                            node.t.isConstExpression = false;
 
                         }
                     }
 
-                    if (tp.is_mat) {
+                    if (tp.isMat) {
                         mval.push(val);
                     }
 
@@ -951,26 +950,26 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                         return;
                     }
 
-                    if (node.t.is_const_expression) {
-                        if (tp.is_mat) {
-                            node.t.const_value = mval;
+                    if (node.t.isConstExpression) {
+                        if (tp.isMat) {
+                            node.t.constValue = mval;
                         } else {
-                            node.t.const_value = val;
+                            node.t.constValue = val;
                         }
                     }
                 } else {
                     var numex = 1;
 
-                    if (tp.is_mat) {
+                    if (tp.isMat) {
                         numex = tp.length * tp.length;
-                    } else if (tp.is_vec) {
+                    } else if (tp.isVec) {
                         numex = tp.length;
                     }
 
                     this._error(node.location(), 'not enough values to fully construct type ' + tp.name + ' (got 0, but expected ' + numex + ')');
 
-                    node.t.is_const_expression = true;
-                    node.t.const_value = node.t.type.zero;
+                    node.t.isConstExpression = true;
+                    node.t.constValue = node.t.type.zero;
                 }
             }
         } else {
@@ -980,7 +979,7 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                 return;
             }
 
-            node.t.is_const_expression = true;
+            node.t.isConstExpression = true;
             var val = {};
 
             for (var i = 0; i < node.arguments.length; i++) {
@@ -990,36 +989,36 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
                 if (arg.t.type != field.type) {
                     this._error(arg.location(), 'cannot initialize ' + tp.name + '.' + field.name + ' with type ' + field.type.name + ' from argument of type ' + arg.t.type.name);
                     continue;
-                } else if (arg.t.is_const_expression) {
-                    val[field.name] = arg.t.const_value;
-                    node.t.is_const_expression = true;
+                } else if (arg.t.isConstExpression) {
+                    val[field.name] = arg.t.constValue;
+                    node.t.isConstExpression = true;
                 }
             }
 
-            if (node.t.is_const_expression) {
-                node.t.const_value = val;
+            if (node.t.isConstExpression) {
+                node.t.constValue = val;
             }
         }
 
         return;
     }
 
-    var sig = glsl.ast.FunctionHeader.signature_from_names(node.name.text, argnames);
-    var f = this._lookup_function_or_proto(sig);
+    var sig = glsl.ast.FunctionHeader.signatureFromNames(node.name.text, argnames);
+    var f = this._lookupFunctionOrProto(sig);
 
     if (f === null) {
         this._error(node.location(), 'could not find function matching signature ' + sig);
         return;
     }
 
-    if (glsl.ast.FunctionProto.prototype.isPrototypeOf(f) && f.is_builtin && f.evaluate !== null) {
+    if (glsl.ast.FunctionProto.prototype.isPrototypeOf(f) && f.isBuiltin && f.evaluate !== null) {
         var cargs = [];
 
         for (var i = 0; i < node.arguments.length; i++) {
             var arg = node.arguments[i];
 
-            if (arg.t.is_const_expression) {
-                cargs.push(arg.t.const_value);
+            if (arg.t.isConstExpression) {
+                cargs.push(arg.t.constValue);
             } else {
                 cargs = null;
                 break;
@@ -1027,8 +1026,8 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
         }
 
         if (cargs !== null) {
-            node.t.is_const_expression = true;
-            node.t.const_value = f.evaluate.apply(this, cargs);
+            node.t.isConstExpression = true;
+            node.t.constValue = f.evaluate.apply(this, cargs);
         }
     }
 
@@ -1036,10 +1035,10 @@ Annotator.prototype._annotate_function_call_expr = function(node) {
     node.t.decl = f;
 };
 
-Annotator.prototype._annotate_variable_expr = function(node) {
-    this._init_expr(node);
+Annotator.prototype._annotateVariableExpr = function(node) {
+    this._initExpr(node);
 
-    var sym = this._lookup_symbol(node.name.text);
+    var sym = this._lookupSymbol(node.name.text);
 
     node.t.decl = null;
 
@@ -1052,38 +1051,38 @@ Annotator.prototype._annotate_variable_expr = function(node) {
 
         sym.t.users.push(node);
 
-        if (glsl.ast.Named.prototype.isPrototypeOf(sym) && sym.t.is_const_expression) {
-            node.t.is_const_expression = true;
-            node.t.const_value = sym.t.const_value;
+        if (glsl.ast.Named.prototype.isPrototypeOf(sym) && sym.t.isConstExpression) {
+            node.t.isConstExpression = true;
+            node.t.constValue = sym.t.constValue;
         }
     } else {
-        this._error(node.location(), 'expected a variable for ' + node.name.text + ' but got a ' + this._error_symbol_type_name(sym));
+        this._error(node.location(), 'expected a variable for ' + node.name.text + ' but got a ' + this._errorSymbolTypeName(sym));
     }
 };
 
-Annotator.prototype._validate_lvalue = function(node) {
+Annotator.prototype._validateLvalue = function(node) {
     if (node.t.type === null) {
         return false;
     }
 
     switch (Object.getPrototypeOf(node)) {
     case glsl.ast.GroupExpr.prototype:
-        return this._validate_lvalue(node.expression);
+        return this._validateLvalue(node.expression);
     case glsl.ast.VariableExpr.prototype:
-        if (node.t.decl.type.is_uniform()) {
+        if (node.t.decl.type.isUniform()) {
             this._error(node.location(), 'cannot assign to uniform value');
             return false;
-        } else if (node.t.decl.type.is_const()) {
+        } else if (node.t.decl.type.isConst()) {
             this._error(node.location(), 'cannot assign to const value');
         }
 
         return true;
     case glsl.ast.FieldSelectionExpr.prototype:
-        if (!this._validate_lvalue(node.expression)) {
+        if (!this._validateLvalue(node.expression)) {
             return false;
         }
 
-        if (node.expression.t.type.is_vec) {
+        if (node.expression.t.type.isVec) {
             // check for repeated values in the swizzle
             var chars = node.selector.text.split('');
             chars.sort();
@@ -1100,14 +1099,14 @@ Annotator.prototype._validate_lvalue = function(node) {
                 var first = node.selector.text.indexOf(found);
                 var second = node.selector.text.indexOf(found, first + 1);
 
-                this._error(node.selector.location().advance_chars(second), 'cannot assign to repeated swizzle');
+                this._error(node.selector.location().advanceChars(second), 'cannot assign to repeated swizzle');
                 return false;
             }
         }
 
         return true;
     case glsl.ast.IndexExpr.prototype:
-        if (!this._validate_lvalue(node.expression)) {
+        if (!this._validateLvalue(node.expression)) {
             return false;
         }
 
@@ -1118,11 +1117,11 @@ Annotator.prototype._validate_lvalue = function(node) {
     }
 };
 
-Annotator.prototype._annotate_assignment_expr = function(node) {
-    this._init_expr(node);
+Annotator.prototype._annotateAssignmentExpr = function(node) {
+    this._initExpr(node);
 
-    this._annotate_node(node.lhs);
-    this._annotate_node(node.rhs);
+    this._annotateNode(node.lhs);
+    this._annotateNode(node.rhs);
 
     node.t.type = node.lhs.t.type;
 
@@ -1147,12 +1146,12 @@ Annotator.prototype._annotate_assignment_expr = function(node) {
         var rettype = node.rhs.t.type;
 
         if (binop !== null) {
-            var sig = Tn.token_name(binop) + '(' + node.lhs.t.type.name + ',' + node.rhs.t.type.name + ')';
+            var sig = Tn.tokenName(binop) + '(' + node.lhs.t.type.name + ',' + node.rhs.t.type.name + ')';
 
-            if (!(sig in this._builtins.operator_map)) {
-                this._error(node.location(), 'cannot use the operator \'' + Tn.token_name(binop) + '\' on types ' + node.lhs.t.type.name + ' and ' + node.rhs.t.type.name);
+            if (!(sig in this._builtins.operatorMap)) {
+                this._error(node.location(), 'cannot use the operator \'' + Tn.tokenName(binop) + '\' on types ' + node.lhs.t.type.name + ' and ' + node.rhs.t.type.name);
             } else {
-                var oper = this._builtins.operator_map[sig];
+                var oper = this._builtins.operatorMap[sig];
                 rettype = oper.ret;
             }
         }
@@ -1162,18 +1161,18 @@ Annotator.prototype._annotate_assignment_expr = function(node) {
         }
     }
 
-    if (glsl.ast.VariableExpr.prototype.isPrototypeOf(node.lhs) && node.lhs.t.type !== null && node.lhs.t.type.is_array) {
+    if (glsl.ast.VariableExpr.prototype.isPrototypeOf(node.lhs) && node.lhs.t.type !== null && node.lhs.t.type.isArray) {
         this._error(node.lhs.location(), 'cannot assign to array');
     }
 
-    this._validate_lvalue(node.lhs);
+    this._validateLvalue(node.lhs);
 };
 
-Annotator.prototype._annotate_bin_op_expr = function(node) {
-    this._init_expr(node);
+Annotator.prototype._annotateBinOpExpr = function(node) {
+    this._initExpr(node);
 
-    this._annotate_node(node.lhs);
-    this._annotate_node(node.rhs);
+    this._annotateNode(node.lhs);
+    this._annotateNode(node.rhs);
 
     // Make some guess if lhs or rhs could not be type checked
     if (node.lhs.t.type === null) {
@@ -1183,13 +1182,13 @@ Annotator.prototype._annotate_bin_op_expr = function(node) {
     } else if (node.lhs.t.type !== null && node.rhs.t.type !== null) {
         if (node.op.id == Tn.T_EQ_OP || node.op.id == Tn.T_NE_OP) {
             if (node.lhs.t.type == node.rhs.t.type) {
-                if (node.lhs.t.type.is_composite && node.lhs.t.type.has_array_field) {
+                if (node.lhs.t.type.isComposite && node.lhs.t.type.hasArrayField) {
                     this._error(node.op.location, 'cannot compare structures with array fields');
-                } else if (node.lhs.t.type.is_composite && node.lhs.t.type.has_sampler_field) {
+                } else if (node.lhs.t.type.isComposite && node.lhs.t.type.hasSamplerField) {
                     this._error(node.op.location, 'cannot compare structures with sampler fields');
-                } else if (node.lhs.t.type.is_array) {
+                } else if (node.lhs.t.type.isArray) {
                     this._error(node.op.location, 'cannot compare arrays');
-                } else if (node.lhs.t.type.is_sampler) {
+                } else if (node.lhs.t.type.isSampler) {
                     this._error(node.op.location, 'cannot compare samplers');
                 }
 
@@ -1200,13 +1199,13 @@ Annotator.prototype._annotate_bin_op_expr = function(node) {
 
         var sig = node.op.text + '(' + node.lhs.t.type.name + ',' + node.rhs.t.type.name + ')';
 
-        if (sig in this._builtins.operator_map) {
-            var op = this._builtins.operator_map[sig];
+        if (sig in this._builtins.operatorMap) {
+            var op = this._builtins.operatorMap[sig];
             node.t.type = op.ret;
 
-            if (node.lhs.t.is_const_expression && node.rhs.t.is_const_expression) {
-                node.t.is_const_expression = true;
-                node.t.const_value = op.evaluate(node.lhs.t.const_value, node.rhs.t.const_value);
+            if (node.lhs.t.isConstExpression && node.rhs.t.isConstExpression) {
+                node.t.isConstExpression = true;
+                node.t.constValue = op.evaluate(node.lhs.t.constValue, node.rhs.t.constValue);
             }
         } else {
             this._error(node.location(), 'cannot use the \'' + node.op.text + '\' operator on types ' + node.lhs.t.type.name + ' and ' + node.rhs.t.type.name);
@@ -1214,10 +1213,10 @@ Annotator.prototype._annotate_bin_op_expr = function(node) {
     }
 };
 
-Annotator.prototype._annotate_unary_op_expr = function(node) {
-    this._init_expr(node);
+Annotator.prototype._annotateUnaryOpExpr = function(node) {
+    this._initExpr(node);
 
-    this._annotate_node(node.expression);
+    this._annotateNode(node.expression);
 
     if (node.expression.t.type === null) {
         return;
@@ -1225,17 +1224,17 @@ Annotator.prototype._annotate_unary_op_expr = function(node) {
 
     var sig = node.op.text + '(' + node.expression.t.type.name + ')';
 
-    if (sig in this._builtins.operator_map) {
-        var op = this._builtins.operator_map[sig];
+    if (sig in this._builtins.operatorMap) {
+        var op = this._builtins.operatorMap[sig];
         node.t.type = op.ret;
 
-        if (node.expression.t.is_const_expression) {
-            node.t.is_const_expression = true;
+        if (node.expression.t.isConstExpression) {
+            node.t.isConstExpression = true;
 
             if (glsl.ast.UnaryPostfixOpExpr.prototype.isPrototypeOf(node)) {
-                node.t.const_value = node.expression.t.const_value;
+                node.t.constValue = node.expression.t.constValue;
             } else {
-                node.t.const_value = op.evaluate(node.expression.t.const_value);
+                node.t.constValue = op.evaluate(node.expression.t.constValue);
             }
         }
     } else {
@@ -1243,95 +1242,95 @@ Annotator.prototype._annotate_unary_op_expr = function(node) {
     }
 };
 
-Annotator.prototype._annotate_unary_postfix_op_expr = function(node) {
-    this._annotate_unary_op_expr(node);
+Annotator.prototype._annotateUnaryPostfixOpExpr = function(node) {
+    this._annotateUnaryOpExpr(node);
 };
 
-Annotator.prototype._annotate_ternary_expr = function(node) {
-    this._init_expr(node);
+Annotator.prototype._annotateTernaryExpr = function(node) {
+    this._initExpr(node);
 
-    this._annotate_node(node.condition);
-    this._annotate_node(node.true_expression);
-    this._annotate_node(node.false_expression);
+    this._annotateNode(node.condition);
+    this._annotateNode(node.trueExpression);
+    this._annotateNode(node.falseExpression);
 
     if (node.condition.t.type !== null && node.condition.t.type != this._builtins.Bool) {
         this._error(node.condition.location(), 'the condition of a ternary conditional expression must be of type bool, not ' + node.condition.t.type.name);
     }
 
-    if ((node.true_expression === null || node.true_expression.t.type === null) &&
-        (node.false_expression === null || node.false_expression.t.type === null)) {
+    if ((node.trueExpression === null || node.trueExpression.t.type === null) &&
+        (node.falseExpression === null || node.falseExpression.t.type === null)) {
         return;
     }
 
-    if (node.true_expression === null || node.true_expression.t.type === null) {
-        node.t.type = node.false_expression.t.type;
-    } else if (node.false_expression === null || node.false_expression.t.type === null) {
-        node.t.type = node.true_expression.t.type;
-    } else if (node.true_expression.t.type != node.false_expression.t.type) {
-        this._error(node.true_expression.location().extend(node.false_expression.location()),
-                    'the true expression and false expression must be of the same type, but got ' + node.true_expression.t.type.name + ' and ' + node.false_expression.t.type.name);
-        node.t.type = node.true_expression.t.type;
+    if (node.trueExpression === null || node.trueExpression.t.type === null) {
+        node.t.type = node.falseExpression.t.type;
+    } else if (node.falseExpression === null || node.falseExpression.t.type === null) {
+        node.t.type = node.trueExpression.t.type;
+    } else if (node.trueExpression.t.type != node.falseExpression.t.type) {
+        this._error(node.trueExpression.location().extend(node.falseExpression.location()),
+                    'the true expression and false expression must be of the same type, but got ' + node.trueExpression.t.type.name + ' and ' + node.falseExpression.t.type.name);
+        node.t.type = node.trueExpression.t.type;
     } else {
-        node.t.type = node.true_expression.t.type;
+        node.t.type = node.trueExpression.t.type;
     }
 
-    if (node.condition.t.is_const_expression) {
-        if (node.condition.t.const_value) {
-            if (node.true_expression.t.is_const_expression) {
-                node.t.is_const_expression = true;
-                node.t.const_value = node.true_expression.t.const_value;
+    if (node.condition.t.isConstExpression) {
+        if (node.condition.t.constValue) {
+            if (node.trueExpression.t.isConstExpression) {
+                node.t.isConstExpression = true;
+                node.t.constValue = node.trueExpression.t.constValue;
             }
         } else {
-            if (node.false_expression.t.is_const_expression) {
-                node.t.is_const_expression = true;
-                node.t.const_value = node.false_expression.t.const_value;
+            if (node.falseExpression.t.isConstExpression) {
+                node.t.isConstExpression = true;
+                node.t.constValue = node.falseExpression.t.constValue;
             }
         }
     }
 };
 
-Annotator.prototype._annotate_index_expr = function(node) {
-    this._init_expr(node);
+Annotator.prototype._annotateIndexExpr = function(node) {
+    this._initExpr(node);
 
-    this._annotate_node(node.expression);
-    this._annotate_node(node.index);
+    this._annotateNode(node.expression);
+    this._annotateNode(node.index);
 
     var et = node.expression.t.type;
 
     if (et !== null) {
-        if ((!et.is_array && !et.is_primitive) || et.length <= 1) {
+        if ((!et.isArray && !et.isPrimitive) || et.length <= 1) {
             this._error(node.expression.location(), 'only vectors, matrices and arrays can be indexed, not ' + et.name);
-        } else if (node.index.t.type !== null && node.index.t.type.is_const_expression && node.index.t.type.const_value >= et.length) {
-            this._error(node.index.location(), 'index out of bounds, trying to index element ' + node.index.t.type.const_value + ' in a value of length ' + et.length);
-        } else if (et.is_primitive) {
-            if (et.is_mat) {
+        } else if (node.index.t.type !== null && node.index.t.type.isConstExpression && node.index.t.type.constValue >= et.length) {
+            this._error(node.index.location(), 'index out of bounds, trying to index element ' + node.index.t.type.constValue + ' in a value of length ' + et.length);
+        } else if (et.isPrimitive) {
+            if (et.isMat) {
                 var m = {2: this._builtins.Vec2, 3: this._builtins.Vec3, 4: this._builtins.Vec4};
                 node.t.type = m[et.length];
-            } else if (et.is_float) {
+            } else if (et.isFloat) {
                 node.t.type = this._builtins.Float;
-            } else if (et.is_int) {
+            } else if (et.isInt) {
                 node.t.type = this._builtins.Int;
-            } else if (et.is_bool) {
+            } else if (et.isBool) {
                 node.t.type = this._builtins.Bool;
             }
-        } else if (et.is_array) {
-            node.t.type = et.element_type;
+        } else if (et.isArray) {
+            node.t.type = et.elementType;
         }
     }
 
     if (node.index.t.type !== null) {
         if (node.index.t.type != this._builtins.Int) {
             this._error(node.index.location(), 'expected integer index expression, but got expression of type ' + node.index.t.type.name);
-        } else if (node.expression.t.is_const_expression) {
-            node.t.const_value = node.expression.t.const_value[node.index.t.const_value];
-            node.t.is_const_expression = true;
+        } else if (node.expression.t.isConstExpression) {
+            node.t.constValue = node.expression.t.constValue[node.index.t.constValue];
+            node.t.isConstExpression = true;
         }
     }
 };
 
-Annotator.prototype._annotate_field_selection_expr = function(node) {
-    this._init_expr(node);
-    this._annotate_node(node.expression);
+Annotator.prototype._annotateFieldSelectionExpr = function(node) {
+    this._initExpr(node);
+    this._annotateNode(node.expression);
 
     var et = node.expression.t.type;
 
@@ -1345,8 +1344,8 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
 
     var s = node.selector.text;
 
-    if (et.is_primitive) {
-        if (et.is_vec) {
+    if (et.isPrimitive) {
+        if (et.isVec) {
             var components = {
                 'x': 0, 'y': 0, 'z': 0, 'w': 0,
                 'r': 1, 'g': 1, 'b': 1, 'a': 1,
@@ -1366,27 +1365,27 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
 
             var tps = [];
 
-            if (et.is_float) {
+            if (et.isFloat) {
                 tps = [Tn.T_FLOAT, Tn.T_VEC2, Tn.T_VEC3, Tn.T_VEC4];
-            } else if (et.is_int) {
+            } else if (et.isInt) {
                 tps = [Tn.T_INT, Tn.T_IVEC2, Tn.T_IVEC3, Tn.T_IVEC4];
-            } else if (et.is_bool) {
+            } else if (et.isBool) {
                 tps = [Tn.T_BOOL, Tn.T_BVEC2, Tn.T_BVEC3, Tn.T_BVEC4];
             }
 
-            node.t.type = this._builtins.type_map[tps[s.length - 1]].type.t.type;
+            node.t.type = this._builtins.typeMap[tps[s.length - 1]].type.t.type;
 
-            if (node.expression.t.is_const_expression) {
-                node.t.is_const_expression = true;
+            if (node.expression.t.isConstExpression) {
+                node.t.isConstExpression = true;
 
-                if (node.t.type.is_vec) {
-                    node.t.const_value = [];
+                if (node.t.type.isVec) {
+                    node.t.constValue = [];
 
                     for (var i = 0; i < node.t.type.length; i++) {
-                        node.t.const_value.push(0);
+                        node.t.constValue.push(0);
                     }
                 } else {
-                    node.t.const_value = 0;
+                    node.t.constValue = 0;
                 }
             }
 
@@ -1396,13 +1395,13 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
                 var c = s[i];
 
                 if (!(c in components)) {
-                    this._error(node.selector.location.start.advance_chars(i).to_range(),
+                    this._error(node.selector.location.start.advanceChars(i).toRange(),
                                 'invalid component selector \'' + c + '\', expected one of \'xyzw\' \'rgba\' or \'stpq\'');
                     return;
                 }
 
                 if (i !== 0 && ci != components[c]) {
-                    this._error(node.selector.location.start.advance_chars(i).to_range(),
+                    this._error(node.selector.location.start.advanceChars(i).toRange(),
                                 'cannot mix components of different groups, expected one of \'' + cgroups[ci] + '\'');
                     return;
                 }
@@ -1412,30 +1411,30 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
                 var j = cgroups[ci].indexOf(c);
 
                 if (j >= et.length) {
-                    this._error(node.selector.location.start.advance_chars(i).to_range(),
+                    this._error(node.selector.location.start.advanceChars(i).toRange(),
                                 'selector out of bounds, expression has only ' + et.length + ' components, but tried to select component ' + (ci + 1));
                     return;
                 }
 
-                if (node.expression.t.is_const_expression) {
-                    if (node.t.type.is_vec) {
-                        node.t.const_value[i] = node.expression.t.const_value[j];
+                if (node.expression.t.isConstExpression) {
+                    if (node.t.type.isVec) {
+                        node.t.constValue[i] = node.expression.t.constValue[j];
                     } else {
-                        node.t.const_value = node.expression.t.const_value[j];
+                        node.t.constValue = node.expression.t.constValue[j];
                     }
                 }
             }
         } else {
             this._error(node.expression.location().extend(node.op.location), 'selector \'' + s + '\' does not apply to an expression of type ' + et.name);
         }
-    } else if (et.is_composite) {
+    } else if (et.isComposite) {
         // Select on field in user defined type
-        if (s in et.field_map) {
-            var f = et.field_map[s];
+        if (s in et.fieldMap) {
+            var f = et.fieldMap[s];
 
-            if (node.expression.t.is_const_expression && s in node.expression.t.const_value) {
-                node.t.is_const_expression = true;
-                node.t.const_value = node.expression.t.const_value[s];
+            if (node.expression.t.isConstExpression && s in node.expression.t.constValue) {
+                node.t.isConstExpression = true;
+                node.t.constValue = node.expression.t.constValue[s];
             }
 
             node.t.type = f.type;
@@ -1447,70 +1446,70 @@ Annotator.prototype._annotate_field_selection_expr = function(node) {
     }
 };
 
-Annotator.prototype._copy_type = function(dest, src) {
+Annotator.prototype._copyType = function(dest, src) {
     dest.t.type = src.t.type;
-    dest.t.is_const_expression = src.t.is_const_expression;
-    dest.t.const_value = src.t.const_value;
+    dest.t.isConstExpression = src.t.isConstExpression;
+    dest.t.constValue = src.t.constValue;
 };
-Annotator.prototype._annotate_group_expr = function(node) {
-    this._init_expr(node);
-    this._annotate_node(node.expression);
+Annotator.prototype._annotateGroupExpr = function(node) {
+    this._initExpr(node);
+    this._annotateNode(node.expression);
 
-    this._copy_type(node, node.expression);
+    this._copyType(node, node.expression);
 };
 
-Annotator.prototype._annotate_expression_list_stmt = function(node) {
+Annotator.prototype._annotateExpressionListStmt = function(node) {
     for (var i = 0; i < node.expressions.length; i++) {
-        this._annotate_node(node.expressions[i]);
+        this._annotateNode(node.expressions[i]);
     }
 
-    this._copy_type(node, node.expressions[node.expressions.length - 1]);
+    this._copyType(node, node.expressions[node.expressions.length - 1]);
 };
 
-Annotator.prototype._annotate_do_stmt = function(node) {
-    this._annotate_node(node.condition);
+Annotator.prototype._annotateDoStmt = function(node) {
+    this._annotateNode(node.condition);
 
     if (node.condition.t.type !== null && node.condition.t.type !== this._builtins.Bool) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
-    this._annotate_node(node.body);
+    this._annotateNode(node.body);
 };
 
-Annotator.prototype._annotate_while_stmt = function(node) {
-    this._push_scope(node);
-    this._annotate_node(node.condition);
+Annotator.prototype._annotateWhileStmt = function(node) {
+    this._pushScope(node);
+    this._annotateNode(node.condition);
 
     if (node.condition.t.type !== null && node.condition.t.type !== this._builtins.Bool) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
-    this._annotate_node(node.body);
-    this._pop_scope();
+    this._annotateNode(node.body);
+    this._popScope();
 };
 
-Annotator.prototype._annotate_for_rest_stmt = function(node) {
-    this._annotate_node(node.condition);
+Annotator.prototype._annotateForRestStmt = function(node) {
+    this._annotateNode(node.condition);
 
     if (node.condition.t.type !== null && node.condition.t.type !== this._builtins.Bool) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
-    this._annotate_node(node.expression);
+    this._annotateNode(node.expression);
 };
 
-Annotator.prototype._annotate_for_stmt = function(node) {
-    this._push_scope(node);
+Annotator.prototype._annotateForStmt = function(node) {
+    this._pushScope(node);
 
-    this._annotate_node(node.init);
-    this._annotate_node(node.rest);
-    this._annotate_node(node.body);
+    this._annotateNode(node.init);
+    this._annotateNode(node.rest);
+    this._annotateNode(node.body);
 
-    this._pop_scope();
+    this._popScope();
 };
 
-Annotator.prototype._annotate_selection_stmt = function(node) {
-    this._annotate_node(node.condition);
+Annotator.prototype._annotateSelectionStmt = function(node) {
+    this._annotateNode(node.condition);
 
     if (node.condition !== null &&
         node.condition.t.type !== null &&
@@ -1518,37 +1517,37 @@ Annotator.prototype._annotate_selection_stmt = function(node) {
         this._error(node.condition.location(), 'condition must of of type bool, got type ' + node.condition.t.type.name);
     }
 
-    this._push_scope(node.body);
-    this._annotate_node(node.body);
-    this._pop_scope();
+    this._pushScope(node.body);
+    this._annotateNode(node.body);
+    this._popScope();
 
     if (node.els) {
-        this._push_scope(node.els);
-        this._annotate_node(node.els);
-        this._pop_scope(node.els);
+        this._pushScope(node.els);
+        this._annotateNode(node.els);
+        this._popScope(node.els);
     }
 };
 
-Annotator.prototype._annotate_selection_else_stmt = function(node) {
-    this._annotate_node(node.body);
+Annotator.prototype._annotateSelectionElseStmt = function(node) {
+    this._annotateNode(node.body);
 };
 
-Annotator.prototype._annotate_break_stmt = function() {
+Annotator.prototype._annotateBreakStmt = function() {
 };
 
-Annotator.prototype._annotate_continue_stmt = function() {
+Annotator.prototype._annotateContinueStmt = function() {
 };
 
-Annotator.prototype._annotate_discard_stmt = function() {
+Annotator.prototype._annotateDiscardStmt = function() {
 };
 
-Annotator.prototype._annotate_return_stmt = function(node) {
-    this._annotate_node(node.expression);
+Annotator.prototype._annotateReturnStmt = function(node) {
+    this._annotateNode(node.expression);
 
     var scope = this._scope;
 
     while (scope !== null && !glsl.ast.FunctionDef.prototype.isPrototypeOf(scope)) {
-        scope = scope.parent_scope;
+        scope = scope.parentScope;
     }
 
     if (scope !== null) {
@@ -1560,10 +1559,10 @@ Annotator.prototype._annotate_return_stmt = function(node) {
     }
 };
 
-Annotator.prototype._annotate_no_match = function() {
+Annotator.prototype._annotateNoMatch = function() {
 };
 
-Annotator.prototype._annotate_empty_stmt = function() {
+Annotator.prototype._annotateEmptyStmt = function() {
 };
 
 Annotator.prototype._error = function(loc, message) {

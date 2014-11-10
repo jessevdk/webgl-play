@@ -15,7 +15,7 @@ suite('preprocessor', function() {
         var errors = p.errors();
 
         for (var i = 0; i < errors.length; i++) {
-            assert.ok(false, errors[i].formatted_message() + '\n' + errors[i]._stack);
+            assert.ok(false, errors[i].formattedMessage() + '\n' + errors[i]._stack);
         }
 
         assert.equal(p.source(), processed);
@@ -30,7 +30,7 @@ suite('preprocessor', function() {
         var errors = p.errors();
 
         for (var i = 0; i < errors.length; i++) {
-            assert.ok(false, errors[i].formatted_message() + '\n' + errors[i]._stack);
+            assert.ok(false, errors[i].formattedMessage() + '\n' + errors[i]._stack);
         }
 
         assert.equal(p.source(), processed);
@@ -47,14 +47,14 @@ suite('preprocessor', function() {
             return;
         }
 
-        assert.equal(errors[0].formatted_message(), '2.2-2.7: this is an error');
+        assert.equal(errors[0].formattedMessage(), '2.2-2.7: this is an error');
     });
 
-    test('source_map', function() {
+    test('sourceMap', function() {
         var unprocessed = fs.readFileSync('tests/testfiles/preprocessor.glslv', 'utf8');
         var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
 
-        var expected_map = [
+        var expectedMap = [
             [[[1, 1], [2, 1]], [[2, 1], [3, 1]], false],
             [[[2, 1], [3, 1]], [[5, 1], [6, 1]], false],
             [[[3, 1], [4, 1]], [[13, 1], [14, 1]], false],
@@ -67,15 +67,15 @@ suite('preprocessor', function() {
             [[[8, 1], [8, 1]], [[18, 1], [18, 1]], false],
         ];
 
-        for (var i = 0; i < p._source_mapping.length; i++) {
-            var m = p._source_mapping[i];
+        for (var i = 0; i < p._sourceMapping.length; i++) {
+            var m = p._sourceMapping[i];
 
-            if (i >= expected_map.length) {
+            if (i >= expectedMap.length) {
                 assert.ok(false, 'unexpected source map entry ' + m);
                 continue;
             }
 
-            var e = expected_map[i];
+            var e = expectedMap[i];
 
             var c = e[0];
             var o = e[1];
@@ -93,8 +93,8 @@ suite('preprocessor', function() {
             assert.deepEqual(m, ex);
         }
 
-        for (var i = p._source_mapping.length; i < expected_map.length; i++) {
-            assert.ok(false, 'expected source map entry ' + expected_map[i]);
+        for (var i = p._sourceMapping.length; i < expectedMap.length; i++) {
+            assert.ok(false, 'expected source map entry ' + expectedMap[i]);
         }
     });
 
@@ -103,7 +103,7 @@ suite('preprocessor', function() {
         var p = new glsl.preprocessor.Preprocessor(unprocessed, glsl.source.VERTEX);
         var t = new glsl.tokenizer.Tokenizer(p);
 
-        var expected_tokens = [
+        var expectedTokens = [
             [t.T_VOID, 'void', [[14, 1], [14, 5]]],
             [t.T_IDENTIFIER, 'main', [[14, 6], [14, 10]]],
             [t.T_LEFT_PAREN, '(', [[14, 10], [14, 11]]],
@@ -132,17 +132,17 @@ suite('preprocessor', function() {
                 break;
             }
 
-            if (expected_tokens.length === 0) {
-                assert.ok(false, 'unexpected token ' + t.token_name(tok.id) + ' ' + tok.location.start.line + '.' + tok.location.start.column + '-' + tok.location.end.line + '.' + tok.location.end.column + ': ' + tok.text);
+            if (expectedTokens.length === 0) {
+                assert.ok(false, 'unexpected token ' + t.tokenName(tok.id) + ' ' + tok.location.start.line + '.' + tok.location.start.column + '-' + tok.location.end.line + '.' + tok.location.end.column + ': ' + tok.text);
             } else {
-                var def = expected_tokens[0];
+                var def = expectedTokens[0];
                 var start = def[2][0];
                 var end = def[2][1];
 
                 var rng = new glsl.source.Range(new glsl.source.Location(start[0], start[1]),
                                                 new glsl.source.Location(end[0], end[1]));
 
-                var extok = t.create_token(def[0], def[1], rng);
+                var extok = t.createToken(def[0], def[1], rng);
 
                 if (def.length > 3) {
                     for (var k in def[3]) {
@@ -150,9 +150,9 @@ suite('preprocessor', function() {
                     }
                 }
 
-                assert.deepEqual(tok.for_assert(), extok);
+                assert.deepEqual(tok.forAssert(), extok);
 
-                expected_tokens = expected_tokens.slice(1);
+                expectedTokens = expectedTokens.slice(1);
             }
         }
     });

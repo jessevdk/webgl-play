@@ -56,7 +56,7 @@ function Geometry(ctx, vertices, normals) {
     this._lastAttrId = 0;
 
     this.attributes = {};
-    this._attribute_ids = {};
+    this._attributeIds = {};
 
     this.update(ctx, vertices, normals);
 }
@@ -103,7 +103,7 @@ Geometry.prototype.removeAttribute = function(ctx, name) {
 
     gl.deleteBuffer(attr.id);
 
-    delete this._attribute_ids[attr.id];
+    delete this._attributeIds[attr.id];
     delete this.attributes[name];
 }
 
@@ -134,7 +134,7 @@ Geometry.prototype.addAttribute = function(ctx, name, data, options) {
 
     var i = 0;
 
-    while (i in this._attribute_ids) {
+    while (i in this._attributeIds) {
         i++;
     }
 
@@ -158,7 +158,7 @@ Geometry.prototype.addAttribute = function(ctx, name, data, options) {
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
     this.attributes[name] = attr;
-    this._attribute_ids[attr.id] = true;
+    this._attributeIds[attr.id] = true;
 }
 
 /**

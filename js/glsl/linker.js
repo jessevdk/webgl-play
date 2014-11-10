@@ -36,7 +36,7 @@ var glsl = {
 function Error(type, loc, message) {
     glsl.source.Error.call(this, loc, message);
 
-    this.shader_type = type;
+    this.shaderType = type;
 }
 
 Error.prototype = Object.create(glsl.source.Error.prototype);
@@ -54,19 +54,19 @@ function Linker(vertex, fragment) {
     };
 }
 
-Linker.prototype._types_equal = function(a, b) {
-    if (a.is_primitive !== b.is_primitive ||
-        a.is_array !== b.is_array ||
-        a.is_composite !== b.is_composite) {
+Linker.prototype._typesEqual = function(a, b) {
+    if (a.isPrimitive !== b.isPrimitive ||
+        a.isArray !== b.isArray ||
+        a.isComposite !== b.isComposite) {
 
         return false;
     }
 
-    if (a.is_primitive) {
+    if (a.isPrimitive) {
         return a.name === b.name;
     }
 
-    if (a.is_composite) {
+    if (a.isComposite) {
         var afields = {};
         var ret = {
             a: [],
@@ -87,7 +87,7 @@ Linker.prototype._types_equal = function(a, b) {
                     message: 'field ' + fb.name +  ' in ' + b.name + ' missing in ' + a.name
                 });
             } else {
-                var d = this._types_equal(fa.type, fb.type);
+                var d = this._typesEqual(fa.type, fb.type);
 
                 if (d === false) {
                     var msg = 'type of field ' + fb.name + ' in vertex shader (' + fa.type.name + ') does not match type in fragment shader (' + fb.type.name + ')';
@@ -129,45 +129,45 @@ Linker.prototype._types_equal = function(a, b) {
     return false;
 }
 
-Linker.prototype._check_matching_types = function(vv, fv, tpname) {
-    var eq = this._types_equal(vv.t.type, fv.t.type);
+Linker.prototype._checkMatchingTypes = function(vv, fv, tpname) {
+    var eq = this._typesEqual(vv.t.type, fv.t.type);
 
     if (eq === false) {
         var msg = 'type of ' + tpname + ' ' + fv.name.text + ' in vertex shader (' + vv.type.token.text + ') does not match type in fragment shader (' + fv.type.token.text + ')';
 
-        this._vertex_error(vv.location(), msg);
-        this._fragment_error(fv.location(), msg);
+        this._vertexError(vv.location(), msg);
+        this._fragmentError(fv.location(), msg);
     } else if (eq !== true) {
         for (var ei = 0; ei < eq.a.length; ei++) {
             var e = eq.a[ei];
-            this._vertex_error(e.location, e.message);
+            this._vertexError(e.location, e.message);
         }
 
         for (var ei = 0; ei < eq.b.length; ei++) {
             var e = eq.b[ei];
-            this._fragment_error(e.location, e.message);
+            this._fragmentError(e.location, e.message);
         }
     }
 }
 
-Linker.prototype._check_uniforms = function() {
+Linker.prototype._checkUniforms = function() {
     for (var i = 0; i < this.fragment.uniforms.length; i++) {
         var fv = this.fragment.uniforms[i];
-        var vv = this.vertex.uniform_map[fv.name.text];
+        var vv = this.vertex.uniformMap[fv.name.text];
 
         if (vv) {
-            this._check_matching_types(vv, fv, 'uniform');
+            this._checkMatchingTypes(vv, fv, 'uniform');
         }
     }
 }
 
-Linker.prototype._check_varyings = function() {
+Linker.prototype._checkVaryings = function() {
     for (var i = 0; i < this.fragment.varyings.length; i++) {
         var fv = this.fragment.varyings[i];
-        var vv = this.vertex.varying_map[fv.name.text];
+        var vv = this.vertex.varyingMap[fv.name.text];
 
         if (vv) {
-            this._check_matching_types(vv, fv, 'varying');
+            this._checkMatchingTypes(vv, fv, 'varying');
         }
 
         // Check if all varyings used at least once by the fragment
@@ -176,17 +176,17 @@ Linker.prototype._check_varyings = function() {
             var msg = 'the varying variable ' + fv.name.text + ' (' + fv.type.token.text + ') is used in the fragment shader, but never declared in the vertex shader';
 
             for (var u = 0; u < fv.t.users.length; u++) {
-                this._fragment_error(fv.t.users[u].location(), msg);
+                this._fragmentError(fv.t.users[u].location(), msg);
             }
         }
     }
 }
 
-Linker.prototype._fragment_error = function(loc, message) {
+Linker.prototype._fragmentError = function(loc, message) {
     this._error(glsl.source.FRAGMENT, loc, message);
 };
 
-Linker.prototype._vertex_error = function(loc, message) {
+Linker.prototype._vertexError = function(loc, message) {
     this._error(glsl.source.VERTEX, loc, message);
 };
 
@@ -210,8 +210,8 @@ Linker.prototype.link = function() {
         fragment: []
     };
 
-    this._check_varyings();
-    this._check_uniforms();
+    this._checkVaryings();
+    this._checkUniforms();
 
     return this.errors();
 }

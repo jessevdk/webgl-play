@@ -43,14 +43,14 @@ function App() {
 
     this.document = null;
 
-    this._on_document_changed = this.register_signal('notify::document');
+    this._onDocumentChanged = this.registerSignal('notify::document');
     this._lastFocus = null;
 
     window.addEventListener('error', (function(e) {
         var error = e.error;
 
         if (error.originalStack) {
-            this._handle_js_error(error);
+            this._handleJsError(error);
 
             e.preventDefault();
             e.stopPropagation();
@@ -78,16 +78,16 @@ App.prototype.find = function(elems) {
     return ret;
 }
 
-App.prototype.new_document = function() {
+App.prototype.newDocument = function() {
     var doc = new Document(this);
 
-    this._load_doc(doc);
-    this._save_current_doc();
+    this._loadDoc(doc);
+    this._saveCurrentDoc();
 }
 
-App.prototype.load_document = function(doc) {
+App.prototype.loadDocument = function(doc) {
     if (doc === null) {
-        this.new_document();
+        this.newDocument();
         return;
     }
 
@@ -95,10 +95,10 @@ App.prototype.load_document = function(doc) {
         doc = Document.deserialize(doc);
     }
 
-    this._load_doc(doc);
+    this._loadDoc(doc);
 }
 
-App.prototype._extract_js_error_loc = function(e) {
+App.prototype._extractJsErrorLoc = function(e) {
     var stack;
 
     stack = e.originalStack || e.stack;
@@ -133,12 +133,12 @@ App.prototype._extract_js_error_loc = function(e) {
     return null;
 }
 
-App.prototype._handle_js_error = function(e) {
+App.prototype._handleJsError = function(e) {
     var message = e.message;
-    var loc = this._extract_js_error_loc(e);
+    var loc = this._extractJsErrorLoc(e);
 
     if (loc) {
-        this.js_editor.runtime_error({
+        this.jsEditor.runtimeError({
             message: message,
             location: loc
         });
@@ -147,7 +147,7 @@ App.prototype._handle_js_error = function(e) {
     }
 }
 
-App.prototype._update_renderer = function() {
+App.prototype._updateRenderer = function() {
     var ret = this.renderer.update(this.document);
 
     if (typeof ret === 'undefined') {
@@ -160,7 +160,7 @@ App.prototype._update_renderer = function() {
             c.this = this.renderer.program;
         }
 
-        this.js_editor.completionContext(c);
+        this.jsEditor.completionContext(c);
 
         for (var i = 0; i < this.document.programs.length; i++) {
             var p = this.document.programs[i];
@@ -178,7 +178,7 @@ App.prototype._update_renderer = function() {
         }
 
         if (e !== null) {
-            this._handle_js_error(e);
+            this._handleJsError(e);
         }
 
         var progs = null;
@@ -196,7 +196,7 @@ App.prototype._update_renderer = function() {
     }
 }
 
-App.prototype._update_editors = function() {
+App.prototype._updateEditors = function() {
     var up = {};
 
     var names = ['vertex', 'fragment', 'js'];
@@ -210,67 +210,67 @@ App.prototype._update_editors = function() {
         };
     }
 
-    this._update_document_by(up);
+    this._updateDocumentBy(up);
 }
 
-App.prototype._on_document_before_active_program_changed = function() {
-    this._update_editors();
+App.prototype._onDocumentBeforeActiveProgramChanged = function() {
+    this._updateEditors();
 }
 
-App.prototype._on_document_active_program_changed = function() {
-    var prg = this.document.active_program();
+App.prototype._onDocumentActiveProgramChanged = function() {
+    var prg = this.document.activeProgram();
 
     var loading = this._loading;
     this._loading = true;
 
-    this.vertex_editor.value(prg.vertex.data);
-    this.vertex_editor.history(prg.vertex.history);
+    this.vertexEditor.value(prg.vertex.data);
+    this.vertexEditor.history(prg.vertex.history);
 
-    this.fragment_editor.value(prg.fragment.data);
-    this.fragment_editor.history(prg.fragment.history);
+    this.fragmentEditor.value(prg.fragment.data);
+    this.fragmentEditor.history(prg.fragment.history);
 
     this._loading = loading;
-    this._save_current_doc_with_delay();
+    this._saveCurrentDocWithDelay();
 }
 
-App.prototype._on_document_title_changed = function() {
+App.prototype._onDocumentTitleChanged = function() {
     this.title.textContent = this.document.title;
 }
 
-App.prototype._load_doc_real = function(doc) {
+App.prototype._loadDocReal = function(doc) {
     if (this.document !== null) {
-        this.document.off('notify-before::active-program', this._on_document_before_active_program_changed, this);
-        this.document.off('notify::active-program', this._on_document_active_program_changed, this);
-        this.document.off('notify::title', this._on_document_title_changed, this);
+        this.document.off('notify-before::active-program', this._onDocumentBeforeActiveProgramChanged, this);
+        this.document.off('notify::active-program', this._onDocumentActiveProgramChanged, this);
+        this.document.off('notify::title', this._onDocumentTitleChanged, this);
 
-        this.document.off('changed', this._on_document_changed, this);
+        this.document.off('changed', this._onDocumentChanged, this);
     }
 
     this.document = doc;
 
-    this._on_document_active_program_changed();
+    this._onDocumentActiveProgramChanged();
 
-    this.js_editor.value(doc.js.data);
-    this.js_editor.history(doc.js.history);
+    this.jsEditor.value(doc.js.data);
+    this.jsEditor.history(doc.js.history);
 
-    if (doc.active_editor !== null) {
+    if (doc.activeEditor !== null) {
         var editor = null;
 
-        switch (doc.active_editor.name) {
+        switch (doc.activeEditor.name) {
         case 'js':
-            editor = this.js_editor;
+            editor = this.jsEditor;
             break;
         case 'vertex':
-            editor = this.vertex_editor;
+            editor = this.vertexEditor;
             break;
         case 'fragment':
-            editor = this.fragment_editor;
+            editor = this.fragmentEditor;
             break;
         }
 
         if (editor !== null) {
             editor.focus();
-            editor.cursor(doc.active_editor.cursor);
+            editor.cursor(doc.activeEditor.cursor);
         }
     } else {
         this.canvas.focus();
@@ -284,24 +284,24 @@ App.prototype._load_doc_real = function(doc) {
             this.panels[k].position(p.position);
         }
 
-        this._update_canvas_size();
+        this._updateCanvasSize();
     }
 
     this._loading = false;
-    this._update_renderer();
+    this._updateRenderer();
 
-    this.document.on('notify-before::active-program', this._on_document_before_active_program_changed, this);
-    this.document.on('notify::active-program', this._on_document_active_program_changed, this);
-    this.document.on('notify::title', this._on_document_title_changed, this);
-    this.document.on('changed', this._on_document_has_changed, this);
+    this.document.on('notify-before::active-program', this._onDocumentBeforeActiveProgramChanged, this);
+    this.document.on('notify::active-program', this._onDocumentActiveProgramChanged, this);
+    this.document.on('notify::title', this._onDocumentTitleChanged, this);
+    this.document.on('changed', this._onDocumentHasChanged, this);
 
-    this._on_document_changed();
+    this._onDocumentChanged();
 
     this.content.classList.add('loaded');
     this.content.classList.remove('loading');
 }
 
-App.prototype._load_doc = function(doc) {
+App.prototype._loadDoc = function(doc) {
     this._loading = true;
 
     if (this.document !== null) {
@@ -309,22 +309,22 @@ App.prototype._load_doc = function(doc) {
         this.content.classList.add('loading');
 
         setTimeout((function() {
-            this._load_doc_real(doc);
+            this._loadDocReal(doc);
         }).bind(this), 200);
     } else {
-        this._load_doc_real(doc);
+        this._loadDocReal(doc);
     }
 }
 
-App.prototype._on_document_has_changed = function(doc, opts) {
-    this._save_current_doc_with_delay((function() {
+App.prototype._onDocumentHasChanged = function(doc, opts) {
+    this._saveCurrentDocWithDelay((function() {
         if ('vertex' in opts || 'fragment' in opts || 'js' in opts || 'programs' in opts) {
-            this._update_renderer();
+            this._updateRenderer();
         }
     }).bind(this));
 }
 
-App.prototype._serialize_document = function(doc) {
+App.prototype._serializeDocument = function(doc) {
     var ret = doc.serialize();
 
     ret.state = {
@@ -340,8 +340,8 @@ App.prototype._serialize_document = function(doc) {
     return ret;
 }
 
-App.prototype._save_doc = function(doc, cb) {
-    this._store.save(this._serialize_document(doc), function(store, retdoc) {
+App.prototype._saveDoc = function(doc, cb) {
+    this._store.save(this._serializeDocument(doc), function(store, retdoc) {
         if (retdoc !== null) {
             doc.id = retdoc.id;
         }
@@ -352,28 +352,28 @@ App.prototype._save_doc = function(doc, cb) {
     });
 }
 
-App.prototype._save_current_doc = function(cb) {
-    this._save_doc(this.document, cb);
+App.prototype._saveCurrentDoc = function(cb) {
+    this._saveDoc(this.document, cb);
 }
 
-App.prototype._save_current_doc_with_delay = function(cb) {
-    if (this._save_timeout !== 0) {
-        clearTimeout(this._save_timeout);
-        this._save_timeout = 0;
+App.prototype._saveCurrentDocWithDelay = function(cb) {
+    if (this._saveTimeout !== 0) {
+        clearTimeout(this._saveTimeout);
+        this._saveTimeout = 0;
     }
 
-    this._save_timeout = setTimeout((function() {
-        this._save_timeout = 0;
-        this._save_current_doc(cb);
+    this._saveTimeout = setTimeout((function() {
+        this._saveTimeout = 0;
+        this._saveCurrentDoc(cb);
     }).bind(this), 500);
 }
 
-App.prototype._update_canvas_size = function() {
+App.prototype._updateCanvasSize = function() {
     this.canvas.width = this.canvas.clientWidth;
     this.canvas.height = this.canvas.clientHeight;
 }
 
-App.prototype._init_panels = function() {
+App.prototype._initPanels = function() {
     var panels = document.querySelectorAll('.panel');
 
     this.panels = {};
@@ -385,31 +385,31 @@ App.prototype._init_panels = function() {
     }
 
     this.panels['panel-programs'].on('resized', (function() {
-        this.vertex_editor.editor.refresh();
-        this.fragment_editor.editor.refresh();
-        this.js_editor.editor.refresh();
-        this._update_canvas_size();
+        this.vertexEditor.editor.refresh();
+        this.fragmentEditor.editor.refresh();
+        this.jsEditor.editor.refresh();
+        this._updateCanvasSize();
     }).bind(this));
 
     this.panels['panel-main'].on('resized', (function() {
-        this.vertex_editor.editor.refresh();
-        this.fragment_editor.editor.refresh();
-        this.js_editor.editor.refresh();
-        this._update_canvas_size();
+        this.vertexEditor.editor.refresh();
+        this.fragmentEditor.editor.refresh();
+        this.jsEditor.editor.refresh();
+        this._updateCanvasSize();
     }).bind(this));
 
     this.panels['panel-program'].on('resized', (function() {
-        this.vertex_editor.editor.refresh();
-        this.fragment_editor.editor.refresh();
+        this.vertexEditor.editor.refresh();
+        this.fragmentEditor.editor.refresh();
     }).bind(this));
 
     this.panels['panel-js'].on('resized', (function() {
-        this.js_editor.editor.refresh();
-        this._update_canvas_size();
+        this.jsEditor.editor.refresh();
+        this._updateCanvasSize();
     }).bind(this));
 }
 
-App.prototype._update_document_by = function(opts) {
+App.prototype._updateDocumentBy = function(opts) {
     if (this._loading) {
         return;
     }
@@ -417,7 +417,7 @@ App.prototype._update_document_by = function(opts) {
     this.document.update(opts);
 }
 
-App.prototype._update_document = function(name, editor) {
+App.prototype._updateDocument = function(name, editor) {
     if (this._loading) {
         return;
     }
@@ -429,17 +429,17 @@ App.prototype._update_document = function(name, editor) {
         history: editor.history()
     };
 
-    this._update_document_by(up);
+    this._updateDocumentBy(up);
 }
 
-App.prototype._init_canvas = function() {
+App.prototype._initCanvas = function() {
     this.canvas = document.getElementById('view');
 
     var t = this.canvas.parentElement.querySelector('.editor-title');
 
     this.canvas.addEventListener('focus', (function(title) {
         t.classList.add('hidden');
-        this._update_document_by({active_editor: null});
+        this._updateDocumentBy({activeEditor: null});
 
         this._lastFocus = this.canvas;
     }).bind(this, t));
@@ -449,7 +449,7 @@ App.prototype._init_canvas = function() {
     }).bind(this, t));
 
     window.addEventListener('resize', (function(e) {
-        this._update_canvas_size();
+        this._updateCanvasSize();
     }).bind(this));
 
     this.renderer = new Renderer(this.canvas, document.getElementById('content'));
@@ -461,13 +461,13 @@ App.prototype._init_canvas = function() {
     }).bind(this));
 
     this.renderer.on('notify::fullscreen', (function() {
-        this._update_canvas_size();
+        this._updateCanvasSize();
     }).bind(this));
 
     this.renderer.on('error', (function(r, type, e) {
         switch (type) {
         case 'js':
-            this._handle_js_error(e);
+            this._handleJsError(e);
             break;
         case 'program':
             for (var i = 0; i < this.document.programs.length; i++) {
@@ -483,11 +483,11 @@ App.prototype._init_canvas = function() {
     }).bind(this));
 }
 
-App.prototype._init_editors = function() {
+App.prototype._initEditors = function() {
     var elems = this.find({
-        vertex_editor: '#vertex-editor',
-        fragment_editor: '#fragment-editor',
-        js_editor: '#js-editor'
+        vertexEditor: '#vertex-editor',
+        fragmentEditor: '#fragment-editor',
+        jsEditor: '#js-editor'
     });
 
     var opts = {
@@ -508,8 +508,8 @@ App.prototype._init_editors = function() {
 
             title.classList.add('hidden');
 
-            this._update_document_by({
-                active_editor: {
+            this._updateDocumentBy({
+                activeEditor: {
                     name: n,
                     cursor: this[k].cursor()
                 }
@@ -525,24 +525,24 @@ App.prototype._init_editors = function() {
 
     var ctx = this.renderer.context;
 
-    this.vertex_editor = new Editor(this.vertex_editor, ctx, glsl.source.VERTEX);
-    this.fragment_editor = new Editor(this.fragment_editor, ctx, glsl.source.FRAGMENT);
-    this.js_editor = new Editor(this.js_editor, ctx, 'javascript');
+    this.vertexEditor = new Editor(this.vertexEditor, ctx, glsl.source.VERTEX);
+    this.fragmentEditor = new Editor(this.fragmentEditor, ctx, glsl.source.FRAGMENT);
+    this.jsEditor = new Editor(this.jsEditor, ctx, 'javascript');
 
     var editors = {
-        'vertex': this.vertex_editor,
-        'fragment': this.fragment_editor,
-        'js': this.js_editor
+        'vertex': this.vertexEditor,
+        'fragment': this.fragmentEditor,
+        'js': this.jsEditor
     };
 
     for (var n in editors) {
         editors[n].editor.on('changes', (function(n) {
-            this._update_document(n, editors[n]);
+            this._updateDocument(n, editors[n]);
         }).bind(this, n));
 
         editors[n].editor.on('cursorActivity', (function(n) {
-            this._update_document_by({
-                active_editor: {
+            this._updateDocumentBy({
+                activeEditor: {
                     name: n,
                     cursor: editors[n].cursor()
                 }
@@ -550,25 +550,25 @@ App.prototype._init_editors = function() {
         }).bind(this, n));
     }
 
-    this._parsed_timeout = 0;
-    this.vertex_editor.on('notify::parsed', this._on_editor_parsed, this);
-    this.fragment_editor.on('notify::parsed', this._on_editor_parsed, this);
+    this._parsedTimeout = 0;
+    this.vertexEditor.on('notify::parsed', this._onEditorParsed, this);
+    this.fragmentEditor.on('notify::parsed', this._onEditorParsed, this);
 }
 
-App.prototype._on_editor_parsed = function() {
-    if (this._parsed_timeout !== 0) {
-        clearTimeout(this._parsed_timeout);
+App.prototype._onEditorParsed = function() {
+    if (this._parsedTimeout !== 0) {
+        clearTimeout(this._parsedTimeout);
     }
 
-    this._parsed_timeout = setTimeout((function() {
-        this._parsed_timeout = 0;
+    this._parsedTimeout = setTimeout((function() {
+        this._parsedTimeout = 0;
 
-        if (this.vertex_editor.parsed !== null && this.fragment_editor.parsed !== null) {
-            var linker = new glsl.linker.Linker(this.vertex_editor.parsed, this.fragment_editor.parsed);
+        if (this.vertexEditor.parsed !== null && this.fragmentEditor.parsed !== null) {
+            var linker = new glsl.linker.Linker(this.vertexEditor.parsed, this.fragmentEditor.parsed);
             var errors = linker.link();
 
-            this.vertex_editor.external_errors(errors.vertex);
-            this.fragment_editor.external_errors(errors.fragment);
+            this.vertexEditor.externalErrors(errors.vertex);
+            this.fragmentEditor.externalErrors(errors.fragment);
         }
     }).bind(this), 50);
 }
@@ -622,7 +622,7 @@ App.prototype.message = function(type, m) {
     return remover;
 }
 
-App.prototype._on_button_share_click = function() {
+App.prototype._onButtonShareClick = function() {
     var req = new XMLHttpRequest();
     var doc = this.document;
 
@@ -633,7 +633,7 @@ App.prototype._on_button_share_click = function() {
             var ret = JSON.parse(req.responseText);
 
             if (this.document === doc) {
-                this._update_document_by({
+                this._updateDocumentBy({
                     share: ret.hash
                 });
 
@@ -673,18 +673,18 @@ App.prototype._on_button_share_click = function() {
     req.send(JSON.stringify(this.document.remote()));
 }
 
-App.prototype._on_button_export_click = function() {
+App.prototype._onButtonExportClick = function() {
     var saveas = require('../vendor/FileSaver');
 
     var blob = new Blob([JSON.stringify(this.document.remote(), undefined, 2)], {type: 'application/json;charset=utf-8'});
     saveas(blob, this.document.title + '.json');
 }
 
-App.prototype._init_programs_bar = function() {
-    this.programs_bar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
+App.prototype._initProgramsBar = function() {
+    this.programsBar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
 }
 
-App.prototype._show_opengl_popup = function(cb) {
+App.prototype._showOpenglPopup = function(cb) {
     var gl = this.renderer.context.gl;
 
     var exts = gl.getSupportedExtensions();
@@ -741,7 +741,7 @@ App.prototype._show_opengl_popup = function(cb) {
     cb(popup);
 }
 
-App.prototype._init_buttons = function() {
+App.prototype._initButtons = function() {
     var buttons = ['new', 'copy', 'export', 'models', 'open', 'opengl', 'help', 'share', 'publish'];
 
     this.buttons = {};
@@ -753,7 +753,7 @@ App.prototype._init_buttons = function() {
         if (elem) {
             var button = new ui.Button({ wrap: elem });
 
-            var eh = '_on_button_' + b + '_click';
+            var eh = '_onButton' + b[0].toUpperCase() + b.slice(1) + 'Click';
 
             if (eh in this) {
                 button.on('click', this[eh], this);
@@ -763,23 +763,23 @@ App.prototype._init_buttons = function() {
         }
     }
 
-    ui.Popup.on(this.buttons.open.e, this._show_open_popup.bind(this));
-    ui.Popup.on(this.buttons.models.e, this._show_models_popup.bind(this));
-    ui.Popup.on(this.buttons.opengl.e, this._show_opengl_popup.bind(this));
+    ui.Popup.on(this.buttons.open.e, this._showOpenPopup.bind(this));
+    ui.Popup.on(this.buttons.models.e, this._showModelsPopup.bind(this));
+    ui.Popup.on(this.buttons.opengl.e, this._showOpenglPopup.bind(this));
 }
 
-App.prototype._on_button_copy_click = function() {
+App.prototype._onButtonCopyClick = function() {
     var title = 'Copy of ' + this.document.title;
 
-    var doc = Document.deserialize(this._serialize_document(this.document));
+    var doc = Document.deserialize(this._serializeDocument(this.document));
 
     doc.id = null;
     doc.title = title;
 
-    this._load_doc(doc);
+    this._loadDoc(doc);
 }
 
-App.prototype._rel_date = function(date) {
+App.prototype._relDate = function(date) {
     var now = new Date();
     var t = (now - date) / 1000;
 
@@ -821,7 +821,7 @@ App.prototype._rel_date = function(date) {
     }
 }
 
-App.prototype._show_models_popup = function(cb) {
+App.prototype._showModelsPopup = function(cb) {
     var popup;
 
     this._store.models((function(store, ret) {
@@ -876,8 +876,8 @@ App.prototype._show_models_popup = function(cb) {
                     if (data !== null) {
                         this._store.addModel({
                             filename: f.name,
-                            modification_time: f.lastModifiedDate,
-                            creation_time: new Date()
+                            modificationTime: f.lastModifiedDate,
+                            creationTime: new Date()
                         }, data, (function(store, model) {
                             reader.finished(f, model !== null);
                         }).bind(this));
@@ -885,7 +885,7 @@ App.prototype._show_models_popup = function(cb) {
                 }).bind(this));
 
                 reader.on('finished', (function() {
-                    this._update_renderer();
+                    this._updateRenderer();
                 }).bind(this));
 
                 popup.destroy();
@@ -921,7 +921,7 @@ App.prototype._show_models_popup = function(cb) {
 
                     W('div', {
                         classes: 'modification-time',
-                        textContent: 'Added ' + this._rel_date(ret[i].creation_time)
+                        textContent: 'Added ' + this._relDate(ret[i].creationTime)
                     }),
 
                     W('div', {
@@ -950,7 +950,7 @@ App.prototype._show_models_popup = function(cb) {
 
                     if (deleted) {
                         content.removeChild(li);
-                        this._update_renderer();
+                        this._updateRenderer();
                     } else {
                         del.textContent = '×';
                     }
@@ -975,7 +975,7 @@ App.prototype._show_models_popup = function(cb) {
     }).bind(this));
 }
 
-App.prototype._show_open_popup = function(cb) {
+App.prototype._showOpenPopup = function(cb) {
     var popup;
 
     this._store.all((function(store, ret) {
@@ -1030,7 +1030,7 @@ App.prototype._show_open_popup = function(cb) {
 
                 reader.on('loaded', (function(i, r, f, data) {
                     var doc = Document.fromRemote(null, JSON.parse(data));
-                    this._save_doc(doc);
+                    this._saveDoc(doc);
 
                     docs[i] = doc;
 
@@ -1040,7 +1040,7 @@ App.prototype._show_open_popup = function(cb) {
                 reader.on('finished', (function() {
                     for (var i = docs.length - 1; i >= 0; i--) {
                         if (docs[i]) {
-                            this._load_doc(docs[i]);
+                            this._loadDoc(docs[i]);
                             break;
                         }
                     }
@@ -1072,7 +1072,7 @@ App.prototype._show_open_popup = function(cb) {
 
                     W('div', {
                         classes: 'modification-time',
-                        textContent: 'Last modified ' + this._rel_date(ret[i].modification_time)
+                        textContent: 'Last modified ' + this._relDate(ret[i].modificationTime)
                     }),
 
                     W('div', {
@@ -1089,7 +1089,7 @@ App.prototype._show_open_popup = function(cb) {
             }
 
             li.addEventListener('click', (function(doc) {
-                this._load_doc(Document.deserialize(doc));
+                this._loadDoc(Document.deserialize(doc));
                 popup.destroy();
             }).bind(this, ret[i]));
 
@@ -1141,10 +1141,10 @@ App.prototype._show_open_popup = function(cb) {
     }).bind(this));
 }
 
-App.prototype._on_button_new_click = function() {
-    this._save_current_doc((function(saved) {
+App.prototype._onButtonNewClick = function() {
+    this._saveCurrentDoc((function(saved) {
         if (saved) {
-            this.new_document();
+            this.newDocument();
         }
     }).bind(this));
 }
@@ -1160,7 +1160,7 @@ App.prototype._addOverlay = function() {
     return overlay;
 }
 
-App.prototype._show_info_popup = function() {
+App.prototype._showInfoPopup = function() {
     var content = document.createElement('div');
     content.classList.add('info-popup');
 
@@ -1172,11 +1172,11 @@ App.prototype._show_info_popup = function() {
     content.appendChild(title);
 
     var f = (function() {
-        this._update_document_by({
+        this._updateDocumentBy({
             title: title.value
         });
 
-        this._save_current_doc_with_delay();
+        this._saveCurrentDocWithDelay();
     }).bind(this);
 
     title.addEventListener('input', f);
@@ -1208,11 +1208,11 @@ App.prototype._show_info_popup = function() {
     var editor = document.createElement('textarea');
 
     var saveEditor = (function() {
-        this._update_document_by({
+        this._updateDocumentBy({
             description: editor.value
         });
 
-        this._save_current_doc_with_delay();
+        this._saveCurrentDocWithDelay();
     }).bind(this);
 
     editor.addEventListener('keydown', (function(e) {
@@ -1258,14 +1258,14 @@ App.prototype._show_info_popup = function() {
     }).bind(this));
 
     var overlay = this._addOverlay();
-    this._info_popup = new ui.Popup(content, this.title);
+    this._infoPopup = new ui.Popup(content, this.title);
 
-    this._info_popup.on('destroy', function() {
+    this._infoPopup.on('destroy', function() {
         if (content.classList.contains('editing')) {
             saveEditor();
         }
 
-        this._info_popup = null;
+        this._infoPopup = null;
         document.body.removeChild(overlay);
 
         if (this._lastFocus) {
@@ -1274,9 +1274,9 @@ App.prototype._show_info_popup = function() {
     }, this);
 }
 
-App.prototype._init_title = function() {
+App.prototype._initTitle = function() {
     this.title = document.getElementById('document-title');
-    ui.Popup.on(this.title, this._show_info_popup.bind(this));
+    ui.Popup.on(this.title, this._showInfoPopup.bind(this));
 }
 
 App.prototype._init = function() {
@@ -1291,11 +1291,11 @@ App.prototype._init = function() {
 
                 if (saved && typeof saved.id !== 'undefined' && saved.id === doc.id)
                 {
-                    saved.modification_time = new Date(saved.modification_time);
-                    saved.creation_time = new Date(saved.creation_time);
+                    saved.modificationTime = new Date(saved.modificationTime);
+                    saved.creationTime = new Date(saved.creationTime);
 
-                    this._load_doc(Document.deserialize(saved));
-                    this._save_current_doc_with_delay();
+                    this._loadDoc(Document.deserialize(saved));
+                    this._saveCurrentDocWithDelay();
 
                     localStorage.setItem('savedDocumentBeforeUnload', null);
 
@@ -1303,7 +1303,7 @@ App.prototype._init = function() {
                 }
             }
 
-            this.load_document(doc);
+            this.loadDocument(doc);
         }).bind(this);
 
         if (m) {
@@ -1351,18 +1351,18 @@ App.prototype._init = function() {
 
     this.content = document.getElementById('content');
 
-    this._init_programs_bar();
-    this._init_canvas();
-    this._init_editors();
-    this._init_buttons();
-    this._init_panels();
-    this._init_title();
+    this._initProgramsBar();
+    this._initCanvas();
+    this._initEditors();
+    this._initButtons();
+    this._initPanels();
+    this._initTitle();
 
-    this._update_canvas_size();
+    this._updateCanvasSize();
 
     window.onbeforeunload = (function(e) {
-        this._update_editors();
-        localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this._serialize_document(this.document)));
+        this._updateEditors();
+        localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this._serializeDocument(this.document)));
     }).bind(this);
 };
 

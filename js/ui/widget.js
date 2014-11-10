@@ -52,9 +52,9 @@ function Widget(clsname, e, settings) {
 
     this.children = [];
 
-    var notify = this.register_signal('notify::value');
+    var notify = this.registerSignal('notify::value');
 
-    this._on_notify_value = (function() {
+    this._onNotifyValue = (function() {
         notify(this._value);
     }).bind(this);
 
@@ -109,7 +109,7 @@ Widget.prototype.value = function(value) {
         this._value = value;
 
         this._valueUpdated();
-        this._on_notify_value();
+        this._onNotifyValue();
     }
 }
 
@@ -171,7 +171,7 @@ Widget.prototype.childElements = function(e) {
     return ret;
 }
 
-Widget.prototype.page_position = function(e) {
+Widget.prototype.pagePosition = function(e) {
     if (typeof e === 'undefined') {
         e = this.e;
     }

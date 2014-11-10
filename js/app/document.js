@@ -46,74 +46,74 @@ function Document() {
     this.title = 'Untitled';
     this.description = '';
 
-    this.modification_time = new Date();
-    this.creation_time = new Date();
-    this.active_editor = null;
+    this.modificationTime = new Date();
+    this.creationTime = new Date();
+    this.activeEditor = null;
     this.screenshot = null;
     this.state = {};
     this.share = null;
 
-    this._active_program = this.programs[0];
-    this._active_program._is_default = true;
+    this._activeProgram = this.programs[0];
+    this._activeProgram._isDefault = true;
 
-    this._default_program = this._active_program;
+    this._defaultProgram = this._activeProgram;
 
-    this._on_notify_title = this.register_signal('notify::title');
-    this._on_notify_description = this.register_signal('notify::description');
-    this._on_notify_before_active_program = this.register_signal('notify-before::active-program');
-    this._on_notify_active_program = this.register_signal('notify::active-program');
-    this._on_program_added = this.register_signal('program-added');
-    this._on_program_removed = this.register_signal('program-removed');
+    this._onNotifyTitle = this.registerSignal('notify::title');
+    this._onNotifyDescription = this.registerSignal('notify::description');
+    this._onNotifyBeforeActiveProgram = this.registerSignal('notify-before::active-program');
+    this._onNotifyActiveProgram = this.registerSignal('notify::active-program');
+    this._onProgramAdded = this.registerSignal('program-added');
+    this._onProgramRemoved = this.registerSignal('program-removed');
 
-    this._on_changed = this.register_signal('changed');
+    this._onChanged = this.registerSignal('changed');
 }
 
 Document.prototype = Object.create(Signals.prototype);
 Document.prototype.constructor = Document;
 
-Document.prototype.default_program = function() {
-    return this._default_program;
+Document.prototype.defaultProgram = function() {
+    return this._defaultProgram;
 }
 
 Document.prototype._changed = function(opts) {
-    this.modification_time = new Date();
-    this._on_changed(opts);
+    this.modificationTime = new Date();
+    this._onChanged(opts);
 }
 
-Document.prototype._on_program_notify_name = function() {
+Document.prototype._onProgramNotifyName = function() {
     this._changed({
         programs: true
     })
 }
 
-Document.prototype.add_program = function(program) {
+Document.prototype.addProgram = function(program) {
     this.programs.push(program);
-    this._on_program_added(program);
+    this._onProgramAdded(program);
 
-    program.on('notify::name', this._on_program_notify_name, this);
+    program.on('notify::name', this._onProgramNotifyName, this);
 
     this._changed({
         programs: true
     });
 }
 
-Document.prototype.remove_program = function(program) {
+Document.prototype.removeProgram = function(program) {
     var idx = this.programs.indexOf(program);
 
-    if (idx >= 0 && !this.programs[idx].is_default()) {
+    if (idx >= 0 && !this.programs[idx].isDefault()) {
         console.log(idx);
-        if (this._active_program === program) {
+        if (this._activeProgram === program) {
             if (idx !== 0) {
-                this.active_program(this.programs[idx - 1]);
+                this.activeProgram(this.programs[idx - 1]);
             } else {
-                this.active_program(this.programs[idx + 1]);
+                this.activeProgram(this.programs[idx + 1]);
             }
         }
 
         this.programs.splice(idx, 1);
-        this._on_program_removed(program);
+        this._onProgramRemoved(program);
 
-        program.off('notify::name', this._on_program_notify_name, this);
+        program.off('notify::name', this._onProgramNotifyName, this);
 
         this._changed({
             programs: true
@@ -121,32 +121,32 @@ Document.prototype.remove_program = function(program) {
     }
 }
 
-Document.prototype.active_program = function(program) {
+Document.prototype.activeProgram = function(program) {
     if (typeof program === 'undefined') {
-        return this._active_program;
+        return this._activeProgram;
     }
 
-    if (program !== this._active_program) {
-        this._on_notify_before_active_program();
-        this._active_program = program;
-        this._on_notify_active_program();
+    if (program !== this._activeProgram) {
+        this._onNotifyBeforeActiveProgram();
+        this._activeProgram = program;
+        this._onNotifyActiveProgram();
 
         this._changed({
-            active_program: true
+            activeProgram: true
         });
     }
 }
 
 Document.prototype.update = function(changes) {
     if ('vertex' in changes) {
-        this._active_program.vertex = {
+        this._activeProgram.vertex = {
             data: changes.vertex.data,
             history: changes.vertex.history
         };
     }
 
     if ('fragment' in changes) {
-        this._active_program.fragment = {
+        this._activeProgram.fragment = {
             data: changes.fragment.data,
             history: changes.fragment.history
         };
@@ -161,22 +161,22 @@ Document.prototype.update = function(changes) {
 
     if ('title' in changes) {
         this.title = changes.title;
-        this._on_notify_title();
+        this._onNotifyTitle();
     }
 
     if ('description' in changes) {
         this.description = changes.description;
-        this._on_notify_description();
+        this._onNotifyDescription();
     }
 
-    if ('active_editor' in changes) {
-        this.active_editor = changes.active_editor;
+    if ('activeEditor' in changes) {
+        this.activeEditor = changes.activeEditor;
     }
 
-    if ('active_program' in changes) {
+    if ('activeProgram' in changes) {
         for (var i = 0; i < this.programs.length; i++) {
-            if (this.programs[i].name() === changes.active_program) {
-                this.active_program(this.programs[i]);
+            if (this.programs[i].name() === changes.activeProgram) {
+                this.activeProgram(this.programs[i]);
                 break;
             }
         }
@@ -198,14 +198,14 @@ Document.fromRemote = function(share, doc) {
 
     ret.share = share;
     ret.programs = [];
-    ret._default_program = null;
+    ret._defaultProgram = null;
 
     for (var i = 0; i < doc.programs.length; i++) {
         var prg = Program.fromRemote(doc.programs[i]);
         ret.programs.push(prg);
 
-        if (prg.is_default()) {
-            ret._default_program = prg;
+        if (prg.isDefault()) {
+            ret._defaultProgram = prg;
         }
     }
 
@@ -213,11 +213,11 @@ Document.fromRemote = function(share, doc) {
         ret.programs.push(Program.default());
     }
 
-    ret._active_program = ret.programs[0];
+    ret._activeProgram = ret.programs[0];
 
-    if (!ret._default_program) {
-        ret._default_program = ret.programs[0];
-        ret.programs[0]._is_default = true;
+    if (!ret._defaultProgram) {
+        ret._defaultProgram = ret.programs[0];
+        ret.programs[0]._isDefault = true;
     }
 
     ret.js = {
@@ -227,8 +227,8 @@ Document.fromRemote = function(share, doc) {
 
     ret.title = doc.title;
     ret.description = doc.description;
-    ret.modification_time = new Date();
-    ret.creation_time = new Date(doc.creationTime);
+    ret.modificationTime = new Date();
+    ret.creationTime = new Date(doc.creationTime);
 
     ret.state = {};
 
@@ -248,7 +248,7 @@ Document.prototype.remote = function() {
         description: this.description,
         programs: programs,
         javascript: this.js.data,
-        creationTime: this.creation_time
+        creationTime: this.creationTime
     };
 }
 
@@ -263,16 +263,16 @@ Document.prototype.serialize = function() {
     var ret = {
         version: 1,
         programs: programs,
-        active_program: this._active_program.name(),
+        activeProgram: this._activeProgram.name(),
         js: {
             data: this.js.data,
             history: this.js.history,
         },
         title: this.title,
         description: this.description,
-        modification_time: this.modification_time,
-        creation_time: this.creation_time,
-        active_editor: this.active_editor
+        modificationTime: this.modificationTime,
+        creationTime: this.creationTime,
+        activeEditor: this.activeEditor
     }
 
     if (this.screenshot) {
@@ -294,8 +294,8 @@ Document.deserialize = function(doc) {
     var ret = new Document();
 
     ret.programs = [];
-    ret._active_program = null;
-    ret._default_program = null;
+    ret._activeProgram = null;
+    ret._defaultProgram = null;
 
     if ('id' in doc) {
         ret.id = doc.id;
@@ -305,12 +305,12 @@ Document.deserialize = function(doc) {
         var prg = Program.deserialize(doc.programs[i]);
         ret.programs.push(prg);
 
-        if (prg.name() === doc.active_program) {
-            ret._active_program = prg;
+        if (prg.name() === doc.activeProgram) {
+            ret._activeProgram = prg;
         }
 
-        if (prg.is_default()) {
-            ret._default_program = prg;
+        if (prg.isDefault()) {
+            ret._defaultProgram = prg;
         }
     }
 
@@ -318,13 +318,13 @@ Document.deserialize = function(doc) {
         ret.programs.push(Program.default());
     }
 
-    if (!ret._default_program) {
-        ret._default_program = ret.programs[0];
-        ret.programs[0]._is_default = true;
+    if (!ret._defaultProgram) {
+        ret._defaultProgram = ret.programs[0];
+        ret.programs[0]._isDefault = true;
     }
 
-    if (ret._active_program === null) {
-        ret._active_program = ret.programs[0];
+    if (ret._activeProgram === null) {
+        ret._activeProgram = ret.programs[0];
     }
 
     if ('screenshot' in doc) {
@@ -335,7 +335,7 @@ Document.deserialize = function(doc) {
         ret.share = doc.share;
     }
 
-    ret.active_editor = doc.active_editor;
+    ret.activeEditor = doc.activeEditor;
 
     ret.js = {
         data: doc.js.data,
@@ -344,8 +344,8 @@ Document.deserialize = function(doc) {
 
     ret.title = doc.title;
     ret.description = doc.description;
-    ret.modification_time = doc.modification_time;
-    ret.creation_time = doc.creation_time;
+    ret.modificationTime = doc.modificationTime;
+    ret.creationTime = doc.creationTime;
 
     ret.state = doc.state;
 

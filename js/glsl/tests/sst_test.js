@@ -6,18 +6,18 @@ var assert = require('chai').assert;
 
 var files = fs.readdirSync('tests/testfiles');
 
-function has_suffix(s, suf) {
+function hasSuffix(s, suf) {
     return s.slice(s.length - suf.length) == suf;
 }
 
-function scan_files(filt) {
+function scanFiles(filt) {
     var ret = [];
 
     for (var i = 0; i < files.length; i++) {
         var f = files[i];
         var ff = 'tests/testfiles/' + f;
 
-        if (filt(files[i]) && (has_suffix(f, '.glslv') || has_suffix(f, '.glslf')) && fs.existsSync(ff + '.sst')) {
+        if (filt(files[i]) && (hasSuffix(f, '.glslv') || hasSuffix(f, '.glslf')) && fs.existsSync(ff + '.sst')) {
             ret.push(f);
         }
     }
@@ -25,9 +25,9 @@ function scan_files(filt) {
     return ret;
 }
 
-function test_one(f) {
+function testOne(f) {
     var unprocessed = fs.readFileSync('tests/testfiles/' + f, 'utf8');
-    var p = new glsl.ast.Parser(unprocessed, has_suffix(f, '.glslv') ? glsl.source.VERTEX : glsl.source.FRAGMENT);
+    var p = new glsl.ast.Parser(unprocessed, hasSuffix(f, '.glslv') ? glsl.source.VERTEX : glsl.source.FRAGMENT);
 
     glsl.sst.Annotate(p);
 
@@ -47,23 +47,23 @@ function test_one(f) {
     }
 }
 
-function make_suite(name, prefix, filter) {
-    var files = scan_files(filter);
+function makeSuite(name, prefix, filter) {
+    var files = scanFiles(filter);
 
     suite(name, function() {
         for (var i = 0; i < files.length; i++) {
             var f = files[i];
 
-            test(f.slice(prefix.length, f.length - 6), test_one.bind(this, f));
+            test(f.slice(prefix.length, f.length - 6), testOne.bind(this, f));
         }
     });
 }
 
-make_suite('sst', 'ast_', function(f) {
+makeSuite('sst', 'ast_', function(f) {
     return f.indexOf('ast_') === 0 && f.indexOf('ast_error_') !== 0;
 });
 
-make_suite('sst-error', 'ast_error_', function(f) {
+makeSuite('sst-error', 'ast_error_', function(f) {
     return f.indexOf('ast_error_') === 0;
 });
 

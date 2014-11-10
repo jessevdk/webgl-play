@@ -52,16 +52,16 @@ function Slider(settings) {
         max: 1
     }, settings));
 
-    this._bob.addEventListener('mousedown', this._on_bob_mousedown.bind(this));
-    this._trough.addEventListener('click', this._on_trough_click.bind(this));
+    this._bob.addEventListener('mousedown', this._onBobMousedown.bind(this));
+    this._trough.addEventListener('click', this._onTroughClick.bind(this));
 
-    this._trough.addEventListener('wheel', this._on_trough_wheel.bind(this));
+    this._trough.addEventListener('wheel', this._onTroughWheel.bind(this));
 }
 
 Slider.prototype = Object.create(Widget.prototype);
 Slider.prototype.constructor = Slider;
 
-Slider.prototype._on_trough_wheel = function(e) {
+Slider.prototype._onTroughWheel = function(e) {
     var delta = (e.deltaX + e.deltaY) / this._trough.offsetWidth;
 
     delta *= (this._settings.max - this._settings.min);
@@ -73,34 +73,34 @@ Slider.prototype._on_trough_wheel = function(e) {
 }
 
 Slider.prototype._updateFromPageX = function(x) {
-    var pos = this.page_position(this._trough);
+    var pos = this.pagePosition(this._trough);
     var f = (x - pos.x) / this._trough.offsetWidth;
 
     this.value(f * (this._settings.max - this._settings.min) + this._settings.min);
 }
 
-Slider.prototype._on_trough_click = function(e) {
+Slider.prototype._onTroughClick = function(e) {
     this._updateFromPageX(e.pageX);
 }
 
-Slider.prototype._on_bob_mousedown = function(e) {
-    this._on_bob_mousemove = (function(e) {
+Slider.prototype._onBobMousedown = function(e) {
+    this._onBobMousemove = (function(e) {
         this._updateFromPageX(e.pageX);
 
         e.preventDefault();
         e.stopPropagation();
     }).bind(this);
 
-    this._on_bob_mouseup = (function(e) {
-        window.removeEventListener('mousemove', this._on_bob_mousemove);
-        window.removeEventListener('mouseup', this._on_bob_mouseup);
+    this._onBobMouseup = (function(e) {
+        window.removeEventListener('mousemove', this._onBobMousemove);
+        window.removeEventListener('mouseup', this._onBobMouseup);
 
         e.preventDefault();
         e.stopPropagation();
     }).bind(this);
 
-    window.addEventListener('mousemove', this._on_bob_mousemove);
-    window.addEventListener('mouseup', this._on_bob_mouseup);
+    window.addEventListener('mousemove', this._onBobMousemove);
+    window.addEventListener('mouseup', this._onBobMouseup);
 
     e.preventDefault();
     e.stopPropagation();

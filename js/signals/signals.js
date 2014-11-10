@@ -39,7 +39,7 @@ Signals.prototype._signal = function(cbs, args) {
     }
 }
 
-Signals.prototype.register_signal = function(ev) {
+Signals.prototype.registerSignal = function(ev) {
     if (!(ev in this._events)) {
         this._events[ev] = [];
     }

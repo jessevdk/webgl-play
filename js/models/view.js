@@ -54,7 +54,7 @@ function View(ctx, projection, viewport, options) {
     Model.call(this, ctx, options);
 
     this._projection = projection;
-    this._projection_set = false;
+    this._projectionSet = false;
 
     this.options = utils.merge({
         color: null,
@@ -112,7 +112,7 @@ View.prototype.interactive = function(ctx, v) {
     }
 
     if (this._interactive) {
-        ctx._signals.off('event', this._on_event, this);
+        ctx._signals.off('event', this._onEvent, this);
     }
 
     if (v === false) {
@@ -124,32 +124,32 @@ View.prototype.interactive = function(ctx, v) {
         origin: math.vec3.create(),
 
         rotate: {
-            scroll_sensitivity: 0.01,
-            mouse_sensitivity: 0.01,
+            scrollSensitivity: 0.01,
+            mouseSensitivity: 0.01,
         },
 
         translate: {
-            mouse_sensitivity: 1,
-            scroll_sensitivity: 0.1
+            mouseSensitivity: 1,
+            scrollSensitivity: 0.1
         },
 
         zoom: {
-            mouse_sensitivity: 0.1,
-            scroll_sensitivity: 0.1,
+            mouseSensitivity: 0.1,
+            scrollSensitivity: 0.1,
             sensitivity: 0.1
         }
     }, v === true ? {} : v);
 
-    this._interactive._mouse_pressed = null;
+    this._interactive._mousePressed = null;
 
-    ctx._signals.on('event', this._on_event, this);
+    ctx._signals.on('event', this._onEvent, this);
 
     ctx.gl.canvas.addEventListener('contextmenu', function(e) {
         e.preventDefault();
     });
 }
 
-View.prototype._rotate_dx_dy = function(dx, dy, s, origTransform) {
+View.prototype._rotateDxDy = function(dx, dy, s, origTransform) {
     if (typeof origTransform !== 'undefined') {
         math.transform.copy(this.transform, origTransform);
     }
@@ -171,7 +171,7 @@ View.prototype._rotate_dx_dy = function(dx, dy, s, origTransform) {
     math.transform.copy(this.transform, new math.transform(rot, math.vec3.add(tr, tr, this._interactive.origin)));
 }
 
-View.prototype._translate_dx_dy = function(dx, dy, sx, sy, origTransform) {
+View.prototype._translateDxDy = function(dx, dy, sx, sy, origTransform) {
     if (typeof origTransform !== 'undefined') {
         math.transform.copy(this.transform, origTransform);
     }
@@ -179,7 +179,7 @@ View.prototype._translate_dx_dy = function(dx, dy, sx, sy, origTransform) {
     this.transform.translateSide(dx * sx).translateUp(dy * sy);
 }
 
-View.prototype._zoom_dx_dy = function(dx, dy, s, origTransform) {
+View.prototype._zoomDxDy = function(dx, dy, s, origTransform) {
     if (typeof origTransform !== 'undefined') {
         math.transform.copy(this.transform, origTransform);
     }
@@ -187,28 +187,28 @@ View.prototype._zoom_dx_dy = function(dx, dy, s, origTransform) {
     this.transform.translateForward((dx + dy) * s);
 }
 
-View.prototype._on_event = function(ctx, e) {
+View.prototype._onEvent = function(ctx, e) {
     switch (e.type) {
     case 'wheel':
         if (e.shiftKey) {
             // Translate
-            this._translate_dx_dy(e.deltaX,
+            this._translateDxDy(e.deltaX,
                                   e.deltaY,
-                                  this._interactive.translate.scroll_sensitivity,
-                                  this._interactive.translate.scroll_sensitivity);
+                                  this._interactive.translate.scrollSensitivity,
+                                  this._interactive.translate.scrollSensitivity);
         } else if (e.ctrlKey) {
             // Zoom
-            this._zoom_dx_dy(e.deltaX, e.deltaY, this._interactive.zoom.scroll_sensitivity);
+            this._zoomDxDy(e.deltaX, e.deltaY, this._interactive.zoom.scrollSensitivity);
         } else {
             // Rotate
-            this._rotate_dx_dy(e.deltaX, e.deltaY, this._interactive.rotate.scroll_sensitivity);
+            this._rotateDxDy(e.deltaX, e.deltaY, this._interactive.rotate.scrollSensitivity);
         }
 
         e.preventDefault();
         e.stopPropagation();
         break;
     case 'mousedown':
-        this._interactive._mouse_pressed = {
+        this._interactive._mousePressed = {
             x: e.pageX,
             y: e.pageY,
             button: e.button,
@@ -217,7 +217,7 @@ View.prototype._on_event = function(ctx, e) {
         };
         break;
     case 'mousemove':
-        var mp = this._interactive._mouse_pressed;
+        var mp = this._interactive._mousePressed;
 
         if (mp !== null && mp.button === 0) {
             if (e.shiftKey) {
@@ -229,7 +229,7 @@ View.prototype._on_event = function(ctx, e) {
                 var proj = this.projection();
                 var vp = this.currentViewport();
 
-                var sensitivity = this._interactive.translate.mouse_sensitivity;
+                var sensitivity = this._interactive.translate.mouseSensitivity;
 
                 var scale = {
                     x: (2 * l) / (proj[0] * vp[2]) * sensitivity,
@@ -241,24 +241,24 @@ View.prototype._on_event = function(ctx, e) {
                     y: e.pageY - mp.y
                 }
 
-                this._translate_dx_dy(d.x,
+                this._translateDxDy(d.x,
                                       d.y,
                                       scale.x,
                                       scale.y,
                                       mp.transform);
 
-                this._interactive._mouse_pressed.translation = [d.x * scale.x, d.y * scale.y, 0];
+                this._interactive._mousePressed.translation = [d.x * scale.x, d.y * scale.y, 0];
             } else if (e.ctrlKey) {
                 // Zoom
-                this._zoom_dx_dy(e.pageX - mp.x,
+                this._zoomDxDy(e.pageX - mp.x,
                                  e.pageY - mp.y,
-                                 this._interactive.zoom.mouse_sensitivity,
+                                 this._interactive.zoom.mouseSensitivity,
                                  mp.transform);
             } else {
                 // Rotate
-                this._rotate_dx_dy(e.pageX - mp.x,
+                this._rotateDxDy(e.pageX - mp.x,
                                    e.pageY - mp.y,
-                                   this._interactive.rotate.mouse_sensitivity,
+                                   this._interactive.rotate.mouseSensitivity,
                                    mp.transform);
             }
 
@@ -267,13 +267,13 @@ View.prototype._on_event = function(ctx, e) {
         }
         break;
     case 'mouseup':
-        var mp = this._interactive._mouse_pressed;
+        var mp = this._interactive._mousePressed;
 
         if (mp !== null && mp.translation !== null) {
             math.vec3.add(this._interactive.origin, this._interactive.origin, mp.translation);
         }
 
-        this._interactive._mouse_pressed = null;
+        this._interactive._mousePressed = null;
         break;
     }
 }
@@ -529,7 +529,7 @@ View.prototype.updateViewport = function(ctx) {
 View.prototype.projection = function(projection) {
     if (typeof projection !== 'undefined') {
         this._projection = projection;
-        this._projection_set = true;
+        this._projectionSet = true;
     } else {
         return this._projection;
     }
@@ -630,7 +630,7 @@ View.prototype.bind = function(ctx) {
     }
 }
 
-View._make_perspective = function(fovy, aspect, near, far) {
+View._makePerspective = function(fovy, aspect, near, far) {
     return math.mat4.perspective(math.mat4.create(), fovy / 180 * Math.PI, aspect, near, far);
 }
 
@@ -657,13 +657,13 @@ View.perspective = function(ctx, fovy, aspect, near, far, options) {
         ap = w / h;
     }
 
-    var ret = new View(ctx, View._make_perspective(fovy, ap, near, far), null, options);
+    var ret = new View(ctx, View._makePerspective(fovy, ap, near, far), null, options);
 
     if (!aspect) {
         ret.updateViewport = function(ctx) {
             View.prototype.updateViewport.call(ret, ctx);
 
-            if (ret._projection_set) {
+            if (ret._projectionSet) {
                 return;
             }
 
@@ -672,7 +672,7 @@ View.perspective = function(ctx, fovy, aspect, near, far, options) {
 
             var ap = w / h;
 
-            ret._projection = View._make_perspective(fovy, ap, near, far);
+            ret._projection = View._makePerspective(fovy, ap, near, far);
         }
     }
 

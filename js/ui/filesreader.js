@@ -112,10 +112,10 @@ function FilesReader(files, settings) {
                 ret = e.target.result;
             }
 
-            this._on_loaded(f, ret);
+            this._onLoaded(f, ret);
 
             if (countdown === 0) {
-                this._on_finished();
+                this._onFinished();
             }
         }).bind(this, f, row, perc);
 
@@ -132,8 +132,8 @@ function FilesReader(files, settings) {
 
     Widget.call(this, 'files-reader', e, utils.merge({}, settings));
 
-    this._on_loaded = this.register_signal('loaded');
-    this._on_finished = this.register_signal('finished');
+    this._onLoaded = this.registerSignal('loaded');
+    this._onFinished = this.registerSignal('finished');
 }
 
 FilesReader.prototype = Object.create(Widget.prototype);
