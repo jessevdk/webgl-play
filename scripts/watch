@@ -5,6 +5,13 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
+WATCHMAN="$(which watchman 2>/dev/null)"
+
+if [ -z "$WATCHMAN" ] || [ ! -x "$WATCHMAN" ]; then
+	echo "Watching requires watchman (https://facebook.github.io/watchman/) which does not seem to be installed"
+	exit 1
+fi
+
 mkdir -p .log
 
 echo "Installing watch..."
