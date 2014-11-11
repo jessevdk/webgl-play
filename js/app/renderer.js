@@ -534,7 +534,7 @@ Renderer.prototype._uiAdd = function(ui, placement) {
     return this._extractUiIds(ui, '', {});
 }
 
-Renderer.prototype._grabImage = function() {
+Renderer.prototype.grabImage = function(width, height) {
     var canvas = document.createElement('canvas');
 
     var r = this.canvas.height / this.canvas.width;
@@ -549,8 +549,8 @@ Renderer.prototype._grabImage = function() {
     var h = Math.floor(ph / step);
 
     var thumbnail = {
-        width: this.options.thumbnailWidth,
-        height: this.options.thumbnailHeight
+        width: width,
+        height: height
     };
 
     // Keep aspect ratio
@@ -603,6 +603,10 @@ Renderer.prototype._grabImage = function() {
     return canvas.toDataURL();
 }
 
+Renderer.prototype._grabThumbnail = function() {
+    return this.grabImage(this.options.thumbnailWidth, this.options.thumbnailHeight);
+}
+
 Renderer.prototype.doRender = function(t) {
     this._anim = requestAnimationFrame(this.doRender.bind(this));
 
@@ -624,7 +628,7 @@ Renderer.prototype.doRender = function(t) {
             this._frameCounter++;
 
             if (this._frameCounter === 1) {
-                var dataurl = this._grabImage();
+                var dataurl = this._grabThumbnail();
                 this._onNotifyFirstFrame(dataurl);
             }
         }
