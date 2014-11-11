@@ -1247,14 +1247,19 @@ App.prototype._showOpenPopup = function(cb) {
         content.appendChild(li);
 
         for (var i = 0; i < ret.length; i++) {
+            var sc = {
+                classes: 'screenshot'
+            };
+
+            if (ret[i].screenshot) {
+                sc.src = ret[i].screenshot;
+            }
+
             var li = W('li', {
                 children: [
                     W('div', {
                         classes: 'screenshot-container',
-                        children: W('img', {
-                            classes: 'screenshot',
-                            src: ret[i].screenshot
-                        })
+                        children: W('img', sc)
                     }),
 
                     W('div', {
