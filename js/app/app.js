@@ -44,6 +44,14 @@ var defaultSettings = {
     license: null
 };
 
+var licenseDescriptions = {
+    'CC 0': 'No Attribution',
+    'CC BY': 'Attribution: This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials.',
+    'CC BY-NC': 'Attribution, Non Commercial: This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms.',
+    'CC BY-SA': 'Attribution, Share Alike: This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to “copyleft” free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects.',
+    'CC BY-NC-SA': 'Attribution, Non Commercial, Share Alike: This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.'
+};
+
 function App() {
     Signals.call(this);
 
@@ -670,7 +678,86 @@ App.prototype.message = function(type, m, options) {
     return remover;
 }
 
+App.prototype._createLicenseSwitch = function(license) {
+    license = license || 'CC BY';
+
+    var values = [
+        { name: '0', value: 'CC 0' },
+        { name: 'BY', value: 'CC BY' },
+        { name: 'BY-NC', value: 'CC BY-NC' },
+        { name: 'BY-SA', value: 'CC BY-SA' },
+        { name: 'BY-NC-SA', value: 'CC BY-NC-SA' }
+    ];
+
+    for (var i = 0; i < values.length; i++) {
+        values[i].title = licenseDescriptions[values[i].value];
+    }
+
+    return new ui.MultiSwitch({
+        values: values,
+        value: license
+    });
+}
+
+App.prototype._showShareDialog = function() {
+    var W = ui.Widget.createUi;
+
+    var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license);
+    var shareButton = new ui.Button('Share');
+    var authorInput = W('input', { classes: 'author', type: 'text', value: (this.document.author || this.settings.author || '') });
+
+    var d = W('div', {
+        classes: 'share',
+        children: [
+            W('div', { classes: 'title', textContent: 'Share document: ' + this.document.title }),
+            W('table', { classes: 'contents', children: [
+                W('tr', { classes: 'description', children: W('td', {
+                    colspan: 2,
+                    innerHTML: 'Sharing stores the current document online and makes it accessible by URL only.<br>The document will not appear in the online gallery.'
+                }) } ),
+
+                W('tr', { children: [
+                    W('td', { textContent: 'Author:' }),
+                    W('td', { children: authorInput }),
+                ]}),
+
+                W('tr', { children: [
+                    W('td', { textContent: 'License, CC:' }),
+                    licenseSwitch.e
+                ]}),
+
+                W('tr', { classes: 'actions', children: [
+                    W('td', {
+                        colspan: 2,
+                        children: shareButton.e
+                    }),
+                ]})
+            ]})
+        ]
+    });
+
+    var rm = this.message('dialog', d);
+
+    shareButton.on('click', (function() {
+        this.settings.license = licenseSwitch.value();
+        this.settings.author = authorInput.value;
+        this._store.saveAppSettings(this.settings);
+
+        this.document.license = licenseSwitch.value();
+        this.document.author = authorInput.value;
+        this._saveCurrentDocWithDelay();
+
+        rm();
+
+        this._shareDocument();
+    }).bind(this));
+}
+
 App.prototype._onButtonShareClick = function() {
+    this._showShareDialog();
+}
+
+App.prototype._shareDocument = function() {
     var req = new XMLHttpRequest();
     var doc = this.document;
 
