@@ -1404,6 +1404,10 @@ App.prototype._init = function() {
     this._store = new Store((function(store) {
         var m = document.location.pathname.match(/d\/([A-Za-z0-9]+)/);
 
+        if (!m) {
+            m = document.location.search.match(/\?d=([A-Za-z0-9]+)/);
+        }
+
         var f = (function(doc) {
             var saved = localStorage.getItem('savedDocumentBeforeUnload');
 
