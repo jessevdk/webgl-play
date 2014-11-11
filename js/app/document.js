@@ -52,6 +52,8 @@ function Document() {
     this.screenshot = null;
     this.state = {};
     this.share = null;
+    this.license = null;
+    this.author = null;
 
     this._activeProgram = this.programs[0];
     this._activeProgram._isDefault = true;
@@ -169,10 +171,6 @@ Document.prototype.update = function(changes) {
         this._onNotifyDescription();
     }
 
-    if ('activeEditor' in changes) {
-        this.activeEditor = changes.activeEditor;
-    }
-
     if ('activeProgram' in changes) {
         for (var i = 0; i < this.programs.length; i++) {
             if (this.programs[i].name() === changes.activeProgram) {
@@ -182,12 +180,15 @@ Document.prototype.update = function(changes) {
         }
     }
 
-    if ('screenshot' in changes) {
-        this.screenshot = changes.screenshot;
-    }
+    // Simple properties
+    var props = ['activeEditor', 'screenshot', 'share', 'license', 'author'];
 
-    if ('share' in changes) {
-        this.share = changes.share;
+    for (var i = 0; i < props.length; i++) {
+        var p = props[i];
+
+        if (p in changes) {
+            this[p] = changes[p];
+        }
     }
 
     this._changed(changes);
@@ -225,8 +226,14 @@ Document.fromRemote = function(share, doc) {
         history: {done: [], undone: []}
     };
 
-    ret.title = doc.title;
-    ret.description = doc.description;
+    // Simple properties
+    var props = ['title', 'description', 'license', 'author'];
+
+    for (var i = 0; i < props.length; i++) {
+        var p = props[i];
+        ret[p] = doc[p];
+    }
+
     ret.modificationTime = new Date();
     ret.creationTime = new Date(doc.creationTime);
 
@@ -248,7 +255,9 @@ Document.prototype.remote = function() {
         description: this.description,
         programs: programs,
         javascript: this.js.data,
-        creationTime: this.creationTime
+        creationTime: this.creationTime,
+        license: this.license,
+        author: this.author
     };
 }
 
@@ -272,15 +281,11 @@ Document.prototype.serialize = function() {
         description: this.description,
         modificationTime: this.modificationTime,
         creationTime: this.creationTime,
-        activeEditor: this.activeEditor
-    }
-
-    if (this.screenshot) {
-        ret.screenshot = this.screenshot;
-    }
-
-    if (this.share) {
-        ret.share = this.share;
+        activeEditor: this.activeEditor,
+        screenshot: this.screenshot,
+        share: this.share,
+        license: this.license,
+        author: this.author
     }
 
     if (this.id !== null) {
@@ -327,27 +332,20 @@ Document.deserialize = function(doc) {
         ret._activeProgram = ret.programs[0];
     }
 
-    if ('screenshot' in doc) {
-        ret.screenshot = doc.screenshot;
-    }
+    var props = ['title', 'description', 'modificationTime', 'creationTime', 'state', 'screenshot', 'share', 'license', 'author', 'activeEditor'];
 
-    if ('share' in doc) {
-        ret.share = doc.share;
-    }
+    for (var i = 0; i < props.length; i++) {
+        var p = props[i];
 
-    ret.activeEditor = doc.activeEditor;
+        if (p in doc) {
+            ret[p] = doc[p];
+        }
+    }
 
     ret.js = {
         data: doc.js.data,
         history: doc.js.history
     };
-
-    ret.title = doc.title;
-    ret.description = doc.description;
-    ret.modificationTime = doc.modificationTime;
-    ret.creationTime = doc.creationTime;
-
-    ret.state = doc.state;
 
     if (typeof ret.state === 'undefined') {
         ret.state = {};
