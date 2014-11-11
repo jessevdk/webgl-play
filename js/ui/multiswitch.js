@@ -54,15 +54,21 @@ function MultiSwitch(settings) {
     for (var i = 0; i < n; i++) {
         var val = settings.values[i];
         var name = val;
+        var title;
 
         if (typeof val === 'object') {
             name = val.name;
+            title = val.title;
             val = val.value;
         }
 
         var td = this.create('td', {
             textContent: name
         });
+
+        if (title) {
+            td.title = title;
+        }
 
         this._values.push(val);
 
