@@ -1353,15 +1353,44 @@ App.prototype._addOverlay = function() {
 }
 
 App.prototype._showInfoPopup = function() {
-    var content = document.createElement('div');
-    content.classList.add('info-popup');
+    var W = ui.Widget.createUi;
 
-    var title = document.createElement('input');
-    title.setAttribute('type', 'text');
+    var title = W('input', { classes: 'title', value: this.document.title, type: 'text' });
 
-    title.classList.add('title');
-    title.value = this.document.title;
-    content.appendChild(title);
+    var props = W('table', {
+        classes: 'properties',
+        children: [
+            W('tr', { children: [
+                W('td', { textContent: 'Author:' }),
+                W('td', { textContent: this.document.author })
+            ]}),
+
+            W('tr', { children: [
+                W('td', { textContent: 'License:' }),
+                W('td', { textContent: this.document.license, title: licenseDescriptions[this.document.license] })
+            ]})
+        ]
+    });
+
+    var description = W('div', {
+        classes: 'description'
+    });
+
+    var close = new ui.Button('Close Editor');
+    close.e.classList.add('close');
+
+    var editor = W('textarea');
+
+    var content = W('div', {
+        classes: 'info-popup',
+        children: [
+            title,
+            props,
+            description,
+            close.e,
+            editor
+        ]
+    });
 
     var f = (function() {
         this._updateDocumentBy({
@@ -1374,9 +1403,6 @@ App.prototype._showInfoPopup = function() {
     title.addEventListener('input', f);
     title.addEventListener('change', f);
 
-    var description = document.createElement('div');
-    description.classList.add('description');
-
     var desc = (function() {
         if (this.document.description) {
             description.classList.remove('empty');
@@ -1388,16 +1414,6 @@ App.prototype._showInfoPopup = function() {
     }).bind(this);
 
     description.innerHTML = marked(desc());
-    content.appendChild(description);
-
-    var close = new ui.Button();
-
-    close.e.classList.add('close');
-    close.e.textContent = 'Close Editor';
-
-    content.appendChild(close.e);
-
-    var editor = document.createElement('textarea');
 
     var saveEditor = (function() {
         this._updateDocumentBy({
@@ -1425,8 +1441,6 @@ App.prototype._showInfoPopup = function() {
             saveEditor();
         }
     }).bind(this));
-
-    content.appendChild(editor);
 
     close.on('click', function() {
         saveEditor();
