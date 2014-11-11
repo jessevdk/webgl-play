@@ -441,4 +441,17 @@ $description_height: 400px;
   }
 }
 
+a {
+  color: $blue;
+  text-decoration: none;
+}
+
+a:hover, a:visited:hover {
+  color: lighten($blue, 10%);
+}
+
+a:visited {
+  color: darken($blue, 10%);
+}
+
 /* vi:ts=2:et */
