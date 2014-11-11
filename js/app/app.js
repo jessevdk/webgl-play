@@ -86,16 +86,21 @@ App.prototype.find = function(elems) {
     return ret;
 }
 
-App.prototype.newDocument = function() {
+App.prototype.newDocument = function(cb) {
     var doc = new Document(this);
 
-    this._loadDoc(doc);
-    this._saveCurrentDoc();
+    this.loadDocument(doc, {}, (function() {
+        this._saveCurrentDoc();
+
+        if (cb) {
+            cb();
+        }
+    }).bind(this));
 }
 
-App.prototype.loadDocument = function(doc) {
+App.prototype.loadDocument = function(doc, options, cb) {
     if (doc === null) {
-        this.newDocument();
+        this.newDocument(cb);
         return;
     }
 
@@ -103,7 +108,7 @@ App.prototype.loadDocument = function(doc) {
         doc = Document.deserialize(doc);
     }
 
-    this._loadDoc(doc);
+    this._loadDoc(doc, options, cb);
 }
 
 App.prototype._extractJsErrorLoc = function(e) {
@@ -245,13 +250,34 @@ App.prototype._onDocumentTitleChanged = function() {
     this.title.textContent = this.document.title;
 }
 
-App.prototype._loadDocReal = function(doc) {
+App.prototype._loadDocReal = function(doc, options) {
+    options = utils.merge({
+        preventPushState: false
+    }, options);
+
     if (this.document !== null) {
         this.document.off('notify-before::active-program', this._onDocumentBeforeActiveProgramChanged, this);
         this.document.off('notify::active-program', this._onDocumentActiveProgramChanged, this);
         this.document.off('notify::title', this._onDocumentTitleChanged, this);
 
         this.document.off('changed', this._onDocumentChanged, this);
+
+        if (!options.preventPushState && global.history) {
+            var st = {};
+
+            if (doc.id) {
+                st.id = doc.id;
+            }
+
+            if (doc.share) {
+                st.share = doc.share;
+                url = global.Settings.backend.dataQuery(doc.share);
+            } else {
+                url = '/';
+            }
+
+            global.history.pushState(st, doc.title, url);
+        }
     }
 
     this.document = doc;
@@ -309,7 +335,7 @@ App.prototype._loadDocReal = function(doc) {
     this.content.classList.remove('loading');
 }
 
-App.prototype._loadDoc = function(doc) {
+App.prototype._loadDoc = function(doc, options, cb) {
     this._loading = true;
 
     if (this.document !== null) {
@@ -317,10 +343,18 @@ App.prototype._loadDoc = function(doc) {
         this.content.classList.add('loading');
 
         setTimeout((function() {
-            this._loadDocReal(doc);
+            this._loadDocReal(doc, options);
+
+            if (cb) {
+                cb();
+            }
         }).bind(this), 200);
     } else {
-        this._loadDocReal(doc);
+        this._loadDocReal(doc, options);
+
+        if (cb) {
+            cb();
+        }
     }
 }
 
@@ -655,7 +689,9 @@ App.prototype._onButtonShareClick = function() {
 
                 var url = global.Settings.backend.dataQuery(ret.hash);
 
-                window.history.replaceState({}, '', url);
+                if (global.history) {
+                    global.history.replaceState({}, '', url);
+                }
 
                 var e = document.createElement('div');
 
@@ -845,7 +881,7 @@ App.prototype._onButtonCopyClick = function() {
     doc.id = null;
     doc.title = title;
 
-    this._loadDoc(doc);
+    this.loadDocument(doc);
 }
 
 App.prototype._relDate = function(date) {
@@ -1109,7 +1145,7 @@ App.prototype._showOpenPopup = function(cb) {
                 reader.on('finished', (function() {
                     for (var i = docs.length - 1; i >= 0; i--) {
                         if (docs[i]) {
-                            this._loadDoc(docs[i]);
+                            this.loadDocument(docs[i]);
                             break;
                         }
                     }
@@ -1158,7 +1194,7 @@ App.prototype._showOpenPopup = function(cb) {
             }
 
             li.addEventListener('click', (function(doc) {
-                this._loadDoc(Document.deserialize(doc));
+                this.loadDocument(Document.deserialize(doc));
                 popup.destroy();
             }).bind(this, ret[i]));
 
@@ -1403,12 +1439,38 @@ App.prototype._checkCompatibility = function() {
     }
 }
 
+App.prototype._initHistory = function() {
+    if (!global.history) {
+        return;
+    }
+
+    global.onpopstate = (function(e) {
+        var st = e.state;
+
+        if (st) {
+            var f = (function(store, doc) {
+                if (doc) {
+                    this.loadDocument(doc, { preventPushState: true });
+                }
+            }).bind(this);
+
+            if (st.id) {
+                this._store.byId(st.id, f);
+            } else if (st.share) {
+                this._store.byShare(st.share, f);
+            }
+        }
+    }).bind(this);
+}
+
 App.prototype._init = function() {
     if (!this._checkCompatibility()) {
         return;
     }
 
     this._store = new Store((function(store) {
+        this._initHistory();
+
         store.appSettings((function(store, settings) {
             this.settings = utils.merge(defaultSettings, settings);
         }).bind(this));
@@ -1430,8 +1492,9 @@ App.prototype._init = function() {
                     saved.modificationTime = new Date(saved.modificationTime);
                     saved.creationTime = new Date(saved.creationTime);
 
-                    this._loadDoc(Document.deserialize(saved));
-                    this._saveCurrentDocWithDelay();
+                    this.loadDocument(Document.deserialize(saved), {}, (function() {
+                        this._saveCurrentDocWithDelay();
+                    }).bind(this));
 
                     localStorage.setItem('savedDocumentBeforeUnload', null);
 
