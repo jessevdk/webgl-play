@@ -51,9 +51,6 @@ function WavefrontParser() {
     this._callbacks = {};
 }
 
-WavefrontParser.prototype = Object.create(Signals.prototype);
-WavefrontParser.prototype.constructor = WavefrontParser;
-
 WavefrontParser.prototype._onWorkerMessage = function(message) {
     var cb = this._callbacks[message.data.id];
 
