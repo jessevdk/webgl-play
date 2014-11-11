@@ -31,6 +31,12 @@ var Widget = require('./widget');
 var utils = require('../utils/utils');
 
 function Button(settings) {
+    if (typeof settings === 'string') {
+        settings = {
+            value: settings
+        };
+    }
+
     Widget.call(this, 'button', this.create('div'), utils.merge({}, settings));
 
     this.e.addEventListener('click', this._onClick.bind(this));
