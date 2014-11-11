@@ -39,6 +39,11 @@ var utils = require('../utils/utils');
 
 require('./js-mode');
 
+var defaultSettings = {
+    author: null,
+    license: null
+};
+
 function App() {
     Signals.call(this);
 
@@ -46,6 +51,8 @@ function App() {
 
     this._onDocumentChanged = this.registerSignal('notify::document');
     this._lastFocus = null;
+
+    this.settings = utils.merge({}, defaultSettings);
 
     window.addEventListener('error', (function(e) {
         var error = e.error;
@@ -1402,6 +1409,10 @@ App.prototype._init = function() {
     }
 
     this._store = new Store((function(store) {
+        store.appSettings((function(store, settings) {
+            this.settings = utils.merge(defaultSettings, settings);
+        }).bind(this));
+
         var m = document.location.pathname.match(/d\/([A-Za-z0-9]+)/);
 
         if (!m) {

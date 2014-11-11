@@ -31,7 +31,7 @@ function Store(ready) {
     this._db = null;
     this._ready = ready;
 
-    var version = 5;
+    var version = 6;
 
     //indexedDB.deleteDatabase('webgl-play');
     var req = indexedDB.open('webgl-play', version);
@@ -39,6 +39,42 @@ function Store(ready) {
     req.onsuccess = this._onsuccess.bind(this);
     req.onerror = this._onerror.bind(this);
     req.onupgradeneeded = this._onupgradeneeded.bind(this);
+}
+
+Store.prototype.saveAppSettings = function(settings) {
+    var tr = this._db.transaction('app-settings', 'readwrite');
+    var store = tr.objectStore('app-settings');
+
+    if (!('id' in settings)) {
+        req = store.add(settings);
+    } else {
+        req = store.put(settings);
+    }
+
+    req.onsuccess = function(e) {
+        if (e.target.result) {
+            settings.id = e.target.result;
+        }
+    };
+}
+
+Store.prototype.appSettings = function(cb) {
+    var tr = this._db.transaction('app-settings');
+    var store = tr.objectStore('app-settings');
+
+    var req = store.openCursor();
+
+    req.onsuccess = (function(ev) {
+        if (ev.target.result) {
+            cb(this, ev.target.result.value);
+        } else {
+            cb(this, {});
+        }
+    }).bind(this);
+
+    req.onerror = (function(ev) {
+        cb(this, {});
+    }).bind(this);
 }
 
 Store.prototype.objectToCache = function(url, filename, date, obj) {
@@ -122,6 +158,25 @@ Store.prototype.byShare = function(share, cb) {
     var idx = store.index('share');
 
     var req = idx.get(share);
+
+    req.onsuccess = (function(ev) {
+        if (ev.target.result) {
+            cb(this, ev.target.result);
+        } else {
+            cb(this, null);
+        }
+    }).bind(this);
+
+    req.onerror = (function(ev) {
+        console.log('database error', ev);
+        cb(this, null);
+    }).bind(this);
+}
+
+Store.prototype.byId = function(id, cb) {
+    var tr = this._db.transaction('documents');
+    var store = tr.objectStore('documents');
+    var req = store.get(id);
 
     req.onsuccess = (function(ev) {
         if (ev.target.result) {
@@ -378,6 +433,13 @@ Store.prototype._onupgradeneeded = function(e) {
     // Add index for local models
     if (e.oldVersion <= 4) {
         objectCacheStore.createIndex('filename', 'filename', { unique: false });
+    }
+
+    var appSettingsStore;
+
+    // Add app-settings
+    if (e.oldVersion <= 5) {
+        appSettingsStore = db.createObjectStore('app-settings', { autoIncrement: true, keyPath: 'id' });
     }
 }
 
