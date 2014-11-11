@@ -28,8 +28,15 @@
  */
 
 var Settings = {
-    backend: function(u) {
-        return 'http://webgl.codyn.net/' + u;
+    backend: {
+        dataQuery: function(hash) {
+            var l = document.location;
+            return l.protocol + '//' + l.host + '/?d=' + hash;
+        },
+
+        url: function(u) {
+            return 'http://webgl.codyn.net/' + u;
+        }
     }
 };
 

@@ -645,7 +645,8 @@ App.prototype._onButtonShareClick = function() {
                 });
 
                 var l = document.location;
-                var url = l.protocol + '//' + l.host + '/d/' + ret.hash;
+
+                var url = global.Settings.backend.dataQuery(ret.hash);
 
                 window.history.replaceState({}, '', url);
 
@@ -1458,7 +1459,7 @@ App.prototype._init = function() {
                         this.message('error', 'Failed to load document ' + m[1]);
                     }).bind(this);
 
-                    req.open('get', global.Settings.backend('d/' + m[1] + '.json'), true);
+                    req.open('get', global.Settings.backend.url('d/' + m[1] + '.json'), true);
                     req.send();
                 }
             }).bind(this));
