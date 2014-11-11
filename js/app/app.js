@@ -677,7 +677,7 @@ App.prototype._onButtonShareClick = function() {
         this.message('error', 'Failed to upload document');
     }).bind(this);
 
-    req.open('post', '/d/new', true);
+    req.open('post', global.Settings.backend.url('d/new'), true);
     req.send(JSON.stringify(this.document.remote()));
 }
 
