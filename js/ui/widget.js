@@ -142,7 +142,11 @@ Widget.createUi = function(name, attributes) {
                 ret.appendChild(v);
             }
         } else {
-            ret[a] = v;
+            if (a in ret) {
+                ret[a] = v;
+            } else {
+                ret.setAttribute(a, v);
+            }
         }
     }
 
