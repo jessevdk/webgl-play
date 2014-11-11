@@ -216,6 +216,8 @@ function Renderer(canvas, fullscreenParent, options) {
     this._mousePressed = false;
     this._frameCounter = 0;
 
+    this._lastDocument = null;
+
     this._onNotifyFirstFrame = this.registerSignal('notify::first-frame');
     this._onNotifyFullscreen = this.registerSignal('notify::fullscreen');
 
@@ -350,7 +352,7 @@ Renderer.prototype.update = function(doc) {
 
     var state = {};
 
-    if (this.program && this.program.save) {
+    if ((doc === this._lastDocument || this._lastDocument === null) && this.program && this.program.save) {
         try {
             var nstate = this.program.save.call(this.program, this.context);
 
@@ -490,6 +492,7 @@ Renderer.prototype.update = function(doc) {
 
     this.program = ret;
 
+    this._lastDocument = doc;
     this._frameCounter = 0;
     this.start();
 }
