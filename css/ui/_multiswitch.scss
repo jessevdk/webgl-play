@@ -36,6 +36,7 @@
     padding: 3px 6px 3px 6px;
     transition: opacity ease 300ms;
     background-color: $bg_color;
+    white-space: nowrap;
 
     &:first-child {
       border-radius: 3px 0px 0px 3px;
