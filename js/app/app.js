@@ -1450,7 +1450,7 @@ App.prototype._init = function() {
 
                             f(Document.fromRemote(m[1], jdoc));
                         } else {
-                            this.message('error', 'Failed to load document: ' + req.textContent);
+                            this.message('error', 'Failed to load document: ' + req.responseText);
                         }
 
                     }).bind(this);
