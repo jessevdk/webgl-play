@@ -1,6 +1,6 @@
 #!/bin/bash
 
-b=$(cd $(dirname "$0"); pwd)
+b=$(pwd)
 d="$b/.git-check-gen"
 
 rm -rf "$d"
@@ -17,7 +17,15 @@ rm -rf "$d/site"
 rm -rf "$d/server/site"
 
 # Run a full make
-make -C "$d" local-site server-site
+make -C "$d" local-site server-site || exit 1 >/dev/null
+
+if [[ "$GIT_DIR" != /* ]]; then
+	GIT_DIR="$b/$GIT_DIR"
+fi
+
+if [[ "$GIT_INDEX_FILE" != /* ]]; then
+	GIT_INDEX_FILE="$b/$GIT_INDEX_FILE"
+fi
 
 # Check all generated files into the index
 (
@@ -29,9 +37,14 @@ make -C "$d" local-site server-site
 	sed -e 's/.git-check-gen\///g' "server/$fixmap" > "server/$fixmap".tmp && mv "server/$fixmap".tmp "server/$fixmap"
 
 	for f in $(find site -type f) $(find server/site -type f); do
-		blobid=$(git hash-object -w --path "$f" -- "$f");
-		git update-index --add --replace --cacheinfo 100644,$blobid,$f;
+		blobid=$(git hash-object -w --path "$f" -- "$f" || exit 1);
+
+		if [ -z "$blobid" ]; then
+			exit 1;
+		fi
+
+		git update-index --add --replace --cacheinfo 100644,$blobid,$f || exit 1;
 	done
-)
+) || exit 1
 
 rm -rf "$d"
