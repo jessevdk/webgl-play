@@ -52,6 +52,11 @@ var licenseDescriptions = {
     'CC BY-NC-SA': 'Attribution, Non Commercial, Share Alike: This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.'
 };
 
+marked.setOptions({
+    sanitize: true,
+    smartypants: true
+});
+
 function App() {
     Signals.call(this);
 
