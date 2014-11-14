@@ -266,7 +266,8 @@ App.prototype._onDocumentTitleChanged = function() {
 
 App.prototype._loadDocReal = function(doc, options) {
     options = utils.merge({
-        preventPushState: false
+        preventPushState: false,
+        showInfo: false
     }, options);
 
     if (this.document !== null) {
@@ -353,6 +354,10 @@ App.prototype._loadDocReal = function(doc, options) {
     this.content.classList.remove('loading');
 
     this._showDocument();
+
+    if (options.showInfo) {
+        this._showInfoPopup();
+    }
 }
 
 App.prototype._loadDoc = function(doc, options, cb) {
@@ -1119,7 +1124,7 @@ App.prototype._fillGalleryItem = function(container, item) {
 
     container.addEventListener('click', (function() {
         this.loadRemoteDocument(item.document, (function(doc) {
-            this.loadDocument(doc);
+            this.loadDocument(doc, { showInfo: true });
 
             var vkey = 'viewed:' + item.parent;
 
