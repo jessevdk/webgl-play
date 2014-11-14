@@ -1,4 +1,6 @@
-# WebGL Playground
+<img align="left" src="icons/webgl-icon-64.png"/>
+
+# &nbsp; WebGL Playground
 
 Visit [https://jessevdk.github.io/webgl-play]() to start right now!
 
@@ -54,3 +56,5 @@ The general structure of this repository is as follows:
                  information.
   * [site/](site/): pre-generated site. You can point your browser to this locally
                after a checkout.
+
+<p align="center"><img src="icons/webgl-icon-512.png"/></p>
