@@ -463,11 +463,11 @@ $description_height: 400px;
       width: 300px;
       overflow: auto;
 
-      p {
+      & > * {
         display: none;
       }
 
-      p:first-of-type {
+      & > *:first-child {
         margin-top: 0;
         margin-bottom: 0;
         display: block;
