@@ -1136,6 +1136,10 @@ App.prototype._fillGalleryItem = function(container, item) {
     }).bind(this));
 }
 
+App.prototype._isLocal = function() {
+    return document.location.protocol.indexOf('file') === 0;
+}
+
 App.prototype._populateGallery = function() {
     // Clear previous gallery
     this.gallery.innerHTML = '';
@@ -1271,6 +1275,13 @@ App.prototype._populateGallery = function() {
 
 App.prototype._showGallery = function(options) {
     if (this._mode === 'gallery') {
+        return;
+    }
+
+    if (this._isLocal()) {
+        // No gallery when running locally, but this is still called on initializing.
+        // Instead, just show a new document
+        this.newDocument();
         return;
     }
 
