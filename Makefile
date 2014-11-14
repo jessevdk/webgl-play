@@ -73,8 +73,8 @@ endef
 define copy-rule
 $1: $2
 	@printf "[\033[1mCP\033[0m] $$@\n"; \
-	mkdir -p $(dir $$@); \
-	cp "$^" "$$@"
+	mkdir -p $$(dir $$@); \
+	cp "$$^" "$$@"
 endef
 
 all: site
