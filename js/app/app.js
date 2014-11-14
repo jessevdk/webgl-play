@@ -1157,7 +1157,7 @@ App.prototype._populateGallery = function() {
     var height = this.content.clientHeight;
 
     // These are just rough, conservative, estimates
-    var pixPerCol = 500;
+    var pixPerCol = 550;
     var pixPerRow = 350;
 
     var nColumns = Math.max(1, Math.floor(width / pixPerCol));
