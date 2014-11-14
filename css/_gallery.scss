@@ -69,6 +69,13 @@ $gallery_switch_time: 0.3s;
             background-color: darken(white, 5%);
           }
         }
+
+        &.screenshot {
+          width: 300px;
+          height: 200px;
+          text-align: center;
+          vertical-align: middle;
+        }
       }
 
       div.gallery-item {
