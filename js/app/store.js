@@ -114,7 +114,7 @@ Store.prototype.objectFromCache = function(url, date, cb) {
                 }).bind(this);
 
                 req.onerror = (function(ev) {
-                    console.log('database error', ev);
+                    console.error('database error', ev);
                     cb(this, null);
                 }).bind(this);
             } else {
@@ -126,7 +126,7 @@ Store.prototype.objectFromCache = function(url, date, cb) {
     }).bind(this);
 
     req.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, null);
     }).bind(this);
 }
@@ -147,7 +147,7 @@ Store.prototype.delete = function(doc, cb) {
     }).bind(this);
 
     req.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, null);
     }).bind(this);
 }
@@ -168,7 +168,7 @@ Store.prototype.byShare = function(share, cb) {
     }).bind(this);
 
     req.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, null);
     }).bind(this);
 }
@@ -187,7 +187,7 @@ Store.prototype.byId = function(id, cb) {
     }).bind(this);
 
     req.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, null);
     }).bind(this);
 }
@@ -208,7 +208,7 @@ Store.prototype.last = function(cb) {
     }).bind(this);
 
     req.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, null);
     }).bind(this);
 }
@@ -234,7 +234,7 @@ Store.prototype.all = function(cb) {
     }).bind(this);
 
     req.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, ret);
     }).bind(this);
 }
@@ -262,7 +262,7 @@ Store.prototype.addModel = function(model, data, cb) {
     }).bind(this);
 
     tr.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, null);
     }).bind(this);
 }
@@ -282,7 +282,7 @@ Store.prototype.modelData = function(filename, cb) {
     }).bind(this);
 
     req.onerror = (function(e) {
-        console.log('database error', e);
+        console.error('database error', e);
         cb(this, null);
     }).bind(this);
 }
@@ -317,7 +317,7 @@ Store.prototype.deleteModel = function(model, cb) {
     }).bind(this);
 
     tr.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, null);
     }).bind(this);
 }
@@ -341,7 +341,7 @@ Store.prototype.models = function(cb) {
     }).bind(this);
 
     req.onerror = (function(ev) {
-        console.log('database error', ev);
+        console.error('database error', ev);
         cb(this, ret);
     }).bind(this);
 }
@@ -351,7 +351,7 @@ Store.prototype.save = function(doc, cb) {
     var store = tr.objectStore('documents');
 
     tr.onerror = (function(ev) {
-        console.log('error saving doc', ev);
+        console.error('error saving doc', ev);
 
         if (typeof cb === 'function') {
             cb(this, null);
@@ -386,7 +386,7 @@ Store.prototype._onsuccess = function(e) {
 }
 
 Store.prototype._onerror = function(e) {
-    console.log('Database error', e);
+    console.error('Database error', e);
 }
 
 Store.prototype._onupgradeneeded = function(e) {

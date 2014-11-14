@@ -31,36 +31,26 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"errors"
 	"net/http"
-	"os"
-	"path"
-	"syscall"
 	"time"
-
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
 )
 
-type DocumentHandler struct {
-	RestishVoid
+var DocumentStorage = Storage{
+	Directory:   "documents",
+	ContentType: "application/json",
+}
+
+var validLicenses = map[string]bool{
+	"CC 0":        true,
+	"CC BY":       true,
+	"CC BY-NC":    true,
+	"CC BY-SA":    true,
+	"CC BY-NC-SA": true,
 }
 
 type NewDocumentHandler struct {
 	RestishVoid
-}
-
-func (d DocumentHandler) Get(writer http.ResponseWriter, req *http.Request) {
-	vars := mux.Vars(req)
-	id := vars["id"]
-
-	if len(id) <= 2 {
-		http.Error(writer, "404 not found", http.StatusNotFound)
-		return
-	}
-
-	writer.Header().Set("Content-Type", "application/json")
-	http.ServeFile(writer, req, path.Join(dataRoot, "documents", id[0:2], id[2:]))
 }
 
 type Program struct {
@@ -71,6 +61,12 @@ type Program struct {
 	IsDefault bool   `json:"isDefault"`
 }
 
+type Author struct {
+	Name    string `json:"name"`
+	License string `json:"license"`
+	Year    int    `json:"year"`
+}
+
 type Document struct {
 	Version      int       `json:"version"`
 	Title        string    `json:"title"`
@@ -78,6 +74,119 @@ type Document struct {
 	Programs     []Program `json:"programs"`
 	Javascript   string    `json:"javascript"`
 	CreationTime time.Time `json:"creationTime"`
+	Authors      []Author  `json:"authors"`
+}
+
+type NewDocumentRequest struct {
+	Document Document `json:"document"`
+	Author   string   `json:"author"`
+	License  string   `json:"license"`
+}
+
+type NewDocumentResponse struct {
+	Hash string `json:"hash"`
+}
+
+func (p *Program) Validate() error {
+	if len(p.Name) == 0 {
+		return errors.New("Program does not have a name")
+	}
+
+	if len(p.Vertex) == 0 {
+		return errors.New("Program does not have a vertex shader")
+	}
+
+	if len(p.Fragment) == 0 {
+		return errors.New("Program does not have a fragment shader")
+	}
+
+	return nil
+}
+
+func (d *Document) Validate() error {
+	if len(d.Title) == 0 {
+		return errors.New("Document does not have a title")
+	}
+
+	if len(d.Programs) == 0 {
+		return errors.New("Document does not have any programs")
+	}
+
+	hasDefault := false
+
+	for _, p := range d.Programs {
+		if p.IsDefault {
+			if hasDefault {
+				return errors.New("Only one program can be the default program")
+			}
+
+			hasDefault = true
+		}
+
+		if err := p.Validate(); err != nil {
+			return err
+		}
+	}
+
+	if !hasDefault {
+		return errors.New("Default program not specified")
+	}
+
+	if len(d.Programs) == 0 {
+		return errors.New("Document does not have a javascript source")
+	}
+
+	return nil
+}
+
+func (d *Document) ValidatePublication() error {
+	if err := d.Validate(); err != nil {
+		return err
+	}
+
+	if len(d.Description) == 0 {
+		return errors.New("Document does not have a description")
+	}
+
+	return nil
+}
+
+func (a *Author) Validate() error {
+	if !validLicenses[a.License] {
+		return errors.New("Invalid license")
+	}
+
+	if len(a.Name) == 0 && a.License != "CC 0" {
+		return errors.New("License requires author")
+	}
+
+	return nil
+}
+
+func (d *Document) Prepare(a Author) error {
+	if err := d.Validate(); err != nil {
+		return err
+	}
+
+	if err := a.Validate(); err != nil {
+		return err
+	}
+
+	if len(d.Authors) == 0 || d.Authors[len(d.Authors)-1] != a {
+		d.Authors = append(d.Authors, a)
+	}
+
+	return nil
+}
+
+func (d *Document) Store() (string, error) {
+	data, err := json.Marshal(d)
+
+	if err != nil {
+		return "", err
+	}
+
+	return DocumentStorage.Store(data)
 }
 
 func (d NewDocumentHandler) Post(writer http.ResponseWriter, req *http.Request) {
@@ -85,71 +194,37 @@ func (d NewDocumentHandler) Post(writer http.ResponseWriter, req *http.Request) 
 
 	dec := json.NewDecoder(req.Body)
 
-	var doc Document
+	var ureq NewDocumentRequest
 
-	if err := dec.Decode(&doc); err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+	if err := dec.Decode(&ureq); err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	data, err := json.Marshal(doc)
+	doc := ureq.Document
+
+	author := Author{
+		Name:    ureq.Author,
+		License: ureq.License,
+		Year:    time.Now().Year(),
+	}
+
+	if err := doc.Prepare(author); err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	hash, err := doc.Store()
 
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	hdata := data
-	hash := Hash(hdata)
-
-	for {
-		d := path.Join(dataRoot, "documents", hash[0:2])
-		p := path.Join(d, hash[2:])
-
-		// Try to write at hash
-		os.MkdirAll(d, 0755)
-		f, err := os.OpenFile(p, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0644)
-
-		if err != nil {
-			if err.(*os.PathError).Err == syscall.EEXIST {
-				// Check if existing file contains the same data
-				fdata, _ := ioutil.ReadFile(p)
-
-				if string(fdata) == string(data) {
-					break
-				}
-
-				// Otherwise it's a hash collision, add some arbitrary data
-				// to hash
-				hdata = append(hdata, '\n')
-				hash = Hash(hdata)
-			} else {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
-		} else {
-			defer f.Close()
-
-			if _, err := f.Write(data); err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				f.Close()
-				return
-			}
-
-			break
-		}
-	}
-
-	retval := map[string]string{
-		"hash": hash,
-	}
-
-	writer.Header().Add("Content-Type", "application/json")
-	enc := json.NewEncoder(writer)
-	enc.Encode(retval)
+	d.RespondJSON(writer, NewDocumentResponse{Hash: hash})
 }
 
 func init() {
-	router.Handle("/d/new", CORSHandler(NewRestishHandler(NewDocumentHandler{})))
-	router.Handle("/d/{id:[A-Za-z0-9]+}.json", handlers.CompressHandler(CORSHandler(NewRestishHandler(DocumentHandler{}))))
+	router.Handle("/d/new", MakeHandler(NewDocumentHandler{}, WrapCORS))
+	router.Handle("/d/{id:[A-Za-z0-9]+}.json", MakeHandler(DocumentStorage, WrapCompress|WrapCORS))
 }

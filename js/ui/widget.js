@@ -48,6 +48,7 @@ function Widget(clsname, e, settings) {
         this.e.classList.add('ui-' + clsname);
     }
 
+    this._sensitive = true;
     this._settings = settings;
 
     this.children = [];
@@ -57,6 +58,8 @@ function Widget(clsname, e, settings) {
     this._onNotifyValue = (function() {
         notify(this._value);
     }).bind(this);
+
+    this._onNotifySensitive = this.registerSignal('notify::sensitive');
 
     if (this._settings.bind) {
         var binding;
@@ -86,10 +89,34 @@ function Widget(clsname, e, settings) {
     if (typeof this._settings.value !== 'undefined') {
         this.value(this._settings.value);
     }
+
+    if (typeof this._settings.sensitive !== 'undefined') {
+        this.sensitive(this._settings.sensitive);
+    }
 }
 
 Widget.prototype = Object.create(Signals.prototype);
 Widget.prototype.constructor = Widget;
+
+Widget.prototype.sensitive = function(value) {
+    if (typeof value === 'undefined') {
+        return this._sensitive;
+    }
+
+    value = !!value;
+
+    if (value !== this._sensitive) {
+        this._sensitive = value;
+
+        if (value) {
+            this.e.classList.remove('insensitive');
+        } else {
+            this.e.classList.add('insensitive');
+        }
+
+        this._onNotifySensitive();
+    }
+}
 
 Widget.prototype._valueTransform = function(v) {
     return v;

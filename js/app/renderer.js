@@ -217,6 +217,7 @@ function Renderer(canvas, fullscreenParent, options) {
     this._frameCounter = 0;
 
     this._lastDocument = null;
+    this._grabs = [];
 
     this._onNotifyFirstFrame = this.registerSignal('notify::first-frame');
     this._onNotifyFullscreen = this.registerSignal('notify::fullscreen');
@@ -534,7 +535,7 @@ Renderer.prototype._uiAdd = function(ui, placement) {
     return this._extractUiIds(ui, '', {});
 }
 
-Renderer.prototype.grabImage = function(width, height) {
+Renderer.prototype._grabImageReal = function(width, height) {
     var canvas = document.createElement('canvas');
 
     var r = this.canvas.height / this.canvas.width;
@@ -554,10 +555,10 @@ Renderer.prototype.grabImage = function(width, height) {
     };
 
     // Keep aspect ratio
-    if (pw > this.options.thumbnailWidth / this.options.thumbnailHeight * ph) {
-        thumbnail.height = (this.options.thumbnailWidth / pw) * ph;
+    if (pw > thumbnail.width / thumbnail.height * ph) {
+        thumbnail.height = (thumbnail.width / pw) * ph;
     } else {
-        thumbnail.width = (this.options.thumbnailHeight / ph) * pw;
+        thumbnail.width = (thumbnail.height / ph) * pw;
     }
 
     canvas.width = Math.max(w, thumbnail.width);
@@ -604,7 +605,15 @@ Renderer.prototype.grabImage = function(width, height) {
 }
 
 Renderer.prototype._grabThumbnail = function() {
-    return this.grabImage(this.options.thumbnailWidth, this.options.thumbnailHeight);
+    return this._grabImageReal(this.options.thumbnailWidth, this.options.thumbnailHeight);
+}
+
+Renderer.prototype.grabImage = function(width, height, cb) {
+    this._grabs.push({
+        width: width,
+        height: height,
+        cb: cb
+    });
 }
 
 Renderer.prototype.doRender = function(t) {
@@ -630,6 +639,16 @@ Renderer.prototype.doRender = function(t) {
             if (this._frameCounter === 1) {
                 var dataurl = this._grabThumbnail();
                 this._onNotifyFirstFrame(dataurl);
+            }
+
+            if (this._grabs.length > 0) {
+                for (var i = 0; i < this._grabs.length; i++) {
+                    var g = this._grabs[i];
+
+                    g.cb(this._grabImageReal(g.width, g.height));
+                }
+
+                this._grabs = [];
             }
         }
     }

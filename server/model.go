@@ -36,7 +36,6 @@ import (
 	"path"
 	"strings"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -79,9 +78,9 @@ func redirectModelRequest(r *http.Request) {
 }
 
 func init() {
-	router.Handle("/m/{url:.*}", handlers.CompressHandler(CORSHandler(NewRestishHandler(&ModelHandler{
+	router.Handle("/m/{url:.*}", MakeHandler(&ModelHandler{
 		proxy: &httputil.ReverseProxy{
 			Director: redirectModelRequest,
 		},
-	}))))
+	}, WrapCompress|WrapCORS))
 }

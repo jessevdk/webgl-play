@@ -60,14 +60,18 @@ Button.prototype._valueUpdated = function() {
 }
 
 Button.prototype._onClick = function(e) {
-    this._onClickEvent(e);
+    if (this.sensitive()) {
+        this._onClickEvent(e);
+    }
 
     e.preventDefault();
     e.stopPropagation();
 }
 
 Button.prototype._onDblclick = function(e) {
-    this._onDblclickEvent(e);
+    if (this.sensitive()) {
+        this._onDblclickEvent(e);
+    }
 
     e.preventDefault();
     e.stopPropagation();

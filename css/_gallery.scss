@@ -1,0 +1,130 @@
+/*
+ * Copyright (c) 2014 Jesse van den Kieboom. All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *    * Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *    * Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following disclaimer
+ *      in the documentation and/or other materials provided with the
+ *      distribution.
+ *    * Neither the name of Google Inc. nor the names of its
+ *      contributors may be used to endorse or promote products derived from
+ *      this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+$gallery_switch_time: 0.3s;
+
+#main {
+  #panel-programs {
+    transition: opacity ease $gallery_switch_time, visibility 0s;
+  }
+
+  #gallery {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    transition: opacity ease $gallery_switch_time;
+
+    table.gallery {
+      width: 100%;
+
+      td {
+        vertical-align: middle;
+        transition: background ease 0.3s;
+
+        &:hover {
+          background-color: $base3;
+        }
+
+        &:active {
+          background-color: transparent;
+        }
+
+        &.empty {
+          &:hover, &:active {
+            background-color: transparent;
+          }
+
+          div.gallery-item {
+            min-height: 350px;
+            background-color: darken(white, 5%);
+          }
+        }
+      }
+
+      div.gallery-item {
+        padding: 12px;
+
+        table.properties {
+          border-spacing: 6px 3px;
+
+          td {
+            vertical-align: baseline;
+          }
+
+          td:first-child {
+            font-style: italic;
+          }
+        }
+
+        .description {
+          padding: 12px;
+          background-color: darken(white, 5%);
+        }
+
+        .title {
+          font-weight: bold;
+          font-size: 1.5em;
+          text-align: center;
+          color: lighten($fg_color, 30%);
+          margin-bottom: 12px;
+        }
+      }
+    }
+  }
+
+  #gallery-title {
+    display: none;
+  }
+
+  &.gallery {
+    #panel-programs {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity ease $gallery_switch_time, visibility 0s $gallery_switch_time;
+    }
+
+    #document-title {
+      display: none;
+    }
+
+    #gallery {
+      opacity: 1;
+    }
+
+    #gallery-title {
+      display: block;
+    }
+  }
+}
+
+/* vi:ts=2:et */

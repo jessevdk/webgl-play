@@ -34,6 +34,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strings"
 	"time"
 
 	"github.com/gorilla/handlers"
@@ -42,10 +43,12 @@ import (
 )
 
 type Options struct {
-	Listen     string `short:"l" long:"listen" description:"The address to listen on" default:":8000"`
-	Data       string `short:"d" long:"data" description:"Root of the data directory" default:"data"`
-	SiteData   string `short:"s" long:"site-data" description:"Root of the site data directory" default:"site"`
-	CORSDomain string `short:"c" long:"cors-domain" description:"An external domain for which to allow cross-requests"`
+	Listen      string `short:"l" long:"listen" description:"The address to listen on" default:":8000"`
+	Data        string `short:"d" long:"data" description:"Root of the data directory" default:"data"`
+	SiteData    string `short:"s" long:"site-data" description:"Root of the site data directory" default:"site"`
+	CORSDomain  string `short:"c" long:"cors-domain" description:"An external domain for which to allow cross-requests"`
+	SMTPAddress string `short:"e" long:"smtp-address" description:"The address (hostname[:port]) of the SMTP server" default:"localhost:25"`
+	PublicHost  string `short:"p" long:"public-host" description:"The public playground host address (e.g. http://webgl.example.com/)" default:"http://localhost:8000/"`
 }
 
 var router = mux.NewRouter()
@@ -70,16 +73,50 @@ func (l LimitedRequestHandler) ServeHTTP(wr http.ResponseWriter, req *http.Reque
 	router.ServeHTTP(wr, req)
 }
 
+type HandlerWrappers int
+
+const (
+	WrapNone HandlerWrappers = 1 << iota
+	WrapCORS
+	WrapCompress
+)
+
+func MakeHandler(h interface{}, wrap HandlerWrappers) http.Handler {
+	var hh http.Handler
+
+	if rest, ok := h.(Restish); ok {
+		hh = NewRestishHandler(rest)
+	} else {
+		hh = h.(http.Handler)
+	}
+
+	if wrap&WrapCORS != 0 {
+		hh = CORSHandler(hh)
+	}
+
+	if wrap&WrapCompress != 0 {
+		hh = handlers.CompressHandler(hh)
+	}
+
+	return hh
+}
+
 func main() {
 	if _, err := flags.Parse(&options); err != nil {
 		os.Exit(1)
 	}
 
+	if !strings.ContainsRune(options.SMTPAddress, ':') {
+		options.SMTPAddress += ":25"
+	}
+
 	dataRoot = absPath(options.Data)
 	siteRoot = absPath(options.SiteData)
 
-	router.PathPrefix("/assets/").Handler(handlers.CompressHandler(http.FileServer(http.Dir(siteRoot))))
-	router.PathPrefix("/").Handler(handlers.CompressHandler(NewRestishHandler(SiteHandler{})))
+	router.PathPrefix("/assets/").Handler(MakeHandler(http.FileServer(http.Dir(siteRoot)), WrapCompress))
+	router.PathPrefix("/").Handler(MakeHandler(NewRestishHandler(SiteHandler{}), WrapCompress))
+
+	db.Open()
 
 	srv := &http.Server{
 		Addr:           options.Listen,

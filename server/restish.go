@@ -30,6 +30,8 @@
 package main
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -66,6 +68,15 @@ func (r RestishVoid) Delete(writer http.ResponseWriter, req *http.Request) {
 
 func (r RestishVoid) Options(writer http.ResponseWriter, req *http.Request) {
 	http.NotFound(writer, req)
+}
+
+func (r RestishVoid) RespondJSON(writer http.ResponseWriter, v interface{}) {
+	writer.Header().Add("Content-Type", "application/json")
+	enc := json.NewEncoder(writer)
+
+	if err := enc.Encode(v); err != nil {
+		log.Printf("Failed to encode json response: %v", err)
+	}
 }
 
 func NewRestishHandler(r Restish) http.Handler {

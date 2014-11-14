@@ -28,6 +28,9 @@
  */
 
 $ui_active_bg: lighten($blue, 10%);
+$ui_active_fg: white;
+$ui_insensitive_bg: lighten($fg_color, 30%);
+$ui_insensitive_fg: lighten($fg_color, 50%);
 
 @import 'panel';
 @import 'button';

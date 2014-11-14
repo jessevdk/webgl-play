@@ -36,7 +36,7 @@ $button_bg: $ui_active_bg;
   background-color: $button_bg;
   background: linear-gradient(to bottom, lighten($button_bg, 5%), $button_bg);
   display: inline-block;
-  color: white;
+  color: $ui_active_fg;
   transition: background-color ease 0.1s;
   text-shadow: 0px 0px 2px darken($button_bg, 20%);
 
@@ -48,6 +48,14 @@ $button_bg: $ui_active_bg;
   &:active {
     background-color: $button_bg;
     background: linear-gradient(to bottom, $button_bg, lighten($button_bg, 5%));
+  }
+
+  &.insensitive, &.insensitive:hover, &.insensitive:active {
+    background: none;
+    background-color: $ui_insensitive_bg;
+    color: $ui_insensitive_fg;
+    text-shadow: none;
+    transition: background-color 0s;
   }
 }
 

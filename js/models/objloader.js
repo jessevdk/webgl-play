@@ -242,14 +242,21 @@ exports.load = function(ctx, filename, options) {
             });
         });
     } else {
-        var req = new XMLHttpRequest();
+        var backend;
+        var url;
 
-        req.onload = function(ev) {
-            var req = ev.target;
+        if (filename.indexOf("http:") === 0 || filename.indexOf("https:") === 0) {
+            url ='m/';
+            backend = true;
+        } else {
+            url = '/assets/models/';
+            backend = false;
+        }
 
-            if (req.status === 200) {
-                var body = req.responseText;
+        url += encodeURIComponent(filename);
 
+        utils.get(url, {
+            success: function(req, body) {
                 try {
                     var date = new Date(req.getResponseHeader('Last-Modified'));
                     parseOrCachedObj(ctx, date, filename, ret, body, fromCache, options);
@@ -257,28 +264,15 @@ exports.load = function(ctx, filename, options) {
                     console.error(e.stack);
                     options.error(e.message);
                 }
-            } else {
-                options.error(req.responseText);
-            }
-        }
+            },
 
-        req.onerror = function(ev) {
-            options.error(ev.target.responseText);
-        }
+            error: function(req, e) {
+                options.error(e ? e.message : req.responseText);
+            },
 
-        // Remote requests have to go through our proxy
-        if (filename.indexOf("http:") === 0 || filename.indexOf("https:") === 0) {
-            req.open('get', global.Settings.backend.url('m/' + encodeURIComponent(filename)), true);
-        } else {
-            req.open('get', '/assets/models/' + encodeURIComponent(filename), true);
-        }
-
-        try {
-            req.send();
-        } catch (e) {
-            console.error(e.stack);
-            options.error(e.message);
-        }
+            backend: backend,
+            json: false
+        });
     }
 
     return ret;

@@ -29,54 +29,11 @@
 
 package main
 
-import (
-	"crypto/sha1"
-)
-
-type Hasher struct {
+var ScreenshotsStorage = Storage{
+	Directory:   "screenshots",
+	ContentType: "image/png",
 }
 
-var hasher Hasher
-
-func (h Hasher) shortHash(b []byte) string {
-	const ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-	ret := make([]byte, 10)
-
-	for i, v := range b {
-		ret[i%10] += v
-	}
-
-	bl := byte(len(ValidChars))
-
-	for i, v := range ret {
-		ret[i] = ValidChars[v%bl]
-	}
-
-	return string(ret)
-}
-
-func (h Hasher) Hash(data ...[]byte) string {
-	s := sha1.New()
-
-	for _, d := range data {
-		s.Write(d)
-	}
-
-	ret := s.Sum(nil)
-	return h.shortHash(ret)
-}
-
-func (h Hasher) ValidHash(s string) bool {
-	for _, c := range s {
-		switch {
-		case c >= 'a' && c <= 'z':
-		case c >= 'A' && c <= 'Z':
-		case c >= '0' && c <= '9':
-		default:
-			return false
-		}
-	}
-
-	return len(s) > 0
+func init() {
+	router.Handle("/s/{id:[A-Za-z0-9]+}.png", MakeHandler(ScreenshotsStorage, WrapCompress|WrapCORS))
 }

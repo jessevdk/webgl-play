@@ -59,8 +59,18 @@ function Popup(child, on) {
 
 Popup.on = function(on, cb) {
     var popup = null;
+    var widget = null;
+
+    if (Widget.prototype.isPrototypeOf(on)) {
+        widget = on;
+        on = widget.e;
+    }
 
     on.addEventListener('mousedown', function() {
+        if (widget && !widget.sensitive()) {
+            return;
+        }
+
         if (!popup) {
             var f;
 

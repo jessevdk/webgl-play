@@ -30,6 +30,7 @@
 @import 'solarized';
 @import 'ui/ui';
 @import 'editor';
+@import 'gallery';
 
 $header_height: 30px;
 
@@ -49,6 +50,12 @@ body, input {
 #main {
   background-color: lighten($bg_color, 20%);
   color: $fg_color;
+  opacity: 0;
+  transition: opacity ease 1s;
+
+  &.loaded {
+    opacity: 1;
+  }
 }
 
 #header {
@@ -58,7 +65,7 @@ body, input {
   line-height: $header_height;
   color: lighten($fg_color, 20%);
 
-  #document-title {
+  #document-title, #gallery-title {
     font-size: 0.6 * $header_height;
     text-align: center;
     text-shadow: 1px 1px white;
@@ -155,12 +162,19 @@ body, input {
   > div:first-child {
     flex-basis: 200px;
   }
+
+  transition: opacity ease 1s;
 }
 
 input[type="text"] {
   border: 1px solid $borders_color;
   background-color: white;
   outline: none;
+}
+
+.ui-popup .documents, .ui-popup .models {
+  max-height: 350px;
+  overflow-y: auto;
 }
 
 .ui-popup .documents, .ui-popup .models, .ui-popup .about {
@@ -409,9 +423,74 @@ $description_height: 400px;
     }
   }
 
-  .share {
+  .share, .publish {
     input.author {
       width: 100%;
+    }
+
+    .status {
+      float: left;
+      font-style: italic;
+      color: $green;
+
+      &.error {
+        color: $red;
+      }
+    }
+  }
+
+  .publish {
+    max-width: 800px;
+
+    .screenshot {
+      float: left;
+    }
+
+    div.contents {
+      min-height: 200px;
+    }
+
+    div.description {
+      margin-bottom: 12px;
+
+      &.empty {
+        color: $red;
+      }
+    }
+
+    td.description div {
+      height: 100px;
+      width: 300px;
+      overflow: hidden;
+
+      p {
+        display: none;
+      }
+
+      p:first-of-type {
+        margin-top: 0;
+        margin-bottom: 0;
+        display: block;
+      }
+    }
+
+    input.token {
+      font-family: menlo, monaco, monospace;
+      width: 100%;
+
+      &.empty {
+        color: lighten($fg_color, 20%);
+        font-style: italic;
+      }
+    }
+
+    .actions {
+      margin-top: 12px;
+      text-align: right;
+
+      & > * {
+        margin-left: 6px;
+      }
     }
   }
 

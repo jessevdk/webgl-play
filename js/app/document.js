@@ -54,6 +54,7 @@ function Document() {
     this.share = null;
     this.license = null;
     this.author = null;
+    this.authors = [];
 
     this._activeProgram = this.programs[0];
     this._activeProgram._isDefault = true;
@@ -227,7 +228,7 @@ Document.fromRemote = function(share, doc) {
     };
 
     // Simple properties
-    var props = ['title', 'description', 'license', 'author'];
+    var props = ['title', 'description', 'authors'];
 
     for (var i = 0; i < props.length; i++) {
         var p = props[i];
@@ -256,8 +257,7 @@ Document.prototype.remote = function() {
         programs: programs,
         javascript: this.js.data,
         creationTime: this.creationTime,
-        license: this.license,
-        author: this.author
+        authors: this.authors
     };
 }
 
@@ -285,7 +285,8 @@ Document.prototype.serialize = function() {
         screenshot: this.screenshot,
         share: this.share,
         license: this.license,
-        author: this.author
+        author: this.author,
+        authors: this.authors
     }
 
     if (this.id !== null) {
@@ -332,7 +333,7 @@ Document.deserialize = function(doc) {
         ret._activeProgram = ret.programs[0];
     }
 
-    var props = ['title', 'description', 'modificationTime', 'creationTime', 'state', 'screenshot', 'share', 'license', 'author', 'activeEditor'];
+    var props = ['title', 'description', 'modificationTime', 'creationTime', 'state', 'screenshot', 'share', 'license', 'author', 'authors', 'activeEditor'];
 
     for (var i = 0; i < props.length; i++) {
         var p = props[i];

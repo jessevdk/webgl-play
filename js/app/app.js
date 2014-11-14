@@ -59,6 +59,7 @@ function App() {
 
     this._onDocumentChanged = this.registerSignal('notify::document');
     this._lastFocus = null;
+    this._mode = null;
 
     this.settings = utils.merge({}, defaultSettings);
 
@@ -269,23 +270,6 @@ App.prototype._loadDocReal = function(doc, options) {
         this.document.off('notify::title', this._onDocumentTitleChanged, this);
 
         this.document.off('changed', this._onDocumentChanged, this);
-
-        if (!options.preventPushState && global.history) {
-            var st = {};
-
-            if (doc.id) {
-                st.id = doc.id;
-            }
-
-            if (doc.share) {
-                st.share = doc.share;
-                url = global.Settings.backend.dataQuery(doc.share);
-            } else {
-                url = '/';
-            }
-
-            global.history.pushState(st, doc.title, url);
-        }
     }
 
     this.document = doc;
@@ -337,10 +321,33 @@ App.prototype._loadDocReal = function(doc, options) {
     this.document.on('notify::title', this._onDocumentTitleChanged, this);
     this.document.on('changed', this._onDocumentHasChanged, this);
 
+    var st = {
+        mode: 'document'
+    };
+
+    if (doc.id) {
+        st.id = doc.id;
+    }
+
+    if (doc.share) {
+        st.share = doc.share;
+        url = global.Settings.backend.dataQuery(doc.share);
+    } else {
+        url = '/';
+    }
+
+    if (!options.preventPushState) {
+        global.history.pushState(st, doc.title, url);
+    } else {
+        global.history.replaceState(st, doc.title, url);
+    }
+
     this._onDocumentChanged();
 
     this.content.classList.add('loaded');
     this.content.classList.remove('loading');
+
+    this._showDocument();
 }
 
 App.prototype._loadDoc = function(doc, options, cb) {
@@ -391,6 +398,14 @@ App.prototype._serializeDocument = function(doc) {
 }
 
 App.prototype._saveDoc = function(doc, cb) {
+    if (this.document === null) {
+        if (typeof cb === 'function') {
+            cb(true);
+        }
+
+        return;
+    }
+
     this._store.save(this._serializeDocument(doc), function(store, retdoc) {
         if (retdoc !== null) {
             doc.id = retdoc.id;
@@ -407,6 +422,16 @@ App.prototype._saveCurrentDoc = function(cb) {
 }
 
 App.prototype._saveCurrentDocWithDelay = function(cb) {
+    if (this.document === null) {
+        if (typeof cb === 'function') {
+            cb(true);
+        }
+
+        return;
+    }
+
+    var doc = this.document;
+
     if (this._saveTimeout !== 0) {
         clearTimeout(this._saveTimeout);
         this._saveTimeout = 0;
@@ -414,7 +439,10 @@ App.prototype._saveCurrentDocWithDelay = function(cb) {
 
     this._saveTimeout = setTimeout((function() {
         this._saveTimeout = 0;
-        this._saveCurrentDoc(cb);
+
+        if (doc === this.document) {
+            this._saveCurrentDoc(cb);
+        }
     }).bind(this), 500);
 }
 
@@ -699,12 +727,205 @@ App.prototype._createLicenseSwitch = function(license) {
     });
 }
 
+App.prototype._showPublishDialog = function() {
+    var W = ui.Widget.createUi;
+
+    var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license);
+    var publishButton = new ui.Button('Publish');
+    var requestTokenButton = new ui.Button('Request Token');
+
+    var authorInput = W('input', { classes: 'author', type: 'text', value: (this.document.author || this.settings.author || '') });
+    var tokenInput = W('input', { classes: ['token', 'empty'], value: 'E-mail address or token', type: 'text', size: 30 });
+
+    var description = this.document.description;
+
+    if (!description) {
+        description = '*You cannot publish documents without a description. You can edit the description by clicking on the document title in the main view*';
+        publishButton.sensitive(false);
+        requestTokenButton.sensitive(false);
+    }
+
+    var desc = marked(description);
+    var tokenval = '';
+
+    tokenInput.addEventListener('focus', (function() {
+        tokenInput.classList.remove('empty');
+        tokenInput.value = tokenval;
+    }).bind(this));
+
+    tokenInput.addEventListener('blur', (function() {
+        tokenval = tokenInput.value;
+
+        if (!tokenval) {
+            tokenInput.value = 'E-mail address or token';
+            tokenInput.classList.add('empty');
+        }
+    }).bind(this));
+
+    var status = W('div', { classes: 'status' });
+
+    var errorStatus = function(m, e) {
+        status.classList.add('error');
+        status.textContent = m;
+
+        if (e) {
+            e.focus();
+            var f;
+
+            f = function() {
+                e.removeEventListener('input', f);
+                e.removeEventListener('change', f);
+                e.removeEventListener('blur', f);
+
+                status.textContent = '';
+                status.classList.remove('error');
+            };
+
+            e.addEventListener('input', f);
+            e.addEventListener('change', f);
+            e.addEventListener('blur', f);
+        }
+    };
+
+    var okStatus = function(m) {
+        status.classList.remove();
+        status.textContent = m;
+    };
+
+    this.renderer.grabImage(300, 200, (function(screenshot) {
+        var descDiv = W('div', { innerHTML: desc });
+
+        if (!this.document.description) {
+            descDiv.classList.add('empty');
+        }
+
+        var d = W('div', {
+            classes: 'publish',
+            children: [
+                W('div', { classes: 'title', textContent: 'Publish document: ' + this.document.title }),
+                W('div', { classes: 'description', textContent: 'Publishing stores the current document online and makes it available in the online gallery. Publishing a document requires a publishing token. You can request a new publishing token to be send by e-mail, or reuse a previously received token. To request a new token, enter your e-mail address in the Token field and press Request Token.'}),
+                W('img', { classes: 'screenshot', src: screenshot }),
+                W('div', { classes: 'contents', children:
+                    W('table', { classes: 'contents', children: [
+                        W('tr', { children: [
+                            W('td', { textContent: 'Description:' }),
+                            W('td', { classes: 'description', children: descDiv }),
+                        ]}),
+
+                        W('tr', { children: [
+                            W('td', { textContent: 'Author:' }),
+                            W('td', { children: authorInput }),
+                        ]}),
+
+                        W('tr', { children: [
+                            W('td', { textContent: 'License, CC:' }),
+                            licenseSwitch.e
+                        ]}),
+
+                        W('tr', { children: [
+                            W('td', { textContent: 'Token:' }),
+                            W('td', { children: tokenInput })
+                        ]}),
+                    ]}),
+                }),
+                W('div', { classes: 'actions', children: [
+                    requestTokenButton.e,
+                    publishButton.e,
+                    status
+                ] })
+            ]
+        });
+
+        var rm = this.message('dialog', d);
+
+        requestTokenButton.on('click', (function() {
+            if (authorInput.value.length === 0) {
+                errorStatus('Please provide an author name', authorInput);
+                return;
+            }
+
+            if (tokenval.indexOf('@') === -1) {
+                errorStatus('Please provide an e-mail address to send a new token to', tokenInput);
+                return;
+            }
+
+            utils.post('g/new', {
+                email: tokenInput.value,
+                title: this.document.title,
+                author: authorInput.value
+            }, {
+                success: function(req, ret) {
+                    okStatus('New request token has been sent and should arrive shortly');
+                },
+
+                error: function(req, e) {
+                    errorStatus(e ? e.message : req.responseText);
+                }
+            });
+        }).bind(this));
+
+        var doc = this.document;
+
+        publishButton.on('click', (function() {
+            if (authorInput.value.length === 0) {
+                errorStatus('Please provide an author name', authorInput);
+                return;
+            }
+
+            if (!tokenval.match(/^[a-zA-Z]+$/)) {
+                errorStatus('The specified token does not appear to be a valid token', tokenInput);
+                return;
+            }
+
+            utils.post('g/update', {
+                document: doc.remote(),
+                author: authorInput.value,
+                license: licenseSwitch.value(),
+                screenshot: screenshot,
+                token: tokenInput.value
+            }, {
+                success: (function(req, ret) {
+                    if (doc !== this.document) {
+                        return;
+                    }
+
+                    this.settings.license = licenseSwitch.value();
+                    this.settings.author = authorInput.value;
+                    this._store.saveAppSettings(this.settings);
+
+                    this.document.license = licenseSwitch.value();
+                    this.document.author = authorInput.value;
+                    this._saveCurrentDocWithDelay();
+
+                    // Update authors received from remote
+                    this.document.authors = ret.document.authors;
+
+                    // Make document shared
+                    this._makeShared(ret.published.document);
+
+                    rm();
+
+                    this.message('ok', '\'' + doc.title + '\' has been successfully published in the gallery, thanks!');
+                }).bind(this),
+
+                error: (function(req, e) {
+                    if (doc === this.document) {
+                        errorStatus(e ? e.message : req.responseText);
+                    }
+                }).bind(this)
+            });
+        }).bind(this));
+    }).bind(this));
+}
+
 App.prototype._showShareDialog = function() {
     var W = ui.Widget.createUi;
 
     var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license);
     var shareButton = new ui.Button('Share');
     var authorInput = W('input', { classes: 'author', type: 'text', value: (this.document.author || this.settings.author || '') });
+
+    var status = W('div', { classes: 'status' });
 
     var d = W('div', {
         classes: 'share',
@@ -729,7 +950,10 @@ App.prototype._showShareDialog = function() {
                 W('tr', { classes: 'actions', children: [
                     W('td', {
                         colspan: 2,
-                        children: shareButton.e
+                        children: [
+                            shareButton.e,
+                            status
+                        ]
                     }),
                 ]})
             ]})
@@ -739,7 +963,19 @@ App.prototype._showShareDialog = function() {
     var rm = this.message('dialog', d);
 
     shareButton.on('click', (function() {
-        this.settings.license = licenseSwitch.value();
+        var author = authorInput.value;
+        var license = licenseSwitch.value();
+
+        if (authorInput.value.length === 0 && license !== 'CC 0') {
+            authorInput.focus();
+
+            status.textContent = 'The selected license requires an author name to give credit';
+            status.classList.add('error');
+
+            return;
+        }
+
+        this.settings.license = license;
         this.settings.author = authorInput.value;
         this._store.saveAppSettings(this.settings);
 
@@ -749,7 +985,7 @@ App.prototype._showShareDialog = function() {
 
         rm();
 
-        this._shareDocument();
+        this._shareDocument(authorInput.value, licenseSwitch.value());
     }).bind(this));
 }
 
@@ -757,58 +993,379 @@ App.prototype._onButtonShareClick = function() {
     this._showShareDialog();
 }
 
-App.prototype._shareDocument = function() {
-    var req = new XMLHttpRequest();
-    var doc = this.document;
+App.prototype._onButtonPublishClick = function() {
+    this._showPublishDialog();
+}
 
-    req.onload = (function(ev) {
-        var req = ev.target;
+App.prototype._showDocument = function() {
+    if (this._mode === 'document') {
+        return;
+    }
 
-        if (req.status === 200) {
-            var ret = JSON.parse(req.responseText);
+    for (var i = 0; i < this.documentOnlyButtons.length; i++) {
+        this.buttons[this.documentOnlyButtons[i]].sensitive(true);
+    }
 
-            if (this.document === doc) {
-                this._updateDocumentBy({
-                    share: ret.hash
-                });
+    this.main.classList.add('loaded');
+    this.main.classList.remove('gallery');
 
-                var l = document.location;
+    this._mode = 'document';
+    localStorage.setItem('lastMode', 'document');
+}
 
-                var url = global.Settings.backend.dataQuery(ret.hash);
+App.prototype._galleryHasEmptyCellsInView = function(empties) {
+    var y = this.gallery.scrollTop;
+    var h = this.gallery.clientHeight;
 
-                if (global.history) {
-                    global.history.replaceState({}, '', url);
+    for (var i = 0; i < empties.length; i++) {
+        var empty = empties[i];
+
+        if (empty.offsetTop < y + h && empty.offsetTop + empty.offsetHeight > y) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+App.prototype._makeEmptyGalleryCells = function(table, nRows, nColumns) {
+    var emptyCells = [];
+    var W = ui.Widget.createUi;
+
+    for (var r = 0; r < nRows; r++) {
+        var tr = W('tr', {
+            parent: table
+        });
+
+        for (var c = 0; c < nColumns; c++) {
+            var div = W('div', {
+                classes: 'gallery-item'
+            });
+
+            var td = W('td', {
+                parent: tr,
+                children: div,
+                classes: 'empty'
+            });
+
+            emptyCells.push(div);
+        }
+    }
+
+    return emptyCells;
+}
+
+App.prototype._fillGalleryItem = function(container, item) {
+    var W = ui.Widget.createUi;
+
+    W('div', {
+        classes: 'title',
+        textContent: item.title,
+        parent: container
+    });
+
+    var date = new Date(item.modificationDate);
+
+    W('table', {
+        classes: 'info',
+        children: [
+            W('tr', { children: [
+                W('td', {
+                    classes: 'screenshot',
+                    children: W('img', {
+                        src: global.Settings.backend.url('s/' + item.screenshot + '.png'),
+                        parent: container
+                    })
+                }),
+
+                W('td', { children: W('table', { classes: 'properties', children: [
+                    W('tr', { children: [
+                        W('td', { textContent: 'Author:' }),
+                        W('td', { textContent: item.author })
+                    ]}),
+                    W('tr', { children: [
+                        W('td', { textContent: 'License:' }),
+                        W('td', { textContent: item.license, title: licenseDescriptions[item.license] })
+                    ]}),
+                    W('tr', { children: [
+                        W('td', { textContent: 'Published:' }),
+                        W('td', { textContent: this._relDate(date) })
+                    ]}),
+                    W('tr', { children: [
+                        W('td', { textContent: 'Views:' }),
+                        W('td', { textContent: item.views })
+                    ]})
+                ]})})
+            ]})
+        ],
+        parent: container
+    });
+
+    var desc = marked(item.description);
+    var div = document.createElement('div');
+    div.innerHTML = desc;
+    var shortDescription = div.querySelector('p');
+
+    W('div', {
+        classes: 'description',
+        innerHTML: shortDescription.innerHTML,
+        parent: container
+    });
+
+    container.addEventListener('click', (function() {
+        this.loadRemoteDocument(item.document, (function(doc) {
+            this.loadDocument(doc);
+
+            var vkey = 'viewed:' + item.parent;
+
+            if (!localStorage.getItem(vkey)) {
+                utils.post('g/' + item.parent + '/' + item.id + '/view');
+                localStorage.setItem(vkey, true);
+            }
+        }).bind(this));
+    }).bind(this));
+}
+
+App.prototype._populateGallery = function() {
+    // Clear previous gallery
+    this.gallery.innerHTML = '';
+
+    var W = ui.Widget.createUi;
+
+    var table = W('table', {
+        classes: 'gallery'
+    });
+
+    var colgroup = W('colgroup', { parent: table });
+
+    // Estimate number of columns
+    var width = this.content.clientWidth;
+    var height = this.content.clientHeight;
+
+    // These are just rough, conservative, estimates
+    var pixPerCol = 500;
+    var pixPerRow = 350;
+
+    var nColumns = Math.max(1, Math.floor(width / pixPerCol));
+    var nRows = Math.max(1, Math.ceil(height / pixPerRow));
+
+    var maxBatchSize = 50;
+    var maxRoundBatchSize = Math.floor(maxBatchSize / nColumns) * nColumns;
+
+    var pageSize = nRows * nColumns;
+    var pagePerBatch = 3;
+    var batchSize = Math.min(maxRoundBatchSize, pagePerBatch * pageSize);
+
+    nRows = batchSize / nColumns;
+
+    var colWidth = (100 / nColumns) + '%';
+
+    for (var i = 0; i < nColumns; i++) {
+        var col = document.createElement('col');
+        col.setAttribute('width', colWidth);
+        colgroup.appendChild(col);
+    }
+
+    var cells = this._makeEmptyGalleryCells(table, nRows, nColumns);
+
+    this.gallery.appendChild(table);
+
+    var state = {
+        populating: false,
+        table: table,
+        emptyCells: cells,
+        pages: 0,
+        pageSize: pageSize,
+        pagePerBatch: pagePerBatch,
+        batchSize: batchSize,
+        nColumns: nColumns,
+        nRows: nRows
+    };
+
+    var finalize = (function() {
+        var trs = [];
+
+        for (var i = 0; i < state.emptyCells.length; i++) {
+            var empty = state.emptyCells[i];
+            var td = empty.parentNode;
+            var tr = td.parentNode;
+
+            if (trs.indexOf(tr) === -1) {
+                trs.push(tr);
+            }
+
+            tr.removeChild(td);
+        }
+
+        for (var i = 0; i < trs.length; i++) {
+            var tr = trs[i];
+
+            if (tr.childNodes.length === 0) {
+                state.table.removeChild(tr);
+            }
+        }
+
+        this._checkPopulateGallery = null;
+    }).bind(this);
+
+    this._checkPopulateGallery = (function(state) {
+        // Check if we are looking at empty cells
+        if (state.populating || !this._galleryHasEmptyCellsInView(state.emptyCells)) {
+            return;
+        }
+
+        state.populating = true;
+
+        // Ok, populate all the empty cells
+        utils.getQuery('g', {
+            page: state.pages,
+            limit: state.batchSize
+        }, {
+            success: (function(req, ret) {
+                if (this._mode !== 'gallery') {
+                    return;
                 }
 
-                var e = document.createElement('div');
+                // Fill up to 'ret' empty cells
+                for (var i = 0; i < ret.length; i++) {
+                    this._fillGalleryItem(state.emptyCells[i], ret[i]);
+                    state.emptyCells[i].parentNode.classList.remove('empty');
+                }
 
-                var s = document.createElement('span');
-                s.textContent = 'Shared document at ';
-                e.appendChild(s);
+                state.populating = false;
 
-                s = document.createElement('span');
-                s.textContent = url;
-                e.appendChild(s);
+                if (ret.length < state.batchSize) {
+                    var n = Math.ceil(ret.length / state.nColumns) * state.nColumns;
+                    state.emptyCells = state.emptyCells.slice(n);
 
-                this.message('ok', e);
+                    finalize();
+                } else {
+                    state.emptyCells = this._makeEmptyGalleryCells(state.table, state.nRows, state.nColumns);
+                    this._checkPopulateGallery();
+                }
+            }).bind(this),
+
+            error: (function(req, e) {
+                if (this._mode !== 'gallery') {
+                    return;
+                }
+
+                this.message('error', 'Error while requesting gallery: ' + (e ? e.message : req.responseText));
+                finalize();
+            }).bind(this)
+        });
+    }).bind(this, state);
+
+    this._checkPopulateGallery();
+}
+
+App.prototype._showGallery = function(options) {
+    if (this._mode === 'gallery') {
+        return;
+    }
+
+    options = utils.merge({
+        preventPushState: false
+    }, options);
+
+    this._saveCurrentDoc((function() {
+        for (var i = 0; i < this.documentOnlyButtons.length; i++) {
+            this.buttons[this.documentOnlyButtons[i]].sensitive(false);
+        }
+
+        this.main.classList.add('loaded');
+        this.main.classList.add('gallery');
+
+        this.content.classList.add('loaded');
+        this.content.classList.remove('loading');
+
+        this.renderer.pause();
+
+        this.document = null;
+        this._mode = 'gallery';
+
+        localStorage.setItem('lastMode', 'gallery');
+
+        var st = {
+            mode: 'gallery'
+        };
+
+        if (!options.preventPushState) {
+            global.history.pushState(st, '', '/');
+        } else {
+            global.history.replaceState(st, '', '/');
+        }
+
+        this._populateGallery();
+    }).bind(this));
+}
+
+App.prototype._onButtonGalleryClick = function() {
+    this._showGallery({
+        preventPushState: false
+    });
+}
+
+App.prototype._makeShared = function(share) {
+    this._updateDocumentBy({
+        share: share
+    });
+
+    var url = global.Settings.backend.dataQuery(share);
+
+    if (global.history) {
+        global.history.replaceState({
+            mode: 'document',
+            share: share
+        }, '', url);
+    }
+
+    return url;
+}
+
+App.prototype._shareDocument = function(author, license) {
+    var doc = this.document;
+
+    utils.post('d/new', {
+        document: doc.remote(),
+        author: author,
+        license: license
+    }, {
+        success: (function(req, ret) {
+            if (this.document === doc) {
+                var url = this._makeShared(ret.hash);
+
+                var W = ui.Widget.createUi;
+
+                var urle = W('span', {
+                    textContent: url
+                });
+
+                var message = W('div', {
+                    children: [
+                        W('span', { textContent: 'Shared document at ' }),
+                        urle
+                    ]
+                })
+
+                this.message('ok', message);
 
                 var selection = window.getSelection();
                 var range = document.createRange();
-                range.selectNodeContents(s);
+
+                range.selectNodeContents(urle);
+
                 selection.removeAllRanges();
                 selection.addRange(range);
             }
-        } else {
-            this.message('error', 'Failed to upload document: ' + req.responseText);
-        }
-    }).bind(this);
+        }).bind(this),
 
-    req.onerror = (function(ev) {
-        this.message('error', 'Failed to upload document');
-    }).bind(this);
-
-    req.open('post', global.Settings.backend.url('d/new'), true);
-    req.send(JSON.stringify(this.document.remote()));
+        error: (function(req, e) {
+            if (this.document === doc) {
+                this.message('error', 'Failed to upload document: ' + e ? e.message : req.responseText);
+            }
+        }).bind(this)
+    });
 }
 
 App.prototype._onButtonExportClick = function() {
@@ -934,9 +1491,17 @@ App.prototype._showAboutPopup = function(cb) {
 }
 
 App.prototype._initButtons = function() {
-    var buttons = ['new', 'copy', 'export', 'models', 'open', 'about', 'help', 'share', 'publish'];
+    var buttons = ['new', 'copy', 'export', 'models', 'open', 'about', 'gallery', 'share', 'publish'];
 
     this.buttons = {};
+
+    this.documentOnlyButtons = [
+        'copy',
+        'export',
+        'models',
+        'share',
+        'publish'
+    ];
 
     for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
@@ -955,9 +1520,9 @@ App.prototype._initButtons = function() {
         }
     }
 
-    ui.Popup.on(this.buttons.open.e, this._showOpenPopup.bind(this));
-    ui.Popup.on(this.buttons.models.e, this._showModelsPopup.bind(this));
-    ui.Popup.on(this.buttons.about.e, this._showAboutPopup.bind(this));
+    ui.Popup.on(this.buttons.open, this._showOpenPopup.bind(this));
+    ui.Popup.on(this.buttons.models, this._showModelsPopup.bind(this));
+    ui.Popup.on(this.buttons.about, this._showAboutPopup.bind(this));
 }
 
 App.prototype._onButtonCopyClick = function() {
@@ -1366,14 +1931,9 @@ App.prototype._showInfoPopup = function() {
         classes: 'properties',
         children: [
             W('tr', { children: [
-                W('td', { textContent: 'Author:' }),
+                W('td', { textContent: 'Authors:' }),
                 W('td', { textContent: this.document.author })
             ]}),
-
-            W('tr', { children: [
-                W('td', { textContent: 'License:' }),
-                W('td', { textContent: this.document.license, title: licenseDescriptions[this.document.license] })
-            ]})
         ]
     });
 
@@ -1503,10 +2063,24 @@ App.prototype._checkCompatibility = function() {
     }
 
     // Check for IndexedDB
-    if (typeof indexedDB === 'undefined') {
+    if (typeof global.indexedDB === 'undefined') {
         missing.push({
             name: 'indexedDB',
             description: 'A suitable implementation of indexedDB could not be found. indexedDB is a local data storage which is used by the WebGL Playground to store documents.'
+        });
+    }
+
+    if (typeof global.localStorage === 'undefined') {
+        missing.push({
+            name: 'localStorage',
+            description: 'A suitable implementation of localStorage could not be found. localStorage is used by the WebGL Playground to track application states.'
+        });
+    }
+
+    if (typeof global.history === 'undefined') {
+        missing.push({
+            name: 'history',
+            description: 'A suitable implementation of history could not be found. history is used by the WebGL Playground to implement proper navigation in history while using the application.'
         });
     }
 
@@ -1554,19 +2128,72 @@ App.prototype._initHistory = function() {
         var st = e.state;
 
         if (st) {
-            var f = (function(store, doc) {
-                if (doc) {
-                    this.loadDocument(doc, { preventPushState: true });
-                }
-            }).bind(this);
+            if (st.mode === 'document') {
+                var f = (function(store, doc) {
+                    if (doc) {
+                        this.loadDocument(doc, { preventPushState: true });
+                    }
+                }).bind(this);
 
-            if (st.id) {
-                this._store.byId(st.id, f);
-            } else if (st.share) {
-                this._store.byShare(st.share, f);
+                if (st.id) {
+                    this._store.byId(st.id, f);
+                } else if (st.share) {
+                    this._store.byShare(st.share, f);
+                }
+            } else {
+                this._showGallery({
+                    preventPushState: true
+                });
             }
+        } else {
+            this._route((function(doc) {
+                this.loadDocument(doc)
+            }).bind(this), (function() {
+                this._showGallery({
+                    preventPushState: true
+                });
+            }).bind(this));
         }
     }).bind(this);
+}
+
+App.prototype.loadRemoteDocument = function(id, cb) {
+    this._store.byShare(id, (function(_, doc) {
+        if (doc !== null) {
+            cb(doc);
+        } else {
+            utils.get('d/' + id + '.json', {
+                success: (function(req, jdoc) {
+                    var doc = Document.fromRemote(id, jdoc);
+
+                    if (cb) {
+                        cb(doc);
+                    } else if (jdoc) {
+                        this.loadDocument(doc);
+                    }
+                }).bind(this),
+
+                error: (function(req, e) {
+                    var msg = e ? e.message : req.responseText;
+                    this.message('error', 'Failed to load document: ' + msg);
+                }).bind(this)
+            });
+        }
+    }).bind(this));
+}
+
+App.prototype._route = function(f, cb) {
+    var m = document.location.pathname.match(/d\/([A-Za-z0-9]+)/);
+
+    if (!m) {
+        m = document.location.search.match(/\?d=([A-Za-z0-9]+)/);
+    }
+
+    if (m) {
+        this.loadRemoteDocument(m[1], f);
+    } else {
+        cb();
+    }
 }
 
 App.prototype._init = function() {
@@ -1581,79 +2208,49 @@ App.prototype._init = function() {
             this.settings = utils.merge(defaultSettings, settings);
         }).bind(this));
 
-        var m = document.location.pathname.match(/d\/([A-Za-z0-9]+)/);
-
-        if (!m) {
-            m = document.location.search.match(/\?d=([A-Za-z0-9]+)/);
-        }
-
         var f = (function(doc) {
-            var saved = localStorage.getItem('savedDocumentBeforeUnload');
+            if (doc === null) {
+                this._showGallery({
+                    preventPushState: true
+                });
+            } else {
+                var saved = localStorage.getItem('savedDocumentBeforeUnload');
 
-            if (saved !== null && doc !== null) {
-                saved = JSON.parse(saved);
+                if (saved !== null && doc !== null) {
+                    saved = JSON.parse(saved);
 
-                if (saved && typeof saved.id !== 'undefined' && saved.id === doc.id)
-                {
-                    saved.modificationTime = new Date(saved.modificationTime);
-                    saved.creationTime = new Date(saved.creationTime);
+                    if (saved && typeof saved.id !== 'undefined' && saved.id === doc.id)
+                    {
+                        saved.modificationTime = new Date(saved.modificationTime);
+                        saved.creationTime = new Date(saved.creationTime);
 
-                    this.loadDocument(Document.deserialize(saved), {}, (function() {
-                        this._saveCurrentDocWithDelay();
-                    }).bind(this));
+                        this.loadDocument(Document.deserialize(saved), {}, (function() {
+                            this._saveCurrentDocWithDelay();
+                        }).bind(this));
 
-                    localStorage.setItem('savedDocumentBeforeUnload', null);
+                        localStorage.setItem('savedDocumentBeforeUnload', null);
 
-                    return;
+                        return;
+                    }
                 }
-            }
 
-            this.loadDocument(doc);
+                this.loadDocument(doc);
+            }
         }).bind(this);
 
-        if (m) {
-            store.byShare(m[1], (function(_, doc) {
-                if (doc !== null) {
+        this._route(f, (function() {
+            if (localStorage.getItem('lastMode') === 'document') {
+                store.last((function(_, doc) {
                     f(doc);
-                } else {
-                    // We don't have it, request it remotely
-                    var req = new XMLHttpRequest();
-
-                    req.onload = (function(e) {
-                        var req = e.target;
-
-                        if (req.status === 200) {
-                            var jdoc;
-
-                            try {
-                                jdoc = JSON.parse(req.responseText);
-                            } catch (e) {
-                                this.message('error', 'Failed parse document: ' + e.message);
-                                return;
-                            }
-
-                            f(Document.fromRemote(m[1], jdoc));
-                        } else {
-                            this.message('error', 'Failed to load document: ' + req.responseText);
-                        }
-
-                    }).bind(this);
-
-                    req.onerror = (function(e) {
-                        this.message('error', 'Failed to load document ' + m[1]);
-                    }).bind(this);
-
-                    req.open('get', global.Settings.backend.url('d/' + m[1] + '.json'), true);
-                    req.send();
-                }
-            }).bind(this));
-        } else {
-            store.last((function(_, doc) {
-                f(doc);
-            }).bind(this));
-        }
+                }).bind(this));
+            } else {
+                f(null);
+            }
+        }).bind(this));
     }).bind(this));
 
+    this.main = document.getElementById('main');
+    this.gallery = document.getElementById('gallery');
     this.content = document.getElementById('content');
 
     this._initProgramsBar();
@@ -1669,6 +2266,12 @@ App.prototype._init = function() {
         this._updateEditors();
         localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this._serializeDocument(this.document)));
     }).bind(this);
+
+    window.addEventListener('scroll', (function() {
+        if (this._mode === 'gallery' && this._checkPopulateGallery) {
+            this._checkPopulateGallery();
+        }
+    }).bind(this));
 };
 
 var app = new App();
