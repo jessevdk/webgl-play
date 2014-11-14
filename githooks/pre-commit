@@ -1,0 +1,37 @@
+#!/bin/bash
+
+b=$(cd $(dirname "$0"); pwd)
+d="$b/.git-check-gen"
+
+rm -rf "$d"
+git checkout-index -a -f --prefix="$d/"
+
+ln -s "$b/node_modules" "$d/node_modules"
+ln -s "$b/.gem" "$d/.gem"
+
+mkdir "$d/.gen"
+touch "$d/.gen/npm.stamp"
+
+# Remove generated files, make it pristine
+rm -rf "$d/site"
+rm -rf "$d/server/site"
+
+# Run a full make
+make -C "$d" local-site server-site
+
+# Check all generated files into the index
+(
+	cd "$d";
+
+	fixmap="site/assets/js/site.min.js.map"
+
+	sed -e 's/.git-check-gen\///g' "$fixmap" > "$fixmap".tmp && mv "$fixmap".tmp "$fixmap"
+	sed -e 's/.git-check-gen\///g' "server/$fixmap" > "server/$fixmap".tmp && mv "server/$fixmap".tmp "server/$fixmap"
+
+	for f in $(find site -type f) $(find server/site -type f); do
+		blobid=$(git hash-object -w --path "$f" -- "$f");
+		git update-index --add --replace --cacheinfo 100644,$blobid,$f;
+	done
+)
+
+rm -rf "$d"
