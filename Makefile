@@ -26,7 +26,7 @@ iconsizes=16 32 48 60 64 76 120 128 152 192 256 512
 ICONS=$(foreach i,$(iconsizes),webgl-icon-$(i).png)
 SITE_ICONS=$(foreach i,$(ICONS),site/assets/icons/$(i)) site/assets/icons/webgl-icon-16-32.ico
 
-MODELS = $(foreach i,$(wildcard models/*.obj models/*.mtl),site/assets/models/$(notdir $(i)))
+MODELS = $(foreach i,$(wildcard models/*.obj),site/assets/models/$(notdir $(i)))
 
 SITE_EXTERNAL_DEPS =		\
 	js/app/default.glslv	\
