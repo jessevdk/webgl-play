@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<!--
+Copyright (c) 2014 Jesse van den Kieboom. All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+     copyright notice, this list of conditions and the following disclaimer
+     in the documentation and/or other materials provided with the
+     distribution.
+   * Neither the name of Google Inc. nor the names of its
+     contributors may be used to endorse or promote products derived from
+     this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<html>
+  <head>
+    <title>WebGL playground</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link href="/assets/css/vendor.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/site.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/remote.css" rel="stylesheet" type="text/css">
+
+    <link rel="icon" href="/assets/icons/webgl-icon-16.png" sizes="16x16" type="image/png">
+    <link rel="icon" href="/assets/icons/webgl-icon-32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/assets/icons/webgl-icon-16-32.ico" sizes="16x16 32x32" type="image/vnd.microsoft.icon">
+    <link rel="icon" href="/assets/icons/webgl-icon-64.png" sizes="64x64" type="image/png">
+    <link rel="icon" href="/assets/icons/webgl-icon-128.png" sizes="128x128" type="image/png">
+    <link rel="icon" href="/assets/icons/webgl-icon-256.png" sizes="256x256" type="image/png">
+    <link rel="icon" href="/assets/icons/webgl-icon-512.png" sizes="512x512" type="image/png">
+
+    <script src="/assets/js/settings.js" type="text/javascript"></script>
+
+    <script src="/assets/js/vendor.min.js" type="text/javascript"></script>
+    <script src="/assets/js/site.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="main">
+      <div id="header">
+        <ul id="buttons-local">
+          <li id="button-about">About ▼</li>
+          <li id="button-open" title="Open an existing local document">Open ▼</li>
+          <li id="button-models" title="Browse and manage locally stored models">Models ▼</li>
+          <li id="button-export" title="Export the current document to a file">Export</li>
+          <li id="button-copy" title="Copy the current document to a new document">Copy</li>
+          <li id="button-new" title="Open a new empty document">New</li>
+        </ul>
+        <ul id="buttons-remote">
+          <li id="button-gallery" title="Open the gallery to look for published documents">Gallery</li>
+          <li id="button-share" title="Share the current document through the online service">Share</li>
+          <li id="button-publish" title="Publish the current document in the online gallery">Publish</li>
+        </ul>
+        <div id="document-title"></div>
+        <div id="gallery-title">Gallery</div>
+      </div>
+      <div id="content">
+        <div id="gallery">
+        </div>
+        <div id="panel-programs" class="panel horizontal">
+          <div>
+            <div class="child-bin" id="programs-sidebar">
+
+              <div class="title">Programs</div>
+              <ul id="program-list">
+                <li class="new-program">
+                  <table id="new-program-container">
+                    <tr>
+                      <td><input type="text" id="new-program-name"/></td>
+                      <td><div id="new-program">Create</div></td>
+                    </tr>
+                  </table>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="separator"></div>
+          <div>
+            <div class="child-bin">
+
+              <div id="panel-main" class="panel horizontal">
+                <div>
+                  <div class="child-bin">
+
+                    <div id="panel-program" class="panel vertical">
+                      <div>
+                        <div class="child-bin">
+                          <div id="vertex-editor" class="editor"></div>
+                          <div class="editor-title">Vertex</div>
+                        </div>
+                      </div>
+                      <div class="separator"></div>
+                      <div>
+                        <div class="child-bin">
+                          <div id="fragment-editor" class="editor"></div>
+                          <div class="editor-title">Fragment</div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="separator"></div>
+                <div>
+                  <div class="child-bin">
+
+                    <div id="panel-js" class="panel vertical">
+                      <div>
+                        <div class="child-bin">
+                          <div id="view-container">
+                            <canvas id="view" tabindex="4"></canvas>
+                            <div class="editor-title">View</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="separator"></div>
+                      <div>
+                        <div class="child-bin">
+
+                          <div id="js-editor" class="editor"></div>
+                          <div class="editor-title">Javascript</div>
+
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!-- vi:ex:ts=2:et -->
