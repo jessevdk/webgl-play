@@ -19,12 +19,12 @@ service.
 
 # Server files
 The server by default serves the static site data from the
-[site/]() directory. This directory contains a copy of the toplevel `site/`
+[site/](site/) directory. This directory contains a copy of the toplevel `site/`
 directory, with a few small path changes to make it work in a server
 setting. The location of this directory can be changed using the `--site-data`
 command line flag.
 
-The [data/]() directory is used by default to store all of the site data,
+The [data/](data/) directory is used by default to store all of the site data,
 including uploaded documents, the gallery database and the uploaded
 screenshots for items in the gallery. The location of this directory can
 be changed using the `--data` command line flag.

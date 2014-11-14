@@ -24,33 +24,33 @@ playground. Here you can look at examples from the gallery, create new
 experiments and share them as you like.
 
 You can also run the playground very easily locally, or on your own server.
-Please see [INSTALL.md]() for more information on installing the playground.
+Please see [INSTALL.md](INSTALL.md) for more information on installing the playground.
 
 # Building
-For specific build instructions please see [BUILD.md]()
+For specific build instructions please see [BUILD.md](BUILD.md)
 
 # Structure of this repository
 The general structure of this repository is as follows:
 
-  * [css/](): all the website style sheets. The playground uses SASS and the
-              main entry point is [css/site.scss](). Normal .css files are
+  * [css/](css/): all the website style sheets. The playground uses SASS and the
+              main entry point is [css/site.scss](css/site.scss). Normal .css files are
               vendored from external sources.
-  * [docs/](): WebGL specific documentation.
-  * [githooks/](): useful githooks used during development.
-  * [html/](): the website html files.
-  * [icons/](): icons of various sizes, as well as the .blend file
+  * [docs/](docs/): WebGL specific documentation.
+  * [githooks/](githooks/): useful githooks used during development.
+  * [html/](html/): the website html files.
+  * [icons/](icons/): icons of various sizes, as well as the .blend file
                 from which the icons are rendered.
-  * [js/](): all the website JavaScript files. Files are distributed over
+  * [js/](js/): all the website JavaScript files. Files are distributed over
              various (mostly self-contained) subdirectories. The playground
              uses browserify to merge all JavaScript together, and the main
-             entry point is [js/site.js](). Externally vendored JavaScript
-             files reside in [js/vendor/]().
-  * [models/](): high poly sample models available directly in the playground,
+             entry point is [js/site.js](js/site.js). Externally vendored JavaScript
+             files reside in [js/vendor/](js/vendor/).
+  * [models/](models/): high poly sample models available directly in the playground,
                  including the Stanford Bunny, Buddha, Dragon, Utah Teapot
                  and Blender Suzanne.
-  * [scripts/](): various scripts used for building the final website.
-  * [server/](): a server for the playground maintaining shared documents
-                 and the gallery. See [server/README.md]() for more
+  * [scripts/](scripts/): various scripts used for building the final website.
+  * [server/](server/): a server for the playground maintaining shared documents
+                 and the gallery. See [server/README.md](server/README.md) for more
                  information.
-  * [site/](): pre-generated site. You can point your browser to this locally
+  * [site/](site/): pre-generated site. You can point your browser to this locally
                after a checkout.

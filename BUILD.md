@@ -1,5 +1,5 @@
 # Build Instructions
-By default, all built files are distributed in the git repository (in [site/]()) and you will
+By default, all built files are distributed in the git repository (in [site/](site/)) and you will
 not need to rebuild the playground for normal usage. If you would like to develop for the
 playground however, you will need to build the site after making changes.
 
@@ -21,8 +21,8 @@ To build all components of the playground, simply run `make`. Any required depen
 (other than the ones listed above) are installed as needed, and the various site components
 are generated. The two outputs of the build process are:
 
-1. [site/](): containing the final static website files
-2. [server/server](): the site server
+1. [site/](site/): containing the final static website files
+2. [server/server](server/): the site server
 
 Note that you can build individual components by running respectively
 `make local-site` and `make server`.
