@@ -1948,12 +1948,24 @@ App.prototype._showInfoPopup = function() {
 
     var title = W('input', { classes: 'title', value: this.document.title, type: 'text' });
 
+    var authors = [];
+
+    for (var i = 0; i < this.document.authors.length; i++) {
+        var author = this.document.authors[i];
+
+        authors.push(author.name + ' (' + author.license + ', ' + author.year + ')');
+    }
+
+    if (authors.length == 0) {
+        authors = ['Unpublished'];
+    }
+
     var props = W('table', {
         classes: 'properties',
         children: [
             W('tr', { children: [
                 W('td', { textContent: 'Authors:' }),
-                W('td', { textContent: this.document.author })
+                W('td', { textContent: authors.join(', ') })
             ]}),
         ]
     });
