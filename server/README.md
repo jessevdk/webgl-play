@@ -19,7 +19,7 @@ service.
 
 # Server files
 The server by default serves the static site data from the
-[site/](site/) directory. This directory contains a copy of the toplevel `site/`
+[site/](site/) directory. This directory contains a copy of the toplevel [site/](../site/)`
 directory, with a few small path changes to make it work in a server
 setting. The location of this directory can be changed using the `--site-data`
 command line flag.
