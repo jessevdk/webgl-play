@@ -196,9 +196,9 @@ $(eval $(call copy-rule,server/site/assets/css/remote.css,server/remote.css))
 
 # Convenience targets
 local-site: $(LOCAL_ASSETS)
-server-site: server/server $(SERVER_ASSETS)
+server-site: $(SERVER_ASSETS)
 
-site: local-site server-site
+site: local-site server-site server/server
 	@printf "[\033[1m$(shell date)\033[0m] ... [\033[32mdone\033[0m]\n\n"
 
 # Watch targets
