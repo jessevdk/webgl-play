@@ -186,7 +186,7 @@ server/site/index.html: html/index.html
 # Compile server using go
 server/server: $(wildcard server/*.go)
 	@printf "[\033[1mGO\033[0m] $@\n"; \
-	(cd server && go build)
+	(cd server && go get -d && go build)
 
 # Server assets are copied
 $(eval $(call copy-rule,server/site/%,site/%))
