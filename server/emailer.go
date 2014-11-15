@@ -125,12 +125,14 @@ func (e Emailer) send(emails []Email) {
 
 	defer c.Close()
 
-	if ok, _ := c.Extension("STARTTLS"); ok {
-		config := &tls.Config{ServerName: e.SMTPHost()}
+	if !options.SMTPDisableTLS {
+		if ok, _ := c.Extension("STARTTLS"); ok {
+			config := &tls.Config{ServerName: e.SMTPHost()}
 
-		if err := c.StartTLS(config); err != nil {
-			log.Printf("Failed to STARTTLS SMTP: %v", err)
-			return
+			if err := c.StartTLS(config); err != nil {
+				log.Printf("Failed to STARTTLS SMTP: %v", err)
+				return
+			}
 		}
 	}
 
