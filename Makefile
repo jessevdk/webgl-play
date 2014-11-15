@@ -135,6 +135,9 @@ site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(EXORCIST) $(SITE_EX
 		 	-t ./scripts/docify 													\
 		 	-o $@.tmp --cachefile .gen/js/.dev-cache js/site.js && 					\
 		 $(EXORCIST) $@.map > $@ < $@.tmp && rm -f $@.tmp) || exit 1; 				\
+		if [ ! -z "$$(tail -c 1 $@.map)" ]; then									\
+			echo >> $@.map;															\
+		fi																			\
 	else 																			\
 		$(BROWSERIFYINC) 															\
 			-t brfs 																\
@@ -144,7 +147,7 @@ site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(EXORCIST) $(SITE_EX
 	fi; 																			\
 	printf "[\033[1mGEN\033[0m] [deps]\n"; 											\
 	mkdir -p .gen/js; 																\
-	printf "site/assets/js/site.min.js: " > .gen/js/site.min.js.deps; 					\
+	printf "site/assets/js/site.min.js: " > .gen/js/site.min.js.deps; 				\
 	$(BROWSERIFY) --list js/site.js 2>/dev/null 									\
 		| tr "\\n" " " >> .gen/js/site.min.js.deps; 								\
 	echo "" >> $@
