@@ -34,6 +34,7 @@ import (
 	"fmt"
 	"log"
 	"net/smtp"
+	"strings"
 	"text/template"
 	"time"
 )
@@ -104,6 +105,16 @@ func (e Emailer) handleResettableError(c *smtp.Client, msg string) bool {
 	return true
 }
 
+func (e Emailer) SMTPHost() string {
+	i := strings.LastIndex(options.SMTPAddress, ":")
+
+	if i >= 0 {
+		return options.SMTPAddress[:i]
+	}
+
+	return options.SMTPAddress
+}
+
 func (e Emailer) send(emails []Email) {
 	c, err := smtp.Dial(options.SMTPAddress)
 
@@ -115,7 +126,7 @@ func (e Emailer) send(emails []Email) {
 	defer c.Close()
 
 	if ok, _ := c.Extension("STARTTLS"); ok {
-		config := &tls.Config{ServerName: options.SMTPAddress}
+		config := &tls.Config{ServerName: e.SMTPHost()}
 
 		if err := c.StartTLS(config); err != nil {
 			log.Printf("Failed to STARTTLS SMTP: %v", err)
