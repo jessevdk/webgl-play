@@ -2,7 +2,7 @@
 
 # &nbsp; WebGL Playground
 
-Visit [http://jessevdk.github.io/webgl-play]() to start right now!
+Visit http://jessevdk.github.io/webgl-play to start right now!
 
 The WebGL Playground is a web-based, live editing environment primarily
 created to allow easy experimenting with WebGL. The main editor consists
@@ -21,7 +21,7 @@ At the same time however, the conveniences should not introduce too much
 
 # Getting Started
 If you want to get started right away, please visit
-[http://jessevdk.github.io/webgl-play]() for the official instance of the
+http://jessevdk.github.io/webgl-play for the official instance of the
 playground. Here you can look at examples from the gallery, create new
 experiments and share them as you like.
 
