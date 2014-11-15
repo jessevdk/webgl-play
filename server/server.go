@@ -111,10 +111,13 @@ func main() {
 	}
 
 	dataRoot = absPath(options.Data)
-	siteRoot = absPath(options.SiteData)
 
-	router.PathPrefix("/assets/").Handler(MakeHandler(http.FileServer(http.Dir(siteRoot)), WrapCompress))
-	router.PathPrefix("/").Handler(MakeHandler(NewRestishHandler(SiteHandler{}), WrapCompress))
+	if options.SiteData != "-" {
+		siteRoot = absPath(options.SiteData)
+
+		router.PathPrefix("/assets/").Handler(MakeHandler(http.FileServer(http.Dir(siteRoot)), WrapCompress))
+		router.PathPrefix("/").Handler(MakeHandler(NewRestishHandler(SiteHandler{}), WrapCompress))
+	}
 
 	db.Open()
 

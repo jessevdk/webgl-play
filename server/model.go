@@ -56,6 +56,11 @@ func (d *ModelHandler) Get(writer http.ResponseWriter, req *http.Request) {
 	}
 
 	if !u.IsAbs() {
+		if options.SiteData == "-" {
+			http.Error(writer, "404 not found", http.StatusNotFound)
+			return
+		}
+
 		root := path.Join(siteRoot, "assets", "models")
 		filename := path.Clean(path.Join(root, u.Path))
 
