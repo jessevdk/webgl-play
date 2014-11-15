@@ -1481,6 +1481,11 @@ App.prototype._showAboutPopup = function(cb) {
                 textContent: item.name
             });
 
+            a.addEventListener('click', function(e) {
+                e.stopPropagation();
+                popup.destroy();
+            });
+
             li = ui.Widget.createUi('li', {
                 children: a
             });
