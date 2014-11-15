@@ -246,10 +246,10 @@ exports.load = function(ctx, filename, options) {
         var url;
 
         if (filename.indexOf("http:") === 0 || filename.indexOf("https:") === 0) {
-            url ='m/';
+            url = 'm/';
             backend = true;
         } else {
-            url = '/assets/models/';
+            url = global.Settings.frontend.url('assets/models/');
             backend = false;
         }
 
