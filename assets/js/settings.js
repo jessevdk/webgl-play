@@ -30,7 +30,7 @@
 var Settings = {
     backend: {
         url: function(u) {
-            return 'http://webgl.codyn.net/' + u;
+            return 'http://webgl-play.codyn.net/' + u;
         }
     },
 
