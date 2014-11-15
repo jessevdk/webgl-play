@@ -337,9 +337,9 @@ App.prototype._loadDocReal = function(doc, options) {
 
     if (doc.share) {
         st.share = doc.share;
-        url = global.Settings.backend.dataQuery(doc.share);
+        url = global.Settings.frontend.dataQuery(doc.share);
     } else {
-        url = '/';
+        url = global.Settings.frontend.url('');
     }
 
     if (!options.preventPushState) {
@@ -1312,9 +1312,9 @@ App.prototype._showGallery = function(options) {
         };
 
         if (!options.preventPushState) {
-            global.history.pushState(st, '', '/');
+            global.history.pushState(st, '',  global.Settings.frontend.url(''));
         } else {
-            global.history.replaceState(st, '', '/');
+            global.history.replaceState(st, '', global.Settings.frontend.url(''));
         }
 
         this._populateGallery();
@@ -1332,7 +1332,7 @@ App.prototype._makeShared = function(share) {
         share: share
     });
 
-    var url = global.Settings.backend.dataQuery(share);
+    var url = global.Settings.frontend.dataQuery(share);
 
     if (global.history) {
         global.history.replaceState({

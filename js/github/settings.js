@@ -29,13 +29,18 @@
 
 var Settings = {
     backend: {
-        dataQuery: function(hash) {
-            var l = document.location;
-            return l.protocol + '//' + l.host + '/?d=' + hash;
-        },
-
         url: function(u) {
             return 'http://webgl.codyn.net/' + u;
+        }
+    },
+
+    frontend: {
+        url: function(u) {
+            return 'http://jessevdk.github.io/webgl-play/' + u;
+        },
+
+        dataQuery: function(hash) {
+            return 'http://jessevdk.github.io/webgl-play/?d=' + hash;
         }
     }
 };

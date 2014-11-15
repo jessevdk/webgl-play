@@ -32,13 +32,18 @@ var utils = require('./utils/utils');
 // TODO: this isn't great
 global.Settings = utils.merge({
     backend: {
+        url: function(u) {
+            return '/' + u;
+        }
+    },
+
+    frontend: {
         dataQuery: function(hash) {
-            var l = document.location;
-            return l.protocol + '//' + l.host + '/d/' + hash;
+            return '/d/' + hash;
         },
 
         url: function(u) {
-            return '/' + u;
+        	return '/' + u;
         }
     }
 }, global.Settings);
