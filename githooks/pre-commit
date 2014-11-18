@@ -1,6 +1,11 @@
 #!/bin/bash
 
 b=$(pwd)
+
+if ! scripts/check-site-changes.py; then
+	exit 0
+fi
+
 d="$b/.git-check-gen"
 
 rm -rf "$d"
