@@ -5,38 +5,38 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(3.1-3.5)",
-            "is_primitive": true,
+            "isPrimitive": true,
             "t": {
               "type(builtins.PrimitiveType)": "$void"
             }
           },
           "name": "IDENTIFIER:main@(3.6-3.10)",
-          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
-          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)",
+          "leftParen": "LEFT_PAREN:(@(3.10-3.11)",
+          "rightParen": "RIGHT_PAREN:)@(3.11-3.12)",
           "t": {
             "type(builtins.PrimitiveType)": "$void"
           }
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(13.1-13.2)",
-          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "rightBrace": "RIGHT_BRACE:}@(13.1-13.2)",
+          "leftBrace": "LEFT_BRACE:{@(3.13-3.14)",
           "body": [
             {
               "WhileStmt": {
                 "token": "WHILE:while@(4.5-4.10)",
-                "left_paren": "LEFT_PAREN:(@(4.11-4.12)",
+                "leftParen": "LEFT_PAREN:(@(4.11-4.12)",
                 "condition(ConstantExpr)": {
                   "token": "BOOLCONSTANT:true@(4.12-4.16) = true",
                   "t": {
                     "type(builtins.PrimitiveType)": "$bool",
-                    "is_const_expression": true,
-                    "const_value": true
+                    "isConstExpression": true,
+                    "constValue": true
                   }
                 },
-                "right_paren": "RIGHT_PAREN:)@(4.16-4.17)",
+                "rightParen": "RIGHT_PAREN:)@(4.16-4.17)",
                 "body(Block)": {
-                  "right_brace": "RIGHT_BRACE:}@(6.5-6.6)",
-                  "left_brace": "LEFT_BRACE:{@(4.18-4.19)",
+                  "rightBrace": "RIGHT_BRACE:}@(6.5-6.6)",
+                  "leftBrace": "LEFT_BRACE:{@(4.18-4.19)",
                   "body": [
                     {
                       "BreakStmt": {
@@ -46,23 +46,27 @@
                       }
                     }
                   ],
-                  "new_scope": true,
+                  "newScope": true,
                   "t": {},
-                  "parent_scope(WhileStmt)": "@6"
+                  "parentScope(WhileStmt)": "@6",
+                  "@id": 8
                 },
                 "t": {},
-                "parent_scope(Block)": "@5",
+                "scopes": [
+                  "Block@8"
+                ],
+                "parentScope(Block)": "@5",
                 "@id": 6
               }
             },
             {
               "ForStmt": {
                 "token": "FOR:for@(8.5-8.8)",
-                "left_paren": "LEFT_PAREN:(@(8.9-8.10)",
+                "leftParen": "LEFT_PAREN:(@(8.9-8.10)",
                 "init(VariableDecl)": {
                   "type(TypeRef)": {
                     "token": "INT:int@(8.10-8.13)",
-                    "is_primitive": true,
+                    "isPrimitive": true,
                     "t": {
                       "type(builtins.PrimitiveType)": "$int"
                     },
@@ -74,16 +78,38 @@
                         "name": "IDENTIFIER:i@(8.14-8.15)",
                         "decl(VariableDecl)": "@11",
                         "type(TypeRef)": "@12",
-                        "initial_assign": "EQUAL:=@(8.16-8.17)",
-                        "initial_value(ConstantExpr)": {
+                        "initialAssign": "EQUAL:=@(8.16-8.17)",
+                        "initialValue(ConstantExpr)": {
                           "token": "INTCONSTANT:0@(8.18-8.19) = 0",
                           "t": {
                             "type(builtins.PrimitiveType)": "$int",
-                            "is_const_expression": true
+                            "isConstExpression": true
                           }
                         },
                         "t": {
-                          "type(builtins.PrimitiveType)": "$int"
+                          "type(builtins.PrimitiveType)": "$int",
+                          "users": [
+                            {
+                              "VariableExpr": {
+                                "name": "IDENTIFIER:i@(8.21-8.22)",
+                                "t": {
+                                  "type(builtins.PrimitiveType)": "$int",
+                                  "decl(Named)": "@13"
+                                },
+                                "@id": 15
+                              }
+                            },
+                            {
+                              "VariableExpr": {
+                                "name": "IDENTIFIER:i@(8.29-8.30)",
+                                "t": {
+                                  "type(builtins.PrimitiveType)": "$int",
+                                  "decl(Named)": "@13"
+                                },
+                                "@id": 16
+                              }
+                            }
+                          ]
                         },
                         "@id": 13
                       }
@@ -95,20 +121,14 @@
                 },
                 "rest(ForRestStmt)": {
                   "condition(BinOpExpr)": {
-                    "lhs(VariableExpr)": {
-                      "name": "IDENTIFIER:i@(8.21-8.22)",
-                      "t": {
-                        "type(builtins.PrimitiveType)": "$int",
-                        "decl(Named)": "@13"
-                      }
-                    },
+                    "lhs(VariableExpr)": "@15",
                     "op": "LEFT_ANGLE:<@(8.23-8.24)",
                     "rhs(ConstantExpr)": {
                       "token": "INTCONSTANT:10@(8.25-8.27) = 10",
                       "t": {
                         "type(builtins.PrimitiveType)": "$int",
-                        "is_const_expression": true,
-                        "const_value": 10
+                        "isConstExpression": true,
+                        "constValue": 10
                       }
                     },
                     "t": {
@@ -118,23 +138,17 @@
                   "semi": "SEMICOLON:;@(8.27-8.28)",
                   "expression(UnaryPostfixOpExpr)": {
                     "op": "INC_OP:++@(8.30-8.32)",
-                    "expression(VariableExpr)": {
-                      "name": "IDENTIFIER:i@(8.29-8.30)",
-                      "t": {
-                        "type(builtins.PrimitiveType)": "$int",
-                        "decl(Named)": "@13"
-                      }
-                    },
+                    "expression(VariableExpr)": "@16",
                     "t": {
                       "type(builtins.PrimitiveType)": "$int"
                     }
                   },
                   "t": {}
                 },
-                "right_paren": "RIGHT_PAREN:)@(8.32-8.33)",
+                "rightParen": "RIGHT_PAREN:)@(8.32-8.33)",
                 "body(Block)": {
-                  "right_brace": "RIGHT_BRACE:}@(10.5-10.6)",
-                  "left_brace": "LEFT_BRACE:{@(8.34-8.35)",
+                  "rightBrace": "RIGHT_BRACE:}@(10.5-10.6)",
+                  "leftBrace": "LEFT_BRACE:{@(8.34-8.35)",
                   "body": [
                     {
                       "ContinueStmt": {
@@ -144,21 +158,25 @@
                       }
                     }
                   ],
-                  "new_scope": true,
+                  "newScope": true,
                   "t": {},
-                  "parent_scope(ForStmt)": "@10"
+                  "parentScope(ForStmt)": "@10",
+                  "@id": 21
                 },
                 "t": {},
                 "variables": [
                   "Named@13"
                 ],
-                "variable_map": {
+                "variableMap": {
                   "i(Named)": "@13"
                 },
+                "scopes": [
+                  "Block@21"
+                ],
                 "symbols": {
                   "i(Named)": "@13"
                 },
-                "parent_scope(Block)": "@5",
+                "parentScope(Block)": "@5",
                 "@id": 10
               }
             },
@@ -170,15 +188,22 @@
               }
             }
           ],
-          "new_scope": true,
+          "newScope": true,
           "t": {},
-          "parent_scope(FunctionDef)": "@2",
+          "scopes": [
+            "WhileStmt@6",
+            "ForStmt@10"
+          ],
+          "parentScope(FunctionDef)": "@2",
           "@id": 5
         },
         "t": {
           "type(builtins.PrimitiveType)": "$void"
         },
-        "parent_scope(Parser)": "@1",
+        "scopes": [
+          "Block@5"
+        ],
+        "parentScope(Parser)": "@1",
         "@id": 2
       }
     },
@@ -187,21 +212,21 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "INT:int@(15.1-15.4)",
-            "is_primitive": true,
+            "isPrimitive": true,
             "t": {
               "type(builtins.PrimitiveType)": "$int"
             }
           },
           "name": "IDENTIFIER:f@(15.5-15.6)",
-          "left_paren": "LEFT_PAREN:(@(15.6-15.7)",
-          "right_paren": "RIGHT_PAREN:)@(15.7-15.8)",
+          "leftParen": "LEFT_PAREN:(@(15.6-15.7)",
+          "rightParen": "RIGHT_PAREN:)@(15.7-15.8)",
           "t": {
             "type(builtins.PrimitiveType)": "$int"
           }
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(17.1-17.2)",
-          "left_brace": "LEFT_BRACE:{@(15.9-15.10)",
+          "rightBrace": "RIGHT_BRACE:}@(17.1-17.2)",
+          "leftBrace": "LEFT_BRACE:{@(15.9-15.10)",
           "body": [
             {
               "ReturnStmt": {
@@ -210,8 +235,8 @@
                   "token": "INTCONSTANT:1@(16.9-16.10) = 1",
                   "t": {
                     "type(builtins.PrimitiveType)": "$int",
-                    "is_const_expression": true,
-                    "const_value": 1
+                    "isConstExpression": true,
+                    "constValue": 1
                   }
                 },
                 "semi": "SEMICOLON:;@(16.10-16.11)",
@@ -219,14 +244,18 @@
               }
             }
           ],
-          "new_scope": true,
+          "newScope": true,
           "t": {},
-          "parent_scope(FunctionDef)": "@24"
+          "parentScope(FunctionDef)": "@24",
+          "@id": 27
         },
         "t": {
           "type(builtins.PrimitiveType)": "$int"
         },
-        "parent_scope(Parser)": "@1",
+        "scopes": [
+          "Block@27"
+        ],
+        "parentScope(Parser)": "@1",
         "@id": 24
       }
     }
@@ -238,11 +267,15 @@
     "FunctionDef@2",
     "FunctionDef@24"
   ],
-  "function_map": {
+  "functionMap": {
     "main()(FunctionDef)": "@2",
     "f()(FunctionDef)": "@24"
   },
-  "parent_scope": "(builtin scope)",
+  "scopes": [
+    "FunctionDef@2",
+    "FunctionDef@24"
+  ],
+  "parentScope": "(builtin scope)",
   "t": {},
   "@id": 1
 }

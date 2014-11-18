@@ -5,7 +5,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "INT:int@(3.1-3.4)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:function_proto@(3.5-3.19)",
           "parameters": [
@@ -13,7 +13,7 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "INT:int@(3.20-3.23)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 }
               }
             },
@@ -21,13 +21,13 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "VEC2:vec2@(3.25-3.29)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 }
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(3.19-3.20)",
-          "right_paren": "RIGHT_PAREN:)@(3.29-3.30)"
+          "leftParen": "LEFT_PAREN:(@(3.19-3.20)",
+          "rightParen": "RIGHT_PAREN:)@(3.29-3.30)"
         },
         "semi": "SEMICOLON:;@(3.30-3.31)"
       }
@@ -37,7 +37,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(5.1-5.5)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:main@(5.6-5.10)",
           "parameters": [
@@ -45,24 +45,24 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "VOID:void@(5.11-5.15)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 }
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(5.10-5.11)",
-          "right_paren": "RIGHT_PAREN:)@(5.15-5.16)"
+          "leftParen": "LEFT_PAREN:(@(5.10-5.11)",
+          "rightParen": "RIGHT_PAREN:)@(5.15-5.16)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(7.1-7.2)",
-          "left_brace": "LEFT_BRACE:{@(5.17-5.18)",
+          "rightBrace": "RIGHT_BRACE:}@(7.1-7.2)",
+          "leftBrace": "LEFT_BRACE:{@(5.17-5.18)",
           "body": [
             {
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:function_proto@(6.5-6.19)",
-                  "left_paren": "LEFT_PAREN:(@(6.19-6.20)",
-                  "right_paren": "RIGHT_PAREN:)@(6.33-6.34)",
+                  "leftParen": "LEFT_PAREN:(@(6.19-6.20)",
+                  "rightParen": "RIGHT_PAREN:)@(6.33-6.34)",
                   "arguments": [
                     {
                       "ConstantExpr": {
@@ -72,8 +72,8 @@
                     {
                       "FunctionCallExpr": {
                         "name": "VEC2:vec2@(6.23-6.27)",
-                        "left_paren": "LEFT_PAREN:(@(6.27-6.28)",
-                        "right_paren": "RIGHT_PAREN:)@(6.32-6.33)",
+                        "leftParen": "LEFT_PAREN:(@(6.27-6.28)",
+                        "rightParen": "RIGHT_PAREN:)@(6.32-6.33)",
                         "arguments": [
                           {
                             "ConstantExpr": {
@@ -94,7 +94,7 @@
               }
             }
           ],
-          "new_scope": true
+          "newScope": true
         }
       }
     },
@@ -103,7 +103,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "INT:int@(9.1-9.4)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:function_proto@(9.5-9.19)",
           "parameters": [
@@ -111,7 +111,7 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "INT:int@(9.20-9.23)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:a@(9.24-9.25)"
               }
@@ -120,19 +120,19 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "VEC2:vec2@(9.27-9.31)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:b@(9.32-9.33)"
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(9.19-9.20)",
-          "right_paren": "RIGHT_PAREN:)@(9.33-9.34)"
+          "leftParen": "LEFT_PAREN:(@(9.19-9.20)",
+          "rightParen": "RIGHT_PAREN:)@(9.33-9.34)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(10.1-10.2)",
-          "left_brace": "LEFT_BRACE:{@(9.35-9.36)",
-          "new_scope": true
+          "rightBrace": "RIGHT_BRACE:}@(10.1-10.2)",
+          "leftBrace": "LEFT_BRACE:{@(9.35-9.36)",
+          "newScope": true
         }
       }
     },
@@ -141,7 +141,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "INT:int@(12.1-12.4)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:function_param_qualifiers@(12.5-12.30)",
           "parameters": [
@@ -149,7 +149,7 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "INT:int@(12.34-12.37)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:a@(12.38-12.39)",
                 "qualifier": "IN:in@(12.31-12.33)"
@@ -159,7 +159,7 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "INT:int@(12.47-12.50)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:b@(12.51-12.52)",
                 "qualifier": "INOUT:inout@(12.41-12.46)"
@@ -169,20 +169,20 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "INT:int@(12.58-12.61)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:c@(12.62-12.63)",
                 "qualifier": "OUT:out@(12.54-12.57)"
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(12.30-12.31)",
-          "right_paren": "RIGHT_PAREN:)@(12.63-12.64)"
+          "leftParen": "LEFT_PAREN:(@(12.30-12.31)",
+          "rightParen": "RIGHT_PAREN:)@(12.63-12.64)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(14.1-14.2)",
-          "left_brace": "LEFT_BRACE:{@(12.65-12.66)",
-          "new_scope": true
+          "rightBrace": "RIGHT_BRACE:}@(14.1-14.2)",
+          "leftBrace": "LEFT_BRACE:{@(12.65-12.66)",
+          "newScope": true
         }
       }
     },
@@ -191,7 +191,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "INT:int@(16.1-16.4)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:function_type_qualifiers@(16.5-16.29)",
           "parameters": [
@@ -199,7 +199,7 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "INT:int@(16.39-16.42)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:a@(16.43-16.44)",
                 "qualifier": "CONST:const@(16.30-16.35)"
@@ -212,7 +212,7 @@
                   "qualifiers": [
                     "MEDIUM_PRECISION:mediump@(16.52-16.59)"
                   ],
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:b@(16.66-16.67)",
                 "qualifier": "CONST:const@(16.46-16.51)"
@@ -225,20 +225,20 @@
                   "qualifiers": [
                     "LOW_PRECISION:lowp@(16.78-16.82)"
                   ],
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:c@(16.89-16.90)",
                 "qualifier": "CONST:const@(16.69-16.74)"
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(16.29-16.30)",
-          "right_paren": "RIGHT_PAREN:)@(16.90-16.91)"
+          "leftParen": "LEFT_PAREN:(@(16.29-16.30)",
+          "rightParen": "RIGHT_PAREN:)@(16.90-16.91)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(18.1-18.2)",
-          "left_brace": "LEFT_BRACE:{@(16.92-16.93)",
-          "new_scope": true
+          "rightBrace": "RIGHT_BRACE:}@(18.1-18.2)",
+          "leftBrace": "LEFT_BRACE:{@(16.92-16.93)",
+          "newScope": true
         }
       }
     },
@@ -247,7 +247,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "INT:int@(20.1-20.4)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:overloaded_func@(20.5-20.20)",
           "parameters": [
@@ -255,19 +255,19 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "INT:int@(20.21-20.24)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:a@(20.25-20.26)"
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(20.20-20.21)",
-          "right_paren": "RIGHT_PAREN:)@(20.26-20.27)"
+          "leftParen": "LEFT_PAREN:(@(20.20-20.21)",
+          "rightParen": "RIGHT_PAREN:)@(20.26-20.27)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(22.1-22.2)",
-          "left_brace": "LEFT_BRACE:{@(20.28-20.29)",
-          "new_scope": true
+          "rightBrace": "RIGHT_BRACE:}@(22.1-22.2)",
+          "leftBrace": "LEFT_BRACE:{@(20.28-20.29)",
+          "newScope": true
         }
       }
     },
@@ -276,7 +276,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "INT:int@(24.1-24.4)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:overloaded_func@(24.5-24.20)",
           "parameters": [
@@ -284,19 +284,19 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "FLOAT:float@(24.21-24.26)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 },
                 "name": "IDENTIFIER:a@(24.27-24.28)"
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(24.20-24.21)",
-          "right_paren": "RIGHT_PAREN:)@(24.28-24.29)"
+          "leftParen": "LEFT_PAREN:(@(24.20-24.21)",
+          "rightParen": "RIGHT_PAREN:)@(24.28-24.29)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(26.1-26.2)",
-          "left_brace": "LEFT_BRACE:{@(24.30-24.31)",
-          "new_scope": true
+          "rightBrace": "RIGHT_BRACE:}@(26.1-26.2)",
+          "leftBrace": "LEFT_BRACE:{@(24.30-24.31)",
+          "newScope": true
         }
       }
     }

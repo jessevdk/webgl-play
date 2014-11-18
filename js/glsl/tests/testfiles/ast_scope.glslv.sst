@@ -5,26 +5,26 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(3.1-3.5)",
-            "is_primitive": true,
+            "isPrimitive": true,
             "t": {
               "type(builtins.PrimitiveType)": "$void"
             }
           },
           "name": "IDENTIFIER:main@(3.6-3.10)",
-          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
-          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)",
+          "leftParen": "LEFT_PAREN:(@(3.10-3.11)",
+          "rightParen": "RIGHT_PAREN:)@(3.11-3.12)",
           "t": {
             "type(builtins.PrimitiveType)": "$void"
           }
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(8.1-8.2)",
-          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "rightBrace": "RIGHT_BRACE:}@(8.1-8.2)",
+          "leftBrace": "LEFT_BRACE:{@(3.13-3.14)",
           "body": [
             {
               "Block": {
-                "right_brace": "RIGHT_BRACE:}@(7.5-7.6)",
-                "left_brace": "LEFT_BRACE:{@(4.5-4.6)",
+                "rightBrace": "RIGHT_BRACE:}@(7.5-7.6)",
+                "leftBrace": "LEFT_BRACE:{@(4.5-4.6)",
                 "body": [
                   {
                     "VariableDecl": {
@@ -33,7 +33,7 @@
                           "INT:int@(6.9-6.12)",
                           "COMMENT:// a new scope@(5.9-5.23), multi:false =  a new scope"
                         ],
-                        "is_primitive": true,
+                        "isPrimitive": true,
                         "t": {
                           "type(builtins.PrimitiveType)": "$int"
                         },
@@ -45,13 +45,13 @@
                             "name": "IDENTIFIER:a@(6.13-6.14)",
                             "decl(VariableDecl)": "@7",
                             "type(TypeRef)": "@8",
-                            "initial_assign": "EQUAL:=@(6.15-6.16)",
-                            "initial_value(ConstantExpr)": {
+                            "initialAssign": "EQUAL:=@(6.15-6.16)",
+                            "initialValue(ConstantExpr)": {
                               "token": "INTCONSTANT:2@(6.17-6.18) = 2",
                               "t": {
                                 "type(builtins.PrimitiveType)": "$int",
-                                "is_const_expression": true,
-                                "const_value": 2
+                                "isConstExpression": true,
+                                "constValue": 2
                               }
                             },
                             "t": {
@@ -67,30 +67,37 @@
                     }
                   }
                 ],
-                "new_scope": true,
+                "newScope": true,
                 "t": {},
                 "variables": [
                   "Named@9"
                 ],
-                "variable_map": {
+                "variableMap": {
                   "a(Named)": "@9"
                 },
                 "symbols": {
                   "a(Named)": "@9"
                 },
-                "parent_scope(Block)": "@5"
+                "parentScope(Block)": "@5",
+                "@id": 6
               }
             }
           ],
-          "new_scope": true,
+          "newScope": true,
           "t": {},
-          "parent_scope(FunctionDef)": "@2",
+          "scopes": [
+            "Block@6"
+          ],
+          "parentScope(FunctionDef)": "@2",
           "@id": 5
         },
         "t": {
           "type(builtins.PrimitiveType)": "$void"
         },
-        "parent_scope(Parser)": "@1",
+        "scopes": [
+          "Block@5"
+        ],
+        "parentScope(Parser)": "@1",
         "@id": 2
       }
     }
@@ -101,10 +108,13 @@
   "functions": [
     "FunctionDef@2"
   ],
-  "function_map": {
+  "functionMap": {
     "main()(FunctionDef)": "@2"
   },
-  "parent_scope": "(builtin scope)",
+  "scopes": [
+    "FunctionDef@2"
+  ],
+  "parentScope": "(builtin scope)",
   "t": {},
   "@id": 1
 }

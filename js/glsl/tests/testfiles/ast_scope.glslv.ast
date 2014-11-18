@@ -5,20 +5,20 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(3.1-3.5)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:main@(3.6-3.10)",
-          "left_paren": "LEFT_PAREN:(@(3.10-3.11)",
-          "right_paren": "RIGHT_PAREN:)@(3.11-3.12)"
+          "leftParen": "LEFT_PAREN:(@(3.10-3.11)",
+          "rightParen": "RIGHT_PAREN:)@(3.11-3.12)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(8.1-8.2)",
-          "left_brace": "LEFT_BRACE:{@(3.13-3.14)",
+          "rightBrace": "RIGHT_BRACE:}@(8.1-8.2)",
+          "leftBrace": "LEFT_BRACE:{@(3.13-3.14)",
           "body": [
             {
               "Block": {
-                "right_brace": "RIGHT_BRACE:}@(7.5-7.6)",
-                "left_brace": "LEFT_BRACE:{@(4.5-4.6)",
+                "rightBrace": "RIGHT_BRACE:}@(7.5-7.6)",
+                "leftBrace": "LEFT_BRACE:{@(4.5-4.6)",
                 "body": [
                   {
                     "VariableDecl": {
@@ -27,7 +27,7 @@
                           "INT:int@(6.9-6.12)",
                           "COMMENT:// a new scope@(5.9-5.23), multi:false =  a new scope"
                         ],
-                        "is_primitive": true,
+                        "isPrimitive": true,
                         "@id": 8
                       },
                       "names": [
@@ -36,8 +36,8 @@
                             "name": "IDENTIFIER:a@(6.13-6.14)",
                             "decl(VariableDecl)": "@7",
                             "type(TypeRef)": "@8",
-                            "initial_assign": "EQUAL:=@(6.15-6.16)",
-                            "initial_value(ConstantExpr)": {
+                            "initialAssign": "EQUAL:=@(6.15-6.16)",
+                            "initialValue(ConstantExpr)": {
                               "token": "INTCONSTANT:2@(6.17-6.18) = 2"
                             }
                           }
@@ -48,11 +48,11 @@
                     }
                   }
                 ],
-                "new_scope": true
+                "newScope": true
               }
             }
           ],
-          "new_scope": true
+          "newScope": true
         }
       }
     }

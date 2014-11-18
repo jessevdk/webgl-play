@@ -5,7 +5,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "FLOAT:float@(3.1-3.6)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:f@(3.7-3.8)",
           "parameters": [
@@ -13,7 +13,7 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "FLOAT:float@(3.9-3.14)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 }
               }
             },
@@ -21,13 +21,13 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "FLOAT:float@(3.16-3.21)",
-                  "is_primitive": true
+                  "isPrimitive": true
                 }
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(3.8-3.9)",
-          "right_paren": "RIGHT_PAREN:)@(3.21-3.22)"
+          "leftParen": "LEFT_PAREN:(@(3.8-3.9)",
+          "rightParen": "RIGHT_PAREN:)@(3.21-3.22)"
         },
         "semi": "SEMICOLON:;@(3.22-3.23)"
       }
@@ -37,11 +37,11 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "FLOAT:float@(4.1-4.6)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:f@(4.7-4.8)",
-          "left_paren": "LEFT_PAREN:(@(4.8-4.9)",
-          "right_paren": "RIGHT_PAREN:)@(4.9-4.10)"
+          "leftParen": "LEFT_PAREN:(@(4.8-4.9)",
+          "rightParen": "RIGHT_PAREN:)@(4.9-4.10)"
         },
         "semi": "SEMICOLON:;@(4.10-4.11)"
       }
@@ -51,21 +51,21 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(6.1-6.5)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:main@(6.6-6.10)",
-          "left_paren": "LEFT_PAREN:(@(6.10-6.11)",
-          "right_paren": "RIGHT_PAREN:)@(6.11-6.12)"
+          "leftParen": "LEFT_PAREN:(@(6.10-6.11)",
+          "rightParen": "RIGHT_PAREN:)@(6.11-6.12)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(46.1-46.2)",
-          "left_brace": "LEFT_BRACE:{@(6.13-6.14)",
+          "rightBrace": "RIGHT_BRACE:}@(46.1-46.2)",
+          "leftBrace": "LEFT_BRACE:{@(6.13-6.14)",
           "body": [
             {
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "FLOAT:float@(7.5-7.10)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 17
                 },
                 "names": [
@@ -92,7 +92,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "VEC2:vec2@(8.5-8.9)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 21
                 },
                 "names": [
@@ -101,12 +101,12 @@
                       "name": "IDENTIFIER:c@(8.10-8.11)",
                       "decl(VariableDecl)": "@20",
                       "type(TypeRef)": "@21",
-                      "is_array": true,
-                      "array_size(ConstantExpr)": {
+                      "isArray": true,
+                      "arraySize(ConstantExpr)": {
                         "token": "INTCONSTANT:4@(8.12-8.13) = 4"
                       },
-                      "left_bracket": "LEFT_BRACKET:[@(8.11-8.12)",
-                      "right_bracket": "RIGHT_BRACKET:]@(8.13-8.14)"
+                      "leftBracket": "LEFT_BRACKET:[@(8.11-8.12)",
+                      "rightBracket": "RIGHT_BRACKET:]@(8.13-8.14)"
                     }
                   }
                 ],
@@ -118,7 +118,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "VEC2:vec2@(9.5-9.9)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 25
                 },
                 "names": [
@@ -141,7 +141,7 @@
                   "qualifiers": [
                     "CONST:const@(10.5-10.10)"
                   ],
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 28
                 },
                 "names": [
@@ -150,8 +150,8 @@
                       "name": "IDENTIFIER:i@(10.15-10.16)",
                       "decl(VariableDecl)": "@27",
                       "type(TypeRef)": "@28",
-                      "initial_assign": "EQUAL:=@(10.17-10.18)",
-                      "initial_value(ConstantExpr)": {
+                      "initialAssign": "EQUAL:=@(10.17-10.18)",
+                      "initialValue(ConstantExpr)": {
                         "token": "INTCONSTANT:1@(10.19-10.20) = 1"
                       }
                     }
@@ -170,8 +170,8 @@
                   "op": "EQUAL:=@(12.7-12.8)",
                   "rhs(FunctionCallExpr)": {
                     "name": "FLOAT:float@(12.9-12.14)",
-                    "left_paren": "LEFT_PAREN:(@(12.14-12.15)",
-                    "right_paren": "RIGHT_PAREN:)@(12.74-12.75)",
+                    "leftParen": "LEFT_PAREN:(@(12.14-12.15)",
+                    "rightParen": "RIGHT_PAREN:)@(12.74-12.75)",
                     "arguments": [
                       {
                         "BinOpExpr": {
@@ -196,15 +196,15 @@
                                 "op": "PLUS:+@(12.25-12.26)",
                                 "rhs(FunctionCallExpr)": {
                                   "name": "INT:int@(12.27-12.30)",
-                                  "left_paren": "LEFT_PAREN:(@(12.30-12.31)",
-                                  "right_paren": "RIGHT_PAREN:)@(12.52-12.53)",
+                                  "leftParen": "LEFT_PAREN:(@(12.30-12.31)",
+                                  "rightParen": "RIGHT_PAREN:)@(12.52-12.53)",
                                   "arguments": [
                                     {
                                       "BinOpExpr": {
                                         "lhs(FunctionCallExpr)": {
                                           "name": "IDENTIFIER:f@(12.31-12.32)",
-                                          "left_paren": "LEFT_PAREN:(@(12.32-12.33)",
-                                          "right_paren": "RIGHT_PAREN:)@(12.39-12.40)",
+                                          "leftParen": "LEFT_PAREN:(@(12.32-12.33)",
+                                          "rightParen": "RIGHT_PAREN:)@(12.39-12.40)",
                                           "arguments": [
                                             {
                                               "VariableExpr": {
@@ -316,8 +316,8 @@
                   "op": "BANG:!@(18.5-18.6)",
                   "expression(FunctionCallExpr)": {
                     "name": "BOOL:bool@(18.6-18.10)",
-                    "left_paren": "LEFT_PAREN:(@(18.10-18.11)",
-                    "right_paren": "RIGHT_PAREN:)@(18.12-18.13)",
+                    "leftParen": "LEFT_PAREN:(@(18.10-18.11)",
+                    "rightParen": "RIGHT_PAREN:)@(18.12-18.13)",
                     "arguments": [
                       {
                         "VariableExpr": {
@@ -342,8 +342,8 @@
                       "token": "FLOATCONSTANT:3.0@(20.10-20.13) = 3"
                     }
                   },
-                  "question_token": "QUESTION:?@(20.14-20.15)",
-                  "true_expression(BinOpExpr)": {
+                  "questionToken": "QUESTION:?@(20.14-20.15)",
+                  "trueExpression(BinOpExpr)": {
                     "lhs(ConstantExpr)": {
                       "token": "INTCONSTANT:1@(20.16-20.17) = 1"
                     },
@@ -352,8 +352,8 @@
                       "token": "INTCONSTANT:2@(20.20-20.21) = 2"
                     }
                   },
-                  "colon_token": "COLON::@(20.22-20.23)",
-                  "false_expression(BinOpExpr)": {
+                  "colonToken": "COLON::@(20.22-20.23)",
+                  "falseExpression(BinOpExpr)": {
                     "lhs(ConstantExpr)": {
                       "token": "INTCONSTANT:3@(20.24-20.25) = 3"
                     },
@@ -387,7 +387,7 @@
                     "expression(VariableExpr)": {
                       "name": "IDENTIFIER:c@(22.5-22.6)"
                     },
-                    "right_bracket": "RIGHT_BRACKET:]@(22.12-22.13)",
+                    "rightBracket": "RIGHT_BRACKET:]@(22.12-22.13)",
                     "index(BinOpExpr)": {
                       "lhs(VariableExpr)": {
                         "name": "IDENTIFIER:i@(22.7-22.8)"
@@ -397,7 +397,7 @@
                         "token": "INTCONSTANT:1@(22.11-22.12) = 1"
                       }
                     },
-                    "left_bracket": "LEFT_BRACKET:[@(22.6-22.7)"
+                    "leftBracket": "LEFT_BRACKET:[@(22.6-22.7)"
                   },
                   "op": "DOT:.@(22.13-22.14)",
                   "selector": "IDENTIFIER:x@(22.14-22.15)"
@@ -411,8 +411,8 @@
                   "lhs(BinOpExpr)": {
                     "lhs(FunctionCallExpr)": {
                       "name": "BOOL:bool@(24.5-24.9)",
-                      "left_paren": "LEFT_PAREN:(@(24.9-24.10)",
-                      "right_paren": "RIGHT_PAREN:)@(24.11-24.12)",
+                      "leftParen": "LEFT_PAREN:(@(24.9-24.10)",
+                      "rightParen": "RIGHT_PAREN:)@(24.11-24.12)",
                       "arguments": [
                         {
                           "VariableExpr": {
@@ -425,8 +425,8 @@
                     "rhs(BinOpExpr)": {
                       "lhs(FunctionCallExpr)": {
                         "name": "BOOL:bool@(24.16-24.20)",
-                        "left_paren": "LEFT_PAREN:(@(24.20-24.21)",
-                        "right_paren": "RIGHT_PAREN:)@(24.22-24.23)",
+                        "leftParen": "LEFT_PAREN:(@(24.20-24.21)",
+                        "rightParen": "RIGHT_PAREN:)@(24.22-24.23)",
                         "arguments": [
                           {
                             "VariableExpr": {
@@ -438,8 +438,8 @@
                       "op": "AND_OP:&&@(24.24-24.26)",
                       "rhs(FunctionCallExpr)": {
                         "name": "BOOL:bool@(24.27-24.31)",
-                        "left_paren": "LEFT_PAREN:(@(24.31-24.32)",
-                        "right_paren": "RIGHT_PAREN:)@(24.38-24.39)",
+                        "leftParen": "LEFT_PAREN:(@(24.31-24.32)",
+                        "rightParen": "RIGHT_PAREN:)@(24.38-24.39)",
                         "arguments": [
                           {
                             "FieldSelectionExpr": {
@@ -447,11 +447,11 @@
                                 "expression(VariableExpr)": {
                                   "name": "IDENTIFIER:c@(24.32-24.33)"
                                 },
-                                "right_bracket": "RIGHT_BRACKET:]@(24.35-24.36)",
+                                "rightBracket": "RIGHT_BRACKET:]@(24.35-24.36)",
                                 "index(ConstantExpr)": {
                                   "token": "INTCONSTANT:0@(24.34-24.35) = 0"
                                 },
-                                "left_bracket": "LEFT_BRACKET:[@(24.33-24.34)"
+                                "leftBracket": "LEFT_BRACKET:[@(24.33-24.34)"
                               },
                               "op": "DOT:.@(24.36-24.37)",
                               "selector": "IDENTIFIER:x@(24.37-24.38)"
@@ -463,12 +463,12 @@
                   },
                   "op": "OR_OP:||@(24.40-24.42)",
                   "rhs(GroupExpr)": {
-                    "left_paren": "LEFT_PAREN:(@(24.43-24.44)",
+                    "leftParen": "LEFT_PAREN:(@(24.43-24.44)",
                     "expression(BinOpExpr)": {
                       "lhs(FunctionCallExpr)": {
                         "name": "BOOL:bool@(24.44-24.48)",
-                        "left_paren": "LEFT_PAREN:(@(24.48-24.49)",
-                        "right_paren": "RIGHT_PAREN:)@(24.52-24.53)",
+                        "leftParen": "LEFT_PAREN:(@(24.48-24.49)",
+                        "rightParen": "RIGHT_PAREN:)@(24.52-24.53)",
                         "arguments": [
                           {
                             "FieldSelectionExpr": {
@@ -486,8 +486,8 @@
                         "op": "BANG:!@(24.57-24.58)",
                         "expression(FunctionCallExpr)": {
                           "name": "BOOL:bool@(24.58-24.62)",
-                          "left_paren": "LEFT_PAREN:(@(24.62-24.63)",
-                          "right_paren": "RIGHT_PAREN:)@(24.69-24.70)",
+                          "leftParen": "LEFT_PAREN:(@(24.62-24.63)",
+                          "rightParen": "RIGHT_PAREN:)@(24.69-24.70)",
                           "arguments": [
                             {
                               "FieldSelectionExpr": {
@@ -495,11 +495,11 @@
                                   "expression(VariableExpr)": {
                                     "name": "IDENTIFIER:c@(24.63-24.64)"
                                   },
-                                  "right_bracket": "RIGHT_BRACKET:]@(24.66-24.67)",
+                                  "rightBracket": "RIGHT_BRACKET:]@(24.66-24.67)",
                                   "index(ConstantExpr)": {
                                     "token": "INTCONSTANT:0@(24.65-24.66) = 0"
                                   },
-                                  "left_bracket": "LEFT_BRACKET:[@(24.64-24.65)"
+                                  "leftBracket": "LEFT_BRACKET:[@(24.64-24.65)"
                                 },
                                 "op": "DOT:.@(24.67-24.68)",
                                 "selector": "IDENTIFIER:y@(24.68-24.69)"
@@ -509,7 +509,7 @@
                         }
                       }
                     },
-                    "right_paren": "RIGHT_PAREN:)@(24.70-24.71)"
+                    "rightParen": "RIGHT_PAREN:)@(24.70-24.71)"
                   }
                 },
                 "semi": "SEMICOLON:;@(24.71-24.72)"
@@ -599,8 +599,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:f@(33.5-33.6)",
-                  "left_paren": "LEFT_PAREN:(@(33.6-33.7)",
-                  "right_paren": "RIGHT_PAREN:)@(33.7-33.8)"
+                  "leftParen": "LEFT_PAREN:(@(33.6-33.7)",
+                  "rightParen": "RIGHT_PAREN:)@(33.7-33.8)"
                 },
                 "semi": "SEMICOLON:;@(33.8-33.9)"
               }
@@ -614,14 +614,14 @@
                       "COMMENT:// various l-value tests@(35.5-35.29), multi:false =  various l-value tests"
                     ],
                     "name": "IDENTIFIER:S@(36.12-36.13)",
-                    "left_brace": "LEFT_BRACE:{@(36.14-36.15)",
-                    "right_brace": "RIGHT_BRACE:}@(38.5-38.6)",
+                    "leftBrace": "LEFT_BRACE:{@(36.14-36.15)",
+                    "rightBrace": "RIGHT_BRACE:}@(38.5-38.6)",
                     "fields": [
                       {
                         "FieldDecl": {
                           "type(TypeRef)": {
                             "token": "INT:int@(37.9-37.12)",
-                            "is_primitive": true,
+                            "isPrimitive": true,
                             "@id": 147
                           },
                           "names": [
@@ -661,17 +661,17 @@
                     "expression(VariableExpr)": {
                       "name": "IDENTIFIER:c@(40.5-40.6)"
                     },
-                    "right_bracket": "RIGHT_BRACKET:]@(40.8-40.9)",
+                    "rightBracket": "RIGHT_BRACKET:]@(40.8-40.9)",
                     "index(ConstantExpr)": {
                       "token": "INTCONSTANT:2@(40.7-40.8) = 2"
                     },
-                    "left_bracket": "LEFT_BRACKET:[@(40.6-40.7)"
+                    "leftBracket": "LEFT_BRACKET:[@(40.6-40.7)"
                   },
                   "op": "EQUAL:=@(40.10-40.11)",
                   "rhs(FunctionCallExpr)": {
                     "name": "VEC2:vec2@(40.12-40.16)",
-                    "left_paren": "LEFT_PAREN:(@(40.16-40.17)",
-                    "right_paren": "RIGHT_PAREN:)@(40.25-40.26)",
+                    "leftParen": "LEFT_PAREN:(@(40.16-40.17)",
+                    "rightParen": "RIGHT_PAREN:)@(40.25-40.26)",
                     "arguments": [
                       {
                         "ConstantExpr": {
@@ -697,11 +697,11 @@
                       "expression(VariableExpr)": {
                         "name": "IDENTIFIER:c@(41.5-41.6)"
                       },
-                      "right_bracket": "RIGHT_BRACKET:]@(41.8-41.9)",
+                      "rightBracket": "RIGHT_BRACKET:]@(41.8-41.9)",
                       "index(ConstantExpr)": {
                         "token": "INTCONSTANT:0@(41.7-41.8) = 0"
                       },
-                      "left_bracket": "LEFT_BRACKET:[@(41.6-41.7)"
+                      "leftBracket": "LEFT_BRACKET:[@(41.6-41.7)"
                     },
                     "op": "DOT:.@(41.9-41.10)",
                     "selector": "IDENTIFIER:xy@(41.10-41.12)"
@@ -709,8 +709,8 @@
                   "op": "EQUAL:=@(41.13-41.14)",
                   "rhs(FunctionCallExpr)": {
                     "name": "VEC2:vec2@(41.15-41.19)",
-                    "left_paren": "LEFT_PAREN:(@(41.19-41.20)",
-                    "right_paren": "RIGHT_PAREN:)@(41.28-41.29)",
+                    "leftParen": "LEFT_PAREN:(@(41.19-41.20)",
+                    "rightParen": "RIGHT_PAREN:)@(41.28-41.29)",
                     "arguments": [
                       {
                         "ConstantExpr": {
@@ -746,11 +746,11 @@
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
                   "lhs(GroupExpr)": {
-                    "left_paren": "LEFT_PAREN:(@(43.5-43.6)",
+                    "leftParen": "LEFT_PAREN:(@(43.5-43.6)",
                     "expression(VariableExpr)": {
                       "name": "IDENTIFIER:a@(43.6-43.7)"
                     },
-                    "right_paren": "RIGHT_PAREN:)@(43.7-43.8)"
+                    "rightParen": "RIGHT_PAREN:)@(43.7-43.8)"
                   },
                   "op": "EQUAL:=@(43.9-43.10)",
                   "rhs(ConstantExpr)": {
@@ -769,8 +769,8 @@
                   "op": "EQUAL:=@(44.7-44.8)",
                   "rhs(FunctionCallExpr)": {
                     "name": "IDENTIFIER:S@(44.9-44.10)",
-                    "left_paren": "LEFT_PAREN:(@(44.10-44.11)",
-                    "right_paren": "RIGHT_PAREN:)@(44.12-44.13)",
+                    "leftParen": "LEFT_PAREN:(@(44.10-44.11)",
+                    "rightParen": "RIGHT_PAREN:)@(44.12-44.13)",
                     "arguments": [
                       {
                         "ConstantExpr": {
@@ -802,7 +802,7 @@
               }
             }
           ],
-          "new_scope": true
+          "newScope": true
         }
       }
     }

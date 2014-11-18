@@ -5,7 +5,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "FLOAT:float@(3.1-3.6)",
-            "is_primitive": true,
+            "isPrimitive": true,
             "t": {
               "type(builtins.PrimitiveType)": "$float"
             }
@@ -16,7 +16,7 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "FLOAT:float@(3.9-3.14)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "t": {
                     "type(builtins.PrimitiveType)": "$float"
                   }
@@ -30,7 +30,7 @@
               "ParamDecl": {
                 "type(TypeRef)": {
                   "token": "FLOAT:float@(3.16-3.21)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "t": {
                     "type(builtins.PrimitiveType)": "$float"
                   }
@@ -41,8 +41,8 @@
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(3.8-3.9)",
-          "right_paren": "RIGHT_PAREN:)@(3.21-3.22)",
+          "leftParen": "LEFT_PAREN:(@(3.8-3.9)",
+          "rightParen": "RIGHT_PAREN:)@(3.21-3.22)",
           "t": {
             "type(builtins.PrimitiveType)": "$float"
           }
@@ -59,14 +59,14 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "FLOAT:float@(4.1-4.6)",
-            "is_primitive": true,
+            "isPrimitive": true,
             "t": {
               "type(builtins.PrimitiveType)": "$float"
             }
           },
           "name": "IDENTIFIER:f@(4.7-4.8)",
-          "left_paren": "LEFT_PAREN:(@(4.8-4.9)",
-          "right_paren": "RIGHT_PAREN:)@(4.9-4.10)",
+          "leftParen": "LEFT_PAREN:(@(4.8-4.9)",
+          "rightParen": "RIGHT_PAREN:)@(4.9-4.10)",
           "t": {
             "type(builtins.PrimitiveType)": "$float"
           }
@@ -83,27 +83,27 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(6.1-6.5)",
-            "is_primitive": true,
+            "isPrimitive": true,
             "t": {
               "type(builtins.PrimitiveType)": "$void"
             }
           },
           "name": "IDENTIFIER:main@(6.6-6.10)",
-          "left_paren": "LEFT_PAREN:(@(6.10-6.11)",
-          "right_paren": "RIGHT_PAREN:)@(6.11-6.12)",
+          "leftParen": "LEFT_PAREN:(@(6.10-6.11)",
+          "rightParen": "RIGHT_PAREN:)@(6.11-6.12)",
           "t": {
             "type(builtins.PrimitiveType)": "$void"
           }
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(46.1-46.2)",
-          "left_brace": "LEFT_BRACE:{@(6.13-6.14)",
+          "rightBrace": "RIGHT_BRACE:}@(46.1-46.2)",
+          "leftBrace": "LEFT_BRACE:{@(6.13-6.14)",
           "body": [
             {
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "FLOAT:float@(7.5-7.10)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "t": {
                     "type(builtins.PrimitiveType)": "$float"
                   },
@@ -116,7 +116,129 @@
                       "decl(VariableDecl)": "@16",
                       "type(TypeRef)": "@17",
                       "t": {
-                        "type(builtins.PrimitiveType)": "$float"
+                        "type(builtins.PrimitiveType)": "$float",
+                        "users": [
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(12.5-12.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 19
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(18.11-18.12)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 20
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(20.5-20.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 21
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(21.5-21.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 22
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(24.10-24.11)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 23
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(26.5-26.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 24
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(28.5-28.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 25
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(29.5-29.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 26
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(30.5-30.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 27
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(31.5-31.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 28
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(42.5-42.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 29
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:a@(43.6-43.7)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@18"
+                              },
+                              "@id": 30
+                            }
+                          }
+                        ]
                       },
                       "@id": 18
                     }
@@ -127,9 +249,81 @@
                       "decl(VariableDecl)": "@16",
                       "type(TypeRef)": "@17",
                       "t": {
-                        "type(builtins.PrimitiveType)": "$float"
+                        "type(builtins.PrimitiveType)": "$float",
+                        "users": [
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:b@(12.33-12.34)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@31"
+                              },
+                              "@id": 32
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:b@(13.5-13.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@31"
+                              },
+                              "@id": 33
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:b@(14.7-14.8)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@31"
+                              },
+                              "@id": 34
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:b@(15.5-15.6)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@31"
+                              },
+                              "@id": 35
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:b@(16.7-16.8)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@31"
+                              },
+                              "@id": 36
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:b@(24.21-24.22)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@31"
+                              },
+                              "@id": 37
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:b@(26.8-26.9)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$float",
+                                "decl(Named)": "@31"
+                              },
+                              "@id": 38
+                            }
+                          }
+                        ]
                       },
-                      "@id": 19
+                      "@id": 31
                     }
                   }
                 ],
@@ -142,34 +336,34 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "VEC2:vec2@(8.5-8.9)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "t": {
                     "type(builtins.PrimitiveType)": "$vec2"
                   },
-                  "@id": 21
+                  "@id": 40
                 },
                 "names": [
                   {
                     "Named": {
                       "name": "IDENTIFIER:c@(8.10-8.11)",
-                      "decl(VariableDecl)": "@20",
-                      "type(TypeRef)": "@21",
-                      "is_array": true,
-                      "array_size(ConstantExpr)": {
+                      "decl(VariableDecl)": "@39",
+                      "type(TypeRef)": "@40",
+                      "isArray": true,
+                      "arraySize(ConstantExpr)": {
                         "token": "INTCONSTANT:4@(8.12-8.13) = 4",
                         "t": {
                           "type(builtins.PrimitiveType)": "$int",
-                          "is_const_expression": true,
-                          "const_value": 4
+                          "isConstExpression": true,
+                          "constValue": 4
                         }
                       },
-                      "left_bracket": "LEFT_BRACKET:[@(8.11-8.12)",
-                      "right_bracket": "RIGHT_BRACKET:]@(8.13-8.14)",
+                      "leftBracket": "LEFT_BRACKET:[@(8.11-8.12)",
+                      "rightBracket": "RIGHT_BRACKET:]@(8.13-8.14)",
                       "t": {
                         "type(builtins.ArrayType)": {
                           "name": "vec2[4]",
-                          "is_array": true,
-                          "element_type(builtins.PrimitiveType)": "$vec2",
+                          "isArray": true,
+                          "elementType(builtins.PrimitiveType)": "$vec2",
                           "length": 4,
                           "zero": [
                             [
@@ -189,44 +383,138 @@
                               0
                             ]
                           ],
-                          "@id": 24
-                        }
+                          "@id": 43
+                        },
+                        "users": [
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:c@(22.5-22.6)",
+                              "t": {
+                                "type(builtins.ArrayType)": "@43",
+                                "decl(Named)": "@41"
+                              },
+                              "@id": 44
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:c@(24.32-24.33)",
+                              "t": {
+                                "type(builtins.ArrayType)": "@43",
+                                "decl(Named)": "@41"
+                              },
+                              "@id": 45
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:c@(24.63-24.64)",
+                              "t": {
+                                "type(builtins.ArrayType)": "@43",
+                                "decl(Named)": "@41"
+                              },
+                              "@id": 46
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:c@(26.11-26.12)",
+                              "t": {
+                                "type(builtins.ArrayType)": "@43",
+                                "decl(Named)": "@41"
+                              },
+                              "@id": 47
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:c@(40.5-40.6)",
+                              "t": {
+                                "type(builtins.ArrayType)": "@43",
+                                "decl(Named)": "@41"
+                              },
+                              "@id": 48
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:c@(41.5-41.6)",
+                              "t": {
+                                "type(builtins.ArrayType)": "@43",
+                                "decl(Named)": "@41"
+                              },
+                              "@id": 49
+                            }
+                          }
+                        ]
                       },
-                      "@id": 22
+                      "@id": 41
                     }
                   }
                 ],
                 "semi": "SEMICOLON:;@(8.14-8.15)",
                 "t": {},
-                "@id": 20
+                "@id": 39
               }
             },
             {
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "VEC2:vec2@(9.5-9.9)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "t": {
                     "type(builtins.PrimitiveType)": "$vec2"
                   },
-                  "@id": 26
+                  "@id": 51
                 },
                 "names": [
                   {
                     "Named": {
                       "name": "IDENTIFIER:d@(9.10-9.11)",
-                      "decl(VariableDecl)": "@25",
-                      "type(TypeRef)": "@26",
+                      "decl(VariableDecl)": "@50",
+                      "type(TypeRef)": "@51",
                       "t": {
-                        "type(builtins.PrimitiveType)": "$vec2"
+                        "type(builtins.PrimitiveType)": "$vec2",
+                        "users": [
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:d@(12.36-12.37)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$vec2",
+                                "decl(Named)": "@52"
+                              },
+                              "@id": 53
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:d@(12.43-12.44)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$vec2",
+                                "decl(Named)": "@52"
+                              },
+                              "@id": 54
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:d@(24.49-24.50)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$vec2",
+                                "decl(Named)": "@52"
+                              },
+                              "@id": 55
+                            }
+                          }
+                        ]
                       },
-                      "@id": 27
+                      "@id": 52
                     }
                   }
                 ],
                 "semi": "SEMICOLON:;@(9.11-9.12)",
                 "t": {},
-                "@id": 25
+                "@id": 50
               }
             },
             {
@@ -236,56 +524,64 @@
                   "qualifiers": [
                     "CONST:const@(10.5-10.10)"
                   ],
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "t": {
                     "type(builtins.PrimitiveType)": "$int"
                   },
-                  "@id": 29
+                  "@id": 57
                 },
                 "names": [
                   {
                     "Named": {
                       "name": "IDENTIFIER:i@(10.15-10.16)",
-                      "decl(VariableDecl)": "@28",
-                      "type(TypeRef)": "@29",
-                      "initial_assign": "EQUAL:=@(10.17-10.18)",
-                      "initial_value(ConstantExpr)": {
+                      "decl(VariableDecl)": "@56",
+                      "type(TypeRef)": "@57",
+                      "initialAssign": "EQUAL:=@(10.17-10.18)",
+                      "initialValue(ConstantExpr)": {
                         "token": "INTCONSTANT:1@(10.19-10.20) = 1",
                         "t": {
                           "type(builtins.PrimitiveType)": "$int",
-                          "is_const_expression": true,
-                          "const_value": 1
+                          "isConstExpression": true,
+                          "constValue": 1
                         }
                       },
                       "t": {
                         "type(builtins.PrimitiveType)": "$int",
-                        "is_const_expression": true,
-                        "const_value": 1
+                        "isConstExpression": true,
+                        "constValue": 1,
+                        "users": [
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:i@(22.7-22.8)",
+                              "t": {
+                                "type(builtins.PrimitiveType)": "$int",
+                                "isConstExpression": true,
+                                "constValue": 1,
+                                "decl(Named)": "@58"
+                              },
+                              "@id": 60
+                            }
+                          }
+                        ]
                       },
-                      "@id": 30
+                      "@id": 58
                     }
                   }
                 ],
                 "semi": "SEMICOLON:;@(10.20-10.21)",
                 "t": {},
-                "@id": 28
+                "@id": 56
               }
             },
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(12.5-12.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@18"
-                    }
-                  },
+                  "lhs(VariableExpr)": "@19",
                   "op": "EQUAL:=@(12.7-12.8)",
                   "rhs(FunctionCallExpr)": {
                     "name": "FLOAT:float@(12.9-12.14)",
-                    "left_paren": "LEFT_PAREN:(@(12.14-12.15)",
-                    "right_paren": "RIGHT_PAREN:)@(12.74-12.75)",
+                    "leftParen": "LEFT_PAREN:(@(12.14-12.15)",
+                    "rightParen": "RIGHT_PAREN:)@(12.74-12.75)",
                     "arguments": [
                       {
                         "BinOpExpr": {
@@ -297,8 +593,8 @@
                                     "token": "INTCONSTANT:2@(12.15-12.16) = 2",
                                     "t": {
                                       "type(builtins.PrimitiveType)": "$int",
-                                      "is_const_expression": true,
-                                      "const_value": 2
+                                      "isConstExpression": true,
+                                      "constValue": 2
                                     }
                                   },
                                   "op": "PLUS:+@(12.17-12.18)",
@@ -307,8 +603,8 @@
                                       "token": "INTCONSTANT:1@(12.19-12.20) = 1",
                                       "t": {
                                         "type(builtins.PrimitiveType)": "$int",
-                                        "is_const_expression": true,
-                                        "const_value": 1
+                                        "isConstExpression": true,
+                                        "constValue": 1
                                       }
                                     },
                                     "op": "STAR:*@(12.21-12.22)",
@@ -316,53 +612,39 @@
                                       "token": "INTCONSTANT:3@(12.23-12.24) = 3",
                                       "t": {
                                         "type(builtins.PrimitiveType)": "$int",
-                                        "is_const_expression": true,
-                                        "const_value": 3
+                                        "isConstExpression": true,
+                                        "constValue": 3
                                       }
                                     },
                                     "t": {
                                       "type(builtins.PrimitiveType)": "$int",
-                                      "is_const_expression": true,
-                                      "const_value": 3
+                                      "isConstExpression": true,
+                                      "constValue": 3
                                     }
                                   },
                                   "t": {
                                     "type(builtins.PrimitiveType)": "$int",
-                                    "is_const_expression": true,
-                                    "const_value": 5
+                                    "isConstExpression": true,
+                                    "constValue": 5
                                   }
                                 },
                                 "op": "PLUS:+@(12.25-12.26)",
                                 "rhs(FunctionCallExpr)": {
                                   "name": "INT:int@(12.27-12.30)",
-                                  "left_paren": "LEFT_PAREN:(@(12.30-12.31)",
-                                  "right_paren": "RIGHT_PAREN:)@(12.52-12.53)",
+                                  "leftParen": "LEFT_PAREN:(@(12.30-12.31)",
+                                  "rightParen": "RIGHT_PAREN:)@(12.52-12.53)",
                                   "arguments": [
                                     {
                                       "BinOpExpr": {
                                         "lhs(FunctionCallExpr)": {
                                           "name": "IDENTIFIER:f@(12.31-12.32)",
-                                          "left_paren": "LEFT_PAREN:(@(12.32-12.33)",
-                                          "right_paren": "RIGHT_PAREN:)@(12.39-12.40)",
+                                          "leftParen": "LEFT_PAREN:(@(12.32-12.33)",
+                                          "rightParen": "RIGHT_PAREN:)@(12.39-12.40)",
                                           "arguments": [
-                                            {
-                                              "VariableExpr": {
-                                                "name": "IDENTIFIER:b@(12.33-12.34)",
-                                                "t": {
-                                                  "type(builtins.PrimitiveType)": "$float",
-                                                  "decl(Named)": "@19"
-                                                }
-                                              }
-                                            },
+                                            "VariableExpr@32",
                                             {
                                               "FieldSelectionExpr": {
-                                                "expression(VariableExpr)": {
-                                                  "name": "IDENTIFIER:d@(12.36-12.37)",
-                                                  "t": {
-                                                    "type(builtins.PrimitiveType)": "$vec2",
-                                                    "decl(Named)": "@27"
-                                                  }
-                                                },
+                                                "expression(VariableExpr)": "@53",
                                                 "op": "DOT:.@(12.37-12.38)",
                                                 "selector": "IDENTIFIER:x@(12.38-12.39)",
                                                 "t": {
@@ -379,13 +661,7 @@
                                         "op": "DASH:-@(12.41-12.42)",
                                         "rhs(BinOpExpr)": {
                                           "lhs(FieldSelectionExpr)": {
-                                            "expression(VariableExpr)": {
-                                              "name": "IDENTIFIER:d@(12.43-12.44)",
-                                              "t": {
-                                                "type(builtins.PrimitiveType)": "$vec2",
-                                                "decl(Named)": "@27"
-                                              }
-                                            },
+                                            "expression(VariableExpr)": "@54",
                                             "op": "DOT:.@(12.44-12.45)",
                                             "selector": "IDENTIFIER:x@(12.45-12.46)",
                                             "t": {
@@ -397,8 +673,8 @@
                                             "token": "FLOATCONSTANT:5.1@(12.49-12.52) = 5.1",
                                             "t": {
                                               "type(builtins.PrimitiveType)": "$float",
-                                              "is_const_expression": true,
-                                              "const_value": 5.1
+                                              "isConstExpression": true,
+                                              "constValue": 5.1
                                             }
                                           },
                                           "t": {
@@ -413,7 +689,7 @@
                                   ],
                                   "t": {
                                     "type(builtins.PrimitiveType)": "$int",
-                                    "is_constructor": true
+                                    "isConstructor": true
                                   }
                                 },
                                 "t": {
@@ -425,8 +701,8 @@
                                 "token": "INTCONSTANT:0555@(12.56-12.60) = 365",
                                 "t": {
                                   "type(builtins.PrimitiveType)": "$int",
-                                  "is_const_expression": true,
-                                  "const_value": 365
+                                  "isConstExpression": true,
+                                  "constValue": 365
                                 }
                               },
                               "t": {
@@ -438,8 +714,8 @@
                               "token": "INTCONSTANT:0xef09@(12.63-12.69) = 61193",
                               "t": {
                                 "type(builtins.PrimitiveType)": "$int",
-                                "is_const_expression": true,
-                                "const_value": 61193
+                                "isConstExpression": true,
+                                "constValue": 61193
                               }
                             },
                             "t": {
@@ -453,14 +729,14 @@
                               "token": "INTCONSTANT:2@(12.73-12.74) = 2",
                               "t": {
                                 "type(builtins.PrimitiveType)": "$int",
-                                "is_const_expression": true,
-                                "const_value": 2
+                                "isConstExpression": true,
+                                "constValue": 2
                               }
                             },
                             "t": {
                               "type(builtins.PrimitiveType)": "$int",
-                              "is_const_expression": true,
-                              "const_value": -2
+                              "isConstExpression": true,
+                              "constValue": -2
                             }
                           },
                           "t": {
@@ -471,7 +747,7 @@
                     ],
                     "t": {
                       "type(builtins.PrimitiveType)": "$float",
-                      "is_constructor": true
+                      "isConstructor": true
                     }
                   },
                   "t": {
@@ -486,13 +762,7 @@
               "ExpressionStmt": {
                 "expression(UnaryPostfixOpExpr)": {
                   "op": "INC_OP:++@(13.6-13.8)",
-                  "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:b@(13.5-13.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@19"
-                    }
-                  },
+                  "expression(VariableExpr)": "@33",
                   "t": {
                     "type(builtins.PrimitiveType)": "$float"
                   }
@@ -505,13 +775,7 @@
               "ExpressionStmt": {
                 "expression(UnaryOpExpr)": {
                   "op": "INC_OP:++@(14.5-14.7)",
-                  "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:b@(14.7-14.8)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@19"
-                    }
-                  },
+                  "expression(VariableExpr)": "@34",
                   "t": {
                     "type(builtins.PrimitiveType)": "$float"
                   }
@@ -524,13 +788,7 @@
               "ExpressionStmt": {
                 "expression(UnaryPostfixOpExpr)": {
                   "op": "DEC_OP:--@(15.6-15.8)",
-                  "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:b@(15.5-15.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@19"
-                    }
-                  },
+                  "expression(VariableExpr)": "@35",
                   "t": {
                     "type(builtins.PrimitiveType)": "$float"
                   }
@@ -543,13 +801,7 @@
               "ExpressionStmt": {
                 "expression(UnaryOpExpr)": {
                   "op": "DEC_OP:--@(16.5-16.7)",
-                  "expression(VariableExpr)": {
-                    "name": "IDENTIFIER:b@(16.7-16.8)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@19"
-                    }
-                  },
+                  "expression(VariableExpr)": "@36",
                   "t": {
                     "type(builtins.PrimitiveType)": "$float"
                   }
@@ -564,22 +816,14 @@
                   "op": "BANG:!@(18.5-18.6)",
                   "expression(FunctionCallExpr)": {
                     "name": "BOOL:bool@(18.6-18.10)",
-                    "left_paren": "LEFT_PAREN:(@(18.10-18.11)",
-                    "right_paren": "RIGHT_PAREN:)@(18.12-18.13)",
+                    "leftParen": "LEFT_PAREN:(@(18.10-18.11)",
+                    "rightParen": "RIGHT_PAREN:)@(18.12-18.13)",
                     "arguments": [
-                      {
-                        "VariableExpr": {
-                          "name": "IDENTIFIER:a@(18.11-18.12)",
-                          "t": {
-                            "type(builtins.PrimitiveType)": "$float",
-                            "decl(Named)": "@18"
-                          }
-                        }
-                      }
+                      "VariableExpr@20"
                     ],
                     "t": {
                       "type(builtins.PrimitiveType)": "$bool",
-                      "is_constructor": true
+                      "isConstructor": true
                     }
                   },
                   "t": {
@@ -594,34 +838,28 @@
               "ExpressionStmt": {
                 "expression(TernaryExpr)": {
                   "condition(BinOpExpr)": {
-                    "lhs(VariableExpr)": {
-                      "name": "IDENTIFIER:a@(20.5-20.6)",
-                      "t": {
-                        "type(builtins.PrimitiveType)": "$float",
-                        "decl(Named)": "@18"
-                      }
-                    },
+                    "lhs(VariableExpr)": "@21",
                     "op": "EQ_OP:==@(20.7-20.9)",
                     "rhs(ConstantExpr)": {
                       "token": "FLOATCONSTANT:3.0@(20.10-20.13) = 3",
                       "t": {
                         "type(builtins.PrimitiveType)": "$float",
-                        "is_const_expression": true,
-                        "const_value": 3
+                        "isConstExpression": true,
+                        "constValue": 3
                       }
                     },
                     "t": {
                       "type(builtins.PrimitiveType)": "$bool"
                     }
                   },
-                  "question_token": "QUESTION:?@(20.14-20.15)",
-                  "true_expression(BinOpExpr)": {
+                  "questionToken": "QUESTION:?@(20.14-20.15)",
+                  "trueExpression(BinOpExpr)": {
                     "lhs(ConstantExpr)": {
                       "token": "INTCONSTANT:1@(20.16-20.17) = 1",
                       "t": {
                         "type(builtins.PrimitiveType)": "$int",
-                        "is_const_expression": true,
-                        "const_value": 1
+                        "isConstExpression": true,
+                        "constValue": 1
                       }
                     },
                     "op": "PLUS:+@(20.18-20.19)",
@@ -629,24 +867,24 @@
                       "token": "INTCONSTANT:2@(20.20-20.21) = 2",
                       "t": {
                         "type(builtins.PrimitiveType)": "$int",
-                        "is_const_expression": true,
-                        "const_value": 2
+                        "isConstExpression": true,
+                        "constValue": 2
                       }
                     },
                     "t": {
                       "type(builtins.PrimitiveType)": "$int",
-                      "is_const_expression": true,
-                      "const_value": 3
+                      "isConstExpression": true,
+                      "constValue": 3
                     }
                   },
-                  "colon_token": "COLON::@(20.22-20.23)",
-                  "false_expression(BinOpExpr)": {
+                  "colonToken": "COLON::@(20.22-20.23)",
+                  "falseExpression(BinOpExpr)": {
                     "lhs(ConstantExpr)": {
                       "token": "INTCONSTANT:3@(20.24-20.25) = 3",
                       "t": {
                         "type(builtins.PrimitiveType)": "$int",
-                        "is_const_expression": true,
-                        "const_value": 3
+                        "isConstExpression": true,
+                        "constValue": 3
                       }
                     },
                     "op": "STAR:*@(20.26-20.27)",
@@ -654,14 +892,14 @@
                       "token": "INTCONSTANT:4@(20.28-20.29) = 4",
                       "t": {
                         "type(builtins.PrimitiveType)": "$int",
-                        "is_const_expression": true,
-                        "const_value": 4
+                        "isConstExpression": true,
+                        "constValue": 4
                       }
                     },
                     "t": {
                       "type(builtins.PrimitiveType)": "$int",
-                      "is_const_expression": true,
-                      "const_value": 12
+                      "isConstExpression": true,
+                      "constValue": 12
                     }
                   },
                   "t": {
@@ -675,20 +913,14 @@
             {
               "ExpressionStmt": {
                 "expression(BinOpExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(21.5-21.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@18"
-                    }
-                  },
+                  "lhs(VariableExpr)": "@22",
                   "op": "NE_OP:!=@(21.7-21.9)",
                   "rhs(ConstantExpr)": {
                     "token": "FLOATCONSTANT:2.0@(21.10-21.13) = 2",
                     "t": {
                       "type(builtins.PrimitiveType)": "$float",
-                      "is_const_expression": true,
-                      "const_value": 2
+                      "isConstExpression": true,
+                      "constValue": 2
                     }
                   },
                   "t": {
@@ -703,40 +935,26 @@
               "ExpressionStmt": {
                 "expression(FieldSelectionExpr)": {
                   "expression(IndexExpr)": {
-                    "expression(VariableExpr)": {
-                      "name": "IDENTIFIER:c@(22.5-22.6)",
-                      "t": {
-                        "type(builtins.ArrayType)": "@24",
-                        "decl(Named)": "@22"
-                      }
-                    },
-                    "right_bracket": "RIGHT_BRACKET:]@(22.12-22.13)",
+                    "expression(VariableExpr)": "@44",
+                    "rightBracket": "RIGHT_BRACKET:]@(22.12-22.13)",
                     "index(BinOpExpr)": {
-                      "lhs(VariableExpr)": {
-                        "name": "IDENTIFIER:i@(22.7-22.8)",
-                        "t": {
-                          "type(builtins.PrimitiveType)": "$int",
-                          "is_const_expression": true,
-                          "const_value": 1,
-                          "decl(Named)": "@30"
-                        }
-                      },
+                      "lhs(VariableExpr)": "@60",
                       "op": "PLUS:+@(22.9-22.10)",
                       "rhs(ConstantExpr)": {
                         "token": "INTCONSTANT:1@(22.11-22.12) = 1",
                         "t": {
                           "type(builtins.PrimitiveType)": "$int",
-                          "is_const_expression": true,
-                          "const_value": 1
+                          "isConstExpression": true,
+                          "constValue": 1
                         }
                       },
                       "t": {
                         "type(builtins.PrimitiveType)": "$int",
-                        "is_const_expression": true,
-                        "const_value": 2
+                        "isConstExpression": true,
+                        "constValue": 2
                       }
                     },
-                    "left_bracket": "LEFT_BRACKET:[@(22.6-22.7)",
+                    "leftBracket": "LEFT_BRACKET:[@(22.6-22.7)",
                     "t": {
                       "type(builtins.PrimitiveType)": "$vec2"
                     }
@@ -757,71 +975,49 @@
                   "lhs(BinOpExpr)": {
                     "lhs(FunctionCallExpr)": {
                       "name": "BOOL:bool@(24.5-24.9)",
-                      "left_paren": "LEFT_PAREN:(@(24.9-24.10)",
-                      "right_paren": "RIGHT_PAREN:)@(24.11-24.12)",
+                      "leftParen": "LEFT_PAREN:(@(24.9-24.10)",
+                      "rightParen": "RIGHT_PAREN:)@(24.11-24.12)",
                       "arguments": [
-                        {
-                          "VariableExpr": {
-                            "name": "IDENTIFIER:a@(24.10-24.11)",
-                            "t": {
-                              "type(builtins.PrimitiveType)": "$float",
-                              "decl(Named)": "@18"
-                            }
-                          }
-                        }
+                        "VariableExpr@23"
                       ],
                       "t": {
                         "type(builtins.PrimitiveType)": "$bool",
-                        "is_constructor": true
+                        "isConstructor": true
                       }
                     },
                     "op": "OR_OP:||@(24.13-24.15)",
                     "rhs(BinOpExpr)": {
                       "lhs(FunctionCallExpr)": {
                         "name": "BOOL:bool@(24.16-24.20)",
-                        "left_paren": "LEFT_PAREN:(@(24.20-24.21)",
-                        "right_paren": "RIGHT_PAREN:)@(24.22-24.23)",
+                        "leftParen": "LEFT_PAREN:(@(24.20-24.21)",
+                        "rightParen": "RIGHT_PAREN:)@(24.22-24.23)",
                         "arguments": [
-                          {
-                            "VariableExpr": {
-                              "name": "IDENTIFIER:b@(24.21-24.22)",
-                              "t": {
-                                "type(builtins.PrimitiveType)": "$float",
-                                "decl(Named)": "@19"
-                              }
-                            }
-                          }
+                          "VariableExpr@37"
                         ],
                         "t": {
                           "type(builtins.PrimitiveType)": "$bool",
-                          "is_constructor": true
+                          "isConstructor": true
                         }
                       },
                       "op": "AND_OP:&&@(24.24-24.26)",
                       "rhs(FunctionCallExpr)": {
                         "name": "BOOL:bool@(24.27-24.31)",
-                        "left_paren": "LEFT_PAREN:(@(24.31-24.32)",
-                        "right_paren": "RIGHT_PAREN:)@(24.38-24.39)",
+                        "leftParen": "LEFT_PAREN:(@(24.31-24.32)",
+                        "rightParen": "RIGHT_PAREN:)@(24.38-24.39)",
                         "arguments": [
                           {
                             "FieldSelectionExpr": {
                               "expression(IndexExpr)": {
-                                "expression(VariableExpr)": {
-                                  "name": "IDENTIFIER:c@(24.32-24.33)",
-                                  "t": {
-                                    "type(builtins.ArrayType)": "@24",
-                                    "decl(Named)": "@22"
-                                  }
-                                },
-                                "right_bracket": "RIGHT_BRACKET:]@(24.35-24.36)",
+                                "expression(VariableExpr)": "@45",
+                                "rightBracket": "RIGHT_BRACKET:]@(24.35-24.36)",
                                 "index(ConstantExpr)": {
                                   "token": "INTCONSTANT:0@(24.34-24.35) = 0",
                                   "t": {
                                     "type(builtins.PrimitiveType)": "$int",
-                                    "is_const_expression": true
+                                    "isConstExpression": true
                                   }
                                 },
-                                "left_bracket": "LEFT_BRACKET:[@(24.33-24.34)",
+                                "leftBracket": "LEFT_BRACKET:[@(24.33-24.34)",
                                 "t": {
                                   "type(builtins.PrimitiveType)": "$vec2"
                                 }
@@ -836,7 +1032,7 @@
                         ],
                         "t": {
                           "type(builtins.PrimitiveType)": "$bool",
-                          "is_constructor": true
+                          "isConstructor": true
                         }
                       },
                       "t": {
@@ -849,22 +1045,16 @@
                   },
                   "op": "OR_OP:||@(24.40-24.42)",
                   "rhs(GroupExpr)": {
-                    "left_paren": "LEFT_PAREN:(@(24.43-24.44)",
+                    "leftParen": "LEFT_PAREN:(@(24.43-24.44)",
                     "expression(BinOpExpr)": {
                       "lhs(FunctionCallExpr)": {
                         "name": "BOOL:bool@(24.44-24.48)",
-                        "left_paren": "LEFT_PAREN:(@(24.48-24.49)",
-                        "right_paren": "RIGHT_PAREN:)@(24.52-24.53)",
+                        "leftParen": "LEFT_PAREN:(@(24.48-24.49)",
+                        "rightParen": "RIGHT_PAREN:)@(24.52-24.53)",
                         "arguments": [
                           {
                             "FieldSelectionExpr": {
-                              "expression(VariableExpr)": {
-                                "name": "IDENTIFIER:d@(24.49-24.50)",
-                                "t": {
-                                  "type(builtins.PrimitiveType)": "$vec2",
-                                  "decl(Named)": "@27"
-                                }
-                              },
+                              "expression(VariableExpr)": "@55",
                               "op": "DOT:.@(24.50-24.51)",
                               "selector": "IDENTIFIER:y@(24.51-24.52)",
                               "t": {
@@ -875,7 +1065,7 @@
                         ],
                         "t": {
                           "type(builtins.PrimitiveType)": "$bool",
-                          "is_constructor": true
+                          "isConstructor": true
                         }
                       },
                       "op": "AND_OP:&&@(24.54-24.56)",
@@ -883,28 +1073,22 @@
                         "op": "BANG:!@(24.57-24.58)",
                         "expression(FunctionCallExpr)": {
                           "name": "BOOL:bool@(24.58-24.62)",
-                          "left_paren": "LEFT_PAREN:(@(24.62-24.63)",
-                          "right_paren": "RIGHT_PAREN:)@(24.69-24.70)",
+                          "leftParen": "LEFT_PAREN:(@(24.62-24.63)",
+                          "rightParen": "RIGHT_PAREN:)@(24.69-24.70)",
                           "arguments": [
                             {
                               "FieldSelectionExpr": {
                                 "expression(IndexExpr)": {
-                                  "expression(VariableExpr)": {
-                                    "name": "IDENTIFIER:c@(24.63-24.64)",
-                                    "t": {
-                                      "type(builtins.ArrayType)": "@24",
-                                      "decl(Named)": "@22"
-                                    }
-                                  },
-                                  "right_bracket": "RIGHT_BRACKET:]@(24.66-24.67)",
+                                  "expression(VariableExpr)": "@46",
+                                  "rightBracket": "RIGHT_BRACKET:]@(24.66-24.67)",
                                   "index(ConstantExpr)": {
                                     "token": "INTCONSTANT:0@(24.65-24.66) = 0",
                                     "t": {
                                       "type(builtins.PrimitiveType)": "$int",
-                                      "is_const_expression": true
+                                      "isConstExpression": true
                                     }
                                   },
-                                  "left_bracket": "LEFT_BRACKET:[@(24.64-24.65)",
+                                  "leftBracket": "LEFT_BRACKET:[@(24.64-24.65)",
                                   "t": {
                                     "type(builtins.PrimitiveType)": "$vec2"
                                   }
@@ -919,7 +1103,7 @@
                           ],
                           "t": {
                             "type(builtins.PrimitiveType)": "$bool",
-                            "is_constructor": true
+                            "isConstructor": true
                           }
                         },
                         "t": {
@@ -930,7 +1114,7 @@
                         "type(builtins.PrimitiveType)": "$bool"
                       }
                     },
-                    "right_paren": "RIGHT_PAREN:)@(24.70-24.71)",
+                    "rightParen": "RIGHT_PAREN:)@(24.70-24.71)",
                     "t": {
                       "type(builtins.PrimitiveType)": "$bool"
                     }
@@ -947,36 +1131,12 @@
               "ExpressionStmt": {
                 "expression(ExpressionListStmt)": {
                   "expressions": [
-                    {
-                      "VariableExpr": {
-                        "name": "IDENTIFIER:a@(26.5-26.6)",
-                        "t": {
-                          "type(builtins.PrimitiveType)": "$float",
-                          "decl(Named)": "@18"
-                        }
-                      }
-                    },
-                    {
-                      "VariableExpr": {
-                        "name": "IDENTIFIER:b@(26.8-26.9)",
-                        "t": {
-                          "type(builtins.PrimitiveType)": "$float",
-                          "decl(Named)": "@19"
-                        }
-                      }
-                    },
-                    {
-                      "VariableExpr": {
-                        "name": "IDENTIFIER:c@(26.11-26.12)",
-                        "t": {
-                          "type(builtins.ArrayType)": "@24",
-                          "decl(Named)": "@22"
-                        }
-                      }
-                    }
+                    "VariableExpr@24",
+                    "VariableExpr@38",
+                    "VariableExpr@47"
                   ],
                   "t": {
-                    "type(builtins.ArrayType)": "@24"
+                    "type(builtins.ArrayType)": "@43"
                   }
                 },
                 "semi": "SEMICOLON:;@(26.12-26.13)",
@@ -986,20 +1146,14 @@
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(28.5-28.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@18"
-                    }
-                  },
+                  "lhs(VariableExpr)": "@25",
                   "op": "ADD_ASSIGN:+=@(28.7-28.9)",
                   "rhs(ConstantExpr)": {
                     "token": "FLOATCONSTANT:2.0@(28.10-28.13) = 2",
                     "t": {
                       "type(builtins.PrimitiveType)": "$float",
-                      "is_const_expression": true,
-                      "const_value": 2
+                      "isConstExpression": true,
+                      "constValue": 2
                     }
                   },
                   "t": {
@@ -1013,20 +1167,14 @@
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(29.5-29.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@18"
-                    }
-                  },
+                  "lhs(VariableExpr)": "@26",
                   "op": "SUB_ASSIGN:-=@(29.7-29.9)",
                   "rhs(ConstantExpr)": {
                     "token": "FLOATCONSTANT:2.0@(29.10-29.13) = 2",
                     "t": {
                       "type(builtins.PrimitiveType)": "$float",
-                      "is_const_expression": true,
-                      "const_value": 2
+                      "isConstExpression": true,
+                      "constValue": 2
                     }
                   },
                   "t": {
@@ -1040,20 +1188,14 @@
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(30.5-30.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@18"
-                    }
-                  },
+                  "lhs(VariableExpr)": "@27",
                   "op": "MUL_ASSIGN:*=@(30.7-30.9)",
                   "rhs(ConstantExpr)": {
                     "token": "FLOATCONSTANT:2.0@(30.10-30.13) = 2",
                     "t": {
                       "type(builtins.PrimitiveType)": "$float",
-                      "is_const_expression": true,
-                      "const_value": 2
+                      "isConstExpression": true,
+                      "constValue": 2
                     }
                   },
                   "t": {
@@ -1067,20 +1209,14 @@
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(31.5-31.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@18"
-                    }
-                  },
+                  "lhs(VariableExpr)": "@28",
                   "op": "DIV_ASSIGN:/=@(31.7-31.9)",
                   "rhs(ConstantExpr)": {
                     "token": "FLOATCONSTANT:2.0@(31.10-31.13) = 2",
                     "t": {
                       "type(builtins.PrimitiveType)": "$float",
-                      "is_const_expression": true,
-                      "const_value": 2
+                      "isConstExpression": true,
+                      "constValue": 2
                     }
                   },
                   "t": {
@@ -1095,8 +1231,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:f@(33.5-33.6)",
-                  "left_paren": "LEFT_PAREN:(@(33.6-33.7)",
-                  "right_paren": "RIGHT_PAREN:)@(33.7-33.8)",
+                  "leftParen": "LEFT_PAREN:(@(33.6-33.7)",
+                  "rightParen": "RIGHT_PAREN:)@(33.7-33.8)",
                   "t": {
                     "type(builtins.PrimitiveType)": "$float",
                     "decl(FunctionProto)": "@9"
@@ -1115,108 +1251,124 @@
                       "COMMENT:// various l-value tests@(35.5-35.29), multi:false =  various l-value tests"
                     ],
                     "name": "IDENTIFIER:S@(36.12-36.13)",
-                    "left_brace": "LEFT_BRACE:{@(36.14-36.15)",
-                    "right_brace": "RIGHT_BRACE:}@(38.5-38.6)",
+                    "leftBrace": "LEFT_BRACE:{@(36.14-36.15)",
+                    "rightBrace": "RIGHT_BRACE:}@(38.5-38.6)",
                     "fields": [
                       {
                         "FieldDecl": {
                           "type(TypeRef)": {
                             "token": "INT:int@(37.9-37.12)",
-                            "is_primitive": true,
+                            "isPrimitive": true,
                             "t": {
                               "type(builtins.PrimitiveType)": "$int"
                             },
-                            "@id": 148
+                            "@id": 152
                           },
                           "names": [
                             {
                               "Named": {
                                 "name": "IDENTIFIER:a@(37.13-37.14)",
-                                "decl(FieldDecl)": "@147",
-                                "type(TypeRef)": "@148",
+                                "decl(FieldDecl)": "@151",
+                                "type(TypeRef)": "@152",
                                 "t": {
                                   "type(builtins.PrimitiveType)": "$int"
                                 },
-                                "@id": 149
+                                "@id": 153
                               }
                             }
                           ],
                           "semi": "SEMICOLON:;@(37.14-37.15)",
-                          "@id": 147
+                          "@id": 151
                         }
                       }
                     ],
                     "t": {
                       "type(builtins.UserType)": {
                         "name": "S",
-                        "is_composite": true,
-                        "is_user": true,
-                        "decl(StructDecl)": "@146",
-                        "field_map": {
+                        "isComposite": true,
+                        "isUser": true,
+                        "decl(StructDecl)": "@150",
+                        "fieldMap": {
                           "a": {
                             "name": "a",
                             "type(builtins.PrimitiveType)": "$int",
-                            "decl(Named)": "@149"
+                            "decl(Named)": "@153"
                           }
                         },
                         "fields": [
                           {
                             "name": "a",
                             "type(builtins.PrimitiveType)": "$int",
-                            "decl(Named)": "@149"
+                            "decl(Named)": "@153"
                           }
                         ],
                         "zero": {},
-                        "@id": 150
+                        "@id": 154
                       }
                     },
-                    "parent_scope(Block)": "@15",
-                    "@id": 146
+                    "parentScope(Block)": "@15",
+                    "@id": 150
                   },
                   "t": {
-                    "type(builtins.UserType)": "@150"
+                    "type(builtins.UserType)": "@154"
                   },
-                  "@id": 145
+                  "@id": 149
                 },
                 "names": [
                   {
                     "Named": {
                       "name": "IDENTIFIER:s@(38.7-38.8)",
-                      "decl(VariableDecl)": "@144",
-                      "type(TypeRef)": "@145",
+                      "decl(VariableDecl)": "@148",
+                      "type(TypeRef)": "@149",
                       "t": {
-                        "type(builtins.UserType)": "@150"
+                        "type(builtins.UserType)": "@154",
+                        "users": [
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:s@(44.5-44.6)",
+                              "t": {
+                                "type(builtins.UserType)": "@154",
+                                "decl(Named)": "@155"
+                              },
+                              "@id": 156
+                            }
+                          },
+                          {
+                            "VariableExpr": {
+                              "name": "IDENTIFIER:s@(45.5-45.6)",
+                              "t": {
+                                "type(builtins.UserType)": "@154",
+                                "decl(Named)": "@155"
+                              },
+                              "@id": 157
+                            }
+                          }
+                        ]
                       },
-                      "@id": 151
+                      "@id": 155
                     }
                   }
                 ],
                 "semi": "SEMICOLON:;@(38.8-38.9)",
                 "t": {},
-                "@id": 144
+                "@id": 148
               }
             },
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
                   "lhs(IndexExpr)": {
-                    "expression(VariableExpr)": {
-                      "name": "IDENTIFIER:c@(40.5-40.6)",
-                      "t": {
-                        "type(builtins.ArrayType)": "@24",
-                        "decl(Named)": "@22"
-                      }
-                    },
-                    "right_bracket": "RIGHT_BRACKET:]@(40.8-40.9)",
+                    "expression(VariableExpr)": "@48",
+                    "rightBracket": "RIGHT_BRACKET:]@(40.8-40.9)",
                     "index(ConstantExpr)": {
                       "token": "INTCONSTANT:2@(40.7-40.8) = 2",
                       "t": {
                         "type(builtins.PrimitiveType)": "$int",
-                        "is_const_expression": true,
-                        "const_value": 2
+                        "isConstExpression": true,
+                        "constValue": 2
                       }
                     },
-                    "left_bracket": "LEFT_BRACKET:[@(40.6-40.7)",
+                    "leftBracket": "LEFT_BRACKET:[@(40.6-40.7)",
                     "t": {
                       "type(builtins.PrimitiveType)": "$vec2"
                     }
@@ -1224,16 +1376,16 @@
                   "op": "EQUAL:=@(40.10-40.11)",
                   "rhs(FunctionCallExpr)": {
                     "name": "VEC2:vec2@(40.12-40.16)",
-                    "left_paren": "LEFT_PAREN:(@(40.16-40.17)",
-                    "right_paren": "RIGHT_PAREN:)@(40.25-40.26)",
+                    "leftParen": "LEFT_PAREN:(@(40.16-40.17)",
+                    "rightParen": "RIGHT_PAREN:)@(40.25-40.26)",
                     "arguments": [
                       {
                         "ConstantExpr": {
                           "token": "FLOATCONSTANT:1.0@(40.17-40.20) = 1",
                           "t": {
                             "type(builtins.PrimitiveType)": "$float",
-                            "is_const_expression": true,
-                            "const_value": 1
+                            "isConstExpression": true,
+                            "constValue": 1
                           }
                         }
                       },
@@ -1242,20 +1394,20 @@
                           "token": "FLOATCONSTANT:1.0@(40.22-40.25) = 1",
                           "t": {
                             "type(builtins.PrimitiveType)": "$float",
-                            "is_const_expression": true,
-                            "const_value": 1
+                            "isConstExpression": true,
+                            "constValue": 1
                           }
                         }
                       }
                     ],
                     "t": {
                       "type(builtins.PrimitiveType)": "$vec2",
-                      "is_const_expression": true,
-                      "const_value": [
+                      "isConstExpression": true,
+                      "constValue": [
                         1,
                         1
                       ],
-                      "is_constructor": true
+                      "isConstructor": true
                     }
                   },
                   "t": {
@@ -1271,22 +1423,16 @@
                 "expression(AssignmentExpr)": {
                   "lhs(FieldSelectionExpr)": {
                     "expression(IndexExpr)": {
-                      "expression(VariableExpr)": {
-                        "name": "IDENTIFIER:c@(41.5-41.6)",
-                        "t": {
-                          "type(builtins.ArrayType)": "@24",
-                          "decl(Named)": "@22"
-                        }
-                      },
-                      "right_bracket": "RIGHT_BRACKET:]@(41.8-41.9)",
+                      "expression(VariableExpr)": "@49",
+                      "rightBracket": "RIGHT_BRACKET:]@(41.8-41.9)",
                       "index(ConstantExpr)": {
                         "token": "INTCONSTANT:0@(41.7-41.8) = 0",
                         "t": {
                           "type(builtins.PrimitiveType)": "$int",
-                          "is_const_expression": true
+                          "isConstExpression": true
                         }
                       },
-                      "left_bracket": "LEFT_BRACKET:[@(41.6-41.7)",
+                      "leftBracket": "LEFT_BRACKET:[@(41.6-41.7)",
                       "t": {
                         "type(builtins.PrimitiveType)": "$vec2"
                       }
@@ -1300,16 +1446,16 @@
                   "op": "EQUAL:=@(41.13-41.14)",
                   "rhs(FunctionCallExpr)": {
                     "name": "VEC2:vec2@(41.15-41.19)",
-                    "left_paren": "LEFT_PAREN:(@(41.19-41.20)",
-                    "right_paren": "RIGHT_PAREN:)@(41.28-41.29)",
+                    "leftParen": "LEFT_PAREN:(@(41.19-41.20)",
+                    "rightParen": "RIGHT_PAREN:)@(41.28-41.29)",
                     "arguments": [
                       {
                         "ConstantExpr": {
                           "token": "FLOATCONSTANT:2.0@(41.20-41.23) = 2",
                           "t": {
                             "type(builtins.PrimitiveType)": "$float",
-                            "is_const_expression": true,
-                            "const_value": 2
+                            "isConstExpression": true,
+                            "constValue": 2
                           }
                         }
                       },
@@ -1318,20 +1464,20 @@
                           "token": "FLOATCONSTANT:2.0@(41.25-41.28) = 2",
                           "t": {
                             "type(builtins.PrimitiveType)": "$float",
-                            "is_const_expression": true,
-                            "const_value": 2
+                            "isConstExpression": true,
+                            "constValue": 2
                           }
                         }
                       }
                     ],
                     "t": {
                       "type(builtins.PrimitiveType)": "$vec2",
-                      "is_const_expression": true,
-                      "const_value": [
+                      "isConstExpression": true,
+                      "constValue": [
                         2,
                         2
                       ],
-                      "is_constructor": true
+                      "isConstructor": true
                     }
                   },
                   "t": {
@@ -1345,20 +1491,14 @@
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:a@(42.5-42.6)",
-                    "t": {
-                      "type(builtins.PrimitiveType)": "$float",
-                      "decl(Named)": "@18"
-                    }
-                  },
+                  "lhs(VariableExpr)": "@29",
                   "op": "EQUAL:=@(42.7-42.8)",
                   "rhs(ConstantExpr)": {
                     "token": "FLOATCONSTANT:2.0@(42.9-42.12) = 2",
                     "t": {
                       "type(builtins.PrimitiveType)": "$float",
-                      "is_const_expression": true,
-                      "const_value": 2
+                      "isConstExpression": true,
+                      "constValue": 2
                     }
                   },
                   "t": {
@@ -1373,15 +1513,9 @@
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
                   "lhs(GroupExpr)": {
-                    "left_paren": "LEFT_PAREN:(@(43.5-43.6)",
-                    "expression(VariableExpr)": {
-                      "name": "IDENTIFIER:a@(43.6-43.7)",
-                      "t": {
-                        "type(builtins.PrimitiveType)": "$float",
-                        "decl(Named)": "@18"
-                      }
-                    },
-                    "right_paren": "RIGHT_PAREN:)@(43.7-43.8)",
+                    "leftParen": "LEFT_PAREN:(@(43.5-43.6)",
+                    "expression(VariableExpr)": "@30",
+                    "rightParen": "RIGHT_PAREN:)@(43.7-43.8)",
                     "t": {
                       "type(builtins.PrimitiveType)": "$float"
                     }
@@ -1391,8 +1525,8 @@
                     "token": "FLOATCONSTANT:3.0@(43.11-43.14) = 3",
                     "t": {
                       "type(builtins.PrimitiveType)": "$float",
-                      "is_const_expression": true,
-                      "const_value": 3
+                      "isConstExpression": true,
+                      "constValue": 3
                     }
                   },
                   "t": {
@@ -1406,41 +1540,35 @@
             {
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
-                  "lhs(VariableExpr)": {
-                    "name": "IDENTIFIER:s@(44.5-44.6)",
-                    "t": {
-                      "type(builtins.UserType)": "@150",
-                      "decl(Named)": "@151"
-                    }
-                  },
+                  "lhs(VariableExpr)": "@156",
                   "op": "EQUAL:=@(44.7-44.8)",
                   "rhs(FunctionCallExpr)": {
                     "name": "IDENTIFIER:S@(44.9-44.10)",
-                    "left_paren": "LEFT_PAREN:(@(44.10-44.11)",
-                    "right_paren": "RIGHT_PAREN:)@(44.12-44.13)",
+                    "leftParen": "LEFT_PAREN:(@(44.10-44.11)",
+                    "rightParen": "RIGHT_PAREN:)@(44.12-44.13)",
                     "arguments": [
                       {
                         "ConstantExpr": {
                           "token": "INTCONSTANT:2@(44.11-44.12) = 2",
                           "t": {
                             "type(builtins.PrimitiveType)": "$int",
-                            "is_const_expression": true,
-                            "const_value": 2
+                            "isConstExpression": true,
+                            "constValue": 2
                           }
                         }
                       }
                     ],
                     "t": {
-                      "type(builtins.UserType)": "@150",
-                      "is_const_expression": true,
-                      "const_value": {
+                      "type(builtins.UserType)": "@154",
+                      "isConstExpression": true,
+                      "constValue": {
                         "a": 2
                       },
-                      "is_constructor": true
+                      "isConstructor": true
                     }
                   },
                   "t": {
-                    "type(builtins.UserType)": "@150"
+                    "type(builtins.UserType)": "@154"
                   }
                 },
                 "semi": "SEMICOLON:;@(44.13-44.14)",
@@ -1451,13 +1579,7 @@
               "ExpressionStmt": {
                 "expression(AssignmentExpr)": {
                   "lhs(FieldSelectionExpr)": {
-                    "expression(VariableExpr)": {
-                      "name": "IDENTIFIER:s@(45.5-45.6)",
-                      "t": {
-                        "type(builtins.UserType)": "@150",
-                        "decl(Named)": "@151"
-                      }
-                    },
+                    "expression(VariableExpr)": "@157",
                     "op": "DOT:.@(45.6-45.7)",
                     "selector": "IDENTIFIER:a@(45.7-45.8)",
                     "t": {
@@ -1469,8 +1591,8 @@
                     "token": "INTCONSTANT:3@(45.11-45.12) = 3",
                     "t": {
                       "type(builtins.PrimitiveType)": "$int",
-                      "is_const_expression": true,
-                      "const_value": 3
+                      "isConstExpression": true,
+                      "constValue": 3
                     }
                   },
                   "t": {
@@ -1482,49 +1604,55 @@
               }
             }
           ],
-          "new_scope": true,
+          "newScope": true,
           "t": {},
           "variables": [
             "Named@18",
-            "Named@19",
-            "Named@22",
-            "Named@27",
-            "Named@30",
-            "Named@151"
+            "Named@31",
+            "Named@41",
+            "Named@52",
+            "Named@58",
+            "Named@155"
           ],
-          "variable_map": {
+          "variableMap": {
             "a(Named)": "@18",
-            "b(Named)": "@19",
-            "c(Named)": "@22",
-            "d(Named)": "@27",
-            "i(Named)": "@30",
-            "s(Named)": "@151"
+            "b(Named)": "@31",
+            "c(Named)": "@41",
+            "d(Named)": "@52",
+            "i(Named)": "@58",
+            "s(Named)": "@155"
           },
           "types": [
-            "builtins.ArrayType@24",
-            "builtins.UserType@150"
+            "builtins.ArrayType@43",
+            "builtins.UserType@154"
           ],
-          "type_map": {
-            "vec2[4](builtins.ArrayType)": "@24",
-            "S(builtins.UserType)": "@150"
+          "typeMap": {
+            "vec2[4](builtins.ArrayType)": "@43",
+            "S(builtins.UserType)": "@154"
           },
+          "scopes": [
+            "StructDecl@150"
+          ],
           "symbols": {
             "a(Named)": "@18",
-            "b(Named)": "@19",
-            "vec2[4](builtins.ArrayType)": "@24",
-            "c(Named)": "@22",
-            "d(Named)": "@27",
-            "i(Named)": "@30",
-            "S(builtins.UserType)": "@150",
-            "s(Named)": "@151"
+            "b(Named)": "@31",
+            "vec2[4](builtins.ArrayType)": "@43",
+            "c(Named)": "@41",
+            "d(Named)": "@52",
+            "i(Named)": "@58",
+            "S(builtins.UserType)": "@154",
+            "s(Named)": "@155"
           },
-          "parent_scope(FunctionDef)": "@12",
+          "parentScope(FunctionDef)": "@12",
           "@id": 15
         },
         "t": {
           "type(builtins.PrimitiveType)": "$void"
         },
-        "parent_scope(Parser)": "@1",
+        "scopes": [
+          "Block@15"
+        ],
+        "parentScope(Parser)": "@1",
         "@id": 12
       }
     }
@@ -1532,21 +1660,24 @@
   "comments": [
     "COMMENT:// vi:ts=4:et@(48.1-48.14), multi:false =  vi:ts=4:et"
   ],
-  "function_protos": [
+  "functionProtos": [
     "FunctionProto@2",
     "FunctionProto@9"
   ],
-  "function_proto_map": {
+  "functionProtoMap": {
     "f(float,float)(FunctionProto)": "@2",
     "f()(FunctionProto)": "@9"
   },
   "functions": [
     "FunctionDef@12"
   ],
-  "function_map": {
+  "functionMap": {
     "main()(FunctionDef)": "@12"
   },
-  "parent_scope": "(builtin scope)",
+  "scopes": [
+    "FunctionDef@12"
+  ],
+  "parentScope": "(builtin scope)",
   "t": {},
   "@id": 1
 }

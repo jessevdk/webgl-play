@@ -7,7 +7,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(3.1-3.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 3
         },
         "names": [
@@ -30,7 +30,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(4.1-4.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 6
         },
         "names": [
@@ -53,7 +53,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(5.1-5.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 9
         },
         "names": [
@@ -76,7 +76,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(7.1-7.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 12
         },
         "names": [
@@ -99,7 +99,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(8.1-8.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 15
         },
         "names": [
@@ -122,7 +122,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(9.1-9.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 18
         },
         "names": [
@@ -145,7 +145,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(11.1-11.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 21
         },
         "names": [
@@ -168,7 +168,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(12.1-12.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 24
         },
         "names": [
@@ -191,7 +191,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(13.1-13.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 27
         },
         "names": [
@@ -214,7 +214,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(15.1-15.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 30
         },
         "names": [
@@ -237,7 +237,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(16.1-16.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 33
         },
         "names": [
@@ -260,7 +260,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(17.1-17.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 36
         },
         "names": [
@@ -283,7 +283,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(19.1-19.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 39
         },
         "names": [
@@ -306,7 +306,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(20.1-20.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 42
         },
         "names": [
@@ -329,7 +329,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(21.1-21.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 45
         },
         "names": [
@@ -352,7 +352,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(23.1-23.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 48
         },
         "names": [
@@ -375,7 +375,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(24.1-24.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 51
         },
         "names": [
@@ -396,21 +396,21 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(26.1-26.5)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:main@(26.6-26.10)",
-          "left_paren": "LEFT_PAREN:(@(26.10-26.11)",
-          "right_paren": "RIGHT_PAREN:)@(26.11-26.12)"
+          "leftParen": "LEFT_PAREN:(@(26.10-26.11)",
+          "rightParen": "RIGHT_PAREN:)@(26.11-26.12)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(117.1-117.2)",
-          "left_brace": "LEFT_BRACE:{@(26.13-26.14)",
+          "rightBrace": "RIGHT_BRACE:}@(117.1-117.2)",
+          "leftBrace": "LEFT_BRACE:{@(26.13-26.14)",
           "body": [
             {
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "FLOAT:float@(27.5-27.10)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 58
                 },
                 "names": [
@@ -430,7 +430,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "VEC2:vec2@(28.5-28.9)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 61
                 },
                 "names": [
@@ -450,7 +450,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "VEC3:vec3@(28.14-28.18)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 64
                 },
                 "names": [
@@ -470,7 +470,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "VEC4:vec4@(28.23-28.27)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 67
                 },
                 "names": [
@@ -490,7 +490,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "IVEC2:ivec2@(29.5-29.10)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 70
                 },
                 "names": [
@@ -510,7 +510,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "IVEC3:ivec3@(29.15-29.20)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 73
                 },
                 "names": [
@@ -530,7 +530,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "IVEC4:ivec4@(29.25-29.30)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 76
                 },
                 "names": [
@@ -550,7 +550,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "BVEC2:bvec2@(30.5-30.10)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 79
                 },
                 "names": [
@@ -570,7 +570,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "BVEC3:bvec3@(30.15-30.20)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 82
                 },
                 "names": [
@@ -590,7 +590,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "BVEC4:bvec4@(30.25-30.30)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 85
                 },
                 "names": [
@@ -610,7 +610,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "MAT2:mat2@(31.5-31.9)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 88
                 },
                 "names": [
@@ -630,7 +630,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "MAT3:mat3@(31.14-31.18)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 91
                 },
                 "names": [
@@ -650,7 +650,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "MAT4:mat4@(31.23-31.27)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 94
                 },
                 "names": [
@@ -670,7 +670,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "SAMPLER2D:sampler2D@(32.5-32.14)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 97
                 },
                 "names": [
@@ -690,7 +690,7 @@
               "VariableDecl": {
                 "type(TypeRef)": {
                   "token": "SAMPLERCUBE:samplerCube@(33.5-33.16)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "@id": 100
                 },
                 "names": [
@@ -713,8 +713,8 @@
                     "IDENTIFIER:radians@(36.5-36.12)",
                     "COMMENT:// Angle and Trigonometry functions@(35.5-35.40), multi:false =  Angle and Trigonometry functions"
                   ],
-                  "left_paren": "LEFT_PAREN:(@(36.12-36.13)",
-                  "right_paren": "RIGHT_PAREN:)@(36.14-36.15)",
+                  "leftParen": "LEFT_PAREN:(@(36.12-36.13)",
+                  "rightParen": "RIGHT_PAREN:)@(36.14-36.15)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -730,8 +730,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:radians@(36.17-36.24)",
-                  "left_paren": "LEFT_PAREN:(@(36.24-36.25)",
-                  "right_paren": "RIGHT_PAREN:)@(36.27-36.28)",
+                  "leftParen": "LEFT_PAREN:(@(36.24-36.25)",
+                  "rightParen": "RIGHT_PAREN:)@(36.27-36.28)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -747,8 +747,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:radians@(36.30-36.37)",
-                  "left_paren": "LEFT_PAREN:(@(36.37-36.38)",
-                  "right_paren": "RIGHT_PAREN:)@(36.40-36.41)",
+                  "leftParen": "LEFT_PAREN:(@(36.37-36.38)",
+                  "rightParen": "RIGHT_PAREN:)@(36.40-36.41)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -764,8 +764,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:radians@(36.43-36.50)",
-                  "left_paren": "LEFT_PAREN:(@(36.50-36.51)",
-                  "right_paren": "RIGHT_PAREN:)@(36.53-36.54)",
+                  "leftParen": "LEFT_PAREN:(@(36.50-36.51)",
+                  "rightParen": "RIGHT_PAREN:)@(36.53-36.54)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -781,8 +781,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:degrees@(37.5-37.12)",
-                  "left_paren": "LEFT_PAREN:(@(37.12-37.13)",
-                  "right_paren": "RIGHT_PAREN:)@(37.14-37.15)",
+                  "leftParen": "LEFT_PAREN:(@(37.12-37.13)",
+                  "rightParen": "RIGHT_PAREN:)@(37.14-37.15)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -798,8 +798,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:degrees@(37.17-37.24)",
-                  "left_paren": "LEFT_PAREN:(@(37.24-37.25)",
-                  "right_paren": "RIGHT_PAREN:)@(37.27-37.28)",
+                  "leftParen": "LEFT_PAREN:(@(37.24-37.25)",
+                  "rightParen": "RIGHT_PAREN:)@(37.27-37.28)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -815,8 +815,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:degrees@(37.30-37.37)",
-                  "left_paren": "LEFT_PAREN:(@(37.37-37.38)",
-                  "right_paren": "RIGHT_PAREN:)@(37.40-37.41)",
+                  "leftParen": "LEFT_PAREN:(@(37.37-37.38)",
+                  "rightParen": "RIGHT_PAREN:)@(37.40-37.41)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -832,8 +832,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:degrees@(37.43-37.50)",
-                  "left_paren": "LEFT_PAREN:(@(37.50-37.51)",
-                  "right_paren": "RIGHT_PAREN:)@(37.53-37.54)",
+                  "leftParen": "LEFT_PAREN:(@(37.50-37.51)",
+                  "rightParen": "RIGHT_PAREN:)@(37.53-37.54)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -849,8 +849,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sin@(38.5-38.8)",
-                  "left_paren": "LEFT_PAREN:(@(38.8-38.9)",
-                  "right_paren": "RIGHT_PAREN:)@(38.10-38.11)",
+                  "leftParen": "LEFT_PAREN:(@(38.8-38.9)",
+                  "rightParen": "RIGHT_PAREN:)@(38.10-38.11)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -866,8 +866,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sin@(38.13-38.16)",
-                  "left_paren": "LEFT_PAREN:(@(38.16-38.17)",
-                  "right_paren": "RIGHT_PAREN:)@(38.19-38.20)",
+                  "leftParen": "LEFT_PAREN:(@(38.16-38.17)",
+                  "rightParen": "RIGHT_PAREN:)@(38.19-38.20)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -883,8 +883,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sin@(38.22-38.25)",
-                  "left_paren": "LEFT_PAREN:(@(38.25-38.26)",
-                  "right_paren": "RIGHT_PAREN:)@(38.28-38.29)",
+                  "leftParen": "LEFT_PAREN:(@(38.25-38.26)",
+                  "rightParen": "RIGHT_PAREN:)@(38.28-38.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -900,8 +900,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sin@(38.31-38.34)",
-                  "left_paren": "LEFT_PAREN:(@(38.34-38.35)",
-                  "right_paren": "RIGHT_PAREN:)@(38.37-38.38)",
+                  "leftParen": "LEFT_PAREN:(@(38.34-38.35)",
+                  "rightParen": "RIGHT_PAREN:)@(38.37-38.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -917,8 +917,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:cos@(39.5-39.8)",
-                  "left_paren": "LEFT_PAREN:(@(39.8-39.9)",
-                  "right_paren": "RIGHT_PAREN:)@(39.10-39.11)",
+                  "leftParen": "LEFT_PAREN:(@(39.8-39.9)",
+                  "rightParen": "RIGHT_PAREN:)@(39.10-39.11)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -934,8 +934,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:cos@(39.13-39.16)",
-                  "left_paren": "LEFT_PAREN:(@(39.16-39.17)",
-                  "right_paren": "RIGHT_PAREN:)@(39.19-39.20)",
+                  "leftParen": "LEFT_PAREN:(@(39.16-39.17)",
+                  "rightParen": "RIGHT_PAREN:)@(39.19-39.20)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -951,8 +951,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:cos@(39.22-39.25)",
-                  "left_paren": "LEFT_PAREN:(@(39.25-39.26)",
-                  "right_paren": "RIGHT_PAREN:)@(39.28-39.29)",
+                  "leftParen": "LEFT_PAREN:(@(39.25-39.26)",
+                  "rightParen": "RIGHT_PAREN:)@(39.28-39.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -968,8 +968,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:cos@(39.31-39.34)",
-                  "left_paren": "LEFT_PAREN:(@(39.34-39.35)",
-                  "right_paren": "RIGHT_PAREN:)@(39.37-39.38)",
+                  "leftParen": "LEFT_PAREN:(@(39.34-39.35)",
+                  "rightParen": "RIGHT_PAREN:)@(39.37-39.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -985,8 +985,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sin@(40.5-40.8)",
-                  "left_paren": "LEFT_PAREN:(@(40.8-40.9)",
-                  "right_paren": "RIGHT_PAREN:)@(40.10-40.11)",
+                  "leftParen": "LEFT_PAREN:(@(40.8-40.9)",
+                  "rightParen": "RIGHT_PAREN:)@(40.10-40.11)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1002,8 +1002,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sin@(40.13-40.16)",
-                  "left_paren": "LEFT_PAREN:(@(40.16-40.17)",
-                  "right_paren": "RIGHT_PAREN:)@(40.19-40.20)",
+                  "leftParen": "LEFT_PAREN:(@(40.16-40.17)",
+                  "rightParen": "RIGHT_PAREN:)@(40.19-40.20)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1019,8 +1019,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sin@(40.22-40.25)",
-                  "left_paren": "LEFT_PAREN:(@(40.25-40.26)",
-                  "right_paren": "RIGHT_PAREN:)@(40.28-40.29)",
+                  "leftParen": "LEFT_PAREN:(@(40.25-40.26)",
+                  "rightParen": "RIGHT_PAREN:)@(40.28-40.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1036,8 +1036,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sin@(40.31-40.34)",
-                  "left_paren": "LEFT_PAREN:(@(40.34-40.35)",
-                  "right_paren": "RIGHT_PAREN:)@(40.37-40.38)",
+                  "leftParen": "LEFT_PAREN:(@(40.34-40.35)",
+                  "rightParen": "RIGHT_PAREN:)@(40.37-40.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1053,8 +1053,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:asin@(41.5-41.9)",
-                  "left_paren": "LEFT_PAREN:(@(41.9-41.10)",
-                  "right_paren": "RIGHT_PAREN:)@(41.11-41.12)",
+                  "leftParen": "LEFT_PAREN:(@(41.9-41.10)",
+                  "rightParen": "RIGHT_PAREN:)@(41.11-41.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1070,8 +1070,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:asin@(41.14-41.18)",
-                  "left_paren": "LEFT_PAREN:(@(41.18-41.19)",
-                  "right_paren": "RIGHT_PAREN:)@(41.21-41.22)",
+                  "leftParen": "LEFT_PAREN:(@(41.18-41.19)",
+                  "rightParen": "RIGHT_PAREN:)@(41.21-41.22)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1087,8 +1087,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:asin@(41.24-41.28)",
-                  "left_paren": "LEFT_PAREN:(@(41.28-41.29)",
-                  "right_paren": "RIGHT_PAREN:)@(41.31-41.32)",
+                  "leftParen": "LEFT_PAREN:(@(41.28-41.29)",
+                  "rightParen": "RIGHT_PAREN:)@(41.31-41.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1104,8 +1104,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:asin@(41.34-41.38)",
-                  "left_paren": "LEFT_PAREN:(@(41.38-41.39)",
-                  "right_paren": "RIGHT_PAREN:)@(41.41-41.42)",
+                  "leftParen": "LEFT_PAREN:(@(41.38-41.39)",
+                  "rightParen": "RIGHT_PAREN:)@(41.41-41.42)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1121,8 +1121,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:acos@(42.5-42.9)",
-                  "left_paren": "LEFT_PAREN:(@(42.9-42.10)",
-                  "right_paren": "RIGHT_PAREN:)@(42.11-42.12)",
+                  "leftParen": "LEFT_PAREN:(@(42.9-42.10)",
+                  "rightParen": "RIGHT_PAREN:)@(42.11-42.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1138,8 +1138,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:acos@(42.14-42.18)",
-                  "left_paren": "LEFT_PAREN:(@(42.18-42.19)",
-                  "right_paren": "RIGHT_PAREN:)@(42.21-42.22)",
+                  "leftParen": "LEFT_PAREN:(@(42.18-42.19)",
+                  "rightParen": "RIGHT_PAREN:)@(42.21-42.22)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1155,8 +1155,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:acos@(42.24-42.28)",
-                  "left_paren": "LEFT_PAREN:(@(42.28-42.29)",
-                  "right_paren": "RIGHT_PAREN:)@(42.31-42.32)",
+                  "leftParen": "LEFT_PAREN:(@(42.28-42.29)",
+                  "rightParen": "RIGHT_PAREN:)@(42.31-42.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1172,8 +1172,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:acos@(42.34-42.38)",
-                  "left_paren": "LEFT_PAREN:(@(42.38-42.39)",
-                  "right_paren": "RIGHT_PAREN:)@(42.41-42.42)",
+                  "leftParen": "LEFT_PAREN:(@(42.38-42.39)",
+                  "rightParen": "RIGHT_PAREN:)@(42.41-42.42)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1189,8 +1189,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:atan@(43.5-43.9)",
-                  "left_paren": "LEFT_PAREN:(@(43.9-43.10)",
-                  "right_paren": "RIGHT_PAREN:)@(43.14-43.15)",
+                  "leftParen": "LEFT_PAREN:(@(43.9-43.10)",
+                  "rightParen": "RIGHT_PAREN:)@(43.14-43.15)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1211,8 +1211,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:atan@(43.17-43.21)",
-                  "left_paren": "LEFT_PAREN:(@(43.21-43.22)",
-                  "right_paren": "RIGHT_PAREN:)@(43.28-43.29)",
+                  "leftParen": "LEFT_PAREN:(@(43.21-43.22)",
+                  "rightParen": "RIGHT_PAREN:)@(43.28-43.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1233,8 +1233,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:atan@(43.31-43.35)",
-                  "left_paren": "LEFT_PAREN:(@(43.35-43.36)",
-                  "right_paren": "RIGHT_PAREN:)@(43.42-43.43)",
+                  "leftParen": "LEFT_PAREN:(@(43.35-43.36)",
+                  "rightParen": "RIGHT_PAREN:)@(43.42-43.43)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1255,8 +1255,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:atan@(43.45-43.49)",
-                  "left_paren": "LEFT_PAREN:(@(43.49-43.50)",
-                  "right_paren": "RIGHT_PAREN:)@(43.56-43.57)",
+                  "leftParen": "LEFT_PAREN:(@(43.49-43.50)",
+                  "rightParen": "RIGHT_PAREN:)@(43.56-43.57)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1277,8 +1277,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:atan@(44.5-44.9)",
-                  "left_paren": "LEFT_PAREN:(@(44.9-44.10)",
-                  "right_paren": "RIGHT_PAREN:)@(44.11-44.12)",
+                  "leftParen": "LEFT_PAREN:(@(44.9-44.10)",
+                  "rightParen": "RIGHT_PAREN:)@(44.11-44.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1294,8 +1294,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:atan@(44.14-44.18)",
-                  "left_paren": "LEFT_PAREN:(@(44.18-44.19)",
-                  "right_paren": "RIGHT_PAREN:)@(44.21-44.22)",
+                  "leftParen": "LEFT_PAREN:(@(44.18-44.19)",
+                  "rightParen": "RIGHT_PAREN:)@(44.21-44.22)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1311,8 +1311,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:atan@(44.24-44.28)",
-                  "left_paren": "LEFT_PAREN:(@(44.28-44.29)",
-                  "right_paren": "RIGHT_PAREN:)@(44.31-44.32)",
+                  "leftParen": "LEFT_PAREN:(@(44.28-44.29)",
+                  "rightParen": "RIGHT_PAREN:)@(44.31-44.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1328,8 +1328,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:atan@(44.34-44.38)",
-                  "left_paren": "LEFT_PAREN:(@(44.38-44.39)",
-                  "right_paren": "RIGHT_PAREN:)@(44.41-44.42)",
+                  "leftParen": "LEFT_PAREN:(@(44.38-44.39)",
+                  "rightParen": "RIGHT_PAREN:)@(44.41-44.42)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1348,8 +1348,8 @@
                     "IDENTIFIER:pow@(47.5-47.8)",
                     "COMMENT:// Exponential Functions@(46.5-46.29), multi:false =  Exponential Functions"
                   ],
-                  "left_paren": "LEFT_PAREN:(@(47.8-47.9)",
-                  "right_paren": "RIGHT_PAREN:)@(47.13-47.14)",
+                  "leftParen": "LEFT_PAREN:(@(47.8-47.9)",
+                  "rightParen": "RIGHT_PAREN:)@(47.13-47.14)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1370,8 +1370,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:pow@(47.16-47.19)",
-                  "left_paren": "LEFT_PAREN:(@(47.19-47.20)",
-                  "right_paren": "RIGHT_PAREN:)@(47.26-47.27)",
+                  "leftParen": "LEFT_PAREN:(@(47.19-47.20)",
+                  "rightParen": "RIGHT_PAREN:)@(47.26-47.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1392,8 +1392,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:pow@(47.29-47.32)",
-                  "left_paren": "LEFT_PAREN:(@(47.32-47.33)",
-                  "right_paren": "RIGHT_PAREN:)@(47.39-47.40)",
+                  "leftParen": "LEFT_PAREN:(@(47.32-47.33)",
+                  "rightParen": "RIGHT_PAREN:)@(47.39-47.40)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1414,8 +1414,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:pow@(47.42-47.45)",
-                  "left_paren": "LEFT_PAREN:(@(47.45-47.46)",
-                  "right_paren": "RIGHT_PAREN:)@(47.52-47.53)",
+                  "leftParen": "LEFT_PAREN:(@(47.45-47.46)",
+                  "rightParen": "RIGHT_PAREN:)@(47.52-47.53)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1436,8 +1436,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:exp@(48.5-48.8)",
-                  "left_paren": "LEFT_PAREN:(@(48.8-48.9)",
-                  "right_paren": "RIGHT_PAREN:)@(48.10-48.11)",
+                  "leftParen": "LEFT_PAREN:(@(48.8-48.9)",
+                  "rightParen": "RIGHT_PAREN:)@(48.10-48.11)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1453,8 +1453,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:exp@(48.13-48.16)",
-                  "left_paren": "LEFT_PAREN:(@(48.16-48.17)",
-                  "right_paren": "RIGHT_PAREN:)@(48.19-48.20)",
+                  "leftParen": "LEFT_PAREN:(@(48.16-48.17)",
+                  "rightParen": "RIGHT_PAREN:)@(48.19-48.20)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1470,8 +1470,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:exp@(48.22-48.25)",
-                  "left_paren": "LEFT_PAREN:(@(48.25-48.26)",
-                  "right_paren": "RIGHT_PAREN:)@(48.28-48.29)",
+                  "leftParen": "LEFT_PAREN:(@(48.25-48.26)",
+                  "rightParen": "RIGHT_PAREN:)@(48.28-48.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1487,8 +1487,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:exp@(48.31-48.34)",
-                  "left_paren": "LEFT_PAREN:(@(48.34-48.35)",
-                  "right_paren": "RIGHT_PAREN:)@(48.37-48.38)",
+                  "leftParen": "LEFT_PAREN:(@(48.34-48.35)",
+                  "rightParen": "RIGHT_PAREN:)@(48.37-48.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1504,8 +1504,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:log@(49.5-49.8)",
-                  "left_paren": "LEFT_PAREN:(@(49.8-49.9)",
-                  "right_paren": "RIGHT_PAREN:)@(49.10-49.11)",
+                  "leftParen": "LEFT_PAREN:(@(49.8-49.9)",
+                  "rightParen": "RIGHT_PAREN:)@(49.10-49.11)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1521,8 +1521,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:log@(49.13-49.16)",
-                  "left_paren": "LEFT_PAREN:(@(49.16-49.17)",
-                  "right_paren": "RIGHT_PAREN:)@(49.19-49.20)",
+                  "leftParen": "LEFT_PAREN:(@(49.16-49.17)",
+                  "rightParen": "RIGHT_PAREN:)@(49.19-49.20)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1538,8 +1538,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:log@(49.22-49.25)",
-                  "left_paren": "LEFT_PAREN:(@(49.25-49.26)",
-                  "right_paren": "RIGHT_PAREN:)@(49.28-49.29)",
+                  "leftParen": "LEFT_PAREN:(@(49.25-49.26)",
+                  "rightParen": "RIGHT_PAREN:)@(49.28-49.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1555,8 +1555,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:log@(49.31-49.34)",
-                  "left_paren": "LEFT_PAREN:(@(49.34-49.35)",
-                  "right_paren": "RIGHT_PAREN:)@(49.37-49.38)",
+                  "leftParen": "LEFT_PAREN:(@(49.34-49.35)",
+                  "rightParen": "RIGHT_PAREN:)@(49.37-49.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1572,8 +1572,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:exp2@(50.5-50.9)",
-                  "left_paren": "LEFT_PAREN:(@(50.9-50.10)",
-                  "right_paren": "RIGHT_PAREN:)@(50.11-50.12)",
+                  "leftParen": "LEFT_PAREN:(@(50.9-50.10)",
+                  "rightParen": "RIGHT_PAREN:)@(50.11-50.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1589,8 +1589,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:exp2@(50.14-50.18)",
-                  "left_paren": "LEFT_PAREN:(@(50.18-50.19)",
-                  "right_paren": "RIGHT_PAREN:)@(50.21-50.22)",
+                  "leftParen": "LEFT_PAREN:(@(50.18-50.19)",
+                  "rightParen": "RIGHT_PAREN:)@(50.21-50.22)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1606,8 +1606,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:exp2@(50.24-50.28)",
-                  "left_paren": "LEFT_PAREN:(@(50.28-50.29)",
-                  "right_paren": "RIGHT_PAREN:)@(50.31-50.32)",
+                  "leftParen": "LEFT_PAREN:(@(50.28-50.29)",
+                  "rightParen": "RIGHT_PAREN:)@(50.31-50.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1623,8 +1623,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:exp2@(50.34-50.38)",
-                  "left_paren": "LEFT_PAREN:(@(50.38-50.39)",
-                  "right_paren": "RIGHT_PAREN:)@(50.41-50.42)",
+                  "leftParen": "LEFT_PAREN:(@(50.38-50.39)",
+                  "rightParen": "RIGHT_PAREN:)@(50.41-50.42)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1640,8 +1640,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:log2@(51.5-51.9)",
-                  "left_paren": "LEFT_PAREN:(@(51.9-51.10)",
-                  "right_paren": "RIGHT_PAREN:)@(51.11-51.12)",
+                  "leftParen": "LEFT_PAREN:(@(51.9-51.10)",
+                  "rightParen": "RIGHT_PAREN:)@(51.11-51.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1657,8 +1657,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:log2@(51.14-51.18)",
-                  "left_paren": "LEFT_PAREN:(@(51.18-51.19)",
-                  "right_paren": "RIGHT_PAREN:)@(51.21-51.22)",
+                  "leftParen": "LEFT_PAREN:(@(51.18-51.19)",
+                  "rightParen": "RIGHT_PAREN:)@(51.21-51.22)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1674,8 +1674,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:log2@(51.24-51.28)",
-                  "left_paren": "LEFT_PAREN:(@(51.28-51.29)",
-                  "right_paren": "RIGHT_PAREN:)@(51.31-51.32)",
+                  "leftParen": "LEFT_PAREN:(@(51.28-51.29)",
+                  "rightParen": "RIGHT_PAREN:)@(51.31-51.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1691,8 +1691,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:log2@(51.34-51.38)",
-                  "left_paren": "LEFT_PAREN:(@(51.38-51.39)",
-                  "right_paren": "RIGHT_PAREN:)@(51.41-51.42)",
+                  "leftParen": "LEFT_PAREN:(@(51.38-51.39)",
+                  "rightParen": "RIGHT_PAREN:)@(51.41-51.42)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1708,8 +1708,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sqrt@(52.5-52.9)",
-                  "left_paren": "LEFT_PAREN:(@(52.9-52.10)",
-                  "right_paren": "RIGHT_PAREN:)@(52.11-52.12)",
+                  "leftParen": "LEFT_PAREN:(@(52.9-52.10)",
+                  "rightParen": "RIGHT_PAREN:)@(52.11-52.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1725,8 +1725,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sqrt@(52.14-52.18)",
-                  "left_paren": "LEFT_PAREN:(@(52.18-52.19)",
-                  "right_paren": "RIGHT_PAREN:)@(52.21-52.22)",
+                  "leftParen": "LEFT_PAREN:(@(52.18-52.19)",
+                  "rightParen": "RIGHT_PAREN:)@(52.21-52.22)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1742,8 +1742,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sqrt@(52.24-52.28)",
-                  "left_paren": "LEFT_PAREN:(@(52.28-52.29)",
-                  "right_paren": "RIGHT_PAREN:)@(52.31-52.32)",
+                  "leftParen": "LEFT_PAREN:(@(52.28-52.29)",
+                  "rightParen": "RIGHT_PAREN:)@(52.31-52.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1759,8 +1759,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sqrt@(52.34-52.38)",
-                  "left_paren": "LEFT_PAREN:(@(52.38-52.39)",
-                  "right_paren": "RIGHT_PAREN:)@(52.41-52.42)",
+                  "leftParen": "LEFT_PAREN:(@(52.38-52.39)",
+                  "rightParen": "RIGHT_PAREN:)@(52.41-52.42)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1776,8 +1776,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:inversesqrt@(53.5-53.16)",
-                  "left_paren": "LEFT_PAREN:(@(53.16-53.17)",
-                  "right_paren": "RIGHT_PAREN:)@(53.18-53.19)",
+                  "leftParen": "LEFT_PAREN:(@(53.16-53.17)",
+                  "rightParen": "RIGHT_PAREN:)@(53.18-53.19)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1793,8 +1793,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:inversesqrt@(53.21-53.32)",
-                  "left_paren": "LEFT_PAREN:(@(53.32-53.33)",
-                  "right_paren": "RIGHT_PAREN:)@(53.35-53.36)",
+                  "leftParen": "LEFT_PAREN:(@(53.32-53.33)",
+                  "rightParen": "RIGHT_PAREN:)@(53.35-53.36)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1810,8 +1810,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:inversesqrt@(53.38-53.49)",
-                  "left_paren": "LEFT_PAREN:(@(53.49-53.50)",
-                  "right_paren": "RIGHT_PAREN:)@(53.52-53.53)",
+                  "leftParen": "LEFT_PAREN:(@(53.49-53.50)",
+                  "rightParen": "RIGHT_PAREN:)@(53.52-53.53)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1827,8 +1827,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:inversesqrt@(53.55-53.66)",
-                  "left_paren": "LEFT_PAREN:(@(53.66-53.67)",
-                  "right_paren": "RIGHT_PAREN:)@(53.69-53.70)",
+                  "leftParen": "LEFT_PAREN:(@(53.66-53.67)",
+                  "rightParen": "RIGHT_PAREN:)@(53.69-53.70)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1847,8 +1847,8 @@
                     "IDENTIFIER:abs@(56.5-56.8)",
                     "COMMENT:// Common Functions@(55.5-55.24), multi:false =  Common Functions"
                   ],
-                  "left_paren": "LEFT_PAREN:(@(56.8-56.9)",
-                  "right_paren": "RIGHT_PAREN:)@(56.10-56.11)",
+                  "leftParen": "LEFT_PAREN:(@(56.8-56.9)",
+                  "rightParen": "RIGHT_PAREN:)@(56.10-56.11)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1864,8 +1864,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:abs@(56.13-56.16)",
-                  "left_paren": "LEFT_PAREN:(@(56.16-56.17)",
-                  "right_paren": "RIGHT_PAREN:)@(56.19-56.20)",
+                  "leftParen": "LEFT_PAREN:(@(56.16-56.17)",
+                  "rightParen": "RIGHT_PAREN:)@(56.19-56.20)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1881,8 +1881,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:abs@(56.22-56.25)",
-                  "left_paren": "LEFT_PAREN:(@(56.25-56.26)",
-                  "right_paren": "RIGHT_PAREN:)@(56.28-56.29)",
+                  "leftParen": "LEFT_PAREN:(@(56.25-56.26)",
+                  "rightParen": "RIGHT_PAREN:)@(56.28-56.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1898,8 +1898,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:abs@(56.31-56.34)",
-                  "left_paren": "LEFT_PAREN:(@(56.34-56.35)",
-                  "right_paren": "RIGHT_PAREN:)@(56.37-56.38)",
+                  "leftParen": "LEFT_PAREN:(@(56.34-56.35)",
+                  "rightParen": "RIGHT_PAREN:)@(56.37-56.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1915,8 +1915,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sign@(57.5-57.9)",
-                  "left_paren": "LEFT_PAREN:(@(57.9-57.10)",
-                  "right_paren": "RIGHT_PAREN:)@(57.11-57.12)",
+                  "leftParen": "LEFT_PAREN:(@(57.9-57.10)",
+                  "rightParen": "RIGHT_PAREN:)@(57.11-57.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1932,8 +1932,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sign@(57.14-57.18)",
-                  "left_paren": "LEFT_PAREN:(@(57.18-57.19)",
-                  "right_paren": "RIGHT_PAREN:)@(57.21-57.22)",
+                  "leftParen": "LEFT_PAREN:(@(57.18-57.19)",
+                  "rightParen": "RIGHT_PAREN:)@(57.21-57.22)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1949,8 +1949,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sign@(57.24-57.28)",
-                  "left_paren": "LEFT_PAREN:(@(57.28-57.29)",
-                  "right_paren": "RIGHT_PAREN:)@(57.31-57.32)",
+                  "leftParen": "LEFT_PAREN:(@(57.28-57.29)",
+                  "rightParen": "RIGHT_PAREN:)@(57.31-57.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1966,8 +1966,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:sign@(57.34-57.38)",
-                  "left_paren": "LEFT_PAREN:(@(57.38-57.39)",
-                  "right_paren": "RIGHT_PAREN:)@(57.41-57.42)",
+                  "leftParen": "LEFT_PAREN:(@(57.38-57.39)",
+                  "rightParen": "RIGHT_PAREN:)@(57.41-57.42)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -1983,8 +1983,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:floor@(58.5-58.10)",
-                  "left_paren": "LEFT_PAREN:(@(58.10-58.11)",
-                  "right_paren": "RIGHT_PAREN:)@(58.12-58.13)",
+                  "leftParen": "LEFT_PAREN:(@(58.10-58.11)",
+                  "rightParen": "RIGHT_PAREN:)@(58.12-58.13)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2000,8 +2000,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:floor@(58.15-58.20)",
-                  "left_paren": "LEFT_PAREN:(@(58.20-58.21)",
-                  "right_paren": "RIGHT_PAREN:)@(58.23-58.24)",
+                  "leftParen": "LEFT_PAREN:(@(58.20-58.21)",
+                  "rightParen": "RIGHT_PAREN:)@(58.23-58.24)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2017,8 +2017,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:floor@(58.26-58.31)",
-                  "left_paren": "LEFT_PAREN:(@(58.31-58.32)",
-                  "right_paren": "RIGHT_PAREN:)@(58.34-58.35)",
+                  "leftParen": "LEFT_PAREN:(@(58.31-58.32)",
+                  "rightParen": "RIGHT_PAREN:)@(58.34-58.35)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2034,8 +2034,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:floor@(58.37-58.42)",
-                  "left_paren": "LEFT_PAREN:(@(58.42-58.43)",
-                  "right_paren": "RIGHT_PAREN:)@(58.45-58.46)",
+                  "leftParen": "LEFT_PAREN:(@(58.42-58.43)",
+                  "rightParen": "RIGHT_PAREN:)@(58.45-58.46)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2051,8 +2051,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:ceil@(59.5-59.9)",
-                  "left_paren": "LEFT_PAREN:(@(59.9-59.10)",
-                  "right_paren": "RIGHT_PAREN:)@(59.11-59.12)",
+                  "leftParen": "LEFT_PAREN:(@(59.9-59.10)",
+                  "rightParen": "RIGHT_PAREN:)@(59.11-59.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2068,8 +2068,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:ceil@(59.14-59.18)",
-                  "left_paren": "LEFT_PAREN:(@(59.18-59.19)",
-                  "right_paren": "RIGHT_PAREN:)@(59.21-59.22)",
+                  "leftParen": "LEFT_PAREN:(@(59.18-59.19)",
+                  "rightParen": "RIGHT_PAREN:)@(59.21-59.22)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2085,8 +2085,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:ceil@(59.24-59.28)",
-                  "left_paren": "LEFT_PAREN:(@(59.28-59.29)",
-                  "right_paren": "RIGHT_PAREN:)@(59.31-59.32)",
+                  "leftParen": "LEFT_PAREN:(@(59.28-59.29)",
+                  "rightParen": "RIGHT_PAREN:)@(59.31-59.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2102,8 +2102,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:ceil@(59.34-59.38)",
-                  "left_paren": "LEFT_PAREN:(@(59.38-59.39)",
-                  "right_paren": "RIGHT_PAREN:)@(59.41-59.42)",
+                  "leftParen": "LEFT_PAREN:(@(59.38-59.39)",
+                  "rightParen": "RIGHT_PAREN:)@(59.41-59.42)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2119,8 +2119,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:fract@(60.5-60.10)",
-                  "left_paren": "LEFT_PAREN:(@(60.10-60.11)",
-                  "right_paren": "RIGHT_PAREN:)@(60.12-60.13)",
+                  "leftParen": "LEFT_PAREN:(@(60.10-60.11)",
+                  "rightParen": "RIGHT_PAREN:)@(60.12-60.13)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2136,8 +2136,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:fract@(60.15-60.20)",
-                  "left_paren": "LEFT_PAREN:(@(60.20-60.21)",
-                  "right_paren": "RIGHT_PAREN:)@(60.23-60.24)",
+                  "leftParen": "LEFT_PAREN:(@(60.20-60.21)",
+                  "rightParen": "RIGHT_PAREN:)@(60.23-60.24)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2153,8 +2153,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:fract@(60.26-60.31)",
-                  "left_paren": "LEFT_PAREN:(@(60.31-60.32)",
-                  "right_paren": "RIGHT_PAREN:)@(60.34-60.35)",
+                  "leftParen": "LEFT_PAREN:(@(60.31-60.32)",
+                  "rightParen": "RIGHT_PAREN:)@(60.34-60.35)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2170,8 +2170,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:fract@(60.37-60.42)",
-                  "left_paren": "LEFT_PAREN:(@(60.42-60.43)",
-                  "right_paren": "RIGHT_PAREN:)@(60.45-60.46)",
+                  "leftParen": "LEFT_PAREN:(@(60.42-60.43)",
+                  "rightParen": "RIGHT_PAREN:)@(60.45-60.46)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2187,8 +2187,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:mod@(61.5-61.8)",
-                  "left_paren": "LEFT_PAREN:(@(61.8-61.9)",
-                  "right_paren": "RIGHT_PAREN:)@(61.13-61.14)",
+                  "leftParen": "LEFT_PAREN:(@(61.8-61.9)",
+                  "rightParen": "RIGHT_PAREN:)@(61.13-61.14)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2209,8 +2209,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:mod@(61.16-61.19)",
-                  "left_paren": "LEFT_PAREN:(@(61.19-61.20)",
-                  "right_paren": "RIGHT_PAREN:)@(61.26-61.27)",
+                  "leftParen": "LEFT_PAREN:(@(61.19-61.20)",
+                  "rightParen": "RIGHT_PAREN:)@(61.26-61.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2231,8 +2231,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:mod@(61.29-61.32)",
-                  "left_paren": "LEFT_PAREN:(@(61.32-61.33)",
-                  "right_paren": "RIGHT_PAREN:)@(61.39-61.40)",
+                  "leftParen": "LEFT_PAREN:(@(61.32-61.33)",
+                  "rightParen": "RIGHT_PAREN:)@(61.39-61.40)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2253,8 +2253,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:mod@(61.42-61.45)",
-                  "left_paren": "LEFT_PAREN:(@(61.45-61.46)",
-                  "right_paren": "RIGHT_PAREN:)@(61.52-61.53)",
+                  "leftParen": "LEFT_PAREN:(@(61.45-61.46)",
+                  "rightParen": "RIGHT_PAREN:)@(61.52-61.53)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2275,8 +2275,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:min@(62.5-62.8)",
-                  "left_paren": "LEFT_PAREN:(@(62.8-62.9)",
-                  "right_paren": "RIGHT_PAREN:)@(62.13-62.14)",
+                  "leftParen": "LEFT_PAREN:(@(62.8-62.9)",
+                  "rightParen": "RIGHT_PAREN:)@(62.13-62.14)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2297,8 +2297,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:min@(62.16-62.19)",
-                  "left_paren": "LEFT_PAREN:(@(62.19-62.20)",
-                  "right_paren": "RIGHT_PAREN:)@(62.26-62.27)",
+                  "leftParen": "LEFT_PAREN:(@(62.19-62.20)",
+                  "rightParen": "RIGHT_PAREN:)@(62.26-62.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2319,8 +2319,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:min@(62.29-62.32)",
-                  "left_paren": "LEFT_PAREN:(@(62.32-62.33)",
-                  "right_paren": "RIGHT_PAREN:)@(62.39-62.40)",
+                  "leftParen": "LEFT_PAREN:(@(62.32-62.33)",
+                  "rightParen": "RIGHT_PAREN:)@(62.39-62.40)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2341,8 +2341,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:min@(62.42-62.45)",
-                  "left_paren": "LEFT_PAREN:(@(62.45-62.46)",
-                  "right_paren": "RIGHT_PAREN:)@(62.52-62.53)",
+                  "leftParen": "LEFT_PAREN:(@(62.45-62.46)",
+                  "rightParen": "RIGHT_PAREN:)@(62.52-62.53)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2363,8 +2363,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:min@(63.16-63.19)",
-                  "left_paren": "LEFT_PAREN:(@(63.19-63.20)",
-                  "right_paren": "RIGHT_PAREN:)@(63.25-63.26)",
+                  "leftParen": "LEFT_PAREN:(@(63.19-63.20)",
+                  "rightParen": "RIGHT_PAREN:)@(63.25-63.26)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2385,8 +2385,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:min@(63.28-63.31)",
-                  "left_paren": "LEFT_PAREN:(@(63.31-63.32)",
-                  "right_paren": "RIGHT_PAREN:)@(63.37-63.38)",
+                  "leftParen": "LEFT_PAREN:(@(63.31-63.32)",
+                  "rightParen": "RIGHT_PAREN:)@(63.37-63.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2407,8 +2407,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:min@(63.40-63.43)",
-                  "left_paren": "LEFT_PAREN:(@(63.43-63.44)",
-                  "right_paren": "RIGHT_PAREN:)@(63.49-63.50)",
+                  "leftParen": "LEFT_PAREN:(@(63.43-63.44)",
+                  "rightParen": "RIGHT_PAREN:)@(63.49-63.50)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2429,8 +2429,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:max@(64.5-64.8)",
-                  "left_paren": "LEFT_PAREN:(@(64.8-64.9)",
-                  "right_paren": "RIGHT_PAREN:)@(64.13-64.14)",
+                  "leftParen": "LEFT_PAREN:(@(64.8-64.9)",
+                  "rightParen": "RIGHT_PAREN:)@(64.13-64.14)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2451,8 +2451,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:max@(64.16-64.19)",
-                  "left_paren": "LEFT_PAREN:(@(64.19-64.20)",
-                  "right_paren": "RIGHT_PAREN:)@(64.26-64.27)",
+                  "leftParen": "LEFT_PAREN:(@(64.19-64.20)",
+                  "rightParen": "RIGHT_PAREN:)@(64.26-64.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2473,8 +2473,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:max@(64.29-64.32)",
-                  "left_paren": "LEFT_PAREN:(@(64.32-64.33)",
-                  "right_paren": "RIGHT_PAREN:)@(64.39-64.40)",
+                  "leftParen": "LEFT_PAREN:(@(64.32-64.33)",
+                  "rightParen": "RIGHT_PAREN:)@(64.39-64.40)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2495,8 +2495,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:max@(64.42-64.45)",
-                  "left_paren": "LEFT_PAREN:(@(64.45-64.46)",
-                  "right_paren": "RIGHT_PAREN:)@(64.52-64.53)",
+                  "leftParen": "LEFT_PAREN:(@(64.45-64.46)",
+                  "rightParen": "RIGHT_PAREN:)@(64.52-64.53)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2517,8 +2517,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:max@(65.16-65.19)",
-                  "left_paren": "LEFT_PAREN:(@(65.19-65.20)",
-                  "right_paren": "RIGHT_PAREN:)@(65.25-65.26)",
+                  "leftParen": "LEFT_PAREN:(@(65.19-65.20)",
+                  "rightParen": "RIGHT_PAREN:)@(65.25-65.26)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2539,8 +2539,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:max@(65.28-65.31)",
-                  "left_paren": "LEFT_PAREN:(@(65.31-65.32)",
-                  "right_paren": "RIGHT_PAREN:)@(65.37-65.38)",
+                  "leftParen": "LEFT_PAREN:(@(65.31-65.32)",
+                  "rightParen": "RIGHT_PAREN:)@(65.37-65.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2561,8 +2561,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:max@(65.40-65.43)",
-                  "left_paren": "LEFT_PAREN:(@(65.43-65.44)",
-                  "right_paren": "RIGHT_PAREN:)@(65.49-65.50)",
+                  "leftParen": "LEFT_PAREN:(@(65.43-65.44)",
+                  "rightParen": "RIGHT_PAREN:)@(65.49-65.50)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2583,8 +2583,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:clamp@(66.5-66.10)",
-                  "left_paren": "LEFT_PAREN:(@(66.10-66.11)",
-                  "right_paren": "RIGHT_PAREN:)@(66.18-66.19)",
+                  "leftParen": "LEFT_PAREN:(@(66.10-66.11)",
+                  "rightParen": "RIGHT_PAREN:)@(66.18-66.19)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2610,8 +2610,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:clamp@(66.21-66.26)",
-                  "left_paren": "LEFT_PAREN:(@(66.26-66.27)",
-                  "right_paren": "RIGHT_PAREN:)@(66.37-66.38)",
+                  "leftParen": "LEFT_PAREN:(@(66.26-66.27)",
+                  "rightParen": "RIGHT_PAREN:)@(66.37-66.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2637,8 +2637,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:clamp@(66.40-66.45)",
-                  "left_paren": "LEFT_PAREN:(@(66.45-66.46)",
-                  "right_paren": "RIGHT_PAREN:)@(66.56-66.57)",
+                  "leftParen": "LEFT_PAREN:(@(66.45-66.46)",
+                  "rightParen": "RIGHT_PAREN:)@(66.56-66.57)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2664,8 +2664,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:clamp@(66.59-66.64)",
-                  "left_paren": "LEFT_PAREN:(@(66.64-66.65)",
-                  "right_paren": "RIGHT_PAREN:)@(66.75-66.76)",
+                  "leftParen": "LEFT_PAREN:(@(66.64-66.65)",
+                  "rightParen": "RIGHT_PAREN:)@(66.75-66.76)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2691,8 +2691,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:clamp@(67.21-67.26)",
-                  "left_paren": "LEFT_PAREN:(@(67.26-67.27)",
-                  "right_paren": "RIGHT_PAREN:)@(67.35-67.36)",
+                  "leftParen": "LEFT_PAREN:(@(67.26-67.27)",
+                  "rightParen": "RIGHT_PAREN:)@(67.35-67.36)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2718,8 +2718,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:clamp@(67.38-67.43)",
-                  "left_paren": "LEFT_PAREN:(@(67.43-67.44)",
-                  "right_paren": "RIGHT_PAREN:)@(67.52-67.53)",
+                  "leftParen": "LEFT_PAREN:(@(67.43-67.44)",
+                  "rightParen": "RIGHT_PAREN:)@(67.52-67.53)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2745,8 +2745,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:clamp@(67.55-67.60)",
-                  "left_paren": "LEFT_PAREN:(@(67.60-67.61)",
-                  "right_paren": "RIGHT_PAREN:)@(67.69-67.70)",
+                  "leftParen": "LEFT_PAREN:(@(67.60-67.61)",
+                  "rightParen": "RIGHT_PAREN:)@(67.69-67.70)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2772,8 +2772,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:step@(68.5-68.9)",
-                  "left_paren": "LEFT_PAREN:(@(68.9-68.10)",
-                  "right_paren": "RIGHT_PAREN:)@(68.14-68.15)",
+                  "leftParen": "LEFT_PAREN:(@(68.9-68.10)",
+                  "rightParen": "RIGHT_PAREN:)@(68.14-68.15)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2794,8 +2794,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:step@(68.17-68.21)",
-                  "left_paren": "LEFT_PAREN:(@(68.21-68.22)",
-                  "right_paren": "RIGHT_PAREN:)@(68.28-68.29)",
+                  "leftParen": "LEFT_PAREN:(@(68.21-68.22)",
+                  "rightParen": "RIGHT_PAREN:)@(68.28-68.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2816,8 +2816,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:step@(68.31-68.35)",
-                  "left_paren": "LEFT_PAREN:(@(68.35-68.36)",
-                  "right_paren": "RIGHT_PAREN:)@(68.42-68.43)",
+                  "leftParen": "LEFT_PAREN:(@(68.35-68.36)",
+                  "rightParen": "RIGHT_PAREN:)@(68.42-68.43)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2838,8 +2838,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:step@(68.45-68.49)",
-                  "left_paren": "LEFT_PAREN:(@(68.49-68.50)",
-                  "right_paren": "RIGHT_PAREN:)@(68.56-68.57)",
+                  "leftParen": "LEFT_PAREN:(@(68.49-68.50)",
+                  "rightParen": "RIGHT_PAREN:)@(68.56-68.57)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2860,8 +2860,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:step@(69.17-69.21)",
-                  "left_paren": "LEFT_PAREN:(@(69.21-69.22)",
-                  "right_paren": "RIGHT_PAREN:)@(69.27-69.28)",
+                  "leftParen": "LEFT_PAREN:(@(69.21-69.22)",
+                  "rightParen": "RIGHT_PAREN:)@(69.27-69.28)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2882,8 +2882,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:step@(69.30-69.34)",
-                  "left_paren": "LEFT_PAREN:(@(69.34-69.35)",
-                  "right_paren": "RIGHT_PAREN:)@(69.40-69.41)",
+                  "leftParen": "LEFT_PAREN:(@(69.34-69.35)",
+                  "rightParen": "RIGHT_PAREN:)@(69.40-69.41)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2904,8 +2904,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:step@(69.43-69.47)",
-                  "left_paren": "LEFT_PAREN:(@(69.47-69.48)",
-                  "right_paren": "RIGHT_PAREN:)@(69.53-69.54)",
+                  "leftParen": "LEFT_PAREN:(@(69.47-69.48)",
+                  "rightParen": "RIGHT_PAREN:)@(69.53-69.54)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2926,8 +2926,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(70.5-70.15)",
-                  "left_paren": "LEFT_PAREN:(@(70.15-70.16)",
-                  "right_paren": "RIGHT_PAREN:)@(70.23-70.24)",
+                  "leftParen": "LEFT_PAREN:(@(70.15-70.16)",
+                  "rightParen": "RIGHT_PAREN:)@(70.23-70.24)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2953,8 +2953,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(70.26-70.36)",
-                  "left_paren": "LEFT_PAREN:(@(70.36-70.37)",
-                  "right_paren": "RIGHT_PAREN:)@(70.47-70.48)",
+                  "leftParen": "LEFT_PAREN:(@(70.36-70.37)",
+                  "rightParen": "RIGHT_PAREN:)@(70.47-70.48)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -2980,8 +2980,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(70.50-70.60)",
-                  "left_paren": "LEFT_PAREN:(@(70.60-70.61)",
-                  "right_paren": "RIGHT_PAREN:)@(70.71-70.72)",
+                  "leftParen": "LEFT_PAREN:(@(70.60-70.61)",
+                  "rightParen": "RIGHT_PAREN:)@(70.71-70.72)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3007,8 +3007,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(70.74-70.84)",
-                  "left_paren": "LEFT_PAREN:(@(70.84-70.85)",
-                  "right_paren": "RIGHT_PAREN:)@(70.95-70.96)",
+                  "leftParen": "LEFT_PAREN:(@(70.84-70.85)",
+                  "rightParen": "RIGHT_PAREN:)@(70.95-70.96)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3034,8 +3034,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(71.23-71.33)",
-                  "left_paren": "LEFT_PAREN:(@(71.33-71.34)",
-                  "right_paren": "RIGHT_PAREN:)@(71.42-71.43)",
+                  "leftParen": "LEFT_PAREN:(@(71.33-71.34)",
+                  "rightParen": "RIGHT_PAREN:)@(71.42-71.43)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3061,8 +3061,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(71.45-71.55)",
-                  "left_paren": "LEFT_PAREN:(@(71.55-71.56)",
-                  "right_paren": "RIGHT_PAREN:)@(71.64-71.65)",
+                  "leftParen": "LEFT_PAREN:(@(71.55-71.56)",
+                  "rightParen": "RIGHT_PAREN:)@(71.64-71.65)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3088,8 +3088,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:smoothstep@(71.67-71.77)",
-                  "left_paren": "LEFT_PAREN:(@(71.77-71.78)",
-                  "right_paren": "RIGHT_PAREN:)@(71.86-71.87)",
+                  "leftParen": "LEFT_PAREN:(@(71.77-71.78)",
+                  "rightParen": "RIGHT_PAREN:)@(71.86-71.87)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3118,8 +3118,8 @@
                     "IDENTIFIER:length@(74.5-74.11)",
                     "COMMENT:// Geometric Functions@(73.5-73.27), multi:false =  Geometric Functions"
                   ],
-                  "left_paren": "LEFT_PAREN:(@(74.11-74.12)",
-                  "right_paren": "RIGHT_PAREN:)@(74.13-74.14)",
+                  "leftParen": "LEFT_PAREN:(@(74.11-74.12)",
+                  "rightParen": "RIGHT_PAREN:)@(74.13-74.14)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3135,8 +3135,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:length@(74.16-74.22)",
-                  "left_paren": "LEFT_PAREN:(@(74.22-74.23)",
-                  "right_paren": "RIGHT_PAREN:)@(74.25-74.26)",
+                  "leftParen": "LEFT_PAREN:(@(74.22-74.23)",
+                  "rightParen": "RIGHT_PAREN:)@(74.25-74.26)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3152,8 +3152,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:length@(74.28-74.34)",
-                  "left_paren": "LEFT_PAREN:(@(74.34-74.35)",
-                  "right_paren": "RIGHT_PAREN:)@(74.37-74.38)",
+                  "leftParen": "LEFT_PAREN:(@(74.34-74.35)",
+                  "rightParen": "RIGHT_PAREN:)@(74.37-74.38)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3169,8 +3169,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:length@(74.40-74.46)",
-                  "left_paren": "LEFT_PAREN:(@(74.46-74.47)",
-                  "right_paren": "RIGHT_PAREN:)@(74.49-74.50)",
+                  "leftParen": "LEFT_PAREN:(@(74.46-74.47)",
+                  "rightParen": "RIGHT_PAREN:)@(74.49-74.50)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3186,8 +3186,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:distance@(75.5-75.13)",
-                  "left_paren": "LEFT_PAREN:(@(75.13-75.14)",
-                  "right_paren": "RIGHT_PAREN:)@(75.18-75.19)",
+                  "leftParen": "LEFT_PAREN:(@(75.13-75.14)",
+                  "rightParen": "RIGHT_PAREN:)@(75.18-75.19)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3208,8 +3208,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:distance@(75.21-75.29)",
-                  "left_paren": "LEFT_PAREN:(@(75.29-75.30)",
-                  "right_paren": "RIGHT_PAREN:)@(75.36-75.37)",
+                  "leftParen": "LEFT_PAREN:(@(75.29-75.30)",
+                  "rightParen": "RIGHT_PAREN:)@(75.36-75.37)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3230,8 +3230,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:distance@(75.39-75.47)",
-                  "left_paren": "LEFT_PAREN:(@(75.47-75.48)",
-                  "right_paren": "RIGHT_PAREN:)@(75.54-75.55)",
+                  "leftParen": "LEFT_PAREN:(@(75.47-75.48)",
+                  "rightParen": "RIGHT_PAREN:)@(75.54-75.55)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3252,8 +3252,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:distance@(75.57-75.65)",
-                  "left_paren": "LEFT_PAREN:(@(75.65-75.66)",
-                  "right_paren": "RIGHT_PAREN:)@(75.72-75.73)",
+                  "leftParen": "LEFT_PAREN:(@(75.65-75.66)",
+                  "rightParen": "RIGHT_PAREN:)@(75.72-75.73)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3274,8 +3274,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:dot@(76.5-76.8)",
-                  "left_paren": "LEFT_PAREN:(@(76.8-76.9)",
-                  "right_paren": "RIGHT_PAREN:)@(76.13-76.14)",
+                  "leftParen": "LEFT_PAREN:(@(76.8-76.9)",
+                  "rightParen": "RIGHT_PAREN:)@(76.13-76.14)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3296,8 +3296,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:dot@(76.16-76.19)",
-                  "left_paren": "LEFT_PAREN:(@(76.19-76.20)",
-                  "right_paren": "RIGHT_PAREN:)@(76.26-76.27)",
+                  "leftParen": "LEFT_PAREN:(@(76.19-76.20)",
+                  "rightParen": "RIGHT_PAREN:)@(76.26-76.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3318,8 +3318,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:dot@(76.29-76.32)",
-                  "left_paren": "LEFT_PAREN:(@(76.32-76.33)",
-                  "right_paren": "RIGHT_PAREN:)@(76.39-76.40)",
+                  "leftParen": "LEFT_PAREN:(@(76.32-76.33)",
+                  "rightParen": "RIGHT_PAREN:)@(76.39-76.40)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3340,8 +3340,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:dot@(76.42-76.45)",
-                  "left_paren": "LEFT_PAREN:(@(76.45-76.46)",
-                  "right_paren": "RIGHT_PAREN:)@(76.52-76.53)",
+                  "leftParen": "LEFT_PAREN:(@(76.45-76.46)",
+                  "rightParen": "RIGHT_PAREN:)@(76.52-76.53)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3362,8 +3362,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:cross@(77.5-77.10)",
-                  "left_paren": "LEFT_PAREN:(@(77.10-77.11)",
-                  "right_paren": "RIGHT_PAREN:)@(77.17-77.18)",
+                  "leftParen": "LEFT_PAREN:(@(77.10-77.11)",
+                  "rightParen": "RIGHT_PAREN:)@(77.17-77.18)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3384,8 +3384,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:normalize@(78.5-78.14)",
-                  "left_paren": "LEFT_PAREN:(@(78.14-78.15)",
-                  "right_paren": "RIGHT_PAREN:)@(78.16-78.17)",
+                  "leftParen": "LEFT_PAREN:(@(78.14-78.15)",
+                  "rightParen": "RIGHT_PAREN:)@(78.16-78.17)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3401,8 +3401,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:normalize@(78.19-78.28)",
-                  "left_paren": "LEFT_PAREN:(@(78.28-78.29)",
-                  "right_paren": "RIGHT_PAREN:)@(78.31-78.32)",
+                  "leftParen": "LEFT_PAREN:(@(78.28-78.29)",
+                  "rightParen": "RIGHT_PAREN:)@(78.31-78.32)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3418,8 +3418,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:normalize@(78.34-78.43)",
-                  "left_paren": "LEFT_PAREN:(@(78.43-78.44)",
-                  "right_paren": "RIGHT_PAREN:)@(78.46-78.47)",
+                  "leftParen": "LEFT_PAREN:(@(78.43-78.44)",
+                  "rightParen": "RIGHT_PAREN:)@(78.46-78.47)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3435,8 +3435,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:normalize@(78.49-78.58)",
-                  "left_paren": "LEFT_PAREN:(@(78.58-78.59)",
-                  "right_paren": "RIGHT_PAREN:)@(78.61-78.62)",
+                  "leftParen": "LEFT_PAREN:(@(78.58-78.59)",
+                  "rightParen": "RIGHT_PAREN:)@(78.61-78.62)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3452,8 +3452,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:faceforward@(79.5-79.16)",
-                  "left_paren": "LEFT_PAREN:(@(79.16-79.17)",
-                  "right_paren": "RIGHT_PAREN:)@(79.24-79.25)",
+                  "leftParen": "LEFT_PAREN:(@(79.16-79.17)",
+                  "rightParen": "RIGHT_PAREN:)@(79.24-79.25)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3479,8 +3479,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:faceforward@(79.27-79.38)",
-                  "left_paren": "LEFT_PAREN:(@(79.38-79.39)",
-                  "right_paren": "RIGHT_PAREN:)@(79.49-79.50)",
+                  "leftParen": "LEFT_PAREN:(@(79.38-79.39)",
+                  "rightParen": "RIGHT_PAREN:)@(79.49-79.50)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3506,8 +3506,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:faceforward@(79.52-79.63)",
-                  "left_paren": "LEFT_PAREN:(@(79.63-79.64)",
-                  "right_paren": "RIGHT_PAREN:)@(79.74-79.75)",
+                  "leftParen": "LEFT_PAREN:(@(79.63-79.64)",
+                  "rightParen": "RIGHT_PAREN:)@(79.74-79.75)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3533,8 +3533,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:faceforward@(79.77-79.88)",
-                  "left_paren": "LEFT_PAREN:(@(79.88-79.89)",
-                  "right_paren": "RIGHT_PAREN:)@(79.99-79.100)",
+                  "leftParen": "LEFT_PAREN:(@(79.88-79.89)",
+                  "rightParen": "RIGHT_PAREN:)@(79.99-79.100)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3560,8 +3560,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:reflect@(80.5-80.12)",
-                  "left_paren": "LEFT_PAREN:(@(80.12-80.13)",
-                  "right_paren": "RIGHT_PAREN:)@(80.17-80.18)",
+                  "leftParen": "LEFT_PAREN:(@(80.12-80.13)",
+                  "rightParen": "RIGHT_PAREN:)@(80.17-80.18)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3582,8 +3582,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:reflect@(80.20-80.27)",
-                  "left_paren": "LEFT_PAREN:(@(80.27-80.28)",
-                  "right_paren": "RIGHT_PAREN:)@(80.34-80.35)",
+                  "leftParen": "LEFT_PAREN:(@(80.27-80.28)",
+                  "rightParen": "RIGHT_PAREN:)@(80.34-80.35)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3604,8 +3604,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:reflect@(80.37-80.44)",
-                  "left_paren": "LEFT_PAREN:(@(80.44-80.45)",
-                  "right_paren": "RIGHT_PAREN:)@(80.51-80.52)",
+                  "leftParen": "LEFT_PAREN:(@(80.44-80.45)",
+                  "rightParen": "RIGHT_PAREN:)@(80.51-80.52)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3626,8 +3626,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:reflect@(80.54-80.61)",
-                  "left_paren": "LEFT_PAREN:(@(80.61-80.62)",
-                  "right_paren": "RIGHT_PAREN:)@(80.68-80.69)",
+                  "leftParen": "LEFT_PAREN:(@(80.61-80.62)",
+                  "rightParen": "RIGHT_PAREN:)@(80.68-80.69)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3648,8 +3648,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:refract@(81.5-81.12)",
-                  "left_paren": "LEFT_PAREN:(@(81.12-81.13)",
-                  "right_paren": "RIGHT_PAREN:)@(81.20-81.21)",
+                  "leftParen": "LEFT_PAREN:(@(81.12-81.13)",
+                  "rightParen": "RIGHT_PAREN:)@(81.20-81.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3675,8 +3675,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:refract@(81.23-81.30)",
-                  "left_paren": "LEFT_PAREN:(@(81.30-81.31)",
-                  "right_paren": "RIGHT_PAREN:)@(81.40-81.41)",
+                  "leftParen": "LEFT_PAREN:(@(81.30-81.31)",
+                  "rightParen": "RIGHT_PAREN:)@(81.40-81.41)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3702,8 +3702,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:refract@(81.43-81.50)",
-                  "left_paren": "LEFT_PAREN:(@(81.50-81.51)",
-                  "right_paren": "RIGHT_PAREN:)@(81.60-81.61)",
+                  "leftParen": "LEFT_PAREN:(@(81.50-81.51)",
+                  "rightParen": "RIGHT_PAREN:)@(81.60-81.61)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3729,8 +3729,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:refract@(81.63-81.70)",
-                  "left_paren": "LEFT_PAREN:(@(81.70-81.71)",
-                  "right_paren": "RIGHT_PAREN:)@(81.80-81.81)",
+                  "leftParen": "LEFT_PAREN:(@(81.70-81.71)",
+                  "rightParen": "RIGHT_PAREN:)@(81.80-81.81)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3759,8 +3759,8 @@
                     "IDENTIFIER:matrixCompMult@(84.5-84.19)",
                     "COMMENT:// Matrix Functions@(83.5-83.24), multi:false =  Matrix Functions"
                   ],
-                  "left_paren": "LEFT_PAREN:(@(84.19-84.20)",
-                  "right_paren": "RIGHT_PAREN:)@(84.26-84.27)",
+                  "leftParen": "LEFT_PAREN:(@(84.19-84.20)",
+                  "rightParen": "RIGHT_PAREN:)@(84.26-84.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3781,8 +3781,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:matrixCompMult@(84.29-84.43)",
-                  "left_paren": "LEFT_PAREN:(@(84.43-84.44)",
-                  "right_paren": "RIGHT_PAREN:)@(84.50-84.51)",
+                  "leftParen": "LEFT_PAREN:(@(84.43-84.44)",
+                  "rightParen": "RIGHT_PAREN:)@(84.50-84.51)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3803,8 +3803,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:matrixCompMult@(84.53-84.67)",
-                  "left_paren": "LEFT_PAREN:(@(84.67-84.68)",
-                  "right_paren": "RIGHT_PAREN:)@(84.74-84.75)",
+                  "leftParen": "LEFT_PAREN:(@(84.67-84.68)",
+                  "rightParen": "RIGHT_PAREN:)@(84.74-84.75)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3828,8 +3828,8 @@
                     "IDENTIFIER:lessThan@(87.5-87.13)",
                     "COMMENT:// Vector Relational Functions@(86.5-86.35), multi:false =  Vector Relational Functions"
                   ],
-                  "left_paren": "LEFT_PAREN:(@(87.13-87.14)",
-                  "right_paren": "RIGHT_PAREN:)@(87.20-87.21)",
+                  "leftParen": "LEFT_PAREN:(@(87.13-87.14)",
+                  "rightParen": "RIGHT_PAREN:)@(87.20-87.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3850,8 +3850,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThan@(87.23-87.31)",
-                  "left_paren": "LEFT_PAREN:(@(87.31-87.32)",
-                  "right_paren": "RIGHT_PAREN:)@(87.38-87.39)",
+                  "leftParen": "LEFT_PAREN:(@(87.31-87.32)",
+                  "rightParen": "RIGHT_PAREN:)@(87.38-87.39)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3872,8 +3872,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThan@(87.41-87.49)",
-                  "left_paren": "LEFT_PAREN:(@(87.49-87.50)",
-                  "right_paren": "RIGHT_PAREN:)@(87.56-87.57)",
+                  "leftParen": "LEFT_PAREN:(@(87.49-87.50)",
+                  "rightParen": "RIGHT_PAREN:)@(87.56-87.57)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3894,8 +3894,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThan@(88.5-88.13)",
-                  "left_paren": "LEFT_PAREN:(@(88.13-88.14)",
-                  "right_paren": "RIGHT_PAREN:)@(88.20-88.21)",
+                  "leftParen": "LEFT_PAREN:(@(88.13-88.14)",
+                  "rightParen": "RIGHT_PAREN:)@(88.20-88.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3916,8 +3916,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThan@(88.23-88.31)",
-                  "left_paren": "LEFT_PAREN:(@(88.31-88.32)",
-                  "right_paren": "RIGHT_PAREN:)@(88.38-88.39)",
+                  "leftParen": "LEFT_PAREN:(@(88.31-88.32)",
+                  "rightParen": "RIGHT_PAREN:)@(88.38-88.39)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3938,8 +3938,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThan@(88.41-88.49)",
-                  "left_paren": "LEFT_PAREN:(@(88.49-88.50)",
-                  "right_paren": "RIGHT_PAREN:)@(88.56-88.57)",
+                  "leftParen": "LEFT_PAREN:(@(88.49-88.50)",
+                  "rightParen": "RIGHT_PAREN:)@(88.56-88.57)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3960,8 +3960,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThanEqual@(89.5-89.18)",
-                  "left_paren": "LEFT_PAREN:(@(89.18-89.19)",
-                  "right_paren": "RIGHT_PAREN:)@(89.25-89.26)",
+                  "leftParen": "LEFT_PAREN:(@(89.18-89.19)",
+                  "rightParen": "RIGHT_PAREN:)@(89.25-89.26)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -3982,8 +3982,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThanEqual@(89.28-89.41)",
-                  "left_paren": "LEFT_PAREN:(@(89.41-89.42)",
-                  "right_paren": "RIGHT_PAREN:)@(89.48-89.49)",
+                  "leftParen": "LEFT_PAREN:(@(89.41-89.42)",
+                  "rightParen": "RIGHT_PAREN:)@(89.48-89.49)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4004,8 +4004,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThanEqual@(89.51-89.64)",
-                  "left_paren": "LEFT_PAREN:(@(89.64-89.65)",
-                  "right_paren": "RIGHT_PAREN:)@(89.71-89.72)",
+                  "leftParen": "LEFT_PAREN:(@(89.64-89.65)",
+                  "rightParen": "RIGHT_PAREN:)@(89.71-89.72)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4026,8 +4026,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThanEqual@(90.5-90.18)",
-                  "left_paren": "LEFT_PAREN:(@(90.18-90.19)",
-                  "right_paren": "RIGHT_PAREN:)@(90.25-90.26)",
+                  "leftParen": "LEFT_PAREN:(@(90.18-90.19)",
+                  "rightParen": "RIGHT_PAREN:)@(90.25-90.26)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4048,8 +4048,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThanEqual@(90.28-90.41)",
-                  "left_paren": "LEFT_PAREN:(@(90.41-90.42)",
-                  "right_paren": "RIGHT_PAREN:)@(90.48-90.49)",
+                  "leftParen": "LEFT_PAREN:(@(90.41-90.42)",
+                  "rightParen": "RIGHT_PAREN:)@(90.48-90.49)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4070,8 +4070,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:lessThanEqual@(90.51-90.64)",
-                  "left_paren": "LEFT_PAREN:(@(90.64-90.65)",
-                  "right_paren": "RIGHT_PAREN:)@(90.71-90.72)",
+                  "leftParen": "LEFT_PAREN:(@(90.64-90.65)",
+                  "rightParen": "RIGHT_PAREN:)@(90.71-90.72)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4092,8 +4092,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThan@(91.5-91.16)",
-                  "left_paren": "LEFT_PAREN:(@(91.16-91.17)",
-                  "right_paren": "RIGHT_PAREN:)@(91.23-91.24)",
+                  "leftParen": "LEFT_PAREN:(@(91.16-91.17)",
+                  "rightParen": "RIGHT_PAREN:)@(91.23-91.24)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4114,8 +4114,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThan@(91.26-91.37)",
-                  "left_paren": "LEFT_PAREN:(@(91.37-91.38)",
-                  "right_paren": "RIGHT_PAREN:)@(91.44-91.45)",
+                  "leftParen": "LEFT_PAREN:(@(91.37-91.38)",
+                  "rightParen": "RIGHT_PAREN:)@(91.44-91.45)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4136,8 +4136,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThan@(91.47-91.58)",
-                  "left_paren": "LEFT_PAREN:(@(91.58-91.59)",
-                  "right_paren": "RIGHT_PAREN:)@(91.65-91.66)",
+                  "leftParen": "LEFT_PAREN:(@(91.58-91.59)",
+                  "rightParen": "RIGHT_PAREN:)@(91.65-91.66)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4158,8 +4158,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThan@(92.5-92.16)",
-                  "left_paren": "LEFT_PAREN:(@(92.16-92.17)",
-                  "right_paren": "RIGHT_PAREN:)@(92.23-92.24)",
+                  "leftParen": "LEFT_PAREN:(@(92.16-92.17)",
+                  "rightParen": "RIGHT_PAREN:)@(92.23-92.24)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4180,8 +4180,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThan@(92.26-92.37)",
-                  "left_paren": "LEFT_PAREN:(@(92.37-92.38)",
-                  "right_paren": "RIGHT_PAREN:)@(92.44-92.45)",
+                  "leftParen": "LEFT_PAREN:(@(92.37-92.38)",
+                  "rightParen": "RIGHT_PAREN:)@(92.44-92.45)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4202,8 +4202,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThan@(92.47-92.58)",
-                  "left_paren": "LEFT_PAREN:(@(92.58-92.59)",
-                  "right_paren": "RIGHT_PAREN:)@(92.65-92.66)",
+                  "leftParen": "LEFT_PAREN:(@(92.58-92.59)",
+                  "rightParen": "RIGHT_PAREN:)@(92.65-92.66)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4224,8 +4224,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThanEqual@(93.5-93.21)",
-                  "left_paren": "LEFT_PAREN:(@(93.21-93.22)",
-                  "right_paren": "RIGHT_PAREN:)@(93.28-93.29)",
+                  "leftParen": "LEFT_PAREN:(@(93.21-93.22)",
+                  "rightParen": "RIGHT_PAREN:)@(93.28-93.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4246,8 +4246,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThanEqual@(93.31-93.47)",
-                  "left_paren": "LEFT_PAREN:(@(93.47-93.48)",
-                  "right_paren": "RIGHT_PAREN:)@(93.54-93.55)",
+                  "leftParen": "LEFT_PAREN:(@(93.47-93.48)",
+                  "rightParen": "RIGHT_PAREN:)@(93.54-93.55)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4268,8 +4268,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThanEqual@(93.57-93.73)",
-                  "left_paren": "LEFT_PAREN:(@(93.73-93.74)",
-                  "right_paren": "RIGHT_PAREN:)@(93.80-93.81)",
+                  "leftParen": "LEFT_PAREN:(@(93.73-93.74)",
+                  "rightParen": "RIGHT_PAREN:)@(93.80-93.81)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4290,8 +4290,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThanEqual@(94.5-94.21)",
-                  "left_paren": "LEFT_PAREN:(@(94.21-94.22)",
-                  "right_paren": "RIGHT_PAREN:)@(94.28-94.29)",
+                  "leftParen": "LEFT_PAREN:(@(94.21-94.22)",
+                  "rightParen": "RIGHT_PAREN:)@(94.28-94.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4312,8 +4312,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThanEqual@(94.31-94.47)",
-                  "left_paren": "LEFT_PAREN:(@(94.47-94.48)",
-                  "right_paren": "RIGHT_PAREN:)@(94.54-94.55)",
+                  "leftParen": "LEFT_PAREN:(@(94.47-94.48)",
+                  "rightParen": "RIGHT_PAREN:)@(94.54-94.55)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4334,8 +4334,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:greaterThanEqual@(94.57-94.73)",
-                  "left_paren": "LEFT_PAREN:(@(94.73-94.74)",
-                  "right_paren": "RIGHT_PAREN:)@(94.80-94.81)",
+                  "leftParen": "LEFT_PAREN:(@(94.73-94.74)",
+                  "rightParen": "RIGHT_PAREN:)@(94.80-94.81)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4356,8 +4356,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:equal@(95.5-95.10)",
-                  "left_paren": "LEFT_PAREN:(@(95.10-95.11)",
-                  "right_paren": "RIGHT_PAREN:)@(95.17-95.18)",
+                  "leftParen": "LEFT_PAREN:(@(95.10-95.11)",
+                  "rightParen": "RIGHT_PAREN:)@(95.17-95.18)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4378,8 +4378,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:equal@(95.20-95.25)",
-                  "left_paren": "LEFT_PAREN:(@(95.25-95.26)",
-                  "right_paren": "RIGHT_PAREN:)@(95.32-95.33)",
+                  "leftParen": "LEFT_PAREN:(@(95.25-95.26)",
+                  "rightParen": "RIGHT_PAREN:)@(95.32-95.33)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4400,8 +4400,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:equal@(95.35-95.40)",
-                  "left_paren": "LEFT_PAREN:(@(95.40-95.41)",
-                  "right_paren": "RIGHT_PAREN:)@(95.47-95.48)",
+                  "leftParen": "LEFT_PAREN:(@(95.40-95.41)",
+                  "rightParen": "RIGHT_PAREN:)@(95.47-95.48)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4422,8 +4422,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:equal@(96.5-96.10)",
-                  "left_paren": "LEFT_PAREN:(@(96.10-96.11)",
-                  "right_paren": "RIGHT_PAREN:)@(96.17-96.18)",
+                  "leftParen": "LEFT_PAREN:(@(96.10-96.11)",
+                  "rightParen": "RIGHT_PAREN:)@(96.17-96.18)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4444,8 +4444,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:equal@(96.20-96.25)",
-                  "left_paren": "LEFT_PAREN:(@(96.25-96.26)",
-                  "right_paren": "RIGHT_PAREN:)@(96.32-96.33)",
+                  "leftParen": "LEFT_PAREN:(@(96.25-96.26)",
+                  "rightParen": "RIGHT_PAREN:)@(96.32-96.33)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4466,8 +4466,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:equal@(96.35-96.40)",
-                  "left_paren": "LEFT_PAREN:(@(96.40-96.41)",
-                  "right_paren": "RIGHT_PAREN:)@(96.47-96.48)",
+                  "leftParen": "LEFT_PAREN:(@(96.40-96.41)",
+                  "rightParen": "RIGHT_PAREN:)@(96.47-96.48)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4488,8 +4488,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(97.5-97.13)",
-                  "left_paren": "LEFT_PAREN:(@(97.13-97.14)",
-                  "right_paren": "RIGHT_PAREN:)@(97.20-97.21)",
+                  "leftParen": "LEFT_PAREN:(@(97.13-97.14)",
+                  "rightParen": "RIGHT_PAREN:)@(97.20-97.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4510,8 +4510,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(97.23-97.31)",
-                  "left_paren": "LEFT_PAREN:(@(97.31-97.32)",
-                  "right_paren": "RIGHT_PAREN:)@(97.38-97.39)",
+                  "leftParen": "LEFT_PAREN:(@(97.31-97.32)",
+                  "rightParen": "RIGHT_PAREN:)@(97.38-97.39)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4532,8 +4532,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(97.41-97.49)",
-                  "left_paren": "LEFT_PAREN:(@(97.49-97.50)",
-                  "right_paren": "RIGHT_PAREN:)@(97.56-97.57)",
+                  "leftParen": "LEFT_PAREN:(@(97.49-97.50)",
+                  "rightParen": "RIGHT_PAREN:)@(97.56-97.57)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4554,8 +4554,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(98.5-98.13)",
-                  "left_paren": "LEFT_PAREN:(@(98.13-98.14)",
-                  "right_paren": "RIGHT_PAREN:)@(98.20-98.21)",
+                  "leftParen": "LEFT_PAREN:(@(98.13-98.14)",
+                  "rightParen": "RIGHT_PAREN:)@(98.20-98.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4576,8 +4576,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(98.23-98.31)",
-                  "left_paren": "LEFT_PAREN:(@(98.31-98.32)",
-                  "right_paren": "RIGHT_PAREN:)@(98.38-98.39)",
+                  "leftParen": "LEFT_PAREN:(@(98.31-98.32)",
+                  "rightParen": "RIGHT_PAREN:)@(98.38-98.39)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4598,8 +4598,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(98.41-98.49)",
-                  "left_paren": "LEFT_PAREN:(@(98.49-98.50)",
-                  "right_paren": "RIGHT_PAREN:)@(98.56-98.57)",
+                  "leftParen": "LEFT_PAREN:(@(98.49-98.50)",
+                  "rightParen": "RIGHT_PAREN:)@(98.56-98.57)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4620,8 +4620,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(99.5-99.13)",
-                  "left_paren": "LEFT_PAREN:(@(99.13-99.14)",
-                  "right_paren": "RIGHT_PAREN:)@(99.20-99.21)",
+                  "leftParen": "LEFT_PAREN:(@(99.13-99.14)",
+                  "rightParen": "RIGHT_PAREN:)@(99.20-99.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4642,8 +4642,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(99.23-99.31)",
-                  "left_paren": "LEFT_PAREN:(@(99.31-99.32)",
-                  "right_paren": "RIGHT_PAREN:)@(99.38-99.39)",
+                  "leftParen": "LEFT_PAREN:(@(99.31-99.32)",
+                  "rightParen": "RIGHT_PAREN:)@(99.38-99.39)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4664,8 +4664,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:notEqual@(99.41-99.49)",
-                  "left_paren": "LEFT_PAREN:(@(99.49-99.50)",
-                  "right_paren": "RIGHT_PAREN:)@(99.56-99.57)",
+                  "leftParen": "LEFT_PAREN:(@(99.49-99.50)",
+                  "rightParen": "RIGHT_PAREN:)@(99.56-99.57)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4686,8 +4686,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:any@(100.5-100.8)",
-                  "left_paren": "LEFT_PAREN:(@(100.8-100.9)",
-                  "right_paren": "RIGHT_PAREN:)@(100.11-100.12)",
+                  "leftParen": "LEFT_PAREN:(@(100.8-100.9)",
+                  "rightParen": "RIGHT_PAREN:)@(100.11-100.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4703,8 +4703,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:any@(100.14-100.17)",
-                  "left_paren": "LEFT_PAREN:(@(100.17-100.18)",
-                  "right_paren": "RIGHT_PAREN:)@(100.20-100.21)",
+                  "leftParen": "LEFT_PAREN:(@(100.17-100.18)",
+                  "rightParen": "RIGHT_PAREN:)@(100.20-100.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4720,8 +4720,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:any@(100.23-100.26)",
-                  "left_paren": "LEFT_PAREN:(@(100.26-100.27)",
-                  "right_paren": "RIGHT_PAREN:)@(100.29-100.30)",
+                  "leftParen": "LEFT_PAREN:(@(100.26-100.27)",
+                  "rightParen": "RIGHT_PAREN:)@(100.29-100.30)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4737,8 +4737,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:all@(101.5-101.8)",
-                  "left_paren": "LEFT_PAREN:(@(101.8-101.9)",
-                  "right_paren": "RIGHT_PAREN:)@(101.11-101.12)",
+                  "leftParen": "LEFT_PAREN:(@(101.8-101.9)",
+                  "rightParen": "RIGHT_PAREN:)@(101.11-101.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4754,8 +4754,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:all@(101.14-101.17)",
-                  "left_paren": "LEFT_PAREN:(@(101.17-101.18)",
-                  "right_paren": "RIGHT_PAREN:)@(101.20-101.21)",
+                  "leftParen": "LEFT_PAREN:(@(101.17-101.18)",
+                  "rightParen": "RIGHT_PAREN:)@(101.20-101.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4771,8 +4771,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:all@(101.23-101.26)",
-                  "left_paren": "LEFT_PAREN:(@(101.26-101.27)",
-                  "right_paren": "RIGHT_PAREN:)@(101.29-101.30)",
+                  "leftParen": "LEFT_PAREN:(@(101.26-101.27)",
+                  "rightParen": "RIGHT_PAREN:)@(101.29-101.30)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4788,8 +4788,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:not@(102.5-102.8)",
-                  "left_paren": "LEFT_PAREN:(@(102.8-102.9)",
-                  "right_paren": "RIGHT_PAREN:)@(102.11-102.12)",
+                  "leftParen": "LEFT_PAREN:(@(102.8-102.9)",
+                  "rightParen": "RIGHT_PAREN:)@(102.11-102.12)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4805,8 +4805,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:not@(102.14-102.17)",
-                  "left_paren": "LEFT_PAREN:(@(102.17-102.18)",
-                  "right_paren": "RIGHT_PAREN:)@(102.20-102.21)",
+                  "leftParen": "LEFT_PAREN:(@(102.17-102.18)",
+                  "rightParen": "RIGHT_PAREN:)@(102.20-102.21)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4822,8 +4822,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:not@(102.23-102.26)",
-                  "left_paren": "LEFT_PAREN:(@(102.26-102.27)",
-                  "right_paren": "RIGHT_PAREN:)@(102.29-102.30)",
+                  "leftParen": "LEFT_PAREN:(@(102.26-102.27)",
+                  "rightParen": "RIGHT_PAREN:)@(102.29-102.30)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4842,8 +4842,8 @@
                     "IDENTIFIER:texture2D@(105.5-105.14)",
                     "COMMENT:// Texture Lookup Functions@(104.5-104.32), multi:false =  Texture Lookup Functions"
                   ],
-                  "left_paren": "LEFT_PAREN:(@(105.14-105.15)",
-                  "right_paren": "RIGHT_PAREN:)@(105.22-105.23)",
+                  "leftParen": "LEFT_PAREN:(@(105.14-105.15)",
+                  "rightParen": "RIGHT_PAREN:)@(105.22-105.23)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4864,8 +4864,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:texture2D@(106.5-106.14)",
-                  "left_paren": "LEFT_PAREN:(@(106.14-106.15)",
-                  "right_paren": "RIGHT_PAREN:)@(106.25-106.26)",
+                  "leftParen": "LEFT_PAREN:(@(106.14-106.15)",
+                  "rightParen": "RIGHT_PAREN:)@(106.25-106.26)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4891,8 +4891,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:texture2DProj@(107.5-107.18)",
-                  "left_paren": "LEFT_PAREN:(@(107.18-107.19)",
-                  "right_paren": "RIGHT_PAREN:)@(107.26-107.27)",
+                  "leftParen": "LEFT_PAREN:(@(107.18-107.19)",
+                  "rightParen": "RIGHT_PAREN:)@(107.26-107.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4913,8 +4913,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:texture2DProj@(108.5-108.18)",
-                  "left_paren": "LEFT_PAREN:(@(108.18-108.19)",
-                  "right_paren": "RIGHT_PAREN:)@(108.29-108.30)",
+                  "leftParen": "LEFT_PAREN:(@(108.18-108.19)",
+                  "rightParen": "RIGHT_PAREN:)@(108.29-108.30)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4940,8 +4940,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:texture2DProj@(109.5-109.18)",
-                  "left_paren": "LEFT_PAREN:(@(109.18-109.19)",
-                  "right_paren": "RIGHT_PAREN:)@(109.26-109.27)",
+                  "leftParen": "LEFT_PAREN:(@(109.18-109.19)",
+                  "rightParen": "RIGHT_PAREN:)@(109.26-109.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4962,8 +4962,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:texture2DProj@(110.5-110.18)",
-                  "left_paren": "LEFT_PAREN:(@(110.18-110.19)",
-                  "right_paren": "RIGHT_PAREN:)@(110.29-110.30)",
+                  "leftParen": "LEFT_PAREN:(@(110.18-110.19)",
+                  "rightParen": "RIGHT_PAREN:)@(110.29-110.30)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -4989,8 +4989,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:texture2DLod@(111.5-111.17)",
-                  "left_paren": "LEFT_PAREN:(@(111.17-111.18)",
-                  "right_paren": "RIGHT_PAREN:)@(111.28-111.29)",
+                  "leftParen": "LEFT_PAREN:(@(111.17-111.18)",
+                  "rightParen": "RIGHT_PAREN:)@(111.28-111.29)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -5016,8 +5016,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:texture2DProjLod@(112.5-112.21)",
-                  "left_paren": "LEFT_PAREN:(@(112.21-112.22)",
-                  "right_paren": "RIGHT_PAREN:)@(112.32-112.33)",
+                  "leftParen": "LEFT_PAREN:(@(112.21-112.22)",
+                  "rightParen": "RIGHT_PAREN:)@(112.32-112.33)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -5043,8 +5043,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:texture2DProjLod@(113.5-113.21)",
-                  "left_paren": "LEFT_PAREN:(@(113.21-113.22)",
-                  "right_paren": "RIGHT_PAREN:)@(113.32-113.33)",
+                  "leftParen": "LEFT_PAREN:(@(113.21-113.22)",
+                  "rightParen": "RIGHT_PAREN:)@(113.32-113.33)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -5070,8 +5070,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:textureCube@(114.5-114.16)",
-                  "left_paren": "LEFT_PAREN:(@(114.16-114.17)",
-                  "right_paren": "RIGHT_PAREN:)@(114.23-114.24)",
+                  "leftParen": "LEFT_PAREN:(@(114.16-114.17)",
+                  "rightParen": "RIGHT_PAREN:)@(114.23-114.24)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -5092,8 +5092,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:textureCube@(115.5-115.16)",
-                  "left_paren": "LEFT_PAREN:(@(115.16-115.17)",
-                  "right_paren": "RIGHT_PAREN:)@(115.26-115.27)",
+                  "leftParen": "LEFT_PAREN:(@(115.16-115.17)",
+                  "rightParen": "RIGHT_PAREN:)@(115.26-115.27)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -5119,8 +5119,8 @@
               "ExpressionStmt": {
                 "expression(FunctionCallExpr)": {
                   "name": "IDENTIFIER:textureCubeLod@(116.5-116.19)",
-                  "left_paren": "LEFT_PAREN:(@(116.19-116.20)",
-                  "right_paren": "RIGHT_PAREN:)@(116.29-116.30)",
+                  "leftParen": "LEFT_PAREN:(@(116.19-116.20)",
+                  "rightParen": "RIGHT_PAREN:)@(116.29-116.30)",
                   "arguments": [
                     {
                       "VariableExpr": {
@@ -5143,7 +5143,7 @@
               }
             }
           ],
-          "new_scope": true
+          "newScope": true
         }
       }
     }

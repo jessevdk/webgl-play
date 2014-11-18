@@ -6,13 +6,14 @@
         "qualifier": "HIGH_PRECISION:highp@(3.11-3.16)",
         "type(TypeRef)": {
           "token": "FLOAT:float@(3.17-3.22)",
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$float"
           }
         },
         "semi": "SEMICOLON:;@(3.22-3.23)",
-        "t": {}
+        "t": {},
+        "@id": 2
       }
     },
     {
@@ -22,7 +23,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(5.1-5.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$mat4"
           },
@@ -53,7 +54,7 @@
           "qualifiers": [
             "VARYING:varying@(6.1-6.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$vec3"
           },
@@ -84,7 +85,7 @@
           "qualifiers": [
             "CONST:const@(8.1-8.6)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$int"
           },
@@ -96,19 +97,19 @@
               "name": "IDENTIFIER:num_iter@(8.11-8.19)",
               "decl(VariableDecl)": "@10",
               "type(TypeRef)": "@11",
-              "initial_assign": "EQUAL:=@(8.20-8.21)",
-              "initial_value(ConstantExpr)": {
+              "initialAssign": "EQUAL:=@(8.20-8.21)",
+              "initialValue(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(8.22-8.23) = 4",
                 "t": {
                   "type(builtins.PrimitiveType)": "$int",
-                  "is_const_expression": true,
-                  "const_value": 4
+                  "isConstExpression": true,
+                  "constValue": 4
                 }
               },
               "t": {
                 "type(builtins.PrimitiveType)": "$int",
-                "is_const_expression": true,
-                "const_value": 4
+                "isConstExpression": true,
+                "constValue": 4
               },
               "@id": 12
             }
@@ -126,7 +127,7 @@
           "qualifiers": [
             "HIGH_PRECISION:highp@(9.1-9.6)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$float"
           },
@@ -157,7 +158,7 @@
           "qualifiers": [
             "MEDIUM_PRECISION:mediump@(10.1-10.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$float"
           },
@@ -188,7 +189,7 @@
           "qualifiers": [
             "LOW_PRECISION:lowp@(11.1-11.5)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$float"
           },
@@ -231,7 +232,7 @@
             "INVARIANT:invariant@(14.1-14.10)",
             "VARYING:varying@(14.11-14.18)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$int"
           },
@@ -262,7 +263,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(16.1-16.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$bool"
           },
@@ -274,22 +275,22 @@
               "name": "IDENTIFIER:boolarray@(16.14-16.23)",
               "decl(VariableDecl)": "@27",
               "type(TypeRef)": "@28",
-              "is_array": true,
-              "array_size(ConstantExpr)": {
+              "isArray": true,
+              "arraySize(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(16.24-16.25) = 4",
                 "t": {
                   "type(builtins.PrimitiveType)": "$int",
-                  "is_const_expression": true,
-                  "const_value": 4
+                  "isConstExpression": true,
+                  "constValue": 4
                 }
               },
-              "left_bracket": "LEFT_BRACKET:[@(16.23-16.24)",
-              "right_bracket": "RIGHT_BRACKET:]@(16.25-16.26)",
+              "leftBracket": "LEFT_BRACKET:[@(16.23-16.24)",
+              "rightBracket": "RIGHT_BRACKET:]@(16.25-16.26)",
               "t": {
                 "type(builtins.ArrayType)": {
                   "name": "bool[4]",
-                  "is_array": true,
-                  "element_type(builtins.PrimitiveType)": "$bool",
+                  "isArray": true,
+                  "elementType(builtins.PrimitiveType)": "$bool",
                   "length": 4,
                   "zero": [
                     false,
@@ -313,7 +314,7 @@
       "VariableDecl": {
         "type(TypeRef)": {
           "token": "INT:int@(18.1-18.4)",
-          "is_primitive": true,
+          "isPrimitive": true,
           "t": {
             "type(builtins.PrimitiveType)": "$int"
           },
@@ -336,13 +337,13 @@
               "name": "IDENTIFIER:multivar2@(18.16-18.25)",
               "decl(VariableDecl)": "@32",
               "type(TypeRef)": "@33",
-              "initial_assign": "EQUAL:=@(18.26-18.27)",
-              "initial_value(ConstantExpr)": {
+              "initialAssign": "EQUAL:=@(18.26-18.27)",
+              "initialValue(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(18.28-18.29) = 4",
                 "t": {
                   "type(builtins.PrimitiveType)": "$int",
-                  "is_const_expression": true,
-                  "const_value": 4
+                  "isConstExpression": true,
+                  "constValue": 4
                 }
               },
               "t": {
@@ -356,22 +357,22 @@
               "name": "IDENTIFIER:multivar3@(18.31-18.40)",
               "decl(VariableDecl)": "@32",
               "type(TypeRef)": "@33",
-              "is_array": true,
-              "array_size(ConstantExpr)": {
+              "isArray": true,
+              "arraySize(ConstantExpr)": {
                 "token": "INTCONSTANT:2@(18.41-18.42) = 2",
                 "t": {
                   "type(builtins.PrimitiveType)": "$int",
-                  "is_const_expression": true,
-                  "const_value": 2
+                  "isConstExpression": true,
+                  "constValue": 2
                 }
               },
-              "left_bracket": "LEFT_BRACKET:[@(18.40-18.41)",
-              "right_bracket": "RIGHT_BRACKET:]@(18.42-18.43)",
+              "leftBracket": "LEFT_BRACKET:[@(18.40-18.41)",
+              "rightBracket": "RIGHT_BRACKET:]@(18.42-18.43)",
               "t": {
                 "type(builtins.ArrayType)": {
                   "name": "int[2]",
-                  "is_array": true,
-                  "element_type(builtins.PrimitiveType)": "$int",
+                  "isArray": true,
+                  "elementType(builtins.PrimitiveType)": "$int",
                   "length": 2,
                   "zero": [
                     0,
@@ -395,14 +396,14 @@
           "decl(StructDecl)": {
             "token": "STRUCT:struct@(20.1-20.7)",
             "name": "IDENTIFIER:usertype@(20.8-20.16)",
-            "left_brace": "LEFT_BRACE:{@(20.17-20.18)",
-            "right_brace": "RIGHT_BRACE:}@(22.1-22.2)",
+            "leftBrace": "LEFT_BRACE:{@(20.17-20.18)",
+            "rightBrace": "RIGHT_BRACE:}@(22.1-22.2)",
             "fields": [
               {
                 "FieldDecl": {
                   "type(TypeRef)": {
                     "token": "INT:int@(21.5-21.8)",
-                    "is_primitive": true,
+                    "isPrimitive": true,
                     "t": {
                       "type(builtins.PrimitiveType)": "$int"
                     },
@@ -440,10 +441,10 @@
             "t": {
               "type(builtins.UserType)": {
                 "name": "usertype",
-                "is_composite": true,
-                "is_user": true,
+                "isComposite": true,
+                "isUser": true,
                 "decl(StructDecl)": "@42",
-                "field_map": {
+                "fieldMap": {
                   "a": {
                     "name": "a",
                     "type(builtins.PrimitiveType)": "$int",
@@ -471,7 +472,7 @@
                 "@id": 47
               }
             },
-            "parent_scope(Parser)": "@1",
+            "parentScope(Parser)": "@1",
             "@id": 42
           },
           "t": {
@@ -529,7 +530,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(26.1-26.5)",
-            "is_primitive": true,
+            "isPrimitive": true,
             "t": {
               "type(builtins.PrimitiveType)": "$void"
             }
@@ -552,15 +553,15 @@
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(26.7-26.8)",
-          "right_paren": "RIGHT_PAREN:)@(26.18-26.19)",
+          "leftParen": "LEFT_PAREN:(@(26.7-26.8)",
+          "rightParen": "RIGHT_PAREN:)@(26.18-26.19)",
           "t": {
             "type(builtins.PrimitiveType)": "$void"
           }
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(28.1-28.2)",
-          "left_brace": "LEFT_BRACE:{@(26.20-26.21)",
+          "rightBrace": "RIGHT_BRACE:}@(28.1-28.2)",
+          "leftBrace": "LEFT_BRACE:{@(26.20-26.21)",
           "body": [
             {
               "VariableDecl": {
@@ -590,18 +591,19 @@
               }
             }
           ],
-          "new_scope": true,
+          "newScope": true,
           "t": {},
           "variables": [
             "Named@60"
           ],
-          "variable_map": {
+          "variableMap": {
             "b(Named)": "@60"
           },
           "symbols": {
             "b(Named)": "@60"
           },
-          "parent_scope(FunctionDef)": "@52"
+          "parentScope(FunctionDef)": "@52",
+          "@id": 57
         },
         "t": {
           "type(builtins.PrimitiveType)": "$void"
@@ -609,13 +611,16 @@
         "variables": [
           "ParamDecl@55"
         ],
-        "variable_map": {
+        "variableMap": {
           "a(ParamDecl)": "@55"
         },
+        "scopes": [
+          "Block@57"
+        ],
         "symbols": {
           "a(ParamDecl)": "@55"
         },
-        "parent_scope(Parser)": "@1",
+        "parentScope(Parser)": "@1",
         "@id": 52
       }
     }
@@ -626,8 +631,24 @@
   "functions": [
     "FunctionDef@52"
   ],
-  "function_map": {
+  "functionMap": {
     "f(usertype)(FunctionDef)": "@52"
+  },
+  "uniforms": [
+    "Named@6",
+    "Named@29"
+  ],
+  "uniformMap": {
+    "projection(Named)": "@6",
+    "boolarray(Named)": "@29"
+  },
+  "varyings": [
+    "Named@9",
+    "Named@26"
+  ],
+  "varyingMap": {
+    "color(Named)": "@9",
+    "nonvariant(Named)": "@26"
   },
   "variables": [
     "Named@6",
@@ -644,7 +665,7 @@
     "Named@48",
     "Named@51"
   ],
-  "variable_map": {
+  "variableMap": {
     "projection(Named)": "@6",
     "color(Named)": "@9",
     "num_iter(Named)": "@12",
@@ -664,11 +685,15 @@
     "builtins.ArrayType@39",
     "builtins.UserType@47"
   ],
-  "type_map": {
+  "typeMap": {
     "bool[4](builtins.ArrayType)": "@31",
     "int[2](builtins.ArrayType)": "@39",
     "usertype(builtins.UserType)": "@47"
   },
+  "scopes": [
+    "StructDecl@42",
+    "FunctionDef@52"
+  ],
   "symbols": {
     "projection(Named)": "@6",
     "color(Named)": "@9",
@@ -687,7 +712,13 @@
     "uservalue1(Named)": "@48",
     "uservalue2(Named)": "@51"
   },
-  "parent_scope": "(builtin scope)",
+  "precisions": [
+    "PrecisionStmt@2"
+  ],
+  "precisionMap": {
+    "float(PrecisionStmt)": "@2"
+  },
+  "parentScope": "(builtin scope)",
   "t": {},
   "@id": 1
 }

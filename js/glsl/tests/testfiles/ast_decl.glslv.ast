@@ -6,7 +6,7 @@
         "qualifier": "HIGH_PRECISION:highp@(3.11-3.16)",
         "type(TypeRef)": {
           "token": "FLOAT:float@(3.17-3.22)",
-          "is_primitive": true
+          "isPrimitive": true
         },
         "semi": "SEMICOLON:;@(3.22-3.23)"
       }
@@ -18,7 +18,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(5.1-5.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 5
         },
         "names": [
@@ -41,7 +41,7 @@
           "qualifiers": [
             "VARYING:varying@(6.1-6.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 8
         },
         "names": [
@@ -64,7 +64,7 @@
           "qualifiers": [
             "CONST:const@(8.1-8.6)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 11
         },
         "names": [
@@ -73,8 +73,8 @@
               "name": "IDENTIFIER:num_iter@(8.11-8.19)",
               "decl(VariableDecl)": "@10",
               "type(TypeRef)": "@11",
-              "initial_assign": "EQUAL:=@(8.20-8.21)",
-              "initial_value(ConstantExpr)": {
+              "initialAssign": "EQUAL:=@(8.20-8.21)",
+              "initialValue(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(8.22-8.23) = 4"
               }
             }
@@ -91,7 +91,7 @@
           "qualifiers": [
             "HIGH_PRECISION:highp@(9.1-9.6)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 15
         },
         "names": [
@@ -114,7 +114,7 @@
           "qualifiers": [
             "MEDIUM_PRECISION:mediump@(10.1-10.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 18
         },
         "names": [
@@ -137,7 +137,7 @@
           "qualifiers": [
             "LOW_PRECISION:lowp@(11.1-11.5)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 21
         },
         "names": [
@@ -171,7 +171,7 @@
             "INVARIANT:invariant@(14.1-14.10)",
             "VARYING:varying@(14.11-14.18)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 25
         },
         "names": [
@@ -194,7 +194,7 @@
           "qualifiers": [
             "UNIFORM:uniform@(16.1-16.8)"
           ],
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 28
         },
         "names": [
@@ -203,12 +203,12 @@
               "name": "IDENTIFIER:boolarray@(16.14-16.23)",
               "decl(VariableDecl)": "@27",
               "type(TypeRef)": "@28",
-              "is_array": true,
-              "array_size(ConstantExpr)": {
+              "isArray": true,
+              "arraySize(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(16.24-16.25) = 4"
               },
-              "left_bracket": "LEFT_BRACKET:[@(16.23-16.24)",
-              "right_bracket": "RIGHT_BRACKET:]@(16.25-16.26)"
+              "leftBracket": "LEFT_BRACKET:[@(16.23-16.24)",
+              "rightBracket": "RIGHT_BRACKET:]@(16.25-16.26)"
             }
           }
         ],
@@ -220,7 +220,7 @@
       "VariableDecl": {
         "type(TypeRef)": {
           "token": "INT:int@(18.1-18.4)",
-          "is_primitive": true,
+          "isPrimitive": true,
           "@id": 32
         },
         "names": [
@@ -236,8 +236,8 @@
               "name": "IDENTIFIER:multivar2@(18.16-18.25)",
               "decl(VariableDecl)": "@31",
               "type(TypeRef)": "@32",
-              "initial_assign": "EQUAL:=@(18.26-18.27)",
-              "initial_value(ConstantExpr)": {
+              "initialAssign": "EQUAL:=@(18.26-18.27)",
+              "initialValue(ConstantExpr)": {
                 "token": "INTCONSTANT:4@(18.28-18.29) = 4"
               }
             }
@@ -247,12 +247,12 @@
               "name": "IDENTIFIER:multivar3@(18.31-18.40)",
               "decl(VariableDecl)": "@31",
               "type(TypeRef)": "@32",
-              "is_array": true,
-              "array_size(ConstantExpr)": {
+              "isArray": true,
+              "arraySize(ConstantExpr)": {
                 "token": "INTCONSTANT:2@(18.41-18.42) = 2"
               },
-              "left_bracket": "LEFT_BRACKET:[@(18.40-18.41)",
-              "right_bracket": "RIGHT_BRACKET:]@(18.42-18.43)"
+              "leftBracket": "LEFT_BRACKET:[@(18.40-18.41)",
+              "rightBracket": "RIGHT_BRACKET:]@(18.42-18.43)"
             }
           }
         ],
@@ -266,14 +266,14 @@
           "decl(StructDecl)": {
             "token": "STRUCT:struct@(20.1-20.7)",
             "name": "IDENTIFIER:usertype@(20.8-20.16)",
-            "left_brace": "LEFT_BRACE:{@(20.17-20.18)",
-            "right_brace": "RIGHT_BRACE:}@(22.1-22.2)",
+            "leftBrace": "LEFT_BRACE:{@(20.17-20.18)",
+            "rightBrace": "RIGHT_BRACE:}@(22.1-22.2)",
             "fields": [
               {
                 "FieldDecl": {
                   "type(TypeRef)": {
                     "token": "INT:int@(21.5-21.8)",
-                    "is_primitive": true,
+                    "isPrimitive": true,
                     "@id": 42
                   },
                   "names": [
@@ -337,7 +337,7 @@
         "header(FunctionHeader)": {
           "type(TypeRef)": {
             "token": "VOID:void@(26.1-26.5)",
-            "is_primitive": true
+            "isPrimitive": true
           },
           "name": "IDENTIFIER:f@(26.6-26.7)",
           "parameters": [
@@ -350,12 +350,12 @@
               }
             }
           ],
-          "left_paren": "LEFT_PAREN:(@(26.7-26.8)",
-          "right_paren": "RIGHT_PAREN:)@(26.18-26.19)"
+          "leftParen": "LEFT_PAREN:(@(26.7-26.8)",
+          "rightParen": "RIGHT_PAREN:)@(26.18-26.19)"
         },
         "body(Block)": {
-          "right_brace": "RIGHT_BRACE:}@(28.1-28.2)",
-          "left_brace": "LEFT_BRACE:{@(26.20-26.21)",
+          "rightBrace": "RIGHT_BRACE:}@(28.1-28.2)",
+          "leftBrace": "LEFT_BRACE:{@(26.20-26.21)",
           "body": [
             {
               "VariableDecl": {
@@ -377,7 +377,7 @@
               }
             }
           ],
-          "new_scope": true
+          "newScope": true
         }
       }
     }

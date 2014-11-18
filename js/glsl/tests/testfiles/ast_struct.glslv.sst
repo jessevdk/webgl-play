@@ -5,14 +5,14 @@
         "type(StructDecl)": {
           "token": "STRUCT:struct@(3.1-3.7)",
           "name": "IDENTIFIER:myvec@(3.8-3.13)",
-          "left_brace": "LEFT_BRACE:{@(3.14-3.15)",
-          "right_brace": "RIGHT_BRACE:}@(7.1-7.2)",
+          "leftBrace": "LEFT_BRACE:{@(3.14-3.15)",
+          "rightBrace": "RIGHT_BRACE:}@(7.1-7.2)",
           "fields": [
             {
               "FieldDecl": {
                 "type(TypeRef)": {
                   "token": "INT:int@(4.5-4.8)",
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "t": {
                     "type(builtins.PrimitiveType)": "$int"
                   },
@@ -35,22 +35,22 @@
                       "name": "IDENTIFIER:b@(4.12-4.13)",
                       "decl(FieldDecl)": "@4",
                       "type(TypeRef)": "@5",
-                      "is_array": true,
-                      "array_size(ConstantExpr)": {
+                      "isArray": true,
+                      "arraySize(ConstantExpr)": {
                         "token": "INTCONSTANT:2@(4.14-4.15) = 2",
                         "t": {
                           "type(builtins.PrimitiveType)": "$int",
-                          "is_const_expression": true,
-                          "const_value": 2
+                          "isConstExpression": true,
+                          "constValue": 2
                         }
                       },
-                      "left_bracket": "LEFT_BRACKET:[@(4.13-4.14)",
-                      "right_bracket": "RIGHT_BRACKET:]@(4.15-4.16)",
+                      "leftBracket": "LEFT_BRACKET:[@(4.13-4.14)",
+                      "rightBracket": "RIGHT_BRACKET:]@(4.15-4.16)",
                       "t": {
                         "type(builtins.ArrayType)": {
                           "name": "int[2]",
-                          "is_array": true,
-                          "element_type(builtins.PrimitiveType)": "$int",
+                          "isArray": true,
+                          "elementType(builtins.PrimitiveType)": "$int",
                           "length": 2,
                           "zero": [
                             0,
@@ -74,7 +74,7 @@
                   "qualifiers": [
                     "MEDIUM_PRECISION:mediump@(6.5-6.12)"
                   ],
-                  "is_primitive": true,
+                  "isPrimitive": true,
                   "t": {
                     "type(builtins.PrimitiveType)": "$float"
                   },
@@ -101,10 +101,10 @@
           "t": {
             "type(builtins.UserType)": {
               "name": "myvec",
-              "is_composite": true,
-              "is_user": true,
+              "isComposite": true,
+              "isUser": true,
               "decl(StructDecl)": "@3",
-              "field_map": {
+              "fieldMap": {
                 "a": {
                   "name": "a",
                   "type(builtins.PrimitiveType)": "$int",
@@ -145,13 +145,13 @@
           "types": [
             "builtins.ArrayType@9"
           ],
-          "type_map": {
+          "typeMap": {
             "int[2](builtins.ArrayType)": "@9"
           },
           "symbols": {
             "int[2](builtins.ArrayType)": "@9"
           },
-          "parent_scope(Parser)": "@1",
+          "parentScope(Parser)": "@1",
           "@id": 3
         },
         "semi": "SEMICOLON:;@(7.2-7.3)",
@@ -165,13 +165,16 @@
   "types": [
     "builtins.UserType@13"
   ],
-  "type_map": {
+  "typeMap": {
     "myvec(builtins.UserType)": "@13"
   },
+  "scopes": [
+    "StructDecl@3"
+  ],
   "symbols": {
     "myvec(builtins.UserType)": "@13"
   },
-  "parent_scope": "(builtin scope)",
+  "parentScope": "(builtin scope)",
   "t": {},
   "@id": 1
 }
