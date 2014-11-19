@@ -1537,6 +1537,10 @@ App.prototype._showAboutPopup = function(cb) {
         classes: 'about'
     });
 
+    if (typeof global.Settings.hooks.about === 'function') {
+        global.Settings.hooks.about(content);
+    }
+
     popup = new ui.Popup(content, this.buttons.about.e);
     cb(popup);
 }

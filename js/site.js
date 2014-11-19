@@ -45,7 +45,9 @@ global.Settings = utils.merge({
         url: function(u) {
         	return '/' + u;
         }
-    }
+    },
+
+    hooks: {}
 }, global.Settings);
 
 app = require('./app/app');
