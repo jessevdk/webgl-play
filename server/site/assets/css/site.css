@@ -1337,7 +1337,8 @@ input[type="text"] {
     border-spacing: 12px 6px;
     margin-bottom: 6px; }
     .ui-popup .info-popup .properties td:first-child {
-      font-style: italic; }
+      font-style: italic;
+      vertical-align: baseline; }
   .ui-popup .info-popup .description, .ui-popup .info-popup textarea {
     background-color: white;
     border: 1px solid #bababa;
