@@ -1404,7 +1404,7 @@ App.prototype._shareDocument = function(author, license) {
 
         error: (function(req, e) {
             if (this.document === doc) {
-                this.message('error', 'Failed to upload document: ' + e ? e.message : req.responseText);
+                this.message('error', 'Failed to upload document: ' + (e ? e.message : req.responseText));
             }
         }).bind(this)
     });
