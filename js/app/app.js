@@ -1352,14 +1352,13 @@ App.prototype._makeShared = function(share) {
 
     var url = global.Settings.frontend.dataQuery(share);
 
-    if (global.history) {
-        global.history.replaceState({
-            mode: 'document',
-            share: share
-        }, '', url);
-    }
+    global.history.replaceState({
+        mode: 'document',
+        share: share
+    }, '', url);
 
-    return url;
+    // Return the full url
+    return document.location.href;
 }
 
 App.prototype._shareDocument = function(author, license) {
