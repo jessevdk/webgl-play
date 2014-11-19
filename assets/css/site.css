@@ -450,6 +450,9 @@
     .ui-multi-switch td.active {
       background-color: #4ca2df;
       color: white; }
+  .ui-multi-switch.insensitive td, .ui-multi-switch td.insensitive {
+    background-color: #748489;
+    color: #abb5b8; }
 
 /*
  * Copyright (c) 2014 Jesse van den Kieboom. All rights reserved.
@@ -1334,7 +1337,8 @@ input[type="text"] {
     border-spacing: 12px 6px;
     margin-bottom: 6px; }
     .ui-popup .info-popup .properties td:first-child {
-      font-style: italic; }
+      font-style: italic;
+      vertical-align: baseline; }
   .ui-popup .info-popup .description, .ui-popup .info-popup textarea {
     background-color: white;
     border: 1px solid #bababa;
