@@ -1930,8 +1930,8 @@ App.prototype._showOpenPopup = function(cb) {
                         if (doc) {
                             content.removeChild(li);
 
-                            if (this.document.id === doc.id) {
-                                this.document.id = null;
+                            if (this.document && this.document.id === doc.id) {
+                                delete this.document.id;
                             }
                         } else {
                             del.textContent = '×';
