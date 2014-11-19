@@ -450,6 +450,9 @@
     .ui-multi-switch td.active {
       background-color: #4ca2df;
       color: white; }
+  .ui-multi-switch.insensitive td, .ui-multi-switch td.insensitive {
+    background-color: #748489;
+    color: #abb5b8; }
 
 /*
  * Copyright (c) 2014 Jesse van den Kieboom. All rights reserved.

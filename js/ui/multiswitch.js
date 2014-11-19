@@ -50,39 +50,57 @@ function MultiSwitch(settings) {
     var tds = [];
 
     this._values = [];
+    this._valueMap = {};
 
     for (var i = 0; i < n; i++) {
         var val = settings.values[i];
-        var name = val;
-        var title;
 
-        if (typeof val === 'object') {
-            name = val.name;
-            title = val.title;
-            val = val.value;
+        if (typeof val !== 'object') {
+            val = {
+                title: null,
+                name: val,
+                value: val,
+                sensitive: true
+            };
+        } else {
+            val = utils.merge({
+                sensitive: true,
+                title: null
+            }, val);
+
+            val.sensitive = !!val.sensitive;
         }
 
-        var td = this.create('td', {
-            textContent: name
+        val.td = this.create('td', {
+            textContent: val.name
         });
 
-        if (title) {
-            td.title = title;
+        if (!val.sensitive) {
+            val.td.classList.add('insensitive');
+        } else if (typeof settings.value === 'undefined' && typeof settings.bind === 'undefined') {
+            // Set initial value to the first sensitive value
+            settings.value = val.value;
+        }
+
+        if (val.title) {
+            val.td.title = val.title;
         }
 
         this._values.push(val);
+        this._valueMap[val.value] = val;
 
-        td.addEventListener('click', (function(val, e) {
-            this.value(val);
+        if (val.sensitive) {
+            val.td.addEventListener('click', (function(val, e) {
+                this.value(val.value);
 
-            e.preventDefault();
-            e.stopPropagation();
-        }).bind(this, val));
+                e.preventDefault();
+                e.stopPropagation();
+            }).bind(this, val));
+        }
 
-        tds.push(td);
+        tds.push(val.td);
     }
 
-    this._tds = tds;
     this._active = null;
 
     Widget.call(this, 'multi-switch', this.create('table', {
@@ -101,15 +119,25 @@ function MultiSwitch(settings) {
 MultiSwitch.prototype = Object.create(Widget.prototype);
 MultiSwitch.prototype.constructor = MultiSwitch;
 
-MultiSwitch.prototype._valueUpdated = function() {
-    var idx = this._values.indexOf(this._value);
+MultiSwitch.prototype._transformValue = function(v) {
+    var val = this._valueMap[v];
 
-    if (idx !== -1) {
+    if (v && !v.sensitive) {
+        return this._value;
+    }
+
+    return v;
+}
+
+MultiSwitch.prototype._valueUpdated = function() {
+    var val = this._valueMap[this._value];
+
+    if (val) {
         if (this._active !== null) {
             this._active.classList.remove('active');
         }
 
-        this._active = this._tds[idx];
+        this._active = val.td;
         this._active.classList.add('active');
     }
 }

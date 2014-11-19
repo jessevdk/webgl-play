@@ -59,4 +59,9 @@
       color: white;
     }
   }
+
+  &.insensitive td, td.insensitive {
+    background-color: $ui_insensitive_bg;
+    color: $ui_insensitive_fg;
+  }
 }
