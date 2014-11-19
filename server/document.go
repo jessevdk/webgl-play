@@ -32,6 +32,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -84,7 +85,8 @@ type NewDocumentRequest struct {
 }
 
 type NewDocumentResponse struct {
-	Hash string `json:"hash"`
+	Hash    string   `json:"hash"`
+	Authors []Author `json:"authors"`
 }
 
 func (p *Program) Validate() error {
@@ -172,6 +174,14 @@ func (d *Document) Prepare(a Author) error {
 		return err
 	}
 
+	if len(d.Authors) != 0 {
+		last := d.Authors[len(d.Authors)-1]
+
+		if (last.License == "CC BY-SA" || last.License == "CC BY-NC-SA") && a.License != last.License {
+			return fmt.Errorf("Cannot change license from %s to %s", last.License, a.License)
+		}
+	}
+
 	if len(d.Authors) == 0 || d.Authors[len(d.Authors)-1] != a {
 		d.Authors = append(d.Authors, a)
 	}
@@ -221,7 +231,7 @@ func (d NewDocumentHandler) Post(writer http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	d.RespondJSON(writer, NewDocumentResponse{Hash: hash})
+	d.RespondJSON(writer, NewDocumentResponse{Hash: hash, Authors: doc.Authors})
 }
 
 func init() {

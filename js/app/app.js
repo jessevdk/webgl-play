@@ -716,8 +716,12 @@ App.prototype.message = function(type, m, options) {
     return remover;
 }
 
-App.prototype._createLicenseSwitch = function(license) {
-    license = license || 'CC BY';
+App.prototype._createLicenseSwitch = function(license, authors) {
+    var initial = license || 'CC BY';
+
+    if (authors && authors.length > 0) {
+        initial = authors[authors.length - 1].license;
+    }
 
     var values = [
         { name: '0', value: 'CC 0' },
@@ -727,20 +731,34 @@ App.prototype._createLicenseSwitch = function(license) {
         { name: 'BY-NC-SA', value: 'CC BY-NC-SA' }
     ];
 
+    if (authors && authors.length > 0) {
+        lastlic = authors[authors.length - 1].license;
+
+        if (lastlic === 'CC BY-SA' || lastlic === 'CC BY-NC-SA') {
+            /*for (var i = 0; i < values.length; i++) {
+                if (values[i].value !== lastlic) {
+                    values[i].sensitive = false;
+                }
+            }*/
+
+            initial = lastlic;
+        }
+    }
+
     for (var i = 0; i < values.length; i++) {
         values[i].title = licenseDescriptions[values[i].value];
     }
 
     return new ui.MultiSwitch({
         values: values,
-        value: license
+        value: initial
     });
 }
 
 App.prototype._showPublishDialog = function() {
     var W = ui.Widget.createUi;
 
-    var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license);
+    var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license, this.document.authors);
     var publishButton = new ui.Button('Publish');
     var requestTokenButton = new ui.Button('Request Token');
 
@@ -931,7 +949,7 @@ App.prototype._showPublishDialog = function() {
 App.prototype._showShareDialog = function() {
     var W = ui.Widget.createUi;
 
-    var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license);
+    var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license, this.document.authors);
     var shareButton = new ui.Button('Share');
     var authorInput = W('input', { classes: 'author', type: 'text', value: (this.document.author || this.settings.author || '') });
 
