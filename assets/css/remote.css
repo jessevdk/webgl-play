@@ -30,3 +30,14 @@
 #header #buttons-remote {
 	display: block;
 }
+
+.ui-popup ul.about li.donate {
+	background-color: transparent;
+	text-align: center;
+	width: 100%;
+	padding: 6px 0px 6px 0px;
+}
+
+.ui-popup ul.about li.donate form {
+	display: inline-block;
+}
