@@ -1373,6 +1373,10 @@ App.prototype._shareDocument = function(author, license) {
             if (this.document === doc) {
                 var url = this._makeShared(ret.hash);
 
+                // Update document authors
+                this.document.authors = ret.authors;
+                this._saveCurrentDoc();
+
                 var W = ui.Widget.createUi;
 
                 var urle = W('span', {
