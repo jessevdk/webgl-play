@@ -229,7 +229,7 @@ App.prototype._updateEditors = function() {
     var names = ['vertex', 'fragment', 'js'];
 
     for (var i = 0; i < names.length; i++) {
-        var editor = this[names[i] + '_editor'];
+        var editor = this[names[i] + 'Editor'];
 
         up[names[i]] = {
             data: editor.value(),
@@ -575,9 +575,9 @@ App.prototype._initCanvas = function() {
 
 App.prototype._initEditors = function() {
     var elems = this.find({
-        vertexEditor: '#vertex-editor',
-        fragmentEditor: '#fragment-editor',
-        jsEditor: '#js-editor'
+        vertex: '#vertex-editor',
+        fragment: '#fragment-editor',
+        js: '#js-editor'
     });
 
     var opts = {
@@ -588,27 +588,28 @@ App.prototype._initEditors = function() {
     };
 
     for (var k in elems) {
-        this[k] = CodeMirror(elems[k], opts);
+        var tname = k + 'Editor';
+        var elem = elems[k];
 
-        var p = elems[k].parentElement;
+        this[tname] = CodeMirror(elem, opts);
+
+        var p = elem.parentElement;
         var t = p.querySelector('.editor-title');
 
-        this[k].on('focus', (function(title, k) {
-            var n = k.slice(0, k.indexOf('_'));
-
+        this[tname].on('focus', (function(title, k, tname) {
             title.classList.add('hidden');
 
             this._updateDocumentBy({
                 activeEditor: {
-                    name: n,
-                    cursor: this[k].cursor()
+                    name: k,
+                    cursor: this[tname].cursor()
                 }
             });
 
             this._lastFocus = elems[k];
-        }).bind(this, t, k));
+        }).bind(this, t, k, tname));
 
-        this[k].on('blur', (function(title) {
+        this[tname].on('blur', (function(title) {
             title.classList.remove('hidden');
         }).bind(this, t));
     }
