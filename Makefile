@@ -28,9 +28,9 @@ SITE_ICONS=$(foreach i,$(ICONS),site/assets/icons/$(i)) site/assets/icons/webgl-
 
 MODELS = $(foreach i,$(wildcard models/*.obj),site/assets/models/$(notdir $(i)))
 
-SITE_EXTERNAL_DEPS =		\
-	js/app/default.glslv	\
-	js/app/default.glslf	\
+JS_APP_DOCUMENT_EXTERNAL_DEPS =		\
+	js/app/default.glslv			\
+	js/app/default.glslf			\
 	js/app/default.js
 
 ASSETS =									\
@@ -112,22 +112,15 @@ icons/webgl-icon-16-32.ico: icons/webgl-icon-16.png icons/webgl-icon-32.png
 
 # The BIG js merge
 site/assets/js/site.min.js.map: site/assets/js/site.min.js
-site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(EXORCIST) $(SITE_EXTERNAL_DEPS)
+site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(EXORCIST) $(JS_APP_DOCUMENT_EXTERNAL_DEPS)
 	@mkdir -p $(dir $@); 															\
-	full=no; 																		\
-	for f in $(SITE_EXTERNAL_DEPS); do 												\
+	for f in $(JS_APP_DOCUMENT_EXTERNAL_DEPS); do 									\
 		if [ $$f -nt $@ ]; then 													\
-			full=yes; 																\
+			touch js/app/document.js												\
 			break; 																	\
 		fi; 																		\
 	done; 																			\
-	if [ "$$full" = "yes" ]; then 													\
-		printf "[\033[1mGEN\033[0m] $@ (\033[31mfull\033[0m)\n"; 					\
-		rm -f .gen/js/.cache; 														\
-		rm -f .gen/js/.dev-cache; 													\
-	else 																			\
-		printf "[\033[1mGEN\033[0m] $@\n"; 											\
-	fi; 																			\
+	printf "[\033[1mGEN\033[0m] $@\n"; 												\
 	if [ "$(ENV)" = "development" ]; then 											\
 		($(BROWSERIFYINC)															\
 		 	-d 																		\
