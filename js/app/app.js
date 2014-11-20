@@ -1155,7 +1155,7 @@ App.prototype._fillGalleryItem = function(container, item) {
         this.loadRemoteDocument(item.document, (function(doc) {
             this.loadDocument(doc, { showInfo: true });
 
-            var vkey = 'viewed:' + item.parent;
+            var vkey = 'viewed:' + (item.parent ? item.parent : item.id);
 
             if (!localStorage.getItem(vkey)) {
                 utils.post('g/' + item.parent + '/' + item.id + '/view');
