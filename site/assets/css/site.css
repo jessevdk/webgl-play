@@ -1379,7 +1379,8 @@ input[type="text"] {
   position: absolute;
   z-index: 600;
   border-radius: 6px;
-  box-shadow: 0px 0px 5px #bababa; }
+  box-shadow: 0px 0px 5px #bababa;
+  font-size: 1.1em; }
   .message.error {
     background-color: #dc322f;
     color: white;
@@ -1441,9 +1442,21 @@ input[type="text"] {
       text-align: right; }
       .message .publish .actions > * {
         margin-left: 6px; }
+  .message .intro {
+    width: 600px;
+    height: 400px;
+    overflow-y: scroll; }
+    .message .intro > *:first-child {
+      margin-top: 0; }
+    .message .intro > *:last-child {
+      margin-bottom: 0; }
   .message .files .actions {
     text-align: right;
     margin-top: 12px; }
+  .message li {
+    margin-bottom: 6px; }
+  .message li:last-child {
+    margin-bottom: 0px; }
 
 .overlay {
   position: absolute;

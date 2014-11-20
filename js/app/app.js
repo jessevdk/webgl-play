@@ -672,7 +672,10 @@ App.prototype.message = function(type, m, options) {
     this._message = div;
 
     div.classList.add('message');
-    div.classList.add(type);
+
+    if (type) {
+        div.classList.add(type);
+    }
 
     if (typeof m === 'string') {
         div.textContent = m;
@@ -1041,6 +1044,11 @@ App.prototype._showDocument = function() {
 
     this._mode = 'document';
     localStorage.setItem('lastMode', 'document');
+
+    if (!localStorage.getItem('firstVisited')) {
+        localStorage.setItem('firstVisited', true);
+        this._showIntro();
+    }
 }
 
 App.prototype._galleryHasEmptyCellsInView = function(empties) {
@@ -1340,6 +1348,11 @@ App.prototype._showGallery = function(options) {
         }
 
         this._populateGallery();
+
+        if (!localStorage.getItem('firstVisited')) {
+            localStorage.setItem('firstVisited', true);
+            this._showIntro();
+        }
     }).bind(this));
 }
 
@@ -1488,7 +1501,6 @@ App.prototype._showAboutPopup = function(cb) {
         { name: 'OpenGL Information', action: (function(popup) {
             this._showOpenglPopup(popup);
         }).bind(this) },
-        //{ name: 'Introduction', action: function(popup) { popup.destroy(); } },
         { name: 'Source on Github', action: 'https://github.com/jessevdk/webgl-play' },
         { name: 'Issues on Github', action: 'https://github.com/jessevdk/webgl-play/issues' }
     ];
@@ -2261,6 +2273,19 @@ App.prototype._route = function(f, cb) {
     } else {
         cb();
     }
+}
+
+App.prototype._showIntro = function() {
+    if (typeof global.Settings.hooks.intro !== 'function') {
+        return;
+    }
+
+    var div = document.createElement('div');
+
+    div.classList.add('intro');
+    div.innerHTML = marked(global.Settings.hooks.intro());
+
+    this.message('', div);
 }
 
 App.prototype._init = function() {

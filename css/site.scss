@@ -385,6 +385,7 @@ $description_height: 400px;
   z-index: 600;
   border-radius: 6px;
   box-shadow: 0px 0px 5px $borders_color;
+  font-size: 1.1em;
 
   &.error {
     background-color: $red;
@@ -495,11 +496,33 @@ $description_height: 400px;
     }
   }
 
+  .intro {
+    & > *:first-child {
+      margin-top: 0;
+    }
+
+    & > *:last-child {
+      margin-bottom: 0;
+    }
+
+    width: 600px;
+    height: 400px;
+    overflow-y: scroll;
+  }
+
   .files {
     .actions {
       text-align: right;
       margin-top: 12px;
     }
+  }
+
+  li {
+    margin-bottom: 6px;
+  }
+
+  li:last-child {
+    margin-bottom: 0px;
   }
 }
 
