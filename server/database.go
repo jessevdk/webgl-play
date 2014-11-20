@@ -361,7 +361,15 @@ func (d *Db) GalleryView(parent int, id int, iphash string) {
 		}
 	}()
 
-	if _, err := tx.Exec("INSERT INTO views (id, ip) VALUES (?, ?)", parent, iphash); err != nil {
+	var viewid int
+
+	if parent > 0 {
+		viewid = parent
+	} else {
+		viewid = id
+	}
+
+	if _, err := tx.Exec("INSERT INTO views (id, ip) VALUES (?, ?)", viewid, iphash); err != nil {
 		log.Printf("Failed to create view: %v", err)
 		return
 	}
