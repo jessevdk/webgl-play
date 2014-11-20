@@ -302,14 +302,21 @@ func (g ViewGalleryHandler) Post(wr http.ResponseWriter, req *http.Request) {
 	}
 
 	// This isn't great, but
-	i := strings.LastIndex(req.RemoteAddr, ":")
+	h := req.Header
+	realIP := h.Get("X-Real-IP")
 
 	var ip string
+	i := -1
 
-	if i >= 0 {
-		ip = req.RemoteAddr[:i]
+	if len(realIP) != 0 {
+		ip = realIP
 	} else {
 		ip = req.RemoteAddr
+		i = strings.LastIndex(req.RemoteAddr, ":")
+	}
+
+	if i >= 0 {
+		ip = ip[:i]
 	}
 
 	iphash := g.makeIpHash(ip)
