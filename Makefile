@@ -35,12 +35,13 @@ JS_APP_PROGRAM_EXTERNAL_DEPS =		\
 	js/app/default.glslv			\
 	js/app/default.glslf
 
-ASSETS =									\
-	site/assets/js/vendor.min.js			\
-	site/assets/js/site.min.js				\
-	site/assets/css/vendor.css				\
-	site/assets/css/site.css				\
-	$(MODELS)								\
+ASSETS =										\
+	site/assets/js/vendor.min.js				\
+	site/assets/js/site.min.js					\
+	site/assets/js/models/wavefrontparser.js	\
+	site/assets/css/vendor.css					\
+	site/assets/css/site.css					\
+	$(MODELS)									\
 	$(SITE_ICONS)
 
 ifeq ($(ENV),development)
@@ -174,6 +175,9 @@ site/assets/css/site.css: $(SASS) $(shell find css -name '*.scss')
 	@printf "[\033[1mGEN\033[0m] $@\n"; \
 	mkdir -p $(dir $@); \
 	$(GP) $(SASS) css/site.scss $@
+
+# Web worker files are copied
+$(eval $(call copy-rule,site/assets/js/models/wavefrontparser.js,js/models/wavefrontparser.js))
 
 # Models are copied
 $(eval $(call copy-rule,site/assets/models/%,models/%))
