@@ -39,6 +39,12 @@ var passObjects = [
     Array.prototype
 ];
 
+var Browser = {
+    IsIE: (function() {
+        return navigator.userAgent.indexOf('Trident/') !== -1 || navigator.userAgent.indexOf('MSIE') !== -1;
+    })()
+};
+
 function merge() {
     var ret = {};
 
@@ -158,5 +164,6 @@ exports.get = get;
 exports.getQuery = getQuery;
 exports.post = post;
 exports.api = api
+exports.Browser = Browser;
 
 // vi:ts=4:et

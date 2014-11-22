@@ -41,7 +41,15 @@ var objectCache = {};
 var fs = require('fs');
 
 function WavefrontParser() {
-    this._worker = new Worker(global.Settings.frontend.url('assets/js/models/wavefrontparser.js'));
+    if (utils.Browser.IsIE) {
+        this._worker = new Worker(global.Settings.frontend.url('assets/js/models/wavefrontparser.js'));
+    } else {
+        var code = new Blob([fs.readFileSync(__dirname + '/wavefrontparser.js', 'utf-8')],
+                            { type: 'application/javascript '});
+
+        this._worker = new Worker(URL.createObjectURL(code));
+    }
+
     this._worker.addEventListener('message', this._onWorkerMessage.bind(this));
 
     this._id = 0;
