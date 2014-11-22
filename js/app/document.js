@@ -39,9 +39,12 @@ function Document() {
     this.programs = [Program.default()];
 
     this.js = {
-        data: fs.readFileSync(__dirname + '/default.js', 'utf-8').trimRight('\n'),
+        data: fs.readFileSync(__dirname + '/default.js', 'utf-8'),
         history: { done: [], undone: [] }
     };
+
+    // Remove ending newline
+    this.js.data = this.js.data.slice(0, this.js.data.length - 1);
 
     this.title = 'Untitled';
     this.description = '';

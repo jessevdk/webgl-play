@@ -55,8 +55,12 @@ Program.prototype = Object.create(Signals.prototype);
 Program.prototype.constructor = Program;
 
 Program.default = function() {
-    var v = fs.readFileSync(__dirname + '/default.glslv', 'utf-8').trimRight('\n');
-    var f = fs.readFileSync(__dirname + '/default.glslf', 'utf-8').trimRight('\n');
+    var v = fs.readFileSync(__dirname + '/default.glslv', 'utf-8');
+    var f = fs.readFileSync(__dirname + '/default.glslf', 'utf-8');
+
+    // Remove ending newline
+    v = v.slice(0, v.length - 1);
+    f = f.slice(0, f.length - 1);
 
     return new Program('Default', v, f);
 }

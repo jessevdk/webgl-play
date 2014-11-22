@@ -173,7 +173,7 @@ function fillInfo(info, completion, doc) {
 
     if (dot !== -1) {
         title.innerHTML += desc.slice(0, dot + 1);
-        desc = desc.slice(dot + 1).trimLeft().trimRight();
+        desc = desc.slice(dot + 1).trim();
 
         if (desc.length === 0) {
             desc = null;
