@@ -308,8 +308,19 @@ Renderer.prototype._event = function(e) {
     }
 }
 
+Renderer.getWebGLContext = function(canvas) {
+    var ctx = canvas.getContext('webgl');
+
+    if (!ctx) {
+        ctx = canvas.getContext('experimental-webgl');
+    }
+
+    return ctx;
+}
+
 Renderer.prototype._createContext = function() {
-    var ret = new JsContext(this.canvas.getContext('webgl'));
+    var ctx = Renderer.getWebGLContext(this.canvas);
+    var ret = new JsContext(ctx);
 
     ret.ui.add = this._uiAdd.bind(this)
     return ret;

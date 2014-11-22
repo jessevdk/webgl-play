@@ -2135,7 +2135,7 @@ App.prototype._checkCompatibility = function() {
 
     var view = document.getElementById('view');
 
-    if (!view.getContext('webgl')) {
+    if (!Renderer.getWebGLContext(view)) {
         missing.push({
             name: 'WebGL',
             description: 'It looks like WebGL is not supported in your browser, and this playground is all about WebGL!'
