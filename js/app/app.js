@@ -2356,8 +2356,10 @@ App.prototype._init = function() {
     this._updateCanvasSize();
 
     window.onbeforeunload = (function(e) {
-        this._updateEditors();
-        localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this._serializeDocument(this.document)));
+        if (this.mode === 'document' && this.document !== null) {
+            this._updateEditors();
+            localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this._serializeDocument(this.document)));
+        }
     }).bind(this);
 
     window.addEventListener('scroll', (function() {
