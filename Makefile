@@ -29,9 +29,11 @@ SITE_ICONS=$(foreach i,$(ICONS),site/assets/icons/$(i)) site/assets/icons/webgl-
 MODELS = $(foreach i,$(wildcard models/*.obj),site/assets/models/$(notdir $(i)))
 
 JS_APP_DOCUMENT_EXTERNAL_DEPS =		\
-	js/app/default.glslv			\
-	js/app/default.glslf			\
 	js/app/default.js
+
+JS_APP_PROGRAM_EXTERNAL_DEPS =		\
+	js/app/default.glslv			\
+	js/app/default.glslf
 
 ASSETS =									\
 	site/assets/js/vendor.min.js			\
@@ -112,11 +114,17 @@ icons/webgl-icon-16-32.ico: icons/webgl-icon-16.png icons/webgl-icon-32.png
 
 # The BIG js merge
 site/assets/js/site.min.js.map: site/assets/js/site.min.js
-site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(EXORCIST) $(JS_APP_DOCUMENT_EXTERNAL_DEPS)
+site/assets/js/site.min.js: $(BROWSERIFY) $(BROWSERIFYINC) $(EXORCIST) $(JS_APP_DOCUMENT_EXTERNAL_DEPS) $(JS_APP_PROGRAM_EXTERNAL_DEPS)
 	@mkdir -p $(dir $@); 															\
 	for f in $(JS_APP_DOCUMENT_EXTERNAL_DEPS); do 									\
 		if [ $$f -nt $@ ]; then 													\
 			touch js/app/document.js												\
+			break; 																	\
+		fi; 																		\
+	done; 																			\
+	for f in $(JS_APP_PROGRAM_EXTERNAL_DEPS); do 									\
+		if [ $$f -nt $@ ]; then 													\
+			touch js/app/program.js													\
 			break; 																	\
 		fi; 																		\
 	done; 																			\
