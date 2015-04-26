@@ -36,11 +36,11 @@ var Settings = {
 
     frontend: {
         url: function(u) {
-            return 'http://jessevdk.github.io/webgl-play/' + u;
+            return '//jessevdk.github.io/webgl-play/' + u;
         },
 
         dataQuery: function(hash) {
-            return 'http://jessevdk.github.io/webgl-play/?d=' + hash;
+            return '//jessevdk.github.io/webgl-play/?d=' + hash;
         }
     },
 
