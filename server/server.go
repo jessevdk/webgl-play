@@ -43,13 +43,15 @@ import (
 )
 
 type Options struct {
-	Listen         string `short:"l" long:"listen" description:"The address to listen on" default:":8000"`
-	Data           string `short:"d" long:"data" description:"Root of the data directory" default:"data"`
-	SiteData       string `short:"s" long:"site-data" description:"Root of the site data directory" default:"site"`
-	CORSDomain     string `short:"c" long:"cors-domain" description:"An external domain for which to allow cross-requests"`
-	SMTPAddress    string `short:"e" long:"smtp-address" description:"The address (hostname[:port]) of the SMTP server" default:"localhost:25"`
-	SMTPDisableTLS bool   `short:"t" long:"smtp-disable-tls" description:"Disable TLS when connecting to the smtp server"`
-	PublicHost     string `short:"p" long:"public-host" description:"The public playground host address (e.g. http://webgl.example.com/)" default:"http://localhost:8000/"`
+	Listen         string   `short:"l" long:"listen" description:"The address to listen on" default:":8000"`
+	Data           string   `short:"d" long:"data" description:"Root of the data directory" default:"data"`
+	SiteData       string   `short:"s" long:"site-data" description:"Root of the site data directory" default:"site"`
+	CORSDomain     []string `short:"c" long:"cors-domain" description:"An external domain for which to allow cross-requests"`
+	SMTPAddress    string   `short:"e" long:"smtp-address" description:"The address (hostname[:port]) of the SMTP server" default:"localhost:25"`
+	SMTPDisableTLS bool     `short:"t" long:"smtp-disable-tls" description:"Disable TLS when connecting to the smtp server"`
+	PublicHost     string   `short:"p" long:"public-host" description:"The public playground host address (e.g. http://webgl.example.com/)" default:"http://localhost:8000/"`
+
+	CORSDomainMap map[string]bool
 }
 
 var router = mux.NewRouter()
@@ -109,6 +111,12 @@ func main() {
 
 	if !strings.ContainsRune(options.SMTPAddress, ':') {
 		options.SMTPAddress += ":25"
+	}
+
+	options.CORSDomainMap = make(map[string]bool)
+
+	for _, domain := range options.CORSDomain {
+		options.CORSDomainMap[domain] = true
 	}
 
 	dataRoot = absPath(options.Data)

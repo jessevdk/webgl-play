@@ -40,7 +40,11 @@ func (c corsHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		if origin := req.Header.Get("Origin"); origin != "" {
 			h := rw.Header()
 
-			h.Set("Access-Control-Allow-Origin", options.CORSDomain)
+			if !options.CORSDomainMap[origin] {
+				origin = options.CORSDomain[0]
+			}
+
+			h.Set("Access-Control-Allow-Origin", origin)
 			h.Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 			h.Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 		}
