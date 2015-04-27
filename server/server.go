@@ -50,6 +50,8 @@ type Options struct {
 	SMTPAddress    string   `short:"e" long:"smtp-address" description:"The address (hostname[:port]) of the SMTP server" default:"localhost:25"`
 	SMTPDisableTLS bool     `short:"t" long:"smtp-disable-tls" description:"Disable TLS when connecting to the smtp server"`
 	PublicHost     string   `short:"p" long:"public-host" description:"The public playground host address (e.g. http://webgl.example.com/)" default:"http://localhost:8000/"`
+	SSLCert        string   `long:"ssl-cert" description:"SSL certificate file"`
+	SSLKey         string   `long:"ssl-key" description:"SSL key file"`
 
 	CORSDomainMap map[string]bool
 }
@@ -138,7 +140,15 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	if err := srv.ListenAndServe(); err != nil {
+	var err error
+
+	if options.SSLCert != "" && options.SSLKey != "" {
+		err = srv.ListenAndServeTLS(options.SSLCert, options.SSLKey)
+	} else {
+		err = srv.ListenAndServe()
+	}
+
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error while listening: %s\n", err)
 		os.Exit(1)
 	}
