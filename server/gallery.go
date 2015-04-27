@@ -99,6 +99,12 @@ func (g NewGalleryHandler) Post(writer http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	publicHost := options.PublicHost
+
+	if strings.HasPrefix(publicHost, "//") {
+		publicHost = req.URL.Scheme + ":" + publicHost
+	}
+
 	info := EmailInfo{
 		Date:  time.Now().Format(time.RFC822),
 		Title: treq.Title,
