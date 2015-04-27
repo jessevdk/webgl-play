@@ -43,7 +43,7 @@ import (
 )
 
 type Options struct {
-	Listen         string   `short:"l" long:"listen" description:"The address to listen on" default:":8000"`
+	Listen         string   `short:"l" long:"listen" description:"The address to listen on"`
 	Data           string   `short:"d" long:"data" description:"Root of the data directory" default:"data"`
 	SiteData       string   `short:"s" long:"site-data" description:"Root of the site data directory" default:"site"`
 	CORSDomain     []string `short:"c" long:"cors-domain" description:"An external domain for which to allow cross-requests"`
@@ -109,6 +109,14 @@ func MakeHandler(h interface{}, wrap HandlerWrappers) http.Handler {
 func main() {
 	if _, err := flags.Parse(&options); err != nil {
 		os.Exit(1)
+	}
+
+	if options.Listen == "" {
+		if options.SSLCert != "" && options.SSLKey != "" {
+			options.Listen = ":8443"
+		} else {
+			options.Listen = ":8000"
+		}
 	}
 
 	if !strings.ContainsRune(options.SMTPAddress, ':') {
