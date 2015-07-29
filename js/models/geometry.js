@@ -79,13 +79,13 @@ Geometry.prototype.update = function(ctx, vertices, normals, options) {
     }, options);
 
     if (vertices) {
-        this.addAttribute(ctx, 'v_Position', vertices, options);
+        this.addAttribute(ctx, 'v_Position', vertices, opts);
     }
 
     if (normals) {
-        this.addAttribute(ctx, 'v_Normal', normals, options);
+        this.addAttribute(ctx, 'v_Normal', normals, opts);
     }
-}
+};
 
 /**
  * Remove an attribute buffer.
@@ -105,7 +105,7 @@ Geometry.prototype.removeAttribute = function(ctx, name) {
 
     delete this._attributeIds[attr.id];
     delete this.attributes[name];
-}
+};
 
 /**
  * Add an attribute buffer. If an attribute buffer with the given
@@ -159,7 +159,7 @@ Geometry.prototype.addAttribute = function(ctx, name, data, options) {
 
     this.attributes[name] = attr;
     this._attributeIds[attr.id] = true;
-}
+};
 
 /**
  * Bind the geometry in the current context.
@@ -181,7 +181,7 @@ Geometry.prototype.bind = function(ctx) {
     }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-}
+};
 
 /**
  * Unbind the geometry from the current context.
@@ -198,7 +198,7 @@ Geometry.prototype.unbind = function(ctx) {
             gl.disableVertexAttribArray(attr.id);
         }
     }
-}
+};
 
 module.exports = Geometry;
 

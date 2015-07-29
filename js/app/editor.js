@@ -35,6 +35,8 @@ var Signals = require('../signals/signals');
 
 window.esprima = esprima;
 
+var CodeMirror = window.CodeMirror;
+
 function Editor(editor, ctx, type) {
     Signals.call(this);
 
@@ -78,12 +80,12 @@ function Editor(editor, ctx, type) {
                 if (cur.ch == line.length) {
                     m = line.length;
                 } else {
-                    var n = cm.getOption("indentUnit");
+                    var n = cm.getOption('indentUnit');
 
                     // all spaces, remove up to N indentUnit
                     m = prefix.length % n;
 
-                    if (m == 0) {
+                    if (m === 0) {
                         m = n;
                     }
                 }
@@ -162,7 +164,7 @@ function Editor(editor, ctx, type) {
                 }
             }).bind(this);
 
-            keymap['Ctrl-Space'] = (function(cm) {
+            keymap['Ctrl-Space'] = (function() {
                 try {
                     this._hint();
                 } catch (e) {
@@ -216,7 +218,7 @@ Editor.prototype._hint = function() {
         completeSingle: false,
         context: this._completionContext,
     });
-}
+};
 
 Editor.prototype.completionContext = function(context) {
     if (!context) {
@@ -224,16 +226,16 @@ Editor.prototype.completionContext = function(context) {
     }
 
     this._completionContext = context;
-}
+};
 
 Editor.prototype._onCursorActivity = function() {
     var doc = this.editor.getDoc();
     var cursor = this.cursor();
     var marks = doc.findMarksAt(cursor);
 
-    var errs = [];
+    var errs = [], i;
 
-    for (var i = 0; i < marks.length; i++) {
+    for (i = 0; i < marks.length; i++) {
         var m = marks[i];
 
         if (m.className === 'error') {
@@ -255,7 +257,7 @@ Editor.prototype._onCursorActivity = function() {
 
         c.appendChild(w);
 
-        for (var i = 0; i < errs.length; i++) {
+        for (i = 0; i < errs.length; i++) {
             var li = document.createElement('li');
             li.textContent = errs[i].formattedMessage();
 
@@ -269,11 +271,11 @@ Editor.prototype._onCursorActivity = function() {
 
         this.editor.addWidget({line: cursor.line, ch: 0}, this._errorMessage.widget, false, 'above');
         c.style.left = '';    }
-}
+};
 
 Editor.prototype.focus = function() {
     this.editor.focus();
-}
+};
 
 Editor.prototype.cursor = function(v) {
     if (typeof v === 'undefined') {
@@ -281,7 +283,7 @@ Editor.prototype.cursor = function(v) {
     }
 
     this.editor.setCursor(v);
-}
+};
 
 Editor.prototype.value = function(v) {
     var stripper = /[ \t]+$/gm;
@@ -298,7 +300,7 @@ Editor.prototype.value = function(v) {
     }
 
     this._onChangeTimeout();
-}
+};
 
 Editor.prototype.history = function(v) {
     if (typeof v === 'undefined') {
@@ -330,11 +332,11 @@ Editor.prototype.history = function(v) {
     }
 
     this.editor.setHistory(v);
-}
+};
 
 Editor.prototype._makeLoc = function(l) {
     return {line: l.line - 1, ch: l.column - 1};
-}
+};
 
 Editor.prototype._onChangeTimeout = function() {
     this._changeTimeout = 0;
@@ -344,7 +346,7 @@ Editor.prototype._onChangeTimeout = function() {
     } else {
         this._onChangeTimeoutJs();
     }
-}
+};
 
 Editor.prototype._onChangeTimeoutJs = function() {
     try {
@@ -362,7 +364,7 @@ Editor.prototype._onChangeTimeoutJs = function() {
     }
 
     this._processErrors(this._internalErrors, []);
-}
+};
 
 Editor.prototype._onChangeTimeoutGlsl = function() {
     this.parsed = new glsl.ast.Parser(this.value(), this.type, {
@@ -375,7 +377,7 @@ Editor.prototype._onChangeTimeoutGlsl = function() {
 
     this._processErrors(this._internalErrors, this.parsed.errors());
     this._onNotifyParsed();
-}
+};
 
 Editor.prototype.runtimeError = function(error) {
     var tok = this.editor.getTokenAt(CodeMirror.Pos(error.location.line - 1, error.location.column));
@@ -400,18 +402,20 @@ Editor.prototype.runtimeError = function(error) {
     };
 
     this._processErrors(this._internalErrors, [err]);
-}
+};
 
 Editor.prototype.externalErrors = function(errors) {
     this._processErrors(this._externalErrors, errors);
-}
+};
 
 Editor.prototype._processErrors = function(ctx, errors) {
     var doc = this.editor.getDoc();
 
     ctx.errors = errors.slice(0);
 
-    for (var i = 0; i < ctx.markers.length; i++) {
+    var i;
+
+    for (i = 0; i < ctx.markers.length; i++) {
         ctx.markers[i].clear();
     }
 
@@ -423,10 +427,8 @@ Editor.prototype._processErrors = function(ctx, errors) {
         this.editor.display.wrapper.classList.add('error');
     }
 
-    for (var i = 0; i < errors.length; i++) {
+    for (i = 0; i < errors.length; i++) {
         var e = errors[i];
-        var l = e.location.start.line - 1;
-
         var m = doc.markText(this._makeLoc(e.location.start),
                              this._makeLoc(e.location.end), {
                                 className: 'error',
@@ -440,16 +442,16 @@ Editor.prototype._processErrors = function(ctx, errors) {
     }
 
     this._onCursorActivity();
-}
+};
 
-Editor.prototype._onChange = function(c, o) {
+Editor.prototype._onChange = function() {
     if (this._changeTimeout !== 0) {
         clearTimeout(this._changeTimeout);
         this._changeTimeout = 0;
     }
 
     this._changeTimeout = setTimeout(this._onChangeTimeout.bind(this), this.options.checkTimeout);
-}
+};
 
 module.exports = Editor;
 

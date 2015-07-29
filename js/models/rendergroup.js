@@ -83,7 +83,7 @@ RenderGroup.prototype.update = function(ctx, geometry, indices, options) {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
     this.length = indices.length;
-}
+};
 
 /**
  * Get all render parts of the render group. Note that this just returns
@@ -95,7 +95,7 @@ RenderGroup.prototype.renderParts = function() {
     }
 
     return [this];
-}
+};
 
 /**
  * Bind the render group in the given context.
@@ -106,7 +106,7 @@ RenderGroup.prototype.bind = function(ctx) {
     var gl = ctx.gl;
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._ibo);
-}
+};
 
 /**
  * Unbind the render group from the given context.
@@ -117,7 +117,7 @@ RenderGroup.prototype.unbind = function(ctx) {
     var gl = ctx.gl;
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-}
+};
 
 /**
  * Render the render group.
@@ -133,7 +133,7 @@ RenderGroup.prototype.render = function(ctx) {
     gl.drawElements(this.type, this.length, gl.UNSIGNED_SHORT, 0);
 
     this.unbind(ctx);
-}
+};
 
 module.exports = RenderGroup;
 

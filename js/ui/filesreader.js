@@ -162,7 +162,7 @@ FilesReader.prototype.finished = function(f, ok) {
         ff.row.classList.add('finished');
         ff.finished = true;
     }
-}
+};
 
 module.exports = FilesReader;
 

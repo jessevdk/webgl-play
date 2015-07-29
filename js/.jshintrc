@@ -1,0 +1,32 @@
+{
+    "maxerr": 5000,
+    "camelcase": true,
+    "curly": true,
+    "forin": false,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "quotmark": true,
+    "undef": true,
+    "unused": "vars",
+    "shadow": false,
+    "sub": false,
+    "loopfunc": true,
+
+	"browser": true,
+	"devel": true,
+	"predef": [
+		"require",
+		"global",
+		"exports",
+		"module",
+		"__dirname"
+	],
+	"globals": {
+		"require": false,
+		"global": false,
+		"exports": false,
+		"module": false,
+		"__dirname": false
+	}
+}

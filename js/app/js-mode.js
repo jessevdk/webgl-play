@@ -29,6 +29,8 @@
 
 var utils = require('../utils/utils');
 
+var CodeMirror = window.CodeMirror;
+
 function render(element, self, data) {
     var t = data.text;
     var prev = 0;
@@ -47,18 +49,19 @@ function render(element, self, data) {
     element.appendChild(icon);
 
     var span = document.createElement('span');
+    var e;
 
     for (var i = 0; i < data.pos.length; i++) {
         var p = data.pos[i];
 
         if (p.start !== prev) {
-            var e = document.createElement('span');
+            e = document.createElement('span');
             e.textContent = t.slice(prev, p.start);
 
             span.appendChild(e);
         }
 
-        var e = document.createElement('span');
+        e = document.createElement('span');
         e.classList.add('match');
         e.textContent = t.slice(p.start, p.end + 1);
         span.appendChild(e);
@@ -67,7 +70,7 @@ function render(element, self, data) {
     }
 
     if (prev != t.length) {
-        var e = document.createElement('span');
+        e = document.createElement('span');
         e.textContent = t.slice(prev);
         span.appendChild(e);
     }
@@ -156,11 +159,13 @@ function fillInfo(info, completion, doc) {
     var title = document.createElement('div');
     title.classList.add('title');
 
+    var i;
+
     if (doc.kind === 'class' || doc.kind === 'function') {
         var args = [];
 
         if (typeof doc.params !== 'undefined') {
-            for (var i = 0; i < doc.params.length; i++) {
+            for (i = 0; i < doc.params.length; i++) {
                 args.push(doc.params[i].name);
             }
         }
@@ -197,12 +202,13 @@ function fillInfo(info, completion, doc) {
         var table = document.createElement('table');
         table.classList.add('params');
 
-        for (var i = 0; i < doc.params.length; i++) {
+        for (i = 0; i < doc.params.length; i++) {
             var p = doc.params[i];
 
             var row = document.createElement('tr');
             var name = document.createElement('td');
-            var description = document.createElement('td');
+            
+            description = document.createElement('td');
 
             name.textContent = p.name;
             description.textContent = p.description;
@@ -278,7 +284,9 @@ function hint(editor, options) {
 
     var obj = context;
 
-    for (var i = 0; i < ctx.length - 1; i++) {
+    var i;
+
+    for (i = 0; i < ctx.length - 1; i++) {
         obj = obj[ctx[i]];
 
         if (obj === null || typeof obj === 'undefined') {
@@ -290,11 +298,11 @@ function hint(editor, options) {
     var matches = [];
 
     var names = Object.getOwnPropertyNames(obj);
-    var seen = {};
+    var seen = {}, m, k;
 
-    for (var i = 0; i < names.length; i++) {
-        var k = names[i];
-        var m = match(k.toLowerCase(), f);
+    for (i = 0; i < names.length; i++) {
+        k = names[i];
+        m = match(k.toLowerCase(), f);
 
         seen[k] = true;
 
@@ -305,12 +313,12 @@ function hint(editor, options) {
         }
     }
 
-    for (var k in obj) {
+    for (k in obj) {
         if (k in seen) {
             continue;
         }
 
-        var m = match(k.toLowerCase(), f);
+        m = match(k.toLowerCase(), f);
 
         if (m !== false) {
             try {
@@ -337,7 +345,7 @@ function hint(editor, options) {
 
     var completions = [];
 
-    for (var i = 0; i < matches.length; i++) {
+    for (i = 0; i < matches.length; i++) {
         completions.push({
             text: matches[i].text,
             render: render,
@@ -412,6 +420,6 @@ function hint(editor, options) {
     return ret;
 }
 
-CodeMirror.registerHelper("hint", "javascript", hint);
+CodeMirror.registerHelper('hint', 'javascript', hint);
 
 // vi:ts=4:et

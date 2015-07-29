@@ -261,7 +261,7 @@ Preprocessor.prototype.type = function() {
 
 Preprocessor.prototype.extensions = function() {
     return this._extensions.slice(0);
-}
+};
 
 Preprocessor.prototype._sourceMap = function(range) {
     return new glsl.source.Range(this._sourceMapOne(range.start, false),
@@ -457,7 +457,7 @@ Preprocessor.prototype._makeExpressionTokenizer = function(tok, s) {
     source.offset(tok.location.end);
 
     return new ExpressionTokenizer(source);
-}
+};
 
 Preprocessor.prototype._if = function(tok, tokenizer) {
     var rest = tokenizer.remainder();

@@ -7523,7 +7523,7 @@
                   "t": {
                     "type(builtins.PrimitiveType)": "$float",
                     "isConstExpression": true,
-                    "constValue": 0.5235987755982988,
+                    "constValue": 0.5235987755982989,
                     "decl(FunctionProto)": {
                       "header(FunctionHeader)": {
                         "type(TypeRef)": {
@@ -7707,7 +7707,7 @@
                   "t": {
                     "type(builtins.PrimitiveType)": "$float",
                     "isConstExpression": true,
-                    "constValue": 1.0471975511965976,
+                    "constValue": 1.0471975511965979,
                     "decl(FunctionProto)": {
                       "header(FunctionHeader)": {
                         "type(TypeRef)": {
@@ -8103,7 +8103,7 @@
                   "t": {
                     "type(builtins.PrimitiveType)": "$float",
                     "isConstExpression": true,
-                    "constValue": 0.46364760900080615,
+                    "constValue": 0.4636476090008061,
                     "decl(FunctionProto)": {
                       "header(FunctionHeader)": {
                         "type(TypeRef)": {
@@ -8148,7 +8148,7 @@
                     "isConstExpression": true,
                     "constValue": [
                       0.7853981633974483,
-                      1.1071487177940906
+                      1.1071487177940904
                     ],
                     "decl(FunctionProto)": {
                       "header(FunctionHeader)": {
@@ -8194,7 +8194,7 @@
                     "isConstExpression": true,
                     "constValue": [
                       0.7853981633974483,
-                      1.1071487177940906,
+                      1.1071487177940904,
                       1.2490457723982544
                     ],
                     "decl(FunctionProto)": {
@@ -8241,7 +8241,7 @@
                     "isConstExpression": true,
                     "constValue": [
                       0.7853981633974483,
-                      1.1071487177940906,
+                      1.1071487177940904,
                       1.2490457723982544,
                       1.3258176636680326
                     ],

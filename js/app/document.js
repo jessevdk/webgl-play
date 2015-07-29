@@ -79,18 +79,18 @@ Document.prototype.constructor = Document;
 
 Document.prototype.defaultProgram = function() {
     return this._defaultProgram;
-}
+};
 
 Document.prototype._changed = function(opts) {
     this.modificationTime = new Date();
     this._onChanged(opts);
-}
+};
 
 Document.prototype._onProgramNotifyName = function() {
     this._changed({
         programs: true
-    })
-}
+    });
+};
 
 Document.prototype.addProgram = function(program) {
     this.programs.push(program);
@@ -101,7 +101,7 @@ Document.prototype.addProgram = function(program) {
     this._changed({
         programs: true
     });
-}
+};
 
 Document.prototype.removeProgram = function(program) {
     var idx = this.programs.indexOf(program);
@@ -125,7 +125,7 @@ Document.prototype.removeProgram = function(program) {
             programs: true
         });
     }
-}
+};
 
 Document.prototype.activeProgram = function(program) {
     if (typeof program === 'undefined') {
@@ -141,7 +141,7 @@ Document.prototype.activeProgram = function(program) {
             activeProgram: true
         });
     }
-}
+};
 
 Document.prototype.update = function(changes) {
     if ('vertex' in changes) {
@@ -175,8 +175,10 @@ Document.prototype.update = function(changes) {
         this._onNotifyDescription();
     }
 
+    var i;
+
     if ('activeProgram' in changes) {
-        for (var i = 0; i < this.programs.length; i++) {
+        for (i = 0; i < this.programs.length; i++) {
             if (this.programs[i].name() === changes.activeProgram) {
                 this.activeProgram(this.programs[i]);
                 break;
@@ -187,7 +189,7 @@ Document.prototype.update = function(changes) {
     // Simple properties
     var props = ['activeEditor', 'screenshot', 'share', 'license', 'author'];
 
-    for (var i = 0; i < props.length; i++) {
+    for (i = 0; i < props.length; i++) {
         var p = props[i];
 
         if (p in changes) {
@@ -196,7 +198,7 @@ Document.prototype.update = function(changes) {
     }
 
     this._changed(changes);
-}
+};
 
 Document.fromRemote = function(share, doc) {
     var ret = new Document();
@@ -205,7 +207,9 @@ Document.fromRemote = function(share, doc) {
     ret.programs = [];
     ret._defaultProgram = null;
 
-    for (var i = 0; i < doc.programs.length; i++) {
+    var i;
+
+    for (i = 0; i < doc.programs.length; i++) {
         var prg = Program.fromRemote(doc.programs[i]);
         ret.programs.push(prg);
 
@@ -233,7 +237,7 @@ Document.fromRemote = function(share, doc) {
     // Simple properties
     var props = ['title', 'description', 'authors'];
 
-    for (var i = 0; i < props.length; i++) {
+    for (i = 0; i < props.length; i++) {
         var p = props[i];
         ret[p] = doc[p];
     }
@@ -244,7 +248,7 @@ Document.fromRemote = function(share, doc) {
     ret.state = {};
 
     return ret;
-}
+};
 
 Document.prototype.remote = function() {
     var programs = [];
@@ -262,7 +266,7 @@ Document.prototype.remote = function() {
         creationTime: this.creationTime,
         authors: this.authors
     };
-}
+};
 
 Document.prototype.serialize = function() {
     var programs = [];
@@ -290,14 +294,14 @@ Document.prototype.serialize = function() {
         license: this.license,
         author: this.author,
         authors: this.authors
-    }
+    };
 
     if (this.id !== null) {
         ret.id = this.id;
     }
 
     return ret;
-}
+};
 
 Document.deserialize = function(doc) {
     var ret = new Document();
@@ -310,7 +314,9 @@ Document.deserialize = function(doc) {
         ret.id = doc.id;
     }
 
-    for (var i = 0; i < doc.programs.length; i++) {
+    var i;
+
+    for (i = 0; i < doc.programs.length; i++) {
         var prg = Program.deserialize(doc.programs[i]);
         ret.programs.push(prg);
 
@@ -338,7 +344,7 @@ Document.deserialize = function(doc) {
 
     var props = ['title', 'description', 'modificationTime', 'creationTime', 'state', 'screenshot', 'share', 'license', 'author', 'authors', 'activeEditor'];
 
-    for (var i = 0; i < props.length; i++) {
+    for (i = 0; i < props.length; i++) {
         var p = props[i];
 
         if (p in doc) {
@@ -356,7 +362,7 @@ Document.deserialize = function(doc) {
     }
 
     return ret;
-}
+};
 
 module.exports = Document;
 

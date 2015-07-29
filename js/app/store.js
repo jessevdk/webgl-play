@@ -34,7 +34,7 @@ function Store(ready) {
     var version = 6;
 
     //indexedDB.deleteDatabase('webgl-play');
-    var req = indexedDB.open('webgl-play', version);
+    var req = window.indexedDB.open('webgl-play', version);
 
     req.onsuccess = this._onsuccess.bind(this);
     req.onerror = this._onerror.bind(this);
@@ -44,6 +44,7 @@ function Store(ready) {
 Store.prototype.saveAppSettings = function(settings) {
     var tr = this._db.transaction('app-settings', 'readwrite');
     var store = tr.objectStore('app-settings');
+    var req;
 
     if (!('id' in settings)) {
         req = store.add(settings);
@@ -56,7 +57,7 @@ Store.prototype.saveAppSettings = function(settings) {
             settings.id = e.target.result;
         }
     };
-}
+};
 
 Store.prototype.appSettings = function(cb) {
     var tr = this._db.transaction('app-settings');
@@ -72,10 +73,10 @@ Store.prototype.appSettings = function(cb) {
         }
     }).bind(this);
 
-    req.onerror = (function(ev) {
+    req.onerror = (function() {
         cb(this, {});
     }).bind(this);
-}
+};
 
 Store.prototype.objectToCache = function(url, filename, date, obj) {
     var tr = this._db.transaction('object-cache', 'readwrite');
@@ -90,7 +91,7 @@ Store.prototype.objectToCache = function(url, filename, date, obj) {
         object: obj,
         filename: filename
     }, url);
-}
+};
 
 Store.prototype.objectFromCache = function(url, date, cb) {
     var tr = this._db.transaction('object-cache');
@@ -129,7 +130,7 @@ Store.prototype.objectFromCache = function(url, date, cb) {
         console.error('database error', ev);
         cb(this, null);
     }).bind(this);
-}
+};
 
 Store.prototype.delete = function(doc, cb) {
     if (!('id' in doc)) {
@@ -142,7 +143,7 @@ Store.prototype.delete = function(doc, cb) {
 
     var req = store.delete(doc.id);
 
-    req.onsuccess = (function(ev) {
+    req.onsuccess = (function() {
         cb(this, doc);
     }).bind(this);
 
@@ -150,7 +151,7 @@ Store.prototype.delete = function(doc, cb) {
         console.error('database error', ev);
         cb(this, null);
     }).bind(this);
-}
+};
 
 Store.prototype.byShare = function(share, cb) {
     var tr = this._db.transaction('documents');
@@ -171,7 +172,7 @@ Store.prototype.byShare = function(share, cb) {
         console.error('database error', ev);
         cb(this, null);
     }).bind(this);
-}
+};
 
 Store.prototype.byId = function(id, cb) {
     var tr = this._db.transaction('documents');
@@ -190,7 +191,7 @@ Store.prototype.byId = function(id, cb) {
         console.error('database error', ev);
         cb(this, null);
     }).bind(this);
-}
+};
 
 Store.prototype.last = function(cb) {
     var tr = this._db.transaction('documents');
@@ -211,7 +212,7 @@ Store.prototype.last = function(cb) {
         console.error('database error', ev);
         cb(this, null);
     }).bind(this);
-}
+};
 
 Store.prototype.all = function(cb) {
     var tr = this._db.transaction('documents');
@@ -237,7 +238,7 @@ Store.prototype.all = function(cb) {
         console.error('database error', ev);
         cb(this, ret);
     }).bind(this);
-}
+};
 
 Store.prototype.addModel = function(model, data, cb) {
     if (!('filename' in model)) {
@@ -257,7 +258,7 @@ Store.prototype.addModel = function(model, data, cb) {
         data: data
     });
 
-    tr.oncomplete = (function(ev) {
+    tr.oncomplete = (function() {
         cb(this, model);
     }).bind(this);
 
@@ -265,7 +266,7 @@ Store.prototype.addModel = function(model, data, cb) {
         console.error('database error', ev);
         cb(this, null);
     }).bind(this);
-}
+};
 
 Store.prototype.modelData = function(filename, cb) {
     var tr = this._db.transaction('model-data');
@@ -285,7 +286,7 @@ Store.prototype.modelData = function(filename, cb) {
         console.error('database error', e);
         cb(this, null);
     }).bind(this);
-}
+};
 
 Store.prototype.deleteModel = function(model, cb) {
     if (!('filename' in model)) {
@@ -312,7 +313,7 @@ Store.prototype.deleteModel = function(model, cb) {
         }
     };
 
-    tr.oncomplete = (function(ev) {
+    tr.oncomplete = (function() {
         cb(this, model);
     }).bind(this);
 
@@ -320,7 +321,7 @@ Store.prototype.deleteModel = function(model, cb) {
         console.error('database error', ev);
         cb(this, null);
     }).bind(this);
-}
+};
 
 Store.prototype.models = function(cb) {
     var tr = this._db.transaction('models');
@@ -344,7 +345,7 @@ Store.prototype.models = function(cb) {
         console.error('database error', ev);
         cb(this, ret);
     }).bind(this);
-}
+};
 
 Store.prototype.save = function(doc, cb) {
     var tr = this._db.transaction('documents', 'readwrite');
@@ -375,7 +376,7 @@ Store.prototype.save = function(doc, cb) {
             cb(this, doc);
         }
     }).bind(this);
-}
+};
 
 Store.prototype._onsuccess = function(e) {
     this._db = e.target.result;
@@ -383,11 +384,11 @@ Store.prototype._onsuccess = function(e) {
     if (typeof this._ready === 'function') {
         this._ready(this);
     }
-}
+};
 
 Store.prototype._onerror = function(e) {
     console.error('Database error', e);
-}
+};
 
 Store.prototype._onupgradeneeded = function(e) {
     var db = e.target.result;
@@ -441,7 +442,7 @@ Store.prototype._onupgradeneeded = function(e) {
     if (e.oldVersion <= 5) {
         appSettingsStore = db.createObjectStore('app-settings', { autoIncrement: true, keyPath: 'id' });
     }
-}
+};
 
 module.exports = Store;
 

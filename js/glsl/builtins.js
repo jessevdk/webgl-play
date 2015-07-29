@@ -438,9 +438,9 @@ Builtins.optionsFromContext = function(ctx) {
         var drawbuffersExt = ctx.getExtension('WEBGL_draw_buffers');
 
         if (drawbuffersExt !== null) {
-            constants['gl_MaxDrawBuffers'] = ctx.getParameter(drawbuffersExt.MAX_DRAW_BUFFERS_WEBGL);
+            constants.gl_MaxDrawBuffers = ctx.getParameter(drawbuffersExt.MAX_DRAW_BUFFERS_WEBGL);
         } else {
-            constants['gl_MaxDrawBuffers'] = 1;
+            constants.gl_MaxDrawBuffers = 1;
         }
     }
 
@@ -656,7 +656,7 @@ Builtins.prototype._declarePrecision = function(precision, typeid) {
 
     this.precisions.push(prec);
     this.precisionMap[type.name] = prec;
-}
+};
 
 Builtins.prototype._definePrecisions = function() {
     switch (this.type) {
@@ -672,7 +672,7 @@ Builtins.prototype._definePrecisions = function() {
         this._declarePrecision(Tn.T_LOWP, Tn.T_SAMPLERCUBE);
         break;
     }
-}
+};
 
 Builtins.prototype._elemEvaluator = function() {
     var l = 0;

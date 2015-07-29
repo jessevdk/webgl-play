@@ -67,7 +67,7 @@ MouseTracker.prototype._onMouseDown = function(e) {
 
     e.preventDefault();
     e.stopPropagation();
-}
+};
 
 module.exports = MouseTracker;
 

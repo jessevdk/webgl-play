@@ -78,6 +78,60 @@ function htmlEscape(s) {
     return escapeDiv.innerHTML;
 }
 
+function api(url, method, data, options) {
+    options = merge({
+        success: function() {},
+        error: function() {},
+        backend: true,
+        json: true
+    }, options);
+
+    var req = new XMLHttpRequest();
+
+    req.onload = function(e) {
+        var req = e.target;
+
+        if (req.status === 200) {
+            var ret;
+
+            if (options.json) {
+                try {
+                    ret = JSON.parse(req.responseText);
+                } catch (err) {
+                    options.error(req, err);
+                    return;
+                }
+            } else {
+                ret = req.responseText;
+            }
+
+            options.success(req, ret);
+        } else {
+            options.error(req, null);
+        }
+    };
+
+    req.onerror = function(e) {
+        options.error(e.target, null);
+    };
+
+    if (options.backend) {
+        url = global.Settings.backend.url(url);
+    }
+
+    req.open(method, url, true);
+
+    if (options.json) {
+        req.setRequestHeader('Content-Type', 'application/json');
+    }
+
+    if (typeof data !== 'undefined') {
+        req.send(JSON.stringify(data));
+    } else {
+        req.send();
+    }
+}
+
 function get(url, options) {
     return api(url, 'get', undefined, options);
 }
@@ -103,67 +157,13 @@ function post(url, data, options) {
     return api(url, 'post', data, options);
 }
 
-function api(url, method, data, options) {
-    options = merge({
-        success: function() {},
-        error: function() {},
-        backend: true,
-        json: true
-    }, options);
-
-    var req = new XMLHttpRequest();
-
-    req.onload = function(e) {
-        var req = e.target;
-
-        if (req.status === 200) {
-            var ret;
-
-            if (options.json) {
-                try {
-                    ret = JSON.parse(req.responseText);
-                } catch (e) {
-                    options.error(req, e);
-                    return;
-                }
-            } else {
-                ret = req.responseText;
-            }
-
-            options.success(req, ret);
-        } else {
-            options.error(req, null);
-        }
-    };
-
-    req.onerror = function(e) {
-        options.error(e.target, null);
-    };
-
-    if (options.backend) {
-        url = global.Settings.backend.url(url);
-    }
-
-    req.open(method, url, true);
-
-    if (options.json) {
-        req.setRequestHeader('Content-Type', 'application/json')
-    }
-
-    if (typeof data !== 'undefined') {
-        req.send(JSON.stringify(data));
-    } else {
-        req.send();
-    }
-}
-
 exports.merge = merge;
 exports.htmlEscape = htmlEscape;
 
 exports.get = get;
 exports.getQuery = getQuery;
 exports.post = post;
-exports.api = api
+exports.api = api;
 exports.Browser = Browser;
 
 // vi:ts=4:et

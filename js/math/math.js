@@ -54,7 +54,7 @@ function transform(orientation, position) {
  */
 transform.create = function() {
     return new transform(glMatrix.quat.create(), glMatrix.vec3.create());
-}
+};
 
 /**
  * Track changes in one transform to derive a value whenever the transform
@@ -102,11 +102,11 @@ transform.track = function(out, value, property, func) {
 
     prev = ret;
     return ret;
-}
+};
 
 transform.clone = function(a) {
     return a.clone();
-}
+};
 
 /**
  * Clone the transform.
@@ -114,7 +114,7 @@ transform.clone = function(a) {
 transform.prototype.clone = function() {
     return new transform(glMatrix.quat.clone(this.orientation),
                          glMatrix.vec3.clone(this.position));
-}
+};
 
 transform.copy = function(out, a) {
     glMatrix.quat.copy(out.orientation, a.orientation);
@@ -123,7 +123,7 @@ transform.copy = function(out, a) {
     out._dirty++;
 
     return out;
-}
+};
 
 transform.multiply = function(out, a, b) {
     var apos = a.position;
@@ -133,7 +133,7 @@ transform.multiply = function(out, a, b) {
     var bori = b.orientation;
 
     var oribpos = glMatrix.vec3.create();
-    glMatrix.vec3.transformQuat(oribpos, bpos, aori)
+    glMatrix.vec3.transformQuat(oribpos, bpos, aori);
 
     glMatrix.vec3.add(out.position, apos, oribpos);
     glMatrix.quat.mul(out.orientation, aori, bori);
@@ -141,7 +141,7 @@ transform.multiply = function(out, a, b) {
     out._dirty++;
 
     return out;
-}
+};
 
 transform.mul = transform.multiply;
 
@@ -153,7 +153,7 @@ transform.mul = transform.multiply;
  */
 transform.prototype.mul = function(other) {
     return transform.mul(this, this, other);
-}
+};
 
 /**
  * Pre-multiply the transform by another transform. Note that this
@@ -163,7 +163,7 @@ transform.prototype.mul = function(other) {
  */
 transform.prototype.preMul = function(other) {
     return transform.mul(this, other, this);
-}
+};
 
 transform.rotateX = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
@@ -172,7 +172,7 @@ transform.rotateX = function(out, a, rad) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Rotate the transform around its local X axis. Note that this
@@ -182,7 +182,7 @@ transform.rotateX = function(out, a, rad) {
  */
 transform.prototype.rotateX = function(rad) {
     return transform.rotateX(this, this, rad);
-}
+};
 
 transform.preRotateX = function(out, a, rad) {
     glMatrix.vec3.rotateX(out.position, a.position, [0, 0, 0], rad);
@@ -191,7 +191,7 @@ transform.preRotateX = function(out, a, rad) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Rotate the transform around its global X axis. Note that this
@@ -201,7 +201,7 @@ transform.preRotateX = function(out, a, rad) {
  */
 transform.prototype.preRotateX = function(rad) {
     return transform.preRotateX(this, this, rad);
-}
+};
 
 transform.rotateY = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
@@ -210,7 +210,7 @@ transform.rotateY = function(out, a, rad) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Rotate the transform around its local Y axis. Note that this
@@ -220,7 +220,7 @@ transform.rotateY = function(out, a, rad) {
  */
 transform.prototype.rotateY = function(rad) {
     return transform.rotateY(this, this, rad);
-}
+};
 
 transform.preRotateY = function(out, a, rad) {
     glMatrix.vec3.rotateY(out.position, a.position, [0, 0, 0], rad);
@@ -229,7 +229,7 @@ transform.preRotateY = function(out, a, rad) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Rotate the transform around its global Y axis. Note that this
@@ -239,7 +239,7 @@ transform.preRotateY = function(out, a, rad) {
  */
 transform.prototype.preRotateY = function(rad) {
     return transform.preRotateY(this, this, rad);
-}
+};
 
 transform.rotateZ = function(out, a, rad) {
     glMatrix.vec3.copy(out.position, a.position);
@@ -248,7 +248,7 @@ transform.rotateZ = function(out, a, rad) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Rotate the transform around its local Z axis. Note that this
@@ -258,7 +258,7 @@ transform.rotateZ = function(out, a, rad) {
  */
 transform.prototype.rotateZ = function(rad) {
     return transform.rotateZ(this, this, rad);
-}
+};
 
 transform.preRotateZ = function(out, a, rad) {
     glMatrix.vec3.rotateZ(out.position, a.position, [0, 0, 0], rad);
@@ -267,7 +267,7 @@ transform.preRotateZ = function(out, a, rad) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Rotate the transform around its global Z axis. Note that this
@@ -277,7 +277,7 @@ transform.preRotateZ = function(out, a, rad) {
  */
 transform.prototype.preRotateZ = function(rad) {
     return transform.preRotateZ(this, this, rad);
-}
+};
 
 transform.rotate = function(out, a, q) {
     glMatrix.vec3.copy(out.position, a.position);
@@ -286,7 +286,7 @@ transform.rotate = function(out, a, q) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Rotate the transform by the given quaternion. Note that this
@@ -296,7 +296,7 @@ transform.rotate = function(out, a, q) {
  */
 transform.prototype.rotate = function(q) {
     return transform.rotate(this, this, q);
-}
+};
 
 transform.preRotate = function(out, a, q) {
     glMatrix.vec3.transformQuat(out.position, a.position, q);
@@ -305,7 +305,7 @@ transform.preRotate = function(out, a, q) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Rotate the transform globally by the given quaternion. Note that this
@@ -315,7 +315,7 @@ transform.preRotate = function(out, a, q) {
  */
 transform.prototype.preRotate = function(q) {
     return transform.rotate(this, this, q);
-}
+};
 
 transform.translateX = function(out, a, v) {
     glMatrix.quat.copy(out.orientation, a.orientation);
@@ -326,7 +326,7 @@ transform.translateX = function(out, a, v) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Translate on X in the parent frame. If you want to translate
@@ -338,7 +338,7 @@ transform.translateX = function(out, a, v) {
  */
 transform.prototype.translateX = function(v) {
     return transform.translateX(this, this, v);
-}
+};
 
 transform.translateY = function(out, a, v) {
     glMatrix.quat.copy(out.orientation, a.orientation);
@@ -349,7 +349,7 @@ transform.translateY = function(out, a, v) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Translate on Y in the parent frame. If you want to translate
@@ -361,7 +361,7 @@ transform.translateY = function(out, a, v) {
  */
 transform.prototype.translateY = function(v) {
     return transform.translateY(this, this, v);
-}
+};
 
 transform.translateZ = function(out, a, v) {
     glMatrix.quat.copy(out.orientation, a.orientation);
@@ -372,7 +372,7 @@ transform.translateZ = function(out, a, v) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Translate on Z in the parent frame. If you want to translate
@@ -384,7 +384,7 @@ transform.translateZ = function(out, a, v) {
  */
 transform.prototype.translateZ = function(v) {
     return transform.translateZ(this, this, v);
-}
+};
 
 transform.translate = function(out, a, v) {
     glMatrix.quat.copy(out.orientation, a.orientation);
@@ -393,7 +393,7 @@ transform.translate = function(out, a, v) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Translate by the given vector. Note that this modifies the
@@ -403,7 +403,7 @@ transform.translate = function(out, a, v) {
  */
 transform.prototype.translate = function(v) {
     return transform.translate(this, this, v);
-}
+};
 
 transform.sideAxis = function(out, a) {
     var o = a.orientation,
@@ -423,7 +423,7 @@ transform.sideAxis = function(out, a) {
     out[2] = zx - wy;
 
     return out;
-}
+};
 
 /**
  * Obtain the local orientation's side axis. This is the same
@@ -431,7 +431,7 @@ transform.sideAxis = function(out, a) {
  */
 transform.prototype.sideAxis = function() {
     return transform.sideAxis(glMatrix.vec3.create(), this);
-}
+};
 
 transform.upAxis = function(out, a) {
     var o = a.orientation,
@@ -451,7 +451,7 @@ transform.upAxis = function(out, a) {
     out[2] = zy + wx;
 
     return out;
-}
+};
 
 /**
  * Obtain the local orientation's up axis. This is the same
@@ -459,14 +459,13 @@ transform.upAxis = function(out, a) {
  */
 transform.prototype.upAxis = function() {
     return transform.upAxis(glMatrix.vec3.create(), this);
-}
+};
 
 transform.forwardAxis = function(out, a) {
     var o = a.orientation,
         x = o[0], y = o[1], z = o[2], w = o[3],
         x2 = x + x,
         y2 = y + y,
-        z2 = z + z,
         zx = z * x2,
         wy = w * y2,
         zy = z * y2,
@@ -479,7 +478,7 @@ transform.forwardAxis = function(out, a) {
     out[2] = 1 - xx - yy;
 
     return out;
-}
+};
 
 /**
  * Obtain the local orientation's forward axis. This is the same
@@ -487,7 +486,7 @@ transform.forwardAxis = function(out, a) {
  */
 transform.prototype.forwardAxis = function() {
     return transform.forwardAxis(glMatrix.vec3.create(), this);
-}
+};
 
 transform.translateSide = function(out, a, v) {
     var axis = transform.sideAxis(glMatrix.vec3.create(), a);
@@ -496,7 +495,7 @@ transform.translateSide = function(out, a, v) {
     out._dirty++;
 
     return transform.translate(out, a, axis);
-}
+};
 
 /**
  * Translate the transform along its local orientation side axis.
@@ -506,7 +505,7 @@ transform.translateSide = function(out, a, v) {
  */
 transform.prototype.translateSide = function(v) {
     return transform.translateSide(this, this, v);
-}
+};
 
 transform.translateUp = function(out, a, v) {
     var axis = transform.upAxis(glMatrix.vec3.create(), a);
@@ -515,7 +514,7 @@ transform.translateUp = function(out, a, v) {
     out._dirty++;
 
     return transform.translate(out, a, axis);
-}
+};
 
 /**
  * Translate the transform along its local orientation up axis.
@@ -525,7 +524,7 @@ transform.translateUp = function(out, a, v) {
  */
 transform.prototype.translateUp = function(v) {
     return transform.translateUp(this, this, v);
-}
+};
 
 transform.translateForward = function(out, a, v) {
     var axis = transform.forwardAxis(glMatrix.vec3.create(), a);
@@ -534,7 +533,7 @@ transform.translateForward = function(out, a, v) {
     out._dirty++;
 
     return transform.translate(out, a, axis);
-}
+};
 
 /**
  * Translate the transform along its local orientation forward axis.
@@ -544,7 +543,7 @@ transform.translateForward = function(out, a, v) {
  */
 transform.prototype.translateForward = function(v) {
     return transform.translateForward(this, this, v);
-}
+};
 
 transform.invert = function(out, a) {
     glMatrix.quat.invert(out.orientation, a.orientation);
@@ -555,7 +554,7 @@ transform.invert = function(out, a) {
     out._dirty++;
 
     return out;
-}
+};
 
 /**
  * Invert the transformation. Note that this modifies the receiving
@@ -563,7 +562,7 @@ transform.invert = function(out, a) {
  */
 transform.prototype.invert = function() {
     return transform.invert(this, this);
-}
+};
 
 transform.lookAt = function(out, eye, center, up) {
     var m = glMatrix.mat4.lookAt(glMatrix.mat4.create(), eye, center, up);
@@ -575,23 +574,23 @@ transform.lookAt = function(out, eye, center, up) {
     out.position[2] = m[14];
 
     return out;
-}
+};
 
 transform.prototype.lookAt = function(eye, center, up) {
     return transform.lookAt(this, eye, center, up);
-}
+};
 
 transform.str = function(a) {
     return '{' + glMatrix.quat.str(a.orientation) + ', ' + glMatrix.vec3.str(a.position) + '}';
-}
+};
 
 transform.prototype.str = function() {
     return transform.str(this);
-}
+};
 
 glMatrix.mat4.fromTransform = function(out, t) {
     return glMatrix.mat4.fromRotationTranslation(glMatrix.mat4.create(), t.orientation, t.position);
-}
+};
 
 glMatrix.vec4.transformTransform = function(out, a, t) {
     glMatrix.vec3.transformTransform(out, a, t);
@@ -604,11 +603,11 @@ glMatrix.vec4.transformTransform = function(out, a, t) {
     out[3] = a[4];
 
     return out;
-}
+};
 
 glMatrix.vec3.transformTransform = function(out, a, t) {
     return glMatrix.vec3.add(out, glMatrix.vec3.transformQuat(out, t.orientation), t.position);
-}
+};
 
 function wrapIsMat(orig) {
     return function() {
@@ -616,7 +615,7 @@ function wrapIsMat(orig) {
         ret.isMat = true;
 
         return ret;
-    }
+    };
 }
 
 var numWrappers = {
@@ -633,14 +632,14 @@ var numWrappers = {
 };
 
 for (var k in numWrappers) {
-    exports[k] = (function(w) {
+    exports[k] = (function(W) {
         return function(v) {
             if (typeof v === 'object' && Array.prototype.isPrototypeOf(v)) {
-                return new w(v);
+                return new W(v);
             } else {
-                return new w([v]);
+                return new W([v]);
             }
-        }
+        };
     })(numWrappers[k]);
 }
 
@@ -687,8 +686,8 @@ for (var k in glMatrix) {
                         var args = Array.prototype.slice.call(arguments);
                         args.unshift(v.create());
 
-                        return v[j].apply(null, args)
-                    }
+                        return v[j].apply(null, args);
+                    };
 
                     return ret;
                 })(v, j);

@@ -45,7 +45,7 @@ Label.prototype._valueUpdated = function() {
     } else if (typeof this._value.markup !== 'undefined') {
         this.e.innerHTML = this._value.markup;
     }
-}
+};
 
 module.exports = Label;
 

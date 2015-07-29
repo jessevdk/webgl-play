@@ -37,7 +37,7 @@ Signals.prototype._signal = function(cbs, args) {
         var cb = cbs[i];
         cb.cb.apply(cb.this ? cb.this : this, args);
     }
-}
+};
 
 Signals.prototype.registerSignal = function(ev) {
     if (!(ev in this._events)) {
@@ -54,7 +54,7 @@ Signals.prototype.registerSignal = function(ev) {
     }).bind(this);
 
     return this._emitter[ev];
-}
+};
 
 Signals.prototype.on = function(ev, cb, _this) {
     if (!(ev in this._events)) {
@@ -62,7 +62,7 @@ Signals.prototype.on = function(ev, cb, _this) {
     } else {
         this._events[ev].push({cb: cb, this: _this});
     }
-}
+};
 
 Signals.prototype.emit = function(ev) {
     var args = Array.prototype.slice.call(arguments, 1);
@@ -76,7 +76,7 @@ Signals.prototype.emit = function(ev) {
             this._signal(this._events[ev], args);
         }
     }
-}
+};
 
 Signals.prototype.off = function(ev, cb, _this) {
     if (ev in this._events) {
@@ -93,7 +93,7 @@ Signals.prototype.off = function(ev, cb, _this) {
             delete this._events[ev];
         }
     }
-}
+};
 
 module.exports = Signals;
 

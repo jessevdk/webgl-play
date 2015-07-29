@@ -70,8 +70,9 @@ function IcoSphere(ctx, radius, subdivisions, options) {
                     -y,  0,  x];
 
     var normals = [];
+    var i;
 
-    for (var i = 0; i < vertices.length; i++) {
+    for (i = 0; i < vertices.length; i++) {
         normals.push(vertices[i] / radius);
     }
 
@@ -109,7 +110,7 @@ function IcoSphere(ctx, radius, subdivisions, options) {
         var split = {};
 
         // for each face
-        for (var i = 0; i < indices.length; i += 3) {
+        for (i = 0; i < indices.length; i += 3) {
             var i0 = this._splitEdge(vertices, normals, indices[i], indices[i + 1], split, radius);
             var i1 = this._splitEdge(vertices, normals, indices[i + 1], indices[i + 2], split, radius);
             var i2 = this._splitEdge(vertices, normals, indices[i + 2], indices[i], split, radius);
@@ -161,7 +162,7 @@ IcoSphere.prototype._splitEdge = function(vertices, normals, i1, i2, split, radi
     normals.push(n[0], n[1], n[2]);
 
     return i;
-}
+};
 
 module.exports = IcoSphere;
 

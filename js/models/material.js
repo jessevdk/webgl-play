@@ -107,13 +107,13 @@ Material.prototype._mixColor = function(mecol, color, prop) {
                             mecol.color[1] * mecol.intensity * color[1],
                             mecol.color[2] * mecol.intensity * color[2],
                             mecol.color[3] * color[3]);
-}
+};
 
 Material.prototype.mixColors = function(color, prop) {
     this._mixColor(this.uniforms.ambient, color, prop);
     this._mixColor(this.uniforms.diffuse, color, prop);
     this._mixColor(this.uniforms.specular, color, prop);
-}
+};
 
 Material.prototype._setUniformTyped = function(ctx, u, v, name) {
     var l;
@@ -174,7 +174,7 @@ Material.prototype._setUniformTyped = function(ctx, u, v, name) {
     default:
         break;
     }
-}
+};
 
 Material.prototype._setUniform = function(ctx, u, v, name) {
     if (typeof v === 'number') {
@@ -200,7 +200,7 @@ Material.prototype._setUniform = function(ctx, u, v, name) {
     default:
         throw new Error('cannot set uniform ' + v);
     }
-}
+};
 
 Material.prototype._setUniforms = function(ctx, p, uniforms, prefix, depth, seen) {
     if (!seen) {
@@ -262,7 +262,7 @@ Material.prototype._setUniforms = function(ctx, p, uniforms, prefix, depth, seen
             this._setUniform(ctx, u, v, fname);
         }
     }
-}
+};
 
 /**
  * Bind the material in the given context. This sets up the material
@@ -293,7 +293,7 @@ Material.prototype.bind = function(ctx, uniforms) {
 
     this._setUniforms(ctx, p, this.uniforms, 'material');
     this._setUniforms(ctx, p, uniforms);
-}
+};
 
 /** Visible, renders the model normally. */
 Material.VISIBLE = true;

@@ -59,7 +59,7 @@ ProgramsBar.prototype._onNewProgramNameKeypress = function(e) {
     if (e.keyCode === 13) {
         this._onNewProgramClick(this._newProgram, e);
     }
-}
+};
 
 ProgramsBar.prototype.document = function(document) {
     if (typeof document === 'undefined') {
@@ -70,13 +70,15 @@ ProgramsBar.prototype.document = function(document) {
         return;
     }
 
+    var i, p;
+
     if (this._document !== null) {
         this._document.off('notify::active-program', this._onActiveProgramChanged, this);
         this._document.off('program-added', this._onProgramAdded, this);
         this._document.off('program-removed', this._onProgramRemoved, this);
 
-        for (var i = 0; i < this._document.programs.length; i++) {
-            var p = this._document.programs[i];
+        for (i = 0; i < this._document.programs.length; i++) {
+            p = this._document.programs[i];
             this._onProgramRemoved(this._document, p, true);
         }
     }
@@ -88,23 +90,25 @@ ProgramsBar.prototype.document = function(document) {
         this._document.on('program-added', this._onProgramAdded, this);
         this._document.on('program-removed', this._onProgramRemoved, this);
 
-        for (var i = 0; i < this._document.programs.length; i++) {
-            var p = this._document.programs[i];
+        for (i = 0; i < this._document.programs.length; i++) {
+            p = this._document.programs[i];
             this._onProgramAdded(this._document, p);
         }
 
         this._onActiveProgramChanged();
     }
-}
+};
 
 ProgramsBar.prototype._uniqueProgramName = function(name) {
     var names = {};
 
-    for (var i = 0; i < this._document.programs.length; i++) {
+    var i;
+
+    for (i = 0; i < this._document.programs.length; i++) {
         names[this._document.programs[i].name()] = true;
     }
 
-    var i = 0;
+    i = 0;
     var uname;
 
     while (true) {
@@ -122,7 +126,7 @@ ProgramsBar.prototype._uniqueProgramName = function(name) {
     }
 
     return uname;
-}
+};
 
 ProgramsBar.prototype._onNewProgramClick = function(button, e) {
     var name = this._newProgramName.value.trim();
@@ -143,11 +147,11 @@ ProgramsBar.prototype._onNewProgramClick = function(button, e) {
 
     e.preventDefault();
     e.stopPropagation();
-}
+};
 
 ProgramsBar.prototype._findByName = function(name) {
     return this._ul.querySelector('[data-program-name=' + JSON.stringify(name) + ']');
-}
+};
 
 ProgramsBar.prototype._insertProgramItem = function(program, item) {
     var lis = this._ul.querySelectorAll('li');
@@ -162,7 +166,7 @@ ProgramsBar.prototype._insertProgramItem = function(program, item) {
     }
 
     this._ul.insertBefore(item, found);
-}
+};
 
 ProgramsBar.prototype._displayName = function(program) {
     var name = program.name();
@@ -172,7 +176,7 @@ ProgramsBar.prototype._displayName = function(program) {
     }
 
     return name;
-}
+};
 
 ProgramsBar.prototype._onProgramNameChanged = function(program, prevname) {
     var item = this._findByName(prevname);
@@ -184,7 +188,7 @@ ProgramsBar.prototype._onProgramNameChanged = function(program, prevname) {
         this._ul.removeChild(item);
         this._insertProgramItem(program, item);
     }
-}
+};
 
 ProgramsBar.prototype._onActiveProgramChanged = function() {
     var sel = this._ul.querySelector('li.selected');
@@ -203,19 +207,19 @@ ProgramsBar.prototype._onActiveProgramChanged = function() {
     if (this._showDelete !== null && this._showDelete.element !== sel) {
         this._onProgramToggleDelete(this._showDelete.element, this._showDelete.program);
     }
-}
+};
 
 ProgramsBar.prototype._onProgramClick = function(program) {
     this._document.activeProgram(program);
-}
+};
 
 ProgramsBar.prototype._onProgramToggleDelete = function(elem, program) {
-    var name = elem.querySelector('span.name');
+    var del;
 
     if (elem.classList.contains('deleting')) {
         elem.classList.remove('deleting');
 
-        var del = elem.querySelector('div.delete');
+        del = elem.querySelector('div.delete');
         del.classList.remove('animate-in');
 
         this._showDelete = null;
@@ -226,7 +230,7 @@ ProgramsBar.prototype._onProgramToggleDelete = function(elem, program) {
     } else {
         elem.classList.add('deleting');
 
-        var del = document.createElement('div');
+        del = document.createElement('div');
         del.classList.add('delete');
         del.setAttribute('title', 'Delete Program');
 
@@ -237,7 +241,7 @@ ProgramsBar.prototype._onProgramToggleDelete = function(elem, program) {
         elem.appendChild(del);
 
         // trigger re-layout
-        del.offsetWidth;
+        del.offsetWidth; // jshint ignore:line
         del.classList.add('animate-in');
 
         del.addEventListener('click', (function(e) {
@@ -251,7 +255,7 @@ ProgramsBar.prototype._onProgramToggleDelete = function(elem, program) {
             program: program
         };
     }
-}
+};
 
 ProgramsBar.prototype._onProgramBeginEditName = function(elem, program) {
     if (elem.classList.contains('editing')) {
@@ -300,7 +304,7 @@ ProgramsBar.prototype._onProgramBeginEditName = function(elem, program) {
             program.name(this._uniqueProgramName(name));
         }
     }).bind(this));
-}
+};
 
 ProgramsBar.prototype._onProgramErrorChanged = function(program) {
     var elem = this._findByName(program.name());
@@ -331,7 +335,7 @@ ProgramsBar.prototype._onProgramErrorChanged = function(program) {
             elem.setAttribute('title', '');
         }
     }
-}
+};
 
 ProgramsBar.prototype._onProgramAdded = function(doc, program) {
     program.on('notify::name', this._onProgramNameChanged, this);
@@ -376,7 +380,7 @@ ProgramsBar.prototype._onProgramAdded = function(doc, program) {
 
     this._insertProgramItem(program, li);
     this._onProgramErrorChanged(program);
-}
+};
 
 ProgramsBar.prototype._onProgramRemoved = function(doc, program, changingDoc) {
     program.off('notify::name', this._onProgramNameChanged, this);
@@ -389,7 +393,7 @@ ProgramsBar.prototype._onProgramRemoved = function(doc, program, changingDoc) {
             item.classList.add('removed');
 
             if (this._showDelete !== null && this._showDelete.element === item) {
-                this._onProgramToggleDelete(elem, program);
+                this._onProgramToggleDelete(item, program);
             }
 
             setTimeout((function() {
@@ -403,7 +407,7 @@ ProgramsBar.prototype._onProgramRemoved = function(doc, program, changingDoc) {
             this._ul.removeChild(item);
         }
     }
-}
+};
 
 module.exports = ProgramsBar;
 

@@ -30,7 +30,7 @@
 var tokenizer = require('../glsl/tokenizer');
 var source = require('../glsl/source');
 
-var mode = function(config, modeopts) {
+var mode = function(config) {
     var wsource = {
         _stream: null,
 
@@ -88,7 +88,7 @@ var mode = function(config, modeopts) {
 
     Context.push = function(state, column, closetok, align) {
         state.context = new Context(state.indented, column, closetok, align, state.context);
-    }
+    };
 
     Context.pop = function(state) {
         var tok = state.context.closetok;
@@ -98,13 +98,13 @@ var mode = function(config, modeopts) {
         }
 
         state.context = state.context.prev;
-    }
+    };
 
     return {
         lineComment: '//',
         blockCommentStart: '/*',
         blockCommentEnd: '*/',
-        electricChars: "{})",
+        electricChars: '{})',
 
         startState: function(baseColumn) {
             return {
@@ -239,14 +239,14 @@ var mode = function(config, modeopts) {
 
         indent: function(state, textAfter) {
             var ctx = state.context;
-            var closing = false;
+            var closing = false, ret;
 
             if (textAfter) {
                 closing = (ctx.closetok == textAfter.charAt(0));
             }
 
             if (ctx.align) {
-                var ret = ctx.column;
+                ret = ctx.column;
 
                 if (!closing) {
                     ret += 1;
@@ -255,7 +255,7 @@ var mode = function(config, modeopts) {
                 return ret;
             }
 
-            var ret = ctx.indented;
+            ret = ctx.indented;
 
             if (!closing) {
                 ret += config.indentUnit;
@@ -264,12 +264,14 @@ var mode = function(config, modeopts) {
             return ret;
         }
     };
-}
+};
+
+var CodeMirror = window.CodeMirror;
 
 CodeMirror.defineMode('glslv', mode);
 CodeMirror.defineMode('glslf', mode);
 
-CodeMirror.defineMIME("text/x-glslv", "glslv");
-CodeMirror.defineMIME("text/x-glslf", "glslf");
+CodeMirror.defineMIME('text/x-glslv', 'glslv');
+CodeMirror.defineMIME('text/x-glslf', 'glslf');
 
 /* vi:ts=4:et */

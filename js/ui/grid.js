@@ -67,11 +67,11 @@ Grid.prototype._reduceRowspan = function() {
             }
         }
 
-        if (this._col === rps.column) {
-            this._col += rps.colspan;
+        if (this._col === rsp.column) {
+            this._col += rsp.colspan;
         }
     }
-}
+};
 
 Grid.prototype.add = function(child) {
     while (this._row === null || this._col >= this._settings.columns) {
@@ -111,7 +111,7 @@ Grid.prototype.add = function(child) {
     } else {
         this._col++;
     }
-}
+};
 
 module.exports = Grid;
 

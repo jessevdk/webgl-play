@@ -27,8 +27,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-'use strict';
-
 var utils = require('../utils/utils');
 var Model = require('./model');
 var Geometry = require('./geometry');
@@ -63,7 +61,7 @@ WavefrontParser.prototype._onWorkerMessage = function(message) {
         delete this._callbacks[message.data.id];
         cb(message.data.result);
     }
-}
+};
 
 WavefrontParser.prototype.parse = function(data, options, cb) {
     var id = this._id++;
@@ -74,7 +72,7 @@ WavefrontParser.prototype.parse = function(data, options, cb) {
         options: options,
         id: id
     });
-}
+};
 
 var wavefrontParser = new WavefrontParser();
 
@@ -250,7 +248,7 @@ exports.load = function(ctx, filename, options) {
         var backend;
         var url;
 
-        if (filename.indexOf("http:") === 0 || filename.indexOf("https:") === 0) {
+        if (filename.indexOf('http:') === 0 || filename.indexOf('https:') === 0) {
             url = 'm/';
             backend = true;
         } else {

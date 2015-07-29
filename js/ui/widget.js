@@ -116,14 +116,14 @@ Widget.prototype.sensitive = function(value) {
 
         this._onNotifySensitive();
     }
-}
+};
 
 Widget.prototype._valueTransform = function(v) {
     return v;
-}
+};
 
 Widget.prototype._valueUpdated = function() {
-}
+};
 
 Widget.prototype.value = function(value) {
     if (typeof value === 'undefined') {
@@ -138,7 +138,7 @@ Widget.prototype.value = function(value) {
         this._valueUpdated();
         this._onNotifyValue();
     }
-}
+};
 
 Widget.createUi = function(name, attributes) {
     var ret = document.createElement(name);
@@ -147,6 +147,8 @@ Widget.createUi = function(name, attributes) {
         attributes = {};
     }
 
+    var i;
+
     for (var a in attributes) {
         var v = attributes[a];
 
@@ -154,7 +156,7 @@ Widget.createUi = function(name, attributes) {
             if (typeof v === 'string') {
                 ret.classList.add(v);
             } else {
-                for (var i = 0; i < v.length; i++) {
+                for (i = 0; i < v.length; i++) {
                     ret.classList.add(v[i]);
                 }
             }
@@ -162,7 +164,7 @@ Widget.createUi = function(name, attributes) {
             v.appendChild(ret);
         } else if (a === 'children') {
             if (typeof v === 'object' && Array.prototype.isPrototypeOf(v)) {
-                for (var i = 0; i < v.length; i++) {
+                for (i = 0; i < v.length; i++) {
                     ret.appendChild(v[i]);
                 }
             } else {
@@ -178,11 +180,11 @@ Widget.createUi = function(name, attributes) {
     }
 
     return ret;
-}
+};
 
 Widget.prototype.create = function(name, attributes) {
     return Widget.createUi(name, attributes);
-}
+};
 
 Widget.prototype.childElements = function(e) {
     if (typeof e === 'undefined') {
@@ -200,7 +202,7 @@ Widget.prototype.childElements = function(e) {
     }
 
     return ret;
-}
+};
 
 Widget.prototype.pagePosition = function(e) {
     if (typeof e === 'undefined') {
@@ -227,7 +229,7 @@ Widget.prototype.pagePosition = function(e) {
     }
 
     return ret;
-}
+};
 
 module.exports = Widget;
 

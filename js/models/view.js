@@ -32,8 +32,6 @@ var math = require('../math/math');
 var utils = require('../utils/utils');
 var Texture = require('./texture');
 
-"use strict";
-
 /**
  * A basic view. A View is a collection of transform (inherited from model),
  * a projection matrix and a viewport. Note that you can use View.perspective
@@ -147,7 +145,7 @@ View.prototype.interactive = function(ctx, v) {
     ctx.gl.canvas.addEventListener('contextmenu', function(e) {
         e.preventDefault();
     });
-}
+};
 
 View.prototype._rotateDxDy = function(dx, dy, s, origTransform) {
     if (typeof origTransform !== 'undefined') {
@@ -169,7 +167,7 @@ View.prototype._rotateDxDy = function(dx, dy, s, origTransform) {
 
     var tr = math.vec3.transformQuat(math.vec3.create(), otr, rot);
     math.transform.copy(this.transform, new math.transform(rot, math.vec3.add(tr, tr, this._interactive.origin)));
-}
+};
 
 View.prototype._translateDxDy = function(dx, dy, sx, sy, origTransform) {
     if (typeof origTransform !== 'undefined') {
@@ -177,7 +175,7 @@ View.prototype._translateDxDy = function(dx, dy, sx, sy, origTransform) {
     }
 
     this.transform.translateSide(dx * sx).translateUp(dy * sy);
-}
+};
 
 View.prototype._zoomDxDy = function(dx, dy, s, origTransform) {
     if (typeof origTransform !== 'undefined') {
@@ -185,9 +183,11 @@ View.prototype._zoomDxDy = function(dx, dy, s, origTransform) {
     }
 
     this.transform.translateForward((dx + dy) * s);
-}
+};
 
 View.prototype._onEvent = function(ctx, e) {
+    var mp;
+
     switch (e.type) {
     case 'wheel':
         if (e.shiftKey) {
@@ -217,7 +217,7 @@ View.prototype._onEvent = function(ctx, e) {
         };
         break;
     case 'mousemove':
-        var mp = this._interactive._mousePressed;
+        mp = this._interactive._mousePressed;
 
         if (mp !== null && mp.button === 0) {
             if (e.shiftKey) {
@@ -239,7 +239,7 @@ View.prototype._onEvent = function(ctx, e) {
                 var d = {
                     x: mp.x - e.pageX,
                     y: e.pageY - mp.y
-                }
+                };
 
                 this._translateDxDy(d.x,
                                       d.y,
@@ -267,7 +267,7 @@ View.prototype._onEvent = function(ctx, e) {
         }
         break;
     case 'mouseup':
-        var mp = this._interactive._mousePressed;
+        mp = this._interactive._mousePressed;
 
         if (mp !== null && mp.translation !== null) {
             math.vec3.add(this._interactive.origin, this._interactive.origin, mp.translation);
@@ -276,7 +276,7 @@ View.prototype._onEvent = function(ctx, e) {
         this._interactive._mousePressed = null;
         break;
     }
-}
+};
 
 /**
  * Get the currently used viewport. If the viewport property is set, then
@@ -289,17 +289,17 @@ View.prototype.currentViewport = function() {
     } else {
         return this._viewport;
     }
-}
+};
 
 View.prototype.bufferTextures = function(name) {
     return this._buffer.textureBuffers[name];
-}
+};
 
 View.prototype.activeBufferTexture = function(name) {
     var buf = this.bufferTextures(name);
 
     return buf.textures[buf.active];
-}
+};
 
 View.prototype.cycleBufferTextures = function(ctx, names) {
     var gl = ctx.gl;
@@ -334,7 +334,7 @@ View.prototype.cycleBufferTextures = function(ctx, names) {
     }
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-}
+};
 
 View.prototype._viewportChanged = function(vp) {
     if (!this._viewport) {
@@ -348,7 +348,7 @@ View.prototype._viewportChanged = function(vp) {
     }
 
     return false;
-}
+};
 
 /**
  * Update the viewport of the view. This is called automatically
@@ -379,15 +379,17 @@ View.prototype.updateViewport = function(ctx) {
         return;
     }
 
-    this._viewport = vp
+    this._viewport = vp;
+
+    var i, buffer, texture, k;
 
     if (this.options.buffer !== null) {
         if (this._buffer !== null) {
-            for (var k in this._buffer.textureBuffers) {
-                var buffer = this._buffer.textureBuffers[k];
+            for (k in this._buffer.textureBuffers) {
+                buffer = this._buffer.textureBuffers[k];
 
-                for (var i = 0; i < buffer.textures.length; i++) {
-                    var texture = buffer.textures[i];
+                for (i = 0; i < buffer.textures.length; i++) {
+                    texture = buffer.textures[i];
 
                     if (texture.target !== gl.TEXTURE_CUBE) {
                         gl.deleteTexture(texture.id);
@@ -395,12 +397,12 @@ View.prototype.updateViewport = function(ctx) {
                 }
             }
 
-            for (var i = 0; i < this._buffer.cubes.length; i++) {
+            for (i = 0; i < this._buffer.cubes.length; i++) {
                 gl.deleteTexture(this._buffer.cubes[i].id);
             }
 
-            for (var i = 0; i < this._buffer.renderBuffers.length; i++) {
-                var buffer = this._buffer.renderBuffers[i];
+            for (i = 0; i < this._buffer.renderBuffers.length; i++) {
+                buffer = this._buffer.renderBuffers[i];
                 gl.deleteRenderbuffer(buffer.id);
             }
 
@@ -419,7 +421,7 @@ View.prototype.updateViewport = function(ctx) {
         var hasDepth = false;
         var hasColor = false;
 
-        for (var k in this.options.buffer) {
+        for (k in this.options.buffer) {
             var n = this.options.buffer[k];
 
             n = utils.merge({
@@ -442,9 +444,7 @@ View.prototype.updateViewport = function(ctx) {
                 hasColor = true;
             }
 
-            for (var i = 0; i < n.n; i++) {
-                var texture;
-
+            for (i = 0; i < n.n; i++) {
                 if (n.texture.target === gl.TEXTURE_CUBE) {
                     if (i >= this._buffer.cubes.length) {
 
@@ -477,8 +477,10 @@ View.prototype.updateViewport = function(ctx) {
             };
         }
 
+        var rb;
+
         if (!hasColor) {
-            var rb = gl.createRenderbuffer();
+            rb = gl.createRenderbuffer();
 
             gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.RGBA4, vp[2], vp[3]);
@@ -491,7 +493,7 @@ View.prototype.updateViewport = function(ctx) {
         }
 
         if (!hasDepth) {
-            var rb = gl.createRenderbuffer();
+            rb = gl.createRenderbuffer();
 
             gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, vp[2], vp[3]);
@@ -519,7 +521,7 @@ View.prototype.updateViewport = function(ctx) {
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
-}
+};
 
 /**
  * Get/set the projection matrix.
@@ -533,7 +535,7 @@ View.prototype.projection = function(projection) {
     } else {
         return this._projection;
     }
-}
+};
 
 View.prototype.unbind = function(ctx) {
     var gl = ctx.gl;
@@ -541,7 +543,7 @@ View.prototype.unbind = function(ctx) {
     if (this._buffer) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
-}
+};
 
 /**
  * Binds the view to the given context. This sets the various gl
@@ -628,11 +630,11 @@ View.prototype.bind = function(ctx) {
     if (cbit !== 0) {
         gl.clear(cbit);
     }
-}
+};
 
 View._makePerspective = function(fovy, aspect, near, far) {
     return math.mat4.perspective(math.mat4.create(), fovy / 180 * Math.PI, aspect, near, far);
-}
+};
 
 /**
  * Create a view with a perspective projection. By default the viewport will be
@@ -673,11 +675,11 @@ View.perspective = function(ctx, fovy, aspect, near, far, options) {
             var ap = w / h;
 
             ret._projection = View._makePerspective(fovy, ap, near, far);
-        }
+        };
     }
 
     return ret;
-}
+};
 
 /**
  * Create a view with an orthographic projection.
@@ -694,7 +696,7 @@ View.orthographic = function(ctx, bounds, near, far, options) {
 
     var b = bounds;
     return new View(ctx, math.mat4.ortho(math.mat4.create(), b[0], b[1], b[2], b[3], near, far), null, options);
-}
+};
 
 module.exports = View;
 

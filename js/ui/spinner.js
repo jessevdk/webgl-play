@@ -47,10 +47,10 @@ Spinner.prototype.constructor = Spinner;
 
 Spinner.prototype.start = function() {
     this._animateId = requestAnimationFrame(this._animate.bind(this));
-}
+};
 
 Spinner.prototype.cancel = function() {
-    if (this._animateId != 0) {
+    if (this._animateId !== 0) {
         cancelAnimationFrame(this._animateId);
 
         this._animateId = 0;
@@ -60,7 +60,7 @@ Spinner.prototype.cancel = function() {
         this.e.style.backgroundPositionX = '';
         this.e.style.backgroundPositionY = '';
     }
-}
+};
 
 Spinner.prototype._animate = function(stamp) {
     if (!this.e.parentNode || (document.compareDocumentPosition(this.e) & document.DOCUMENT_POSITION_CONTAINED_BY) === 0) {
@@ -68,7 +68,7 @@ Spinner.prototype._animate = function(stamp) {
         return;
     }
 
-    if (this._animateStart == null) {
+    if (this._animateStart === null) {
         this._animateStart = stamp;
     }
 
@@ -86,7 +86,7 @@ Spinner.prototype._animate = function(stamp) {
     this.e.style.backgroundPositionY = (-100 * fy) + '%';
 
     this.start();
-}
+};
 
 module.exports = Spinner;
 

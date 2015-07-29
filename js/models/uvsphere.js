@@ -61,25 +61,27 @@ function UvSphere(ctx, radius, segments, rings, options) {
     vertices.push(0, radius, 0);
     normals.push(0, 1, 0);
 
-    for (var r = 0; r < rings - 2; r++) {
+    var n, r, s;
+
+    for (r = 0; r < rings - 2; r++) {
         var a = Math.PI * ((r + 1) / (rings - 1));
         var y = Math.cos(a) * radius;
         var zr = Math.sin(a) * radius;
 
-        for (var s = 0; s < segments; s++) {
+        for (s = 0; s < segments; s++) {
             var b = 2 * Math.PI * (s / segments);
 
             var x = Math.sin(b) * zr;
             var z = Math.cos(b) * zr;
 
-            var n = math.vec3.normalize$([x, y, z]);
+            n = math.vec3.normalize$([x, y, z]);
 
-            vertices.push(x, y, z)
+            vertices.push(x, y, z);
             normals.push(n[0], n[1], n[2]);
         }
     }
 
-    var n = (rings - 2) * segments + 2;
+    n = (rings - 2) * segments + 2;
 
     // Bottom
     vertices.push(0, -radius, 0);
@@ -99,8 +101,8 @@ function UvSphere(ctx, radius, segments, rings, options) {
     }
 
     // Segmented rings in between
-    for (var r = 1; r < rings - 2; r++) {
-        for (var s = 1; s <= segments; s++) {
+    for (r = 1; r < rings - 2; r++) {
+        for (s = 1; s <= segments; s++) {
             if (s != segments) {
                 indices.push(i, i + 1, i + 1 - segments,
                              i, i + 1 - segments, i - segments);

@@ -41,7 +41,9 @@ function MultiSwitch(settings) {
     var n = settings.values.length;
     var p = Math.floor(1 / n * 100);
 
-    for (var i = 0; i < n; i++) {
+    var i;
+
+    for (i = 0; i < n; i++) {
         cols.push(this.create('col', {
             width: p + '%'
         }));
@@ -52,7 +54,7 @@ function MultiSwitch(settings) {
     this._values = [];
     this._valueMap = {};
 
-    for (var i = 0; i < n; i++) {
+    for (i = 0; i < n; i++) {
         var val = settings.values[i];
 
         if (typeof val !== 'object') {
@@ -122,12 +124,12 @@ MultiSwitch.prototype.constructor = MultiSwitch;
 MultiSwitch.prototype._transformValue = function(v) {
     var val = this._valueMap[v];
 
-    if (v && !v.sensitive) {
+    if (val && !val.sensitive) {
         return this._value;
     }
 
-    return v;
-}
+    return val;
+};
 
 MultiSwitch.prototype._valueUpdated = function() {
     var val = this._valueMap[this._value];
@@ -140,7 +142,7 @@ MultiSwitch.prototype._valueUpdated = function() {
         this._active = val.td;
         this._active.classList.add('active');
     }
-}
+};
 
 module.exports = MultiSwitch;
 

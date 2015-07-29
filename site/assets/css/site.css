@@ -600,9 +600,9 @@
   .ui-color-picker .color-background {
     position: relative;
     border-radius: 2px;
-    background-image: -moz-linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray), -moz-linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray);
-    background-image: -webkit-linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray), -webkit-linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray);
-    background-image: linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray), linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray);
+    background-image: -moz-linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4), -moz-linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4);
+    background-image: -webkit-linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4), -webkit-linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4);
+    background-image: linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4), linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4);
     background-position: 0 0, 5px 5px;
     background-size: 10px 10px;
     -webkit-background-size: 11px 11px; }
@@ -664,9 +664,9 @@
 .ui-color-picker-popup .alpha {
   display: inline-block;
   border: 1px solid #bababa;
-  background-image: -moz-linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray), -moz-linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray);
-  background-image: -webkit-linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray), -webkit-linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray);
-  background-image: linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray), linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 75%, lightgray 75%, lightgray);
+  background-image: -moz-linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4), -moz-linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4);
+  background-image: -webkit-linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4), -webkit-linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4);
+  background-image: linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4), linear-gradient(45deg, #d4d4d4 25%, transparent 25%, transparent 75%, #d4d4d4 75%, #d4d4d4);
   background-position: 0 0, 5px 5px;
   background-size: 10px 10px;
   -webkit-background-size: 11px 11px; }
@@ -1165,7 +1165,7 @@ body, input {
 #header {
   height: 30px;
   background-color: #ededed;
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid #d4d4d4;
   line-height: 30px;
   color: #5d696d; }
   #header #document-title, #header #gallery-title {
@@ -1252,7 +1252,7 @@ input[type="text"] {
   padding: 0;
   list-style: none;
   background-color: white;
-  border: 1px solid lightgray; }
+  border: 1px solid #d4d4d4; }
   .ui-popup .documents li, .ui-popup .models li, .ui-popup .about li {
     padding: 6px;
     cursor: default;
@@ -1304,7 +1304,7 @@ input[type="text"] {
         pointer-events: none; }
     .ui-popup .documents li.import, .ui-popup .models li.import, .ui-popup .about li.import {
       padding: 12px;
-      border-bottom: 1px solid lightgray;
+      border-bottom: 1px solid #d4d4d4;
       font-weight: bold;
       text-align: center; }
       .ui-popup .documents li.import:last-child, .ui-popup .models li.import:last-child, .ui-popup .about li.import:last-child {

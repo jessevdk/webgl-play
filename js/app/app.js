@@ -28,7 +28,7 @@
  */
 
 var Editor = require('./editor');
-var Document = require('./document');
+var Document = require('./document'); // jshint ignore:line
 var ui = require('../ui/ui');
 var glsl = require('../glsl/glsl');
 var Store = require('./store');
@@ -98,7 +98,7 @@ App.prototype.find = function(elems) {
     }
 
     return ret;
-}
+};
 
 App.prototype.newDocument = function(cb) {
     var doc = new Document(this);
@@ -110,7 +110,7 @@ App.prototype.newDocument = function(cb) {
             cb();
         }
     }).bind(this));
-}
+};
 
 App.prototype.loadDocument = function(doc, options, cb) {
     if (doc === null) {
@@ -123,7 +123,7 @@ App.prototype.loadDocument = function(doc, options, cb) {
     }
 
     this._loadDoc(doc, options, cb);
-}
+};
 
 App.prototype._extractJsErrorLoc = function(e) {
     var stack;
@@ -142,23 +142,23 @@ App.prototype._extractJsErrorLoc = function(e) {
             return {
                 line: parseInt(m[1]) - 1,
                 column: parseInt(m[2])
-            }
+            };
         }
 
         // Firefox
-        var func = /> Function:([0-9]+):([0-9]+)$/
+        var func = /> Function:([0-9]+):([0-9]+)$/;
         m = line.match(func);
 
         if (m) {
             return {
                 line: parseInt(m[1]),
                 column: parseInt(m[2])
-            }
+            };
         }
     }
 
     return null;
-}
+};
 
 App.prototype._handleJsError = function(e) {
     var message = e.message;
@@ -172,10 +172,12 @@ App.prototype._handleJsError = function(e) {
     } else {
         console.error(e.stack);
     }
-}
+};
 
 App.prototype._updateRenderer = function() {
     var ret = this.renderer.update(this.document);
+
+    var i, p;
 
     if (typeof ret === 'undefined') {
         var c = {
@@ -189,8 +191,8 @@ App.prototype._updateRenderer = function() {
 
         this.jsEditor.completionContext(c);
 
-        for (var i = 0; i < this.document.programs.length; i++) {
-            var p = this.document.programs[i];
+        for (i = 0; i < this.document.programs.length; i++) {
+            p = this.document.programs[i];
             p.error(null);
         }
     } else {
@@ -208,10 +210,8 @@ App.prototype._updateRenderer = function() {
             this._handleJsError(e);
         }
 
-        var progs = null;
-
-        for (var i = 0; i < this.document.programs.length; i++) {
-            var p = this.document.programs[i];
+        for (i = 0; i < this.document.programs.length; i++) {
+            p = this.document.programs[i];
             var name = p.name();
 
             if (ret.programs !== null && name in ret.programs) {
@@ -221,7 +221,7 @@ App.prototype._updateRenderer = function() {
             }
         }
     }
-}
+};
 
 App.prototype._updateEditors = function() {
     var up = {};
@@ -238,11 +238,11 @@ App.prototype._updateEditors = function() {
     }
 
     this._updateDocumentBy(up);
-}
+};
 
 App.prototype._onDocumentBeforeActiveProgramChanged = function() {
     this._updateEditors();
-}
+};
 
 App.prototype._onDocumentActiveProgramChanged = function() {
     var prg = this.document.activeProgram();
@@ -258,11 +258,11 @@ App.prototype._onDocumentActiveProgramChanged = function() {
 
     this._loading = loading;
     this._saveCurrentDocWithDelay();
-}
+};
 
 App.prototype._onDocumentTitleChanged = function() {
     this.title.textContent = this.document.title;
-}
+};
 
 App.prototype._loadDocReal = function(doc, options) {
     options = utils.merge({
@@ -335,6 +335,8 @@ App.prototype._loadDocReal = function(doc, options) {
         st.id = doc.id;
     }
 
+    var url;
+
     if (doc.share) {
         st.share = doc.share;
         url = global.Settings.frontend.dataQuery(doc.share);
@@ -360,7 +362,7 @@ App.prototype._loadDocReal = function(doc, options) {
     if (options.showInfo) {
         this._showInfoPopup();
     }
-}
+};
 
 App.prototype._loadDoc = function(doc, options, cb) {
     this._loading = true;
@@ -383,7 +385,7 @@ App.prototype._loadDoc = function(doc, options, cb) {
             cb();
         }
     }
-}
+};
 
 App.prototype._onDocumentHasChanged = function(doc, opts) {
     this._saveCurrentDocWithDelay((function() {
@@ -391,7 +393,7 @@ App.prototype._onDocumentHasChanged = function(doc, opts) {
             this._updateRenderer();
         }
     }).bind(this));
-}
+};
 
 App.prototype._serializeDocument = function(doc) {
     var ret = doc.serialize();
@@ -407,7 +409,7 @@ App.prototype._serializeDocument = function(doc) {
     }
 
     return ret;
-}
+};
 
 App.prototype._saveDoc = function(doc, cb) {
     if (this.document === null) {
@@ -427,11 +429,11 @@ App.prototype._saveDoc = function(doc, cb) {
             cb(retdoc !== null);
         }
     });
-}
+};
 
 App.prototype._saveCurrentDoc = function(cb) {
     this._saveDoc(this.document, cb);
-}
+};
 
 App.prototype._saveCurrentDocWithDelay = function(cb) {
     if (this.document === null) {
@@ -456,12 +458,12 @@ App.prototype._saveCurrentDocWithDelay = function(cb) {
             this._saveCurrentDoc(cb);
         }
     }).bind(this), 500);
-}
+};
 
 App.prototype._updateCanvasSize = function() {
     this.canvas.width = this.canvas.clientWidth;
     this.canvas.height = this.canvas.clientHeight;
-}
+};
 
 App.prototype._initPanels = function() {
     var panels = document.querySelectorAll('.panel');
@@ -497,7 +499,7 @@ App.prototype._initPanels = function() {
         this.jsEditor.editor.refresh();
         this._updateCanvasSize();
     }).bind(this));
-}
+};
 
 App.prototype._updateDocumentBy = function(opts) {
     if (this._loading) {
@@ -505,7 +507,7 @@ App.prototype._updateDocumentBy = function(opts) {
     }
 
     this.document.update(opts);
-}
+};
 
 App.prototype._updateDocument = function(name, editor) {
     if (this._loading) {
@@ -520,25 +522,25 @@ App.prototype._updateDocument = function(name, editor) {
     };
 
     this._updateDocumentBy(up);
-}
+};
 
 App.prototype._initCanvas = function() {
     this.canvas = document.getElementById('view');
 
     var t = this.canvas.parentElement.querySelector('.editor-title');
 
-    this.canvas.addEventListener('focus', (function(title) {
+    this.canvas.addEventListener('focus', (function() {
         t.classList.add('hidden');
         this._updateDocumentBy({activeEditor: null});
 
         this._lastFocus = this.canvas;
     }).bind(this, t));
 
-    this.canvas.addEventListener('blur', (function(title) {
+    this.canvas.addEventListener('blur', (function() {
         t.classList.remove('hidden');
     }).bind(this, t));
 
-    window.addEventListener('resize', (function(e) {
+    window.addEventListener('resize', (function() {
         this._updateCanvasSize();
     }).bind(this));
 
@@ -571,7 +573,7 @@ App.prototype._initCanvas = function() {
             break;
         }
     }).bind(this));
-}
+};
 
 App.prototype._initEditors = function() {
     var elems = this.find({
@@ -591,7 +593,7 @@ App.prototype._initEditors = function() {
         var tname = k + 'Editor';
         var elem = elems[k];
 
-        this[tname] = CodeMirror(elem, opts);
+        this[tname] = global.CodeMirror(elem, opts);
 
         var p = elem.parentElement;
         var t = p.querySelector('.editor-title');
@@ -644,7 +646,7 @@ App.prototype._initEditors = function() {
     this._parsedTimeout = 0;
     this.vertexEditor.on('notify::parsed', this._onEditorParsed, this);
     this.fragmentEditor.on('notify::parsed', this._onEditorParsed, this);
-}
+};
 
 App.prototype._onEditorParsed = function() {
     if (this._parsedTimeout !== 0) {
@@ -662,7 +664,7 @@ App.prototype._onEditorParsed = function() {
             this.fragmentEditor.externalErrors(errors.fragment);
         }
     }).bind(this), 50);
-}
+};
 
 App.prototype.message = function(type, m, options) {
     options = utils.merge({
@@ -720,7 +722,7 @@ App.prototype.message = function(type, m, options) {
     window.addEventListener('mousedown', this._messageMousedown);
 
     return remover;
-}
+};
 
 App.prototype._createLicenseSwitch = function(license, authors) {
     var initial = license || 'CC BY';
@@ -738,7 +740,7 @@ App.prototype._createLicenseSwitch = function(license, authors) {
     ];
 
     if (authors && authors.length > 0) {
-        lastlic = authors[authors.length - 1].license;
+        var lastlic = authors[authors.length - 1].license;
 
         if (lastlic === 'CC BY-SA' || lastlic === 'CC BY-NC-SA') {
             /*for (var i = 0; i < values.length; i++) {
@@ -759,17 +761,17 @@ App.prototype._createLicenseSwitch = function(license, authors) {
         values: values,
         value: initial
     });
-}
+};
 
 App.prototype._showPublishDialog = function() {
-    var W = ui.Widget.createUi;
+    var w = ui.Widget.createUi;
 
     var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license, this.document.authors);
     var publishButton = new ui.Button('Publish');
     var requestTokenButton = new ui.Button('Request Token');
 
-    var authorInput = W('input', { classes: 'author', type: 'text', value: (this.document.author || this.settings.author || '') });
-    var tokenInput = W('input', { classes: ['token', 'empty'], value: 'E-mail address or token', type: 'text', size: 30 });
+    var authorInput = w('input', { classes: 'author', type: 'text', value: (this.document.author || this.settings.author || '') });
+    var tokenInput = w('input', { classes: ['token', 'empty'], value: 'E-mail address or token', type: 'text', size: 30 });
 
     var description = this.document.description;
 
@@ -796,7 +798,7 @@ App.prototype._showPublishDialog = function() {
         }
     }).bind(this));
 
-    var status = W('div', { classes: 'status' });
+    var status = w('div', { classes: 'status' });
 
     var errorStatus = function(m, e) {
         status.classList.add('error');
@@ -827,42 +829,42 @@ App.prototype._showPublishDialog = function() {
     };
 
     this.renderer.grabImage(300, 200, (function(screenshot) {
-        var descDiv = W('div', { innerHTML: desc });
+        var descDiv = w('div', { innerHTML: desc });
 
         if (!this.document.description) {
             descDiv.classList.add('empty');
         }
 
-        var d = W('div', {
+        var d = w('div', {
             classes: 'publish',
             children: [
-                W('div', { classes: 'title', textContent: 'Publish document: ' + this.document.title }),
-                W('div', { classes: 'description', textContent: 'Publishing stores the current document online and makes it available in the online gallery. Publishing a document requires a publishing token. You can request a new publishing token to be send by e-mail, or reuse a previously received token. To request a new token, enter your e-mail address in the Token field and press Request Token.'}),
-                W('img', { classes: 'screenshot', src: screenshot }),
-                W('div', { classes: 'contents', children:
-                    W('table', { classes: 'contents', children: [
-                        W('tr', { children: [
-                            W('td', { textContent: 'Description:' }),
-                            W('td', { classes: 'description', children: descDiv }),
+                w('div', { classes: 'title', textContent: 'Publish document: ' + this.document.title }),
+                w('div', { classes: 'description', textContent: 'Publishing stores the current document online and makes it available in the online gallery. Publishing a document requires a publishing token. You can request a new publishing token to be send by e-mail, or reuse a previously received token. To request a new token, enter your e-mail address in the Token field and press Request Token.'}),
+                w('img', { classes: 'screenshot', src: screenshot }),
+                w('div', { classes: 'contents', children:
+                    w('table', { classes: 'contents', children: [
+                        w('tr', { children: [
+                            w('td', { textContent: 'Description:' }),
+                            w('td', { classes: 'description', children: descDiv }),
                         ]}),
 
-                        W('tr', { children: [
-                            W('td', { textContent: 'Author:' }),
-                            W('td', { children: authorInput }),
+                        w('tr', { children: [
+                            w('td', { textContent: 'Author:' }),
+                            w('td', { children: authorInput }),
                         ]}),
 
-                        W('tr', { children: [
-                            W('td', { textContent: 'License, CC:' }),
+                        w('tr', { children: [
+                            w('td', { textContent: 'License, CC:' }),
                             licenseSwitch.e
                         ]}),
 
-                        W('tr', { children: [
-                            W('td', { textContent: 'Token:' }),
-                            W('td', { children: tokenInput })
+                        w('tr', { children: [
+                            w('td', { textContent: 'Token:' }),
+                            w('td', { children: tokenInput })
                         ]}),
                     ]}),
                 }),
-                W('div', { classes: 'actions', children: [
+                w('div', { classes: 'actions', children: [
                     requestTokenButton.e,
                     publishButton.e,
                     status
@@ -888,7 +890,7 @@ App.prototype._showPublishDialog = function() {
                 title: this.document.title,
                 author: authorInput.value
             }, {
-                success: function(req, ret) {
+                success: function() {
                     okStatus('New request token has been sent and should arrive shortly');
                 },
 
@@ -950,39 +952,39 @@ App.prototype._showPublishDialog = function() {
             });
         }).bind(this));
     }).bind(this));
-}
+};
 
 App.prototype._showShareDialog = function() {
-    var W = ui.Widget.createUi;
+    var w = ui.Widget.createUi;
 
     var licenseSwitch = this._createLicenseSwitch(this.document.license || this.settings.license, this.document.authors);
     var shareButton = new ui.Button('Share');
-    var authorInput = W('input', { classes: 'author', type: 'text', value: (this.document.author || this.settings.author || '') });
+    var authorInput = w('input', { classes: 'author', type: 'text', value: (this.document.author || this.settings.author || '') });
 
-    var status = W('div', { classes: 'status' });
+    var status = w('div', { classes: 'status' });
 
-    var d = W('div', {
+    var d = w('div', {
         classes: 'share',
         children: [
-            W('div', { classes: 'title', textContent: 'Share document: ' + this.document.title }),
-            W('table', { classes: 'contents', children: [
-                W('tr', { classes: 'description', children: W('td', {
+            w('div', { classes: 'title', textContent: 'Share document: ' + this.document.title }),
+            w('table', { classes: 'contents', children: [
+                w('tr', { classes: 'description', children: w('td', {
                     colspan: 2,
                     innerHTML: 'Sharing stores the current document online and makes it accessible by URL only.<br>The document will not appear in the online gallery.'
                 }) } ),
 
-                W('tr', { children: [
-                    W('td', { textContent: 'Author:' }),
-                    W('td', { children: authorInput }),
+                w('tr', { children: [
+                    w('td', { textContent: 'Author:' }),
+                    w('td', { children: authorInput }),
                 ]}),
 
-                W('tr', { children: [
-                    W('td', { textContent: 'License, CC:' }),
+                w('tr', { children: [
+                    w('td', { textContent: 'License, CC:' }),
                     licenseSwitch.e
                 ]}),
 
-                W('tr', { classes: 'actions', children: [
-                    W('td', {
+                w('tr', { classes: 'actions', children: [
+                    w('td', {
                         colspan: 2,
                         children: [
                             shareButton.e,
@@ -997,7 +999,6 @@ App.prototype._showShareDialog = function() {
     var rm = this.message('dialog', d);
 
     shareButton.on('click', (function() {
-        var author = authorInput.value;
         var license = licenseSwitch.value();
 
         if (authorInput.value.length === 0 && license !== 'CC 0') {
@@ -1021,15 +1022,15 @@ App.prototype._showShareDialog = function() {
 
         this._shareDocument(authorInput.value, licenseSwitch.value());
     }).bind(this));
-}
+};
 
 App.prototype._onButtonShareClick = function() {
     this._showShareDialog();
-}
+};
 
 App.prototype._onButtonPublishClick = function() {
     this._showPublishDialog();
-}
+};
 
 App.prototype._showDocument = function() {
     if (this._mode === 'document') {
@@ -1050,7 +1051,7 @@ App.prototype._showDocument = function() {
         localStorage.setItem('firstVisited', true);
         this._showIntro();
     }
-}
+};
 
 App.prototype._galleryHasEmptyCellsInView = function(empties) {
     var y = this.gallery.scrollTop;
@@ -1065,23 +1066,23 @@ App.prototype._galleryHasEmptyCellsInView = function(empties) {
     }
 
     return false;
-}
+};
 
 App.prototype._makeEmptyGalleryCells = function(table, nRows, nColumns) {
     var emptyCells = [];
-    var W = ui.Widget.createUi;
+    var w = ui.Widget.createUi;
 
     for (var r = 0; r < nRows; r++) {
-        var tr = W('tr', {
+        var tr = w('tr', {
             parent: table
         });
 
         for (var c = 0; c < nColumns; c++) {
-            var div = W('div', {
+            var div = w('div', {
                 classes: 'gallery-item'
             });
 
-            var td = W('td', {
+            w('td', {
                 parent: tr,
                 children: div,
                 classes: 'empty'
@@ -1092,12 +1093,12 @@ App.prototype._makeEmptyGalleryCells = function(table, nRows, nColumns) {
     }
 
     return emptyCells;
-}
+};
 
 App.prototype._fillGalleryItem = function(container, item) {
-    var W = ui.Widget.createUi;
+    var w = ui.Widget.createUi;
 
-    W('div', {
+    w('div', {
         classes: 'title',
         textContent: item.title,
         parent: container
@@ -1105,34 +1106,34 @@ App.prototype._fillGalleryItem = function(container, item) {
 
     var date = new Date(item.modificationDate);
 
-    W('table', {
+    w('table', {
         classes: 'info',
         children: [
-            W('tr', { children: [
-                W('td', {
+            w('tr', { children: [
+                w('td', {
                     classes: 'screenshot',
-                    children: W('img', {
+                    children: w('img', {
                         src: global.Settings.backend.url('s/' + item.screenshot + '.png'),
                         parent: container
                     })
                 }),
 
-                W('td', { children: W('table', { classes: 'properties', children: [
-                    W('tr', { children: [
-                        W('td', { textContent: 'Author:' }),
-                        W('td', { textContent: item.author })
+                w('td', { children: w('table', { classes: 'properties', children: [
+                    w('tr', { children: [
+                        w('td', { textContent: 'Author:' }),
+                        w('td', { textContent: item.author })
                     ]}),
-                    W('tr', { children: [
-                        W('td', { textContent: 'License:' }),
-                        W('td', { textContent: item.license, title: licenseDescriptions[item.license] })
+                    w('tr', { children: [
+                        w('td', { textContent: 'License:' }),
+                        w('td', { textContent: item.license, title: licenseDescriptions[item.license] })
                     ]}),
-                    W('tr', { children: [
-                        W('td', { textContent: 'Published:' }),
-                        W('td', { textContent: this._relDate(date) })
+                    w('tr', { children: [
+                        w('td', { textContent: 'Published:' }),
+                        w('td', { textContent: this._relDate(date) })
                     ]}),
-                    W('tr', { children: [
-                        W('td', { textContent: 'Views:' }),
-                        W('td', { textContent: item.views })
+                    w('tr', { children: [
+                        w('td', { textContent: 'Views:' }),
+                        w('td', { textContent: item.views })
                     ]})
                 ]})})
             ]})
@@ -1145,7 +1146,7 @@ App.prototype._fillGalleryItem = function(container, item) {
     div.innerHTML = desc;
     var shortDescription = div.querySelector('p');
 
-    W('div', {
+    w('div', {
         classes: 'description',
         innerHTML: shortDescription.innerHTML,
         parent: container
@@ -1163,23 +1164,23 @@ App.prototype._fillGalleryItem = function(container, item) {
             }
         }).bind(this));
     }).bind(this));
-}
+};
 
 App.prototype._isLocal = function() {
     return document.location.protocol.indexOf('file') === 0;
-}
+};
 
 App.prototype._populateGallery = function() {
     // Clear previous gallery
     this.gallery.innerHTML = '';
 
-    var W = ui.Widget.createUi;
+    var w = ui.Widget.createUi;
 
-    var table = W('table', {
+    var table = w('table', {
         classes: 'gallery'
     });
 
-    var colgroup = W('colgroup', { parent: table });
+    var colgroup = w('colgroup', { parent: table });
 
     // Estimate number of columns
     var width = this.content.clientWidth;
@@ -1227,11 +1228,13 @@ App.prototype._populateGallery = function() {
 
     var finalize = (function() {
         var trs = [];
+        var i, tr;
 
-        for (var i = 0; i < state.emptyCells.length; i++) {
+        for (i = 0; i < state.emptyCells.length; i++) {
             var empty = state.emptyCells[i];
             var td = empty.parentNode;
-            var tr = td.parentNode;
+            
+            tr = td.parentNode;
 
             if (trs.indexOf(tr) === -1) {
                 trs.push(tr);
@@ -1240,8 +1243,8 @@ App.prototype._populateGallery = function() {
             tr.removeChild(td);
         }
 
-        for (var i = 0; i < trs.length; i++) {
-            var tr = trs[i];
+        for (i = 0; i < trs.length; i++) {
+            tr = trs[i];
 
             if (tr.childNodes.length === 0) {
                 state.table.removeChild(tr);
@@ -1300,7 +1303,7 @@ App.prototype._populateGallery = function() {
     }).bind(this, state);
 
     this._checkPopulateGallery();
-}
+};
 
 App.prototype._showGallery = function(options) {
     if (this._mode === 'gallery') {
@@ -1355,13 +1358,13 @@ App.prototype._showGallery = function(options) {
             this._showIntro();
         }
     }).bind(this));
-}
+};
 
 App.prototype._onButtonGalleryClick = function() {
     this._showGallery({
         preventPushState: false
     });
-}
+};
 
 App.prototype._makeShared = function(share) {
     this._updateDocumentBy({
@@ -1377,7 +1380,7 @@ App.prototype._makeShared = function(share) {
 
     // Return the full url
     return document.location.href;
-}
+};
 
 App.prototype._shareDocument = function(author, license) {
     var doc = this.document;
@@ -1395,18 +1398,18 @@ App.prototype._shareDocument = function(author, license) {
                 this.document.authors = ret.authors;
                 this._saveCurrentDoc();
 
-                var W = ui.Widget.createUi;
+                var w = ui.Widget.createUi;
 
-                var urle = W('span', {
+                var urle = w('span', {
                     textContent: url
                 });
 
-                var message = W('div', {
+                var message = w('div', {
                     children: [
-                        W('span', { textContent: 'Shared document at ' }),
+                        w('span', { textContent: 'Shared document at ' }),
                         urle
                     ]
-                })
+                });
 
                 this.message('ok', message);
 
@@ -1426,18 +1429,18 @@ App.prototype._shareDocument = function(author, license) {
             }
         }).bind(this)
     });
-}
+};
 
 App.prototype._onButtonExportClick = function() {
     var saveas = require('../vendor/FileSaver');
 
     var blob = new Blob([JSON.stringify(this.document.remote(), undefined, 2)], {type: 'application/json;charset=utf-8'});
     saveas(blob, this.document.title + '.json');
-}
+};
 
 App.prototype._initProgramsBar = function() {
     this.programsBar = new ui.ProgramsBar(document.getElementById('programs-sidebar'), this);
-}
+};
 
 App.prototype._showOpenglPopup = function(popup) {
     var gl = this.renderer.context.gl;
@@ -1493,7 +1496,7 @@ App.prototype._showOpenglPopup = function(popup) {
     }
 
     popup.content(content);
-}
+};
 
 App.prototype._showAboutPopup = function(cb) {
     var popup;
@@ -1556,7 +1559,7 @@ App.prototype._showAboutPopup = function(cb) {
 
     popup = new ui.Popup(content, this.buttons.about.e);
     cb(popup);
-}
+};
 
 App.prototype._initButtons = function() {
     var buttons = ['new', 'copy', 'export', 'models', 'open', 'about', 'gallery', 'share', 'publish'];
@@ -1591,7 +1594,7 @@ App.prototype._initButtons = function() {
     ui.Popup.on(this.buttons.open, this._showOpenPopup.bind(this));
     ui.Popup.on(this.buttons.models, this._showModelsPopup.bind(this));
     ui.Popup.on(this.buttons.about, this._showAboutPopup.bind(this));
-}
+};
 
 App.prototype._onButtonCopyClick = function() {
     var title = 'Copy of ' + this.document.title;
@@ -1602,7 +1605,7 @@ App.prototype._onButtonCopyClick = function() {
     doc.title = title;
 
     this.loadDocument(doc);
-}
+};
 
 App.prototype._relDate = function(date) {
     var now = new Date();
@@ -1611,7 +1614,6 @@ App.prototype._relDate = function(date) {
     var MINUTE = 60;
     var HOUR = MINUTE * 60;
     var DAY = HOUR * 24;
-    var WEEK = DAY * 7;
 
     if (t < 29.5 * MINUTE) {
         var mins = Math.round(t / MINUTE);
@@ -1644,23 +1646,23 @@ App.prototype._relDate = function(date) {
     } else {
         return 'on ' + date.toDateString();
     }
-}
+};
 
 App.prototype._showModelsPopup = function(cb) {
     var popup;
 
     this._store.models((function(store, ret) {
-        var W = ui.Widget.createUi;
-        var content = W('div', { classes: 'models' });
+        var w = ui.Widget.createUi;
+        var content = w('div', { classes: 'models' });
 
-        var li = W('li', {
+        var li = w('li', {
             classes: 'import',
             innerHTML: 'Import&nbsp;from&nbsp;file',
             title: 'Import a model from a local file'
         });
 
         li.addEventListener('click', (function() {
-            var inp = W('input', { type: 'file', multiple: 'multiple' });
+            var inp = w('input', { type: 'file', multiple: 'multiple' });
 
             inp.onchange = (function() {
                 var reader = new ui.FilesReader(inp.files);
@@ -1676,17 +1678,17 @@ App.prototype._showModelsPopup = function(cb) {
                     value: 'Close'
                 });
 
-                var remover = this.message('files', W('div', {
+                var remover = this.message('files', w('div', {
                     classes: 'files',
                     children: [
-                        W('div', {
+                        w('div', {
                             classes: 'title',
                             textContent: msg
                         }),
 
                         reader.e,
 
-                        W('div', {
+                        w('div', {
                             classes: 'actions',
                             children: but.e
                         })
@@ -1732,24 +1734,24 @@ App.prototype._showModelsPopup = function(cb) {
                 sc.src = ret[i].screenshot;
             }
 
-            var li = W('li', {
+            li = w('li', {
                 children: [
-                    W('div', {
+                    w('div', {
                         classes: 'screenshot-container',
-                        children: W('img', sc)
+                        children: w('img', sc)
                     }),
 
-                    W('div', {
+                    w('div', {
                         classes: 'filename',
                         textContent: ret[i].filename
                     }),
 
-                    W('div', {
+                    w('div', {
                         classes: 'modification-time',
                         textContent: 'Added ' + this._relDate(ret[i].creationTime)
                     }),
 
-                    W('div', {
+                    w('div', {
                         classes: 'delete',
                         textContent: '×',
                         title: 'Delete model'
@@ -1798,23 +1800,23 @@ App.prototype._showModelsPopup = function(cb) {
 
         cb(popup);
     }).bind(this));
-}
+};
 
 App.prototype._showOpenPopup = function(cb) {
     var popup;
 
     this._store.all((function(store, ret) {
-        var W = ui.Widget.createUi;
-        var content = W('ul', { classes: 'documents' });
+        var w = ui.Widget.createUi;
+        var content = w('ul', { classes: 'documents' });
 
-        var li = W('li', {
+        var li = w('li', {
             classes: 'import',
             innerHTML: 'Import&nbsp;from&nbsp;file',
             title: 'Import a previously exported document'
         });
 
         li.addEventListener('click', (function() {
-            var inp = W('input', { type: 'file', multiple: 'multiple' });
+            var inp = w('input', { type: 'file', multiple: 'multiple' });
 
             inp.onchange = (function() {
                 var reader = new ui.FilesReader(inp.files);
@@ -1830,17 +1832,17 @@ App.prototype._showOpenPopup = function(cb) {
                     value: 'Close'
                 });
 
-                var remover = this.message('files', W('div', {
+                var remover = this.message('files', w('div', {
                     classes: 'files',
                     children: [
-                        W('div', {
+                        w('div', {
                             classes: 'title',
                             textContent: msg
                         }),
 
                         reader.e,
 
-                        W('div', {
+                        w('div', {
                             classes: 'actions',
                             children: but.e
                         })
@@ -1888,24 +1890,24 @@ App.prototype._showOpenPopup = function(cb) {
                 sc.src = ret[i].screenshot;
             }
 
-            var li = W('li', {
+            li = w('li', {
                 children: [
-                    W('div', {
+                    w('div', {
                         classes: 'screenshot-container',
-                        children: W('img', sc)
+                        children: w('img', sc)
                     }),
 
-                    W('div', {
+                    w('div', {
                         classes: 'title',
                         textContent: ret[i].title
                     }),
 
-                    W('div', {
+                    w('div', {
                         classes: 'modification-time',
                         textContent: 'Last modified ' + this._relDate(ret[i].modificationTime)
                     }),
 
-                    W('div', {
+                    w('div', {
                         classes: 'delete',
                         textContent: '×',
                         title: 'Delete document'
@@ -1969,7 +1971,7 @@ App.prototype._showOpenPopup = function(cb) {
 
         cb(popup);
     }).bind(this));
-}
+};
 
 App.prototype._onButtonNewClick = function() {
     this._saveCurrentDoc((function(saved) {
@@ -1977,23 +1979,23 @@ App.prototype._onButtonNewClick = function() {
             this.newDocument();
         }
     }).bind(this));
-}
+};
 
 App.prototype._addOverlay = function() {
     var overlay = document.createElement('div');
     overlay.classList.add('overlay');
 
     document.body.appendChild(overlay);
-    overlay.offsetWidth;
+    overlay.offsetWidth; // jshint ignore:line
     overlay.classList.add('animate');
 
     return overlay;
-}
+};
 
 App.prototype._showInfoPopup = function() {
-    var W = ui.Widget.createUi;
+    var w = ui.Widget.createUi;
 
-    var title = W('input', { classes: 'title', value: this.document.title, type: 'text' });
+    var title = w('input', { classes: 'title', value: this.document.title, type: 'text' });
 
     var authors = [];
 
@@ -2003,30 +2005,30 @@ App.prototype._showInfoPopup = function() {
         authors.push(author.name + ' (' + author.license + ', ' + author.year + ')');
     }
 
-    if (authors.length == 0) {
+    if (authors.length === 0) {
         authors = ['Unpublished'];
     }
 
-    var props = W('table', {
+    var props = w('table', {
         classes: 'properties',
         children: [
-            W('tr', { children: [
-                W('td', { textContent: 'Authors:' }),
-                W('td', { textContent: authors.join(', ') })
+            w('tr', { children: [
+                w('td', { textContent: 'Authors:' }),
+                w('td', { textContent: authors.join(', ') })
             ]}),
         ]
     });
 
-    var description = W('div', {
+    var description = w('div', {
         classes: 'description'
     });
 
     var close = new ui.Button('Close Editor');
     close.e.classList.add('close');
 
-    var editor = W('textarea');
+    var editor = w('textarea');
 
-    var content = W('div', {
+    var content = w('div', {
         classes: 'info-popup',
         children: [
             title,
@@ -2081,7 +2083,7 @@ App.prototype._showInfoPopup = function() {
         }
     }).bind(this));
 
-    editor.addEventListener('blur', (function(e) {
+    editor.addEventListener('blur', (function() {
         if (content.classList.contains('editing')) {
             saveEditor();
         }
@@ -2099,7 +2101,7 @@ App.prototype._showInfoPopup = function() {
         editor.value = this.document.description || '';
 
         content.classList.add('editing');
-        close.e.offsetWidth;
+        close.e.offsetWidth; // jshint ignore:line
         close.e.classList.add('animate');
 
         editor.focus();
@@ -2123,12 +2125,12 @@ App.prototype._showInfoPopup = function() {
             this._lastFocus.focus();
         }
     }, this);
-}
+};
 
 App.prototype._initTitle = function() {
     this.title = document.getElementById('document-title');
     ui.Popup.on(this.title, this._showInfoPopup.bind(this));
-}
+};
 
 App.prototype._checkCompatibility = function() {
     var missing = [];
@@ -2197,7 +2199,7 @@ App.prototype._checkCompatibility = function() {
     } else {
         return true;
     }
-}
+};
 
 App.prototype._initHistory = function() {
     if (!global.history) {
@@ -2227,7 +2229,7 @@ App.prototype._initHistory = function() {
             }
         } else {
             this._route((function(doc) {
-                this.loadDocument(doc)
+                this.loadDocument(doc);
             }).bind(this), (function() {
                 this._showGallery({
                     preventPushState: true
@@ -2235,7 +2237,7 @@ App.prototype._initHistory = function() {
             }).bind(this));
         }
     }).bind(this);
-}
+};
 
 App.prototype.loadRemoteDocument = function(id, cb) {
     this._store.byShare(id, (function(_, doc) {
@@ -2260,7 +2262,7 @@ App.prototype.loadRemoteDocument = function(id, cb) {
             });
         }
     }).bind(this));
-}
+};
 
 App.prototype._route = function(f, cb) {
     var m = document.location.pathname.match(/d\/([A-Za-z0-9]+)/);
@@ -2274,7 +2276,7 @@ App.prototype._route = function(f, cb) {
     } else {
         cb();
     }
-}
+};
 
 App.prototype._showIntro = function() {
     if (typeof global.Settings.hooks.intro !== 'function') {
@@ -2287,7 +2289,7 @@ App.prototype._showIntro = function() {
     div.innerHTML = marked(global.Settings.hooks.intro());
 
     this.message('', div);
-}
+};
 
 App.prototype._init = function() {
     if (!this._checkCompatibility()) {
@@ -2355,7 +2357,7 @@ App.prototype._init = function() {
 
     this._updateCanvasSize();
 
-    window.onbeforeunload = (function(e) {
+    window.onbeforeunload = (function() {
         if (this.mode === 'document' && this.document !== null) {
             this._updateEditors();
             localStorage.setItem('savedDocumentBeforeUnload', JSON.stringify(this._serializeDocument(this.document)));

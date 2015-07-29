@@ -70,18 +70,18 @@ Slider.prototype._onTroughWheel = function(e) {
 
     e.preventDefault();
     e.stopPropagation();
-}
+};
 
 Slider.prototype._updateFromPageX = function(x) {
     var pos = this.pagePosition(this._trough);
     var f = (x - pos.x) / this._trough.offsetWidth;
 
     this.value(f * (this._settings.max - this._settings.min) + this._settings.min);
-}
+};
 
 Slider.prototype._onTroughClick = function(e) {
     this._updateFromPageX(e.pageX);
-}
+};
 
 Slider.prototype._onBobMousedown = function(e) {
     this._onBobMousemove = (function(e) {
@@ -104,7 +104,7 @@ Slider.prototype._onBobMousedown = function(e) {
 
     e.preventDefault();
     e.stopPropagation();
-}
+};
 
 Slider.prototype._clip = function(v) {
     if (v < this._settings.min) {
@@ -114,17 +114,17 @@ Slider.prototype._clip = function(v) {
     }
 
     return v;
-}
+};
 
 Slider.prototype._valueTransform = function(v) {
     return this._clip(v);
-}
+};
 
 Slider.prototype._valueUpdated = function() {
     this._bob.style.left = ((this._value - this._settings.min) / (this._settings.max - this._settings.min) * 100) + '%';
 
     this._bob.title = this._value;
-}
+};
 
 module.exports = Slider;
 

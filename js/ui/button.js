@@ -57,7 +57,7 @@ Button.prototype._valueUpdated = function() {
     } else if (typeof this._value.markup !== 'undefined') {
         this.e.innerHTML = this._value.markup;
     }
-}
+};
 
 Button.prototype._onClick = function(e) {
     if (this.sensitive()) {
@@ -66,7 +66,7 @@ Button.prototype._onClick = function(e) {
 
     e.preventDefault();
     e.stopPropagation();
-}
+};
 
 Button.prototype._onDblclick = function(e) {
     if (this.sensitive()) {
@@ -75,7 +75,7 @@ Button.prototype._onDblclick = function(e) {
 
     e.preventDefault();
     e.stopPropagation();
-}
+};
 
 module.exports = Button;
 

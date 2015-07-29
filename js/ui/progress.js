@@ -51,7 +51,7 @@ Progress.prototype.constructor = Progress;
 
 Progress.prototype._valueUpdated = function() {
 	this._indicator.style.width = (this._value * 100) + '%';
-}
+};
 
 module.exports = Progress;
 

@@ -74,7 +74,7 @@ Popup.on = function(on, cb) {
         if (!popup) {
             var f;
 
-            f = function(e) {
+            f = function() {
                 on.removeEventListener('mouseup', f);
 
                 var r = function(p) {
@@ -94,7 +94,7 @@ Popup.on = function(on, cb) {
             on.addEventListener('mouseup', f);
         }
     });
-}
+};
 
 Popup.prototype = Object.create(Widget.prototype);
 Popup.prototype.constructor = Popup;
@@ -109,7 +109,7 @@ Popup.prototype.destroy = function() {
 
         this._onDestroy();
     }
-}
+};
 
 Popup.prototype.content = function(c) {
     if (typeof c === 'undefined') {
@@ -120,7 +120,7 @@ Popup.prototype.content = function(c) {
 
     this._child = c;
     this._content.appendChild(this._child);
-}
+};
 
 Popup.prototype._build = function() {
     var outer = document.createElement('div');
@@ -185,7 +185,7 @@ Popup.prototype._build = function() {
     outer.style.top = pos.y + 'px';
 
     this._outer = outer;
-}
+};
 
 module.exports = Popup;
 

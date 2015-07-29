@@ -27,8 +27,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-'use strict';
-
 var Signals = require('../signals/signals');
 var utils = require('../utils/utils');
 
@@ -110,7 +108,7 @@ JsContext.prototype.view = function(view) {
     view.updateViewport(this);
 
     view.bind(this);
-}
+};
 
 JsContext.prototype.define = function(program, name, value) {
     if (!(program in this._defines)) {
@@ -119,7 +117,7 @@ JsContext.prototype.define = function(program, name, value) {
 
     this._defines[program][name] = value;
     this._signals.onDefine(program);
-}
+};
 
 JsContext.prototype.defines = function(program, defines) {
     if (!(program in this._defines)) {
@@ -133,7 +131,7 @@ JsContext.prototype.defines = function(program, defines) {
     }
 
     this._signals.onDefine(program);
-}
+};
 
 JsContext.prototype.requireExtension = function(ext) {
     var e = this.gl.getExtension(ext);
@@ -143,7 +141,7 @@ JsContext.prototype.requireExtension = function(ext) {
     }
 
     return e;
-}
+};
 
 JsContext.prototype.requireExtensions = function(exts) {
     var ret = {};
@@ -155,11 +153,11 @@ JsContext.prototype.requireExtensions = function(exts) {
     }
 
     return ret;
-}
+};
 
 JsContext.prototype.getExtension = function(ext) {
     return this.gl.getExtension(ext);
-}
+};
 
 JsContext.prototype.getExtensions = function(exts) {
     var ret = {};
@@ -173,7 +171,7 @@ JsContext.prototype.getExtensions = function(exts) {
     }
 
     return ret;
-}
+};
 
 /**
  * Find a GLSL program by name. If the name is not given, or null, then
@@ -192,7 +190,7 @@ JsContext.prototype.findProgram = function(name) {
     }
 
     return this.programs[name];
-}
+};
 
 function Renderer(canvas, fullscreenParent, options) {
     Signals.call(this);
@@ -263,7 +261,7 @@ Renderer.prototype._onKeydown = function(e) {
             break;
         }
     }
-}
+};
 
 Renderer.prototype._onPassEvent = function(e) {
     if (e.type === 'mousedown') {
@@ -291,14 +289,14 @@ Renderer.prototype._onPassEvent = function(e) {
     if ((e.type !== 'mousemove' && e.type !== 'mouseup') || !this._mousePressed) {
         this._event(e);
     }
-}
+};
 
 Renderer.prototype._event = function(e) {
     if (this.program && typeof this.program.event === 'function') {
         try {
             this.program.event.call(this.program, this.context, e);
-        } catch (e) {
-            this._onError('js', e);
+        } catch (err) {
+            this._onError('js', err);
             this.pause();
         }
     }
@@ -306,7 +304,7 @@ Renderer.prototype._event = function(e) {
     if (!e.defaultPrevented) {
         this.context._signals.onEvent(e);
     }
-}
+};
 
 Renderer.getWebGLContext = function(canvas) {
     var ctx = canvas.getContext('webgl');
@@ -316,21 +314,21 @@ Renderer.getWebGLContext = function(canvas) {
     }
 
     return ctx;
-}
+};
 
 Renderer.prototype._createContext = function() {
     var ctx = Renderer.getWebGLContext(this.canvas);
     var ret = new JsContext(ctx);
 
-    ret.ui.add = this._uiAdd.bind(this)
+    ret.ui.add = this._uiAdd.bind(this);
     return ret;
-}
+};
 
 Renderer.prototype._removeUi = function(ui) {
     for (var i = 0; i < ui.length; i++) {
         ui[i].e.parentElement.removeChild(ui[i].e);
     }
-}
+};
 
 Renderer.prototype.update = function(doc) {
     var complete = true;
@@ -349,12 +347,14 @@ Renderer.prototype.update = function(doc) {
 
     // Compile javascript
     try {
+        // jshint ignore:start
         func = new Function(doc.js.data
                             + '\n\nreturn {init: typeof init !== "undefined" ? init : null'
                             + ', render: typeof render !== "undefined" ? render : null'
                             + ', save: typeof save !== "undefined" ? save : null'
                             + ', event: typeof event !== "undefined" ? event : null'
                             + ', extensions: typeof extensions !== "undefined" ? extensions : null};');
+        // jshint ignore:end
     } catch (e) {
         console.error(e.stack);
 
@@ -507,7 +507,7 @@ Renderer.prototype.update = function(doc) {
     this._lastDocument = doc;
     this._frameCounter = 0;
     this.start();
-}
+};
 
 Renderer.prototype._extractUiIds = function(ui, prefix, ret) {
     if (typeof ui._settings.id !== 'undefined') {
@@ -525,7 +525,7 @@ Renderer.prototype._extractUiIds = function(ui, prefix, ret) {
     }
 
     return ret;
-}
+};
 
 Renderer.prototype._uiAdd = function(ui, placement) {
     this._canvasContainer.appendChild(ui.e);
@@ -544,7 +544,7 @@ Renderer.prototype._uiAdd = function(ui, placement) {
     }
 
     return this._extractUiIds(ui, '', {});
-}
+};
 
 Renderer.prototype._grabImageReal = function(width, height) {
     var canvas = document.createElement('canvas');
@@ -613,11 +613,11 @@ Renderer.prototype._grabImageReal = function(width, height) {
     ctx.putImageData(img, 0, 0);
 
     return canvas.toDataURL();
-}
+};
 
 Renderer.prototype._grabThumbnail = function() {
     return this._grabImageReal(this.options.thumbnailWidth, this.options.thumbnailHeight);
-}
+};
 
 Renderer.prototype.grabImage = function(width, height, cb) {
     this._grabs.push({
@@ -625,12 +625,10 @@ Renderer.prototype.grabImage = function(width, height, cb) {
         height: height,
         cb: cb
     });
-}
+};
 
-Renderer.prototype.doRender = function(t) {
+Renderer.prototype.doRender = function() {
     this._anim = requestAnimationFrame(this.doRender.bind(this));
-
-    var gl = this.context.gl;
 
     if (this.program.render) {
         this.context._renderedSomething = false;
@@ -663,7 +661,7 @@ Renderer.prototype.doRender = function(t) {
             }
         }
     }
-}
+};
 
 Renderer.prototype.start = function() {
     if (this._anim !== 0) {
@@ -672,14 +670,14 @@ Renderer.prototype.start = function() {
     }
 
     this._anim = requestAnimationFrame(this.doRender.bind(this));
-}
+};
 
 Renderer.prototype.pause = function() {
     if (this._anim !== 0) {
         cancelAnimationFrame(this._anim);
         this._anim = 0;
     }
-}
+};
 
 Renderer.prototype.toggleUi = function() {
     if (this._hideUi) {
@@ -689,7 +687,7 @@ Renderer.prototype.toggleUi = function() {
     }
 
     this._hideUi = !this._hideUi;
-}
+};
 
 Renderer.prototype.toggleFullscreen = function() {
     var hasFocus = (document.activeElement === this.canvas);
@@ -710,7 +708,7 @@ Renderer.prototype.toggleFullscreen = function() {
 
     this._isFullscreen = !this._isFullscreen;
     this._onNotifyFullscreen();
-}
+};
 
 module.exports = Renderer;
 

@@ -48,7 +48,7 @@ OnOff.prototype.constructor = OnOff;
 
 OnOff.prototype._valueTransform = function(v) {
     return !!v;
-}
+};
 
 module.exports = OnOff;
 

@@ -78,7 +78,7 @@ Texture.prototype.data = function(ctx, width, height, data, options) {
                   options.type,
                   data);
     this.unbind(ctx);
-}
+};
 
 Texture.prototype.bind = function(ctx, unit) {
     var gl = ctx.gl;
@@ -89,11 +89,11 @@ Texture.prototype.bind = function(ctx, unit) {
 
     gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(this.target, this.id);
-}
+};
 
 Texture.prototype.unbind = function(ctx) {
     ctx.gl.bindTexture(this.target, null);
-}
+};
 
 module.exports = Texture;
 

@@ -103,7 +103,7 @@ ColorPicker.prototype._rgbToHsv = function(rgb, h) {
     } else {
         return math.vec3(h, s, v);
     }
-}
+};
 
 ColorPicker.prototype._hsvToRgb = function(hsv) {
     var c = hsv[2] * hsv[1];
@@ -132,7 +132,7 @@ ColorPicker.prototype._hsvToRgb = function(hsv) {
     } else {
         return math.vec3(rgb[0] + m, rgb[1] + m, rgb[2] + m);
     }
-}
+};
 
 ColorPicker.prototype._showPopup = function() {
     var content = this.create('div', {
@@ -209,7 +209,7 @@ ColorPicker.prototype._showPopup = function() {
 
         var updateAlpha = function(sender, e) {
             this._updateAlpha(alphaArea, alphaPick, e);
-        }
+        };
 
         alphaTracker.on('mousedown', updateAlpha, this);
         alphaTracker.on('mouseup', updateAlpha, this);
@@ -218,8 +218,8 @@ ColorPicker.prototype._showPopup = function() {
         alphaArea.classList.add('hidden');
     }
 
-    var popup = new Popup(content, this.e);
-}
+    new Popup(content, this.e);
+};
 
 ColorPicker.prototype._clip = function(v, a, b) {
     if (v < a) {
@@ -229,7 +229,7 @@ ColorPicker.prototype._clip = function(v, a, b) {
     } else {
         return v;
     }
-}
+};
 
 ColorPicker.prototype._updateAlpha = function(alphaArea, alphaPick, e) {
     var pos = this.pagePosition(alphaArea);
@@ -241,7 +241,7 @@ ColorPicker.prototype._updateAlpha = function(alphaArea, alphaPick, e) {
     alphaPick.style.left = (alpha * 100) + '%';
 
     this.value(math.vec4(this._value[0], this._value[1], this._value[2], alpha));
-}
+};
 
 ColorPicker.prototype._updateSv = function(svarea, svpick, e) {
     var pos = this.pagePosition(svarea);
@@ -262,7 +262,7 @@ ColorPicker.prototype._updateSv = function(svarea, svpick, e) {
     this._hsv[2] = y;
 
     this.value(this._hsvToRgb(this._hsv));
-}
+};
 
 ColorPicker.prototype._updateH = function(harea, hpick, svarea, e) {
     var pos = this.pagePosition(harea);
@@ -280,14 +280,14 @@ ColorPicker.prototype._updateH = function(harea, hpick, svarea, e) {
     svarea.style.backgroundColor = this._rgbToHex(bg);
 
     this.value(this._hsvToRgb(this._hsv));
-}
+};
 
 ColorPicker.prototype._toHex = function(v) {
     v *= 255;
 
     var h = '0123456789abcdef';
     return h[v >> 4] + h[v & 0x0f];
-}
+};
 
 ColorPicker.prototype._rgbToHex = function(rgb) {
     var ret = '#';
@@ -297,7 +297,7 @@ ColorPicker.prototype._rgbToHex = function(rgb) {
     }
 
     return ret;
-}
+};
 
 ColorPicker.prototype._valueUpdated = function() {
     this._color.style.backgroundColor = this._rgbToHex(this._value);
@@ -307,7 +307,7 @@ ColorPicker.prototype._valueUpdated = function() {
     }
 
     this._hsv = this._rgbToHsv(this._value, this._hsv[0]);
-}
+};
 
 module.exports = ColorPicker;
 

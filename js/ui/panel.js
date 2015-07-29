@@ -71,15 +71,15 @@ Panel.prototype.position = function(value) {
     }
 
     if (value !== null) {
-        this.child1.style.flexBasis = value + 'px'
+        this.child1.style.flexBasis = value + 'px';
     }
-}
+};
 
 Panel.prototype._onMousedownReal = function(e) {
     window.addEventListener('mousemove', this._onMousemove);
     window.addEventListener('mouseup', this._onMouseup);
 
-    p = this.pagePosition(this.sep);
+    var p = this.pagePosition(this.sep);
 
     if (this._orientation == Panel.Orientation.VERTICAL) {
         this._doffset = e.pageY - p.y;
@@ -90,7 +90,7 @@ Panel.prototype._onMousedownReal = function(e) {
     }
 
     e.preventDefault();
-}
+};
 
 Panel.prototype._onMouseupReal = function(e) {
     window.removeEventListener('mousemove', this._onMousemove);
@@ -99,12 +99,12 @@ Panel.prototype._onMouseupReal = function(e) {
     document.body.style.cursor = '';
 
     e.preventDefault();
-}
+};
 
 Panel.prototype._onMousemoveReal = function(e) {
     var d;
 
-    pagepos = this.pagePosition();
+    var pagepos = this.pagePosition();
 
     if (this._orientation == Panel.Orientation.VERTICAL) {
         d = e.pageY - pagepos.y;
@@ -117,7 +117,7 @@ Panel.prototype._onMousemoveReal = function(e) {
     this._onResized();
 
     e.preventDefault();
-}
+};
 
 module.exports = Panel;
 

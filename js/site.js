@@ -50,6 +50,6 @@ global.Settings = utils.merge({
     hooks: {}
 }, global.Settings);
 
-app = require('./app/app');
+global.app = require('./app/app');
 
 // vi:ts=4:et

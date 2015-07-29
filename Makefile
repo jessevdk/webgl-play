@@ -222,4 +222,20 @@ unwatch:
 serve: server
 	(cd server && ./server)
 
-.PHONY: all site local-site server-site server watch unwatch serve
+check-jshint: check-glsl
+	@printf "[\033[1mLINT\033[0m] ... ";			\
+	ret=$$(cd js && jshint .);						\
+	if [ $$? -ne 0 ]; then							\
+		printf "[\033[31mfail\033[0m]\n";			\
+		echo "$$ret";								\
+		exit 1;										\
+	else											\
+		printf "[\033[33mok\033[0m]\n";				\
+	fi
+
+check-glsl:
+	@$(MAKE) -C js/glsl check
+
+check: check-jshint
+
+.PHONY: all site local-site server-site server watch unwatch serve check check-jshint

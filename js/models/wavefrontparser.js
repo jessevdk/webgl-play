@@ -1,3 +1,5 @@
+// jshint worker:true
+
 /*
  * Copyright (c) 2014 Jesse van den Kieboom. All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -26,8 +28,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-'use strict';
 
 function ensureObject(state, name) {
     if (state.object === null || typeof name !== 'undefined') {
@@ -124,7 +124,7 @@ function faceNormal(p1, p2, p3) {
     }
 
     // cross product
-    var n = cross(v, w);
+    n = cross(v, w);
     return normalize(n);
 }
 
@@ -215,7 +215,9 @@ function splitObj(o) {
         var g = o.groups[gi];
         group = null;
 
-        for (var i = 0; i < 3; i++) {
+        var i;
+
+        for (i = 0; i < 3; i++) {
             if (gi === 0) {
                 ret.aabbox[i].min = g.aabbox[i].min;
                 ret.aabbox[i].max = g.aabbox[i].max;
@@ -230,7 +232,7 @@ function splitObj(o) {
             }
         }
 
-        for (var i = 0; i < g.indices.length; i += 3) {
+        for (i = 0; i < g.indices.length; i += 3) {
             if ((buffer.attributes.vertices.length / 3) + 3 > indexLimit) {
                 buffer = makeBuffer();
                 ret.buffers.push(buffer);
@@ -263,10 +265,9 @@ function splitObj(o) {
 }
 
 function parseObj(s, options) {
-    var i = 0;
+    var i = 0, n, j;
 
     var lineno = 1;
-    var faces = [];
 
     var state = {
         objects: [],
@@ -310,6 +311,7 @@ function parseObj(s, options) {
 
         var line = s.slice(st, nl);
         var parts = line.trim().split(/ +/);
+        var h, k, sh, name;
 
         switch (parts[0]) {
         case 'v':
@@ -349,6 +351,7 @@ function parseObj(s, options) {
 
             var gv = state.object.attributes.vertices;
             var gn = state.object.attributes.normals;
+            var gt = state.object.attributes.texcoords;
             var gi = state.group.indices;
 
             if (parts.length === 4) {
@@ -361,7 +364,7 @@ function parseObj(s, options) {
                 } else {
                     var v = state.object.vertices;
                     var t = state.object.texcoords;
-                    var n = state.object.normals;
+                    n = state.object.normals;
 
                     var l = p[0].length;
 
@@ -371,8 +374,8 @@ function parseObj(s, options) {
                     var hasT = (l > 1 && p[k][1].length > 0);
                     var hasN = (l > 2 && p[k][2].length !== 0);
 
-                    for (var k = 0; k < 3; k++) {
-                        var h = parts[k + 1];
+                    for (k = 0; k < 3; k++) {
+                        h = parts[k + 1];
 
                         var vi = parseIndex(parseInt(p[k][0]), v.length);
 
@@ -394,7 +397,7 @@ function parseObj(s, options) {
                                     state.object.sharedVertices[h] = ii;
                                 }
                             } else {
-                                var sh = state.object.sharedVertices[h];
+                                sh = state.object.sharedVertices[h];
 
                                 if (!sh) {
                                     state.object.sharedVertices[h] = [ii];
@@ -410,7 +413,7 @@ function parseObj(s, options) {
                         gi.push(ii);
                         gv.push(verts[k][0], verts[k][1], verts[k][2]);
 
-                        for (var j = 0; j < 3; j++) {
+                        for (j = 0; j < 3; j++) {
                             if (state.group.aabbox[j].min === null || verts[k][j] < state.group.aabbox[j].min) {
                                 state.group.aabbox[j].min = verts[k][j];
                             }
@@ -426,8 +429,8 @@ function parseObj(s, options) {
                         }
 
                         if (hasN) {
-                            var ni = parseIndex(parseInt(p[k][2]), n.length);
-                            gn.push(n[ni], n[ni + 1], n[ni + 2]);
+                            var nii = parseIndex(parseInt(p[k][2]), n.length);
+                            gn.push(n[nii], n[nii + 1], n[nii + 2]);
                         } else if (state.group.smooth) {
                             gn.push(ninit[0], ninit[1], ninit[2]);
                         }
@@ -438,13 +441,12 @@ function parseObj(s, options) {
                     // Generate normal for non-smooth surfaces without
                     // defined normals
                     if (!hasN) {
-                        var n = faceNormal(verts[0], verts[1], verts[2]);
+                        n = faceNormal(verts[0], verts[1], verts[2]);
 
                         // Use face normal for each vertex
                         if (state.group.smooth) {
-                            for (var k = 0; k < 3; k++) {
-                                var h = parts[k + 1];
-                                var sh;
+                            for (k = 0; k < 3; k++) {
+                                h = parts[k + 1];
 
                                 if (options.shareVertices) {
                                     sh = [state.object.sharedVertices[h]];
@@ -461,7 +463,7 @@ function parseObj(s, options) {
                                 }
                             }
                         } else {
-                            for (var k = 0; k < 3; k++) {
+                            for (k = 0; k < 3; k++) {
                                 gn.push(n[0], n[1], n[2]);
                             }
                         }
@@ -476,7 +478,7 @@ function parseObj(s, options) {
                 throw new Error('l' + lineno + ': expected object name');
             }
 
-            var name = parts[1].trim();
+            name = parts[1].trim();
 
             if (name.length === 0) {
                 throw new Error('l' + lineno + ': expected non-empty object name');
@@ -490,7 +492,7 @@ function parseObj(s, options) {
                 throw new Error('l' + lineno + ': expected group name');
             }
 
-            var name = parts[1].trim();
+            name = parts[1].trim();
 
             if (name.length === 0) {
                 throw new Error('l' + lineno + ': expected non-empty group name');
@@ -520,18 +522,18 @@ function parseObj(s, options) {
 
     var ret = [];
 
-    for (var i = 0; i < state.objects.length; i++) {
+    for (i = 0; i < state.objects.length; i++) {
         var o = state.objects[i];
 
-        var n = o.attributes.normals;
+        n = o.attributes.normals;
 
-        for (var i = 0; i < n.length; i += 3) {
-            var nn = new Float64Array(n.slice(i, i + 3));
+        for (j = 0; j < n.length; j += 3) {
+            var nn = new Float64Array(n.slice(j, j + 3));
             nn = normalize(nn);
 
-            n[i + 0] = nn[0];
-            n[i + 1] = nn[1];
-            n[i + 2] = nn[2];
+            n[j + 0] = nn[0];
+            n[j + 1] = nn[1];
+            n[j + 2] = nn[2];
         }
 
         ret.push(splitObj(o));

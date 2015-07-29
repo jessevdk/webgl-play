@@ -102,7 +102,9 @@ Model.prototype.render = function(ctx, options) {
 
     var fullTransform = this.fullTransform();
 
-    for (var i = 0; i < this.children.length; i++) {
+    var i;
+
+    for (i = 0; i < this.children.length; i++) {
         this.children[i].render(ctx, options);
     }
 
@@ -151,15 +153,18 @@ Model.prototype.render = function(ctx, options) {
 
     var prevGeometry = null;
 
-    for (var i = 0; i < parts.length; i++) {
+    var attr;
+
+    for (i = 0; i < parts.length; i++) {
         var part = parts[i];
         var geometry = part.geometry;
         var needsRebind = false;
+        var attrname;
 
         if (p !== null) {
             // Reconcile geometry attributes with program attributes
-            for (var attrname in geometry.attributes) {
-                var attr = geometry.attributes[attrname];
+            for (attrname in geometry.attributes) {
+                attr = geometry.attributes[attrname];
 
                 if (!(attrname in p.attributes) || p.attributes[attrname] !== attr.id) {
                     needsRebind = true;
@@ -173,8 +178,8 @@ Model.prototype.render = function(ctx, options) {
                 p.attributes = {};
                 p.uniforms = {};
 
-                for (var attrname in geometry.attributes) {
-                    var attr = geometry.attributes[attrname];
+                for (attrname in geometry.attributes) {
+                    attr = geometry.attributes[attrname];
                     gl.bindAttribLocation(p.program, attr.id, attrname);
 
                     p.attributes[attrname] = attr.id;
@@ -199,7 +204,7 @@ Model.prototype.render = function(ctx, options) {
     if (prevGeometry !== null) {
         prevGeometry.unbind(ctx);
     }
-}
+};
 
 /**
  * Remove a child model.
@@ -220,7 +225,7 @@ Model.prototype.remove = function(child) {
     if (i !== -1) {
         this.children.splice(i, 1);
     }
-}
+};
 
 /**
  * Add a child model.
@@ -242,7 +247,7 @@ Model.prototype.add = function(child) {
     child.fullTransform = math.transform.track(math.transform.create(), this, 'fullTransform', function(out, tr) {
         return child.transform.preMul(tr());
     });
-}
+};
 
 module.exports = Model;
 

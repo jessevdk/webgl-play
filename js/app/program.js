@@ -63,7 +63,7 @@ Program.default = function() {
     f = f.slice(0, f.length - 1);
 
     return new Program('Default', v, f);
-}
+};
 
 Program.prototype.error = function(error) {
     if (typeof error === 'undefined') {
@@ -72,11 +72,11 @@ Program.prototype.error = function(error) {
 
     this._error = error;
     this._onNotifyError();
-}
+};
 
 Program.prototype.isDefault = function() {
     return this._isDefault;
-}
+};
 
 Program.prototype.name = function(name) {
     if (typeof name === 'undefined') {
@@ -89,7 +89,7 @@ Program.prototype.name = function(name) {
         this._name = name;
         this._onNotifyName(prev);
     }
-}
+};
 
 Program.prototype._compileShader = function(gl, type, source) {
     var ret = gl.createShader(type);
@@ -110,7 +110,7 @@ Program.prototype._compileShader = function(gl, type, source) {
         id: ret,
         error: log
     };
-}
+};
 
 Program.prototype._definesToString = function(defines) {
     if (defines) {
@@ -124,7 +124,7 @@ Program.prototype._definesToString = function(defines) {
     } else {
         return '';
     }
-}
+};
 
 Program.prototype._sourceWithDefines = function(source, defines) {
     var m = source.match(/^\s*#version .*\n/);
@@ -135,7 +135,7 @@ Program.prototype._sourceWithDefines = function(source, defines) {
 
     var split = m.index + m[0].length;
     return source.slice(0, split) + defines + source.slice(split);
-}
+};
 
 Program.prototype.compile = function(gl, defines) {
     var defs = this._definesToString(defines);
@@ -168,7 +168,7 @@ Program.prototype.compile = function(gl, defines) {
         gl.attachShader(p, v.id);
         gl.attachShader(p, f.id);
 
-        for (attr in attrs) {
+        for (var attr in attrs) {
             gl.bindAttribLocation(p, attrs[attr], attr);
         }
 
@@ -194,7 +194,7 @@ Program.prototype.compile = function(gl, defines) {
         error: error,
         name: this._name
     };
-}
+};
 
 Program.fromRemote = function(p) {
     var ret = new Program();
@@ -213,7 +213,7 @@ Program.fromRemote = function(p) {
     ret._isDefault = p.isDefault || false;
 
     return ret;
-}
+};
 
 Program.prototype.remote = function() {
     return {
@@ -223,7 +223,7 @@ Program.prototype.remote = function() {
         fragment: this.fragment.data,
         isDefault: this._isDefault
     };
-}
+};
 
 Program.prototype.serialize = function() {
     return {
@@ -239,7 +239,7 @@ Program.prototype.serialize = function() {
         },
         isDefault: this._isDefault
     };
-}
+};
 
 Program.deserialize = function(program) {
     var ret = new Program();
@@ -258,7 +258,7 @@ Program.deserialize = function(program) {
     ret._isDefault = program.isDefault;
 
     return ret;
-}
+};
 
 module.exports = Program;
 

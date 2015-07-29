@@ -48,7 +48,7 @@ function RenderGroups(options) {
  */
 RenderGroups.prototype.add = function(group) {
     this.groups.push(group);
-}
+};
 
 /**
  * Remove a render group.
@@ -61,14 +61,14 @@ RenderGroups.prototype.remove = function(group) {
     if (idx !== -1) {
         this.groups.splice(idx, 1);
     }
-}
+};
 
 /**
  * Get all render parts of the group.
  */
 RenderGroups.prototype.renderParts = function() {
     return this.groups;
-}
+};
 
 module.exports = RenderGroups;
 
